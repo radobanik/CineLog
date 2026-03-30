@@ -1,15 +1,11 @@
-using System.Text.Json;
 using CineLog.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CineLog.Infrastructure.Data.Configurations;
 
 public class ReviewConfiguration : IEntityTypeConfiguration<Review>
 {
-    private static readonly JsonSerializerOptions JsonOptions = new();
-
     public void Configure(EntityTypeBuilder<Review> builder)
     {
         builder.ToTable("reviews");
@@ -37,18 +33,6 @@ public class ReviewConfiguration : IEntityTypeConfiguration<Review>
         builder.Property(r => r.CreatedAt).IsRequired();
         builder.Property(r => r.UpdatedAt);
 
-        // Tags stored as jsonb — backed by private List<string> _tags field
-        builder.Property<List<string>>("_tags")
-            .HasColumnName("tags")
-            .HasColumnType("jsonb")
-            .HasConversion(
-                new ValueConverter<List<string>, string>(
-                    v => JsonSerializer.Serialize(v, JsonOptions),
-                    v => JsonSerializer.Deserialize<List<string>>(v, JsonOptions) ?? new List<string>()
-                )
-            );
-
-        // DomainEvents is never persisted
         builder.Ignore(r => r.DomainEvents);
 
         builder.HasMany(r => r.Reactions)

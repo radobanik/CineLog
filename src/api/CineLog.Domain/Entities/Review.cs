@@ -7,7 +7,6 @@ namespace CineLog.Domain.Entities;
 
 public class Review
 {
-    private List<string> _tags = [];
     private readonly List<ReviewReaction> _reactions = [];
     private readonly List<INotification> _domainEvents = [];
 
@@ -23,7 +22,6 @@ public class Review
     public DateTimeOffset CreatedAt { get; private set; }
     public DateTimeOffset? UpdatedAt { get; private set; }
 
-    public IReadOnlyCollection<string> Tags => _tags.AsReadOnly();
     public IReadOnlyCollection<ReviewReaction> Reactions => _reactions.AsReadOnly();
     public IReadOnlyCollection<INotification> DomainEvents => _domainEvents.AsReadOnly();
 
@@ -59,13 +57,11 @@ public class Review
         _domainEvents.Add(new ReviewReactedEvent(Id, userId, type));
     }
 
-    public void Update(Rating rating, string? reviewText, bool containsSpoilers, List<string> tags)
+    public void Update(Rating rating, string? reviewText, bool containsSpoilers)
     {
         Rating = rating;
         ReviewText = reviewText;
         ContainsSpoilers = containsSpoilers;
-        _tags.Clear();
-        _tags.AddRange(tags);
         UpdatedAt = DateTimeOffset.UtcNow;
     }
 

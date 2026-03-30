@@ -39,7 +39,7 @@ public class UpdateReviewHandler : IRequestHandler<UpdateReviewCommand, ReviewRe
         var movie = await _movieRepository.GetByIdAsync(review.MovieId, cancellationToken)
             ?? throw new NotFoundException($"Movie {review.MovieId} not found.");
 
-        review.Update(Rating.Create(request.Rating), request.ReviewText, request.ContainsSpoilers, request.Tags);
+        review.Update(Rating.Create(request.Rating), request.ReviewText, request.ContainsSpoilers);
         await _reviewRepository.UpdateAsync(review, cancellationToken);
 
         return new ReviewResponse(

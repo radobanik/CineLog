@@ -6,5 +6,4 @@ public record UpdateReviewCommand(
     Guid ReviewId,
     decimal Rating,
     string? ReviewText,
-    bool ContainsSpoilers,
-    List<string> Tags) : IRequest<ReviewResponse>;
+    bool ContainsSpoilers) : IRequest<ReviewResponse>;

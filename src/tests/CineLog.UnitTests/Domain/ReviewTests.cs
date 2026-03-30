@@ -61,11 +61,10 @@ public class ReviewTests
         var review = Review.Create(Guid.NewGuid(), Guid.NewGuid(), 2.0m, "Meh", false);
         review.ClearDomainEvents();
 
-        review.Update(5.0m, "Actually amazing", true, ["drama", "sci-fi"]);
+        review.Update(5.0m, "Actually amazing", true);
 
         review.Rating.Value.Should().Be(5.0m);
         review.ReviewText.Should().Be("Actually amazing");
         review.ContainsSpoilers.Should().BeTrue();
-        review.Tags.Should().BeEquivalentTo(["drama", "sci-fi"]);
     }
 }
