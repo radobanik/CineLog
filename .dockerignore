@@ -1,0 +1,10 @@
+**/bin/
+**/obj/
+.git/
+tests/
+**/*.user
+**/*.suo
+**/.vs/
+**/node_modules/
+*.md
+.env
