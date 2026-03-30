@@ -50,7 +50,34 @@ try
     builder.Services.AddScoped<PersonSync>();
     builder.Services.AddHostedService<SyncWorker>();
 
-    await builder.Build().RunAsync();
+    var host = builder.Build();
+
+    // Create sync-only tables not covered by API migrations
+    using (var scope = host.Services.CreateScope())
+    {
+        var db = scope.ServiceProvider.GetRequiredService<TmdbSyncDbContext>();
+        await db.Database.ExecuteSqlRawAsync(@"
+            CREATE TABLE IF NOT EXISTS sync_checkpoints (
+                sync_type varchar(50) PRIMARY KEY,
+                last_page int NOT NULL,
+                total_pages int NOT NULL,
+                updated_at timestamptz NOT NULL
+            );
+            CREATE TABLE IF NOT EXISTS sync_failures (
+                id bigserial PRIMARY KEY,
+                sync_type varchar(50) NOT NULL,
+                tmdb_id int NOT NULL,
+                error_message varchar(2000) NOT NULL,
+                retry_count int NOT NULL DEFAULT 0,
+                failed_at timestamptz NOT NULL,
+                resolved_at timestamptz NULL
+            );
+            CREATE INDEX IF NOT EXISTS ix_sync_failures_lookup
+                ON sync_failures(sync_type, tmdb_id, resolved_at);
+        ");
+    }
+
+    await host.RunAsync();
 }
 catch (Exception ex)
 {
