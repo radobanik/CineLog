@@ -54,6 +54,16 @@ public class TestAppDbContext : DbContext, IAppDbContext
         {
             b.HasKey(f => new { f.FollowerId, f.FollowedId });
         });
+
+        modelBuilder.Entity<MovieGenre>(b =>
+        {
+            b.HasKey(mg => new { mg.MovieId, mg.GenreId });
+        });
+
+        modelBuilder.Entity<MovieProductionCompany>(b =>
+        {
+            b.HasKey(mp => new { mp.MovieId, mp.CompanyId });
+        });
     }
 
     public static TestAppDbContext Create(string? dbName = null)
