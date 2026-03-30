@@ -27,7 +27,6 @@ public class MovieFullSync(
 {
     private const string SyncType = "movies";
     private readonly int _maxPages = configuration.GetValue("Sync:MaxDiscoverPages", 500);
-    private readonly int _batchSize = configuration.GetValue("Sync:BatchSize", 5);
 
     public async Task SyncAsync(CancellationToken ct)
     {
@@ -69,7 +68,7 @@ public class MovieFullSync(
             if (detail.Item is null) return;
 
             var d = detail.Item;
-            var existing = await db.Movies.FirstOrDefaultAsync(m => m.TmdbId == info.Id, ct);
+            var existing = await db.Movies.FirstOrDefaultAsync(m => m.IdTmdb == info.Id, ct);
 
             if (existing is null)
             {
@@ -126,22 +125,21 @@ public class MovieFullSync(
         }
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
-            logger.LogWarning(ex, "Failed to sync movie TmdbId={TmdbId}", info.Id);
+            logger.LogWarning(ex, "Failed to sync movie IdTmdb={IdTmdb}", info.Id);
             db.ChangeTracker.Clear();
             await failures.RecordAsync(SyncType, info.Id, ex, ct);
         }
     }
 
-    private async Task SyncGenresAsync(Guid movieId, IEnumerable<(int Id, string Name)> genres, CancellationToken ct)
+    private async Task SyncGenresAsync(Guid movieId, IEnumerable<(int IdTmdb, string Name)> genres, CancellationToken ct)
     {
         var oldLinks = await db.MovieGenres.Where(mg => mg.MovieId == movieId).ToListAsync(ct);
         db.MovieGenres.RemoveRange(oldLinks);
 
         foreach (var g in genres)
         {
-            if (!await db.Genres.AnyAsync(genre => genre.Id == g.Id, ct))
-                db.Genres.Add(new Genre { Id = g.Id, Name = g.Name });
-            db.MovieGenres.Add(new MovieGenre { MovieId = movieId, GenreId = g.Id });
+            var genreId = await EnsureGenreAsync(g.IdTmdb, g.Name, ct);
+            db.MovieGenres.Add(new MovieGenre { MovieId = movieId, GenreId = genreId });
         }
 
         await db.SaveChangesAsync(ct);
@@ -160,11 +158,11 @@ public class MovieFullSync(
 
         foreach (var member in credits.Item.CastMembers)
         {
-            await EnsurePersonAsync(member.PersonId, member.Name, ct);
+            var personId = await EnsurePersonAsync(member.PersonId, member.Name, ct);
             db.MovieCast.Add(new MovieCast
             {
                 MovieId = movieId,
-                PersonId = member.PersonId,
+                PersonId = personId,
                 Character = member.Character,
                 Order = member.Order,
                 CreditId = member.CreditId
@@ -173,11 +171,11 @@ public class MovieFullSync(
 
         foreach (var member in credits.Item.CrewMembers)
         {
-            await EnsurePersonAsync(member.PersonId, member.Name, ct);
+            var personId = await EnsurePersonAsync(member.PersonId, member.Name, ct);
             db.MovieCrew.Add(new MovieCrew
             {
                 MovieId = movieId,
-                PersonId = member.PersonId,
+                PersonId = personId,
                 Department = member.Department,
                 Job = member.Job,
                 CreditId = member.CreditId
@@ -197,18 +195,49 @@ public class MovieFullSync(
 
         foreach (var c in companies)
         {
-            if (!await db.ProductionCompanies.AnyAsync(pc => pc.Id == c.Id, ct))
-                db.ProductionCompanies.Add(new ProductionCompany { Id = c.Id, Name = c.Name });
-            db.MovieProductionCompanies.Add(new MovieProductionCompany { MovieId = movieId, CompanyId = c.Id });
+            var companyId = await EnsureCompanyAsync(c.Id, c.Name, ct);
+            db.MovieProductionCompanies.Add(new MovieProductionCompany { MovieId = movieId, CompanyId = companyId });
         }
 
         await db.SaveChangesAsync(ct);
     }
 
-    private async Task EnsurePersonAsync(int personId, string name, CancellationToken ct)
+    private async Task<Guid> EnsurePersonAsync(int idTmdb, string name, CancellationToken ct)
     {
-        var alreadyTracked = db.ChangeTracker.Entries<Person>().Any(e => e.Entity.Id == personId);
-        if (!alreadyTracked && !await db.Persons.AnyAsync(p => p.Id == personId, ct))
-            db.Persons.Add(new Person { Id = personId, Name = name, SyncedAt = DateTimeOffset.UtcNow });
+        var tracked = db.ChangeTracker.Entries<Person>().FirstOrDefault(e => e.Entity.IdTmdb == idTmdb);
+        if (tracked != null) return tracked.Entity.Id;
+
+        var existing = await db.Persons.FirstOrDefaultAsync(p => p.IdTmdb == idTmdb, ct);
+        if (existing != null) return existing.Id;
+
+        var person = new Person { Id = Guid.NewGuid(), IdTmdb = idTmdb, Name = name, SyncedAt = DateTimeOffset.UtcNow };
+        db.Persons.Add(person);
+        return person.Id;
+    }
+
+    private async Task<Guid> EnsureGenreAsync(int idTmdb, string name, CancellationToken ct)
+    {
+        var tracked = db.ChangeTracker.Entries<Genre>().FirstOrDefault(e => e.Entity.IdTmdb == idTmdb);
+        if (tracked != null) return tracked.Entity.Id;
+
+        var existing = await db.Genres.FirstOrDefaultAsync(g => g.IdTmdb == idTmdb, ct);
+        if (existing != null) return existing.Id;
+
+        var genre = new Genre { Id = Guid.NewGuid(), IdTmdb = idTmdb, Name = name };
+        db.Genres.Add(genre);
+        return genre.Id;
+    }
+
+    private async Task<Guid> EnsureCompanyAsync(int idTmdb, string name, CancellationToken ct)
+    {
+        var tracked = db.ChangeTracker.Entries<ProductionCompany>().FirstOrDefault(e => e.Entity.IdTmdb == idTmdb);
+        if (tracked != null) return tracked.Entity.Id;
+
+        var existing = await db.ProductionCompanies.FirstOrDefaultAsync(c => c.IdTmdb == idTmdb, ct);
+        if (existing != null) return existing.Id;
+
+        var company = new ProductionCompany { Id = Guid.NewGuid(), IdTmdb = idTmdb, Name = name };
+        db.ProductionCompanies.Add(company);
+        return company.Id;
     }
 }

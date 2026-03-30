@@ -4,7 +4,7 @@ public class MovieCast
 {
     public long Id { get; set; }
     public Guid MovieId { get; set; }
-    public int PersonId { get; set; }
+    public Guid PersonId { get; set; }
     public string? Character { get; set; }
     public int Order { get; set; }
     public string? CreditId { get; set; }

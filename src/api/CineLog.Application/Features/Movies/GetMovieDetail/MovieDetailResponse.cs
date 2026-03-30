@@ -4,7 +4,7 @@ namespace CineLog.Application.Features.Movies.GetMovieDetail;
 
 public record MovieDetailResponse(
     Guid Id,
-    int TmdbId,
+    int IdTmdb,
     MovieType Type,
     string Title,
     string? Overview,
@@ -29,24 +29,24 @@ public record MovieDetailResponse(
     List<CrewMemberResponse> Crew,
     List<ProductionCompanyResponse> ProductionCompanies);
 
-public record GenreResponse(int Id, string Name);
+public record GenreResponse(Guid Id, string Name);
 
 public record CastMemberResponse(
-    int PersonId,
+    Guid PersonId,
     string Name,
     string? Character,
     int Order,
     string? ProfilePath);
 
 public record CrewMemberResponse(
-    int PersonId,
+    Guid PersonId,
     string Name,
     string? Department,
     string? Job,
     string? ProfilePath);
 
 public record ProductionCompanyResponse(
-    int Id,
+    Guid Id,
     string Name,
     string? LogoPath,
     string? OriginCountry);

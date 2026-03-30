@@ -11,7 +11,7 @@ public class Movie
     private readonly List<MovieProductionCompany> _productionCompanies = [];
 
     public Guid Id { get; private set; }
-    public int TmdbId { get; private set; }
+    public int IdTmdb { get; private set; }
     public string Title { get; private set; } = null!;
     public string? Overview { get; private set; }
     public string? PosterPath { get; private set; }
@@ -48,7 +48,7 @@ public class Movie
         return new Movie
         {
             Id = Guid.NewGuid(),
-            TmdbId = tmdbId,
+            IdTmdb = tmdbId,
             Title = title,
             Type = type
         };

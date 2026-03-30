@@ -10,7 +10,8 @@ public class ProductionCompanyConfiguration : IEntityTypeConfiguration<Productio
     {
         builder.ToTable("production_companies");
         builder.HasKey(c => c.Id);
-        builder.Property(c => c.Id).ValueGeneratedNever();
+        builder.Property(c => c.IdTmdb).IsRequired();
+        builder.HasIndex(c => c.IdTmdb).IsUnique();
         builder.Property(c => c.Name).HasMaxLength(200).IsRequired();
         builder.Property(c => c.OriginCountry).HasMaxLength(10);
     }

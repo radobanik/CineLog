@@ -21,7 +21,7 @@ public class MovieRepository : IMovieRepository
         await _context.Movies
             .AsNoTracking()
             .Cacheable()
-            .FirstOrDefaultAsync(m => m.TmdbId == tmdbId, cancellationToken);
+            .FirstOrDefaultAsync(m => m.IdTmdb == tmdbId, cancellationToken);
 
     public async Task AddAsync(Movie movie, CancellationToken cancellationToken = default)
     {

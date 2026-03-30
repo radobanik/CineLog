@@ -24,7 +24,7 @@ public class GetMovieDetailHandler : IRequestHandler<GetMovieDetailQuery, MovieD
 
         return new MovieDetailResponse(
             movie.Id,
-            movie.TmdbId,
+            movie.IdTmdb,
             movie.Type,
             movie.Title,
             movie.Overview,

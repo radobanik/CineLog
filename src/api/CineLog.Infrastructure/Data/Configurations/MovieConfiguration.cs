@@ -12,8 +12,8 @@ public class MovieConfiguration : IEntityTypeConfiguration<Movie>
 
         builder.HasKey(m => m.Id);
 
-        builder.Property(m => m.TmdbId).IsRequired();
-        builder.HasIndex(m => m.TmdbId).IsUnique();
+        builder.Property(m => m.IdTmdb).IsRequired();
+        builder.HasIndex(m => m.IdTmdb).IsUnique();
 
         builder.Property(m => m.Title).IsRequired();
         builder.Property(m => m.Overview);

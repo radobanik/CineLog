@@ -19,40 +19,40 @@ public class PersonSync(
 
     public async Task SyncAsync(CancellationToken ct)
     {
-        var stalePersonIds = await db.Persons
+        var stalePersons = await db.Persons
             .Where(p => p.Biography == null)
             .OrderBy(p => p.SyncedAt)
-            .Select(p => p.Id)
+            .Select(p => new { p.Id, p.IdTmdb })
             .Take(500)
             .ToListAsync(ct);
 
-        if (stalePersonIds.Count == 0)
+        if (stalePersons.Count == 0)
         {
             logger.LogInformation("No persons to enrich");
             return;
         }
 
-        logger.LogInformation("Enriching {Count} persons", stalePersonIds.Count);
+        logger.LogInformation("Enriching {Count} persons", stalePersons.Count);
 
-        foreach (var personId in stalePersonIds)
+        foreach (var person in stalePersons)
         {
             if (ct.IsCancellationRequested) break;
-            await EnrichPersonAsync(personId, ct);
+            await EnrichPersonAsync(person.Id, person.IdTmdb, ct);
         }
 
         logger.LogInformation("Person enrichment complete");
     }
 
-    private async Task EnrichPersonAsync(int personId, CancellationToken ct)
+    private async Task EnrichPersonAsync(Guid id, int idTmdb, CancellationToken ct)
     {
         try
         {
             await rateLimiter.ThrottleAsync(ct);
-            var detail = await RetryHelper.ExecuteAsync(() => peopleApi.FindByIdAsync(personId), ct: ct);
+            var detail = await RetryHelper.ExecuteAsync(() => peopleApi.FindByIdAsync(idTmdb), ct: ct);
             if (detail.Item is null) return;
 
             var d = detail.Item;
-            var existing = await db.Persons.FindAsync([personId], ct);
+            var existing = await db.Persons.FindAsync([id], ct);
             if (existing is null) return;
 
             existing.Name = d.Name;
@@ -67,8 +67,8 @@ public class PersonSync(
         }
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
-            logger.LogWarning(ex, "Failed to enrich person TmdbId={TmdbId}", personId);
-            await failures.RecordAsync(SyncType, personId, ex, ct);
+            logger.LogWarning(ex, "Failed to enrich person IdTmdb={IdTmdb}", idTmdb);
+            await failures.RecordAsync(SyncType, idTmdb, ex, ct);
         }
     }
 }

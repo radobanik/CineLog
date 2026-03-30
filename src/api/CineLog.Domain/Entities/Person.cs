@@ -2,7 +2,8 @@ namespace CineLog.Domain.Entities;
 
 public class Person
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; }
+    public int IdTmdb { get; set; }
     public string Name { get; set; } = null!;
     public string? ProfilePath { get; set; }
     public string? Biography { get; set; }
