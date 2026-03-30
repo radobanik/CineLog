@@ -46,8 +46,6 @@ publish/
 # ASP.NET
 ScaffoldingReadMe.txt
 
-# Entity Framework
-migrations/
 
 # Secrets / env
 .env
