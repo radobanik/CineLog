@@ -1,0 +1,84 @@
+version: '3.9'
+services:
+  api:
+    build:
+      context: .
+      dockerfile: src/CineLog.Api/Dockerfile
+    ports:
+      - "5000:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Host=postgres;Database=cinelog;Username=postgres;Password=postgres
+      - ConnectionStrings__Redis=redis:6379
+      - Jwt__Secret=super-secret-key-min-32-characters-long!!
+      - Jwt__Issuer=CineLog
+      - Jwt__Audience=CineLog
+      - Jwt__ExpiryMinutes=1440
+      - Tmdb__ApiKey=${TMDB_API_KEY}
+      - Tmdb__BaseUrl=https://api.themoviedb.org/
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: cinelog
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  tmdb-sync:
+    build:
+      context: .
+      dockerfile: tools/CineLog.TmdbSync/Dockerfile
+    environment:
+      - ConnectionStrings__DefaultConnection=Host=postgres;Database=cinelog;Username=postgres;Password=postgres
+      - Tmdb__BearerToken=${TMDB_BEARER_TOKEN}
+      - Sync__IntervalMinutes=1440
+      - Sync__MaxDiscoverPages=500
+      - Sync__PersonPages=20
+      - Sync__BatchSize=5
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@cinelog.dev
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  pgadmin_data:
