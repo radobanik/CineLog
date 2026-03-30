@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(*)",
+      "Read(*)",
+      "Write(*)",
+      "Edit(*)",
+      "Glob(*)",
+      "Grep(*)",
+      "Bash(mkdir -p src/api src/mobile infra)",
+      "Bash(mv src/CineLog.Api src/api/)",
+      "Bash(mv src/CineLog.Application src/api/)",
+      "Bash(mv src/CineLog.Domain src/api/)",
+      "Bash(mv src/CineLog.Infrastructure src/api/)",
+      "Bash(cd:*)",
+      "Bash(python3 -c \":*)",
+      "Bash(grep -v \"\\\\.cs$\\\\|\\\\.csproj$\\\\|\\\\.json$\\\\|\\\\.md$\\\\|\\\\.xml\\\\|\\\\.Designer\\\\|Snapshot\\\\|\\\\.user\\\\|\\\\.png\\\\|launchSettings\\\\|DotSettings\")"
+    ]
+  }
+}

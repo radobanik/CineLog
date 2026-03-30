@@ -84,3 +84,4 @@ _TeamCity*
 *.cache
 *.bak
 *.orig
+*.DotSettings.user

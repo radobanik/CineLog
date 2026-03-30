@@ -7,8 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\CineLog.Domain\CineLog.Domain.csproj" />
-    <ProjectReference Include="..\..\src\CineLog.Infrastructure\CineLog.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\api\CineLog.Domain\CineLog.Domain.csproj" />
+    <ProjectReference Include="..\..\api\CineLog.Infrastructure\CineLog.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>

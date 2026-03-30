@@ -1,0 +1,8 @@
+{
+  "enabledPlugins": {
+    "maui-skills@maui-skills": true
+  },
+  "permissions": {
+    "defaultMode": "bypassPermissions"
+  }
+}
