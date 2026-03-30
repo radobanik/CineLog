@@ -6,7 +6,6 @@ namespace CineLog.UnitTests.TestHelpers;
 
 /// <summary>
 /// Lightweight DbContext backed by the InMemory provider for unit tests.
-/// Omits PostgreSQL-specific config (jsonb, column types) while preserving entity structure.
 /// </summary>
 public class TestAppDbContext : DbContext, IAppDbContext
 {

@@ -20,7 +20,7 @@ public class ReviewConfiguration : IEntityTypeConfiguration<Review>
         builder.OwnsOne(r => r.Rating, rating =>
         {
             rating.Property(r => r.Value)
-                .HasColumnName("rating")
+                .HasColumnName("Rating")
                 .HasPrecision(4, 2)
                 .IsRequired();
         });

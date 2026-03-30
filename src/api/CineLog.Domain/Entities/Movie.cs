@@ -22,7 +22,6 @@ public class Movie
     public decimal AverageRating { get; private set; }
     public int RatingsCount { get; private set; }
 
-    // Extended fields
     public string? ImdbId { get; private set; }
     public string? OriginalTitle { get; private set; }
     public string? OriginalLanguage { get; private set; }
