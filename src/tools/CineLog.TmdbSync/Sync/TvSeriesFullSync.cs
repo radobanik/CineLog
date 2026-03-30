@@ -1,16 +1,14 @@
+using CineLog.Domain.Entities;
 using CineLog.Domain.Enums;
 using CineLog.TmdbSync.Data;
-using CineLog.TmdbSync.Entities;
 using CineLog.TmdbSync.Infrastructure;
 using DM.MovieApi.MovieDb.TV;
 using Microsoft.EntityFrameworkCore;
-using DomainMovie = CineLog.Domain.Entities.Movie;
 
 namespace CineLog.TmdbSync.Sync;
 
 public class TvSeriesFullSync(
-    TmdbSyncDbContext appDb,
-    TmdbSchemaDbContext tmdbDb,
+    TmdbSyncDbContext db,
     IApiTVShowRequest tvApi,
     TmdbDirectClient directClient,
     TmdbRateLimiter rateLimiter,
@@ -62,8 +60,58 @@ public class TvSeriesFullSync(
     {
         try
         {
-            await SyncPublicMovieAsync(info, ct);
-            await SyncTvDetailsAsync(info, ct);
+            await rateLimiter.ThrottleAsync(ct);
+            var detail = await RetryHelper.ExecuteAsync(() => tvApi.FindByIdAsync(info.Id), ct: ct);
+            if (detail.Item is null) return;
+
+            var d = detail.Item;
+            var runtime = d.EpisodeRunTime?.FirstOrDefault();
+            var existing = await db.Movies.FirstOrDefaultAsync(m => m.TmdbId == info.Id, ct);
+
+            if (existing is null)
+            {
+                var show = Movie.Create(info.Id, info.Name, MovieType.Series);
+                show.UpdateDetails(
+                    info.Overview,
+                    info.PosterPath,
+                    info.BackdropPath,
+                    info.FirstAirDate == default ? null : DateOnly.FromDateTime(info.FirstAirDate),
+                    runtime is 0 ? null : runtime,
+                    d.Genres.Select(g => g.Name),
+                    originalLanguage: d.OriginalLanguage,
+                    numberOfSeasons: d.NumberOfSeasons,
+                    numberOfEpisodes: d.NumberOfEpisodes);
+                show.UpdateAverageRating((decimal)info.VoteAverage, info.VoteCount);
+                show.UpdatePopularity(info.Popularity);
+                db.Movies.Add(show);
+                await db.SaveChangesAsync(ct);
+
+                await SyncCreditsAsync(show.Id, info.Id, ct);
+                await SyncProductionCompaniesAsync(show.Id, d.ProductionCompanies, ct);
+            }
+            else
+            {
+                existing.UpdateAverageRating((decimal)info.VoteAverage, info.VoteCount);
+                existing.UpdatePopularity(info.Popularity);
+
+                if (!existing.IsManuallyEdited)
+                {
+                    existing.UpdateDetails(
+                        info.Overview,
+                        info.PosterPath,
+                        info.BackdropPath,
+                        info.FirstAirDate == default ? null : DateOnly.FromDateTime(info.FirstAirDate),
+                        runtime is 0 ? null : runtime,
+                        d.Genres.Select(g => g.Name),
+                        originalLanguage: d.OriginalLanguage,
+                        numberOfSeasons: d.NumberOfSeasons,
+                        numberOfEpisodes: d.NumberOfEpisodes);
+                }
+
+                await db.SaveChangesAsync(ct);
+                await SyncCreditsAsync(existing.Id, info.Id, ct);
+                await SyncProductionCompaniesAsync(existing.Id, d.ProductionCompanies, ct);
+            }
         }
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
@@ -72,128 +120,23 @@ public class TvSeriesFullSync(
         }
     }
 
-    private async Task SyncPublicMovieAsync(TVShowInfo info, CancellationToken ct)
-    {
-        var existing = await appDb.Movies.FirstOrDefaultAsync(m => m.TmdbId == info.Id, ct);
-
-        if (existing is null)
-        {
-            await rateLimiter.ThrottleAsync(ct);
-            var detail = await RetryHelper.ExecuteAsync(() => tvApi.FindByIdAsync(info.Id), ct: ct);
-
-            var show = DomainMovie.Create(info.Id, info.Name, MovieType.Series);
-            var runtime = detail.Item?.EpisodeRunTime?.FirstOrDefault();
-            show.UpdateDetails(
-                info.Overview,
-                info.PosterPath,
-                info.BackdropPath,
-                info.FirstAirDate == default ? null : DateOnly.FromDateTime(info.FirstAirDate),
-                runtime is 0 ? null : runtime,
-                detail.Item?.Genres.Select(g => g.Name).ToList() ?? []);
-            show.UpdateAverageRating((decimal)info.VoteAverage, info.VoteCount);
-            appDb.Movies.Add(show);
-        }
-        else
-        {
-            existing.UpdateAverageRating((decimal)info.VoteAverage, info.VoteCount);
-        }
-
-        await appDb.SaveChangesAsync(ct);
-    }
-
-    private async Task SyncTvDetailsAsync(TVShowInfo info, CancellationToken ct)
-    {
-        await rateLimiter.ThrottleAsync(ct);
-        var detail = await RetryHelper.ExecuteAsync(() => tvApi.FindByIdAsync(info.Id), ct: ct);
-        if (detail.Item is null) return;
-
-        var d = detail.Item;
-        var runtime = d.EpisodeRunTime?.FirstOrDefault();
-
-        var existing = await tmdbDb.TvSeries.FindAsync([info.Id], ct);
-        if (existing is null)
-        {
-            tmdbDb.TvSeries.Add(new TmdbTvSeries
-            {
-                TmdbId = info.Id,
-                Title = info.Name,
-                Overview = info.Overview,
-                PosterPath = info.PosterPath,
-                BackdropPath = info.BackdropPath,
-                FirstAirDate = info.FirstAirDate == default ? null : DateOnly.FromDateTime(info.FirstAirDate),
-                EpisodeRuntime = runtime is 0 ? null : runtime,
-                OriginalLanguage = d.OriginalLanguage,
-                NumberOfSeasons = d.NumberOfSeasons,
-                NumberOfEpisodes = d.NumberOfEpisodes,
-                AverageRating = (decimal)info.VoteAverage,
-                RatingsCount = info.VoteCount,
-                Popularity = info.Popularity,
-                SyncedAt = DateTimeOffset.UtcNow
-            });
-        }
-        else
-        {
-            existing.AverageRating = (decimal)info.VoteAverage;
-            existing.RatingsCount = info.VoteCount;
-            existing.Popularity = info.Popularity;
-            existing.NumberOfSeasons = d.NumberOfSeasons;
-            existing.NumberOfEpisodes = d.NumberOfEpisodes;
-            existing.SyncedAt = DateTimeOffset.UtcNow;
-        }
-
-        await SyncTvGenresAsync(info.Id, d.Genres.Select(g => g.Id).ToList(), ct);
-        await SyncTvProductionCompaniesAsync(info.Id, d.ProductionCompanies, ct);
-        await SyncTvCreditsAsync(info.Id, ct);
-
-        await tmdbDb.SaveChangesAsync(ct);
-    }
-
-    private async Task SyncTvGenresAsync(int tmdbId, List<int> genreIds, CancellationToken ct)
-    {
-        var existingLinks = await tmdbDb.TvGenres.Where(g => g.TmdbTvId == tmdbId).ToListAsync(ct);
-        tmdbDb.TvGenres.RemoveRange(existingLinks);
-
-        foreach (var gid in genreIds)
-        {
-            if (!await tmdbDb.Genres.AnyAsync(g => g.Id == gid, ct))
-                tmdbDb.Genres.Add(new TmdbGenre { Id = gid, Name = "Unknown", IsTvGenre = true });
-            tmdbDb.TvGenres.Add(new TmdbTvGenre { TmdbTvId = tmdbId, GenreId = gid });
-        }
-    }
-
-    private async Task SyncTvProductionCompaniesAsync(
-        int tmdbId,
-        IEnumerable<DM.MovieApi.MovieDb.Companies.ProductionCompanyInfo> companies,
-        CancellationToken ct)
-    {
-        var existingLinks = await tmdbDb.TvProductionCompanies.Where(tp => tp.TmdbTvId == tmdbId).ToListAsync(ct);
-        tmdbDb.TvProductionCompanies.RemoveRange(existingLinks);
-
-        foreach (var c in companies)
-        {
-            if (!await tmdbDb.ProductionCompanies.AnyAsync(pc => pc.Id == c.Id, ct))
-                tmdbDb.ProductionCompanies.Add(new TmdbProductionCompany { Id = c.Id, Name = c.Name });
-            tmdbDb.TvProductionCompanies.Add(new TmdbTvProductionCompany { TmdbTvId = tmdbId, CompanyId = c.Id });
-        }
-    }
-
-    private async Task SyncTvCreditsAsync(int tmdbId, CancellationToken ct)
+    private async Task SyncCreditsAsync(Guid movieId, int tmdbId, CancellationToken ct)
     {
         await rateLimiter.ThrottleAsync(ct);
         var credits = await RetryHelper.ExecuteAsync(() => directClient.GetTvCreditsAsync(tmdbId, ct), ct: ct);
         if (credits is null) return;
 
-        var oldCast = await tmdbDb.TvCast.Where(c => c.TmdbTvId == tmdbId).ToListAsync(ct);
-        var oldCrew = await tmdbDb.TvCrew.Where(c => c.TmdbTvId == tmdbId).ToListAsync(ct);
-        tmdbDb.TvCast.RemoveRange(oldCast);
-        tmdbDb.TvCrew.RemoveRange(oldCrew);
+        var oldCast = await db.MovieCast.Where(c => c.MovieId == movieId).ToListAsync(ct);
+        var oldCrew = await db.MovieCrew.Where(c => c.MovieId == movieId).ToListAsync(ct);
+        db.MovieCast.RemoveRange(oldCast);
+        db.MovieCrew.RemoveRange(oldCrew);
 
         foreach (var member in credits.Cast)
         {
             await EnsurePersonAsync(member.Id, ct);
-            tmdbDb.TvCast.Add(new TmdbTvCast
+            db.MovieCast.Add(new MovieCast
             {
-                TmdbTvId = tmdbId,
+                MovieId = movieId,
                 PersonId = member.Id,
                 Character = member.Character,
                 Order = member.Order,
@@ -204,20 +147,40 @@ public class TvSeriesFullSync(
         foreach (var member in credits.Crew)
         {
             await EnsurePersonAsync(member.Id, ct);
-            tmdbDb.TvCrew.Add(new TmdbTvCrew
+            db.MovieCrew.Add(new MovieCrew
             {
-                TmdbTvId = tmdbId,
+                MovieId = movieId,
                 PersonId = member.Id,
                 Department = member.Department,
                 Job = member.Job,
                 CreditId = member.CreditId
             });
         }
+
+        await db.SaveChangesAsync(ct);
+    }
+
+    private async Task SyncProductionCompaniesAsync(
+        Guid movieId,
+        IEnumerable<DM.MovieApi.MovieDb.Companies.ProductionCompanyInfo> companies,
+        CancellationToken ct)
+    {
+        var oldLinks = await db.MovieProductionCompanies.Where(mp => mp.MovieId == movieId).ToListAsync(ct);
+        db.MovieProductionCompanies.RemoveRange(oldLinks);
+
+        foreach (var c in companies)
+        {
+            if (!await db.ProductionCompanies.AnyAsync(pc => pc.Id == c.Id, ct))
+                db.ProductionCompanies.Add(new ProductionCompany { Id = c.Id, Name = c.Name });
+            db.MovieProductionCompanies.Add(new MovieProductionCompany { MovieId = movieId, CompanyId = c.Id });
+        }
+
+        await db.SaveChangesAsync(ct);
     }
 
     private async Task EnsurePersonAsync(int personId, CancellationToken ct)
     {
-        if (!await tmdbDb.Persons.AnyAsync(p => p.Id == personId, ct))
-            tmdbDb.Persons.Add(new TmdbPerson { Id = personId, Name = "Unknown", SyncedAt = DateTimeOffset.UtcNow });
+        if (!await db.Persons.AnyAsync(p => p.Id == personId, ct))
+            db.Persons.Add(new Person { Id = personId, Name = "Unknown", SyncedAt = DateTimeOffset.UtcNow });
     }
 }

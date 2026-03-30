@@ -26,7 +26,6 @@ public class SyncWorker(
             using var scope = scopeFactory.CreateScope();
             var sp = scope.ServiceProvider;
 
-            await sp.GetRequiredService<GenreSync>().SyncAsync(ct);
             await sp.GetRequiredService<MovieFullSync>().SyncAsync(ct);
             await sp.GetRequiredService<TvSeriesFullSync>().SyncAsync(ct);
             await sp.GetRequiredService<PersonSync>().SyncAsync(ct);

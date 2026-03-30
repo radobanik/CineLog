@@ -3,7 +3,7 @@ using CineLog.TmdbSync.Entities;
 
 namespace CineLog.TmdbSync.Infrastructure;
 
-public class FailureTracker(TmdbSchemaDbContext db)
+public class FailureTracker(TmdbSyncDbContext db)
 {
     public async Task RecordAsync(string syncType, int tmdbId, Exception ex, CancellationToken ct = default)
     {

@@ -1,5 +1,4 @@
 using CineLog.TmdbSync.Data;
-using CineLog.TmdbSync.Entities;
 using CineLog.TmdbSync.Infrastructure;
 using DM.MovieApi.MovieDb.People;
 using Microsoft.EntityFrameworkCore;
@@ -10,19 +9,16 @@ namespace CineLog.TmdbSync.Sync;
 /// Enriches person records that were added during cast/crew sync with full details from TMDb.
 /// </summary>
 public class PersonSync(
-    TmdbSchemaDbContext db,
+    TmdbSyncDbContext db,
     IApiPeopleRequest peopleApi,
     TmdbRateLimiter rateLimiter,
     FailureTracker failures,
-    ILogger<PersonSync> logger,
-    IConfiguration configuration)
+    ILogger<PersonSync> logger)
 {
     private const string SyncType = "persons";
-    private readonly int _batchSize = configuration.GetValue("Sync:BatchSize", 5);
 
     public async Task SyncAsync(CancellationToken ct)
     {
-        // Enrich persons that haven't been fully synced yet (no biography fetched)
         var stalePersonIds = await db.Persons
             .Where(p => p.Biography == null)
             .OrderBy(p => p.SyncedAt)
@@ -57,7 +53,6 @@ public class PersonSync(
 
             var d = detail.Item;
             var existing = await db.Persons.FindAsync([personId], ct);
-
             if (existing is null) return;
 
             existing.Name = d.Name;

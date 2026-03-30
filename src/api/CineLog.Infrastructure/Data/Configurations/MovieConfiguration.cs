@@ -32,6 +32,18 @@ public class MovieConfiguration : IEntityTypeConfiguration<Movie>
 
         builder.Property(m => m.RatingsCount);
 
+        builder.Property(m => m.ImdbId).HasMaxLength(20);
+        builder.Property(m => m.OriginalTitle).HasMaxLength(500);
+        builder.Property(m => m.OriginalLanguage).HasMaxLength(10);
+        builder.Property(m => m.Tagline).HasMaxLength(500);
+        builder.Property(m => m.Status).HasMaxLength(50);
+        builder.Property(m => m.Budget);
+        builder.Property(m => m.Revenue).HasPrecision(18, 2);
+        builder.Property(m => m.Popularity);
+        builder.Property(m => m.NumberOfSeasons);
+        builder.Property(m => m.NumberOfEpisodes);
+        builder.Property(m => m.IsManuallyEdited);
+
         // Genres stored as jsonb — backed by private List<string> _genres field
         builder.Property<List<string>>("_genres")
             .HasColumnName("genres")
@@ -42,5 +54,20 @@ public class MovieConfiguration : IEntityTypeConfiguration<Movie>
                     v => JsonSerializer.Deserialize<List<string>>(v, JsonOptions) ?? new List<string>()
                 )
             );
+
+        builder.HasMany(m => m.Cast)
+            .WithOne(c => c.Movie)
+            .HasForeignKey(c => c.MovieId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasMany(m => m.Crew)
+            .WithOne(c => c.Movie)
+            .HasForeignKey(c => c.MovieId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasMany(m => m.ProductionCompanies)
+            .WithOne(p => p.Movie)
+            .HasForeignKey(p => p.MovieId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

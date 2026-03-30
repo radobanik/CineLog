@@ -3,7 +3,6 @@ using CineLog.TmdbSync.Infrastructure;
 using CineLog.TmdbSync.Sync;
 using DM.MovieApi;
 using DM.MovieApi.MovieDb.Discover;
-using DM.MovieApi.MovieDb.Genres;
 using DM.MovieApi.MovieDb.Movies;
 using DM.MovieApi.MovieDb.People;
 using DM.MovieApi.MovieDb.TV;
@@ -32,16 +31,12 @@ try
     MovieDbFactory.RegisterSettings(bearerToken);
     builder.Services.AddSingleton(_ => MovieDbFactory.Create<IApiMovieRequest>().Value);
     builder.Services.AddSingleton(_ => MovieDbFactory.Create<IApiTVShowRequest>().Value);
-    builder.Services.AddSingleton(_ => MovieDbFactory.Create<IApiGenreRequest>().Value);
     builder.Services.AddSingleton(_ => MovieDbFactory.Create<IApiPeopleRequest>().Value);
     builder.Services.AddSingleton(_ => MovieDbFactory.Create<IApiDiscoverRequest>().Value);
     builder.Services.AddSingleton(new TmdbDirectClient(bearerToken));
 
-    // Database contexts
+    // Database context
     builder.Services.AddDbContext<TmdbSyncDbContext>(options =>
-        options.UseNpgsql(connectionString));
-
-    builder.Services.AddDbContext<TmdbSchemaDbContext>(options =>
         options.UseNpgsql(connectionString));
 
     // Infrastructure
@@ -50,22 +45,12 @@ try
     builder.Services.AddScoped<FailureTracker>();
 
     // Sync services
-    builder.Services.AddScoped<GenreSync>();
     builder.Services.AddScoped<MovieFullSync>();
     builder.Services.AddScoped<TvSeriesFullSync>();
     builder.Services.AddScoped<PersonSync>();
     builder.Services.AddHostedService<SyncWorker>();
 
-    var host = builder.Build();
-
-    // Ensure tmdb schema tables exist
-    using (var scope = host.Services.CreateScope())
-    {
-        var tmdbCtx = scope.ServiceProvider.GetRequiredService<TmdbSchemaDbContext>();
-        await tmdbCtx.Database.EnsureCreatedAsync();
-    }
-
-    await host.RunAsync();
+    await builder.Build().RunAsync();
 }
 catch (Exception ex)
 {

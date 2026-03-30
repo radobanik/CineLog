@@ -1,6 +1,6 @@
-namespace CineLog.TmdbSync.Entities;
+namespace CineLog.Domain.Entities;
 
-public class TmdbProductionCompany
+public class ProductionCompany
 {
     public int Id { get; set; }
     public string Name { get; set; } = null!;

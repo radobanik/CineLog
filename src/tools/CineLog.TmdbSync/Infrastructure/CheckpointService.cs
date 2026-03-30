@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CineLog.TmdbSync.Infrastructure;
 
-public class CheckpointService(TmdbSchemaDbContext db)
+public class CheckpointService(TmdbSyncDbContext db)
 {
     public async Task<int> GetLastPageAsync(string syncType, CancellationToken ct = default)
     {
