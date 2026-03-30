@@ -14,7 +14,7 @@ public record MovieDetailResponse(
     int? RuntimeMinutes,
     decimal AverageRating,
     int RatingsCount,
-    List<string> Genres,
+    List<GenreResponse> Genres,
     string? ImdbId,
     string? OriginalTitle,
     string? OriginalLanguage,
@@ -28,6 +28,8 @@ public record MovieDetailResponse(
     List<CastMemberResponse> Cast,
     List<CrewMemberResponse> Crew,
     List<ProductionCompanyResponse> ProductionCompanies);
+
+public record GenreResponse(int Id, string Name);
 
 public record CastMemberResponse(
     int PersonId,

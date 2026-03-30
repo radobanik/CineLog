@@ -43,14 +43,14 @@ public class SearchMoviesHandler : IRequestHandler<SearchMoviesQuery, PagedRespo
         if (existing is not null)
         {
             existing.UpdateDetails(data.Overview, data.PosterPath, data.BackdropPath,
-                data.ReleaseDate, data.RuntimeMinutes, data.Genres);
+                data.ReleaseDate, data.RuntimeMinutes);
             await _movieRepository.UpdateAsync(existing, ct);
             return existing;
         }
 
         var movie = Movie.Create(data.TmdbId, data.Title, data.Type);
         movie.UpdateDetails(data.Overview, data.PosterPath, data.BackdropPath,
-            data.ReleaseDate, data.RuntimeMinutes, data.Genres);
+            data.ReleaseDate, data.RuntimeMinutes);
         await _movieRepository.AddAsync(movie, ct);
         return movie;
     }

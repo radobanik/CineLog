@@ -14,6 +14,7 @@ public class GetMovieDetailHandler : IRequestHandler<GetMovieDetailQuery, MovieD
     public async Task<MovieDetailResponse> Handle(GetMovieDetailQuery request, CancellationToken cancellationToken)
     {
         var movie = await _db.Movies
+            .Include(m => m.Genres).ThenInclude(mg => mg.Genre)
             .Include(m => m.Cast).ThenInclude(c => c.Person)
             .Include(m => m.Crew).ThenInclude(c => c.Person)
             .Include(m => m.ProductionCompanies).ThenInclude(p => p.Company)
@@ -33,7 +34,7 @@ public class GetMovieDetailHandler : IRequestHandler<GetMovieDetailQuery, MovieD
             movie.RuntimeMinutes,
             movie.AverageRating,
             movie.RatingsCount,
-            movie.Genres.ToList(),
+            movie.Genres.Select(mg => new GenreResponse(mg.Genre.Id, mg.Genre.Name)).ToList(),
             movie.ImdbId,
             movie.OriginalTitle,
             movie.OriginalLanguage,
