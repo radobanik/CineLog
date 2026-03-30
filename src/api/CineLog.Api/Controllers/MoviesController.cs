@@ -11,7 +11,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace CineLog.Api.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Authorize]
+[Route("api/movies")]
 public class MoviesController : ControllerBase
 {
     private readonly ISender _sender;
@@ -20,7 +21,6 @@ public class MoviesController : ControllerBase
 
     /// <summary>Get movie detail by id.</summary>
     [HttpGet("{id:guid}")]
-    [Authorize]
     [ProducesResponseType(typeof(MovieDetailResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<MovieDetailResponse>> GetById(Guid id, CancellationToken ct)
@@ -28,7 +28,6 @@ public class MoviesController : ControllerBase
 
     /// <summary>Search movies via TMDb.</summary>
     [HttpGet("search")]
-    [Authorize]
     [ProducesResponseType(typeof(PagedResponse<MovieSummaryResponse>), StatusCodes.Status200OK)]
     public async Task<ActionResult<PagedResponse<MovieSummaryResponse>>> Search(
         [FromQuery] string query,
@@ -37,7 +36,7 @@ public class MoviesController : ControllerBase
         CancellationToken ct = default)
         => Ok(await _sender.Send(new SearchMoviesQuery(query, page, pageSize), ct));
 
-    /// <summary>Get top rated movies.</summary>
+    /// <summary>Get top-rated movies.</summary>
     [HttpGet("top-rated")]
     [ProducesResponseType(typeof(List<MovieSummaryResponse>), StatusCodes.Status200OK)]
     public async Task<ActionResult<List<MovieSummaryResponse>>> GetTopRated(

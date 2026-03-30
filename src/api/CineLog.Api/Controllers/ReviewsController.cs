@@ -13,6 +13,7 @@ namespace CineLog.Api.Controllers;
 
 [ApiController]
 [Authorize]
+[Route("api/reviews")]
 public class ReviewsController : ControllerBase
 {
     private readonly ISender _sender;
