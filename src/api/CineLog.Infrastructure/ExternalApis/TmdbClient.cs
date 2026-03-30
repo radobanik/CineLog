@@ -68,7 +68,6 @@ public class TmdbClient : ITmdbClient
         );
     }
 
-    // Internal DTOs for TMDb API deserialization
     private record TmdbSearchResponse(
         [property: JsonPropertyName("results")] List<TmdbMovieItem>? Results
     );

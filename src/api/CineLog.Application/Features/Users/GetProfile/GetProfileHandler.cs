@@ -33,7 +33,7 @@ public class GetProfileHandler : IRequestHandler<GetProfileQuery, UserProfileRes
 
         return new UserProfileResponse(
             user.Id,
-            user.Username.Value,
+            user.UserName!,
             user.Bio,
             user.AvatarUrl,
             filmsCount,

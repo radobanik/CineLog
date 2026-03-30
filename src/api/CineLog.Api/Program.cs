@@ -14,7 +14,7 @@ using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// ── Serilog ───────────────────────────────────────────────────────────────────
+// Serilog
 builder.Host.UseSerilog((ctx, config) =>
     config.ReadFrom.Configuration(ctx.Configuration)
           .Enrich.FromLogContext()
@@ -23,33 +23,29 @@ builder.Host.UseSerilog((ctx, config) =>
           .WriteTo.Console()
           .WriteTo.File("logs/cinelog-.txt", rollingInterval: Serilog.RollingInterval.Day));
 
-// ── Application + Infrastructure ─────────────────────────────────────────────
 builder.Services
     .AddApplication()
     .AddInfrastructure(builder.Configuration);
 
-// ── Auth ──────────────────────────────────────────────────────────────────────
+// Auth
 builder.Services.AddJwtAuth(builder.Configuration);
 builder.Services.AddAuthorization();
 
-// ── MVC ───────────────────────────────────────────────────────────────────────
+// MVC
 builder.Services.AddControllers();
 
-// ── SignalR (already registered in AddInfrastructure, but ensure hub is mapped)
-// builder.Services.AddSignalR(); — already called in AddInfrastructure
-
-// ── Exception handling ────────────────────────────────────────────────────────
+// Exception handling
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
 
-// ── HTTP context + current user ───────────────────────────────────────────────
+// HTTP context + current user
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 
-// ── Swagger ───────────────────────────────────────────────────────────────────
+// Swagger
 builder.Services.AddSwaggerWithJwt();
 
-// ── Health checks ─────────────────────────────────────────────────────────────
+// Connection strings
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? string.Empty;
 var redisConnectionString = builder.Configuration.GetConnectionString("Redis") ?? string.Empty;
 
@@ -57,7 +53,7 @@ builder.Services.AddHealthChecks()
     .AddNpgSql(connectionString, name: "postgres")
     .AddRedis(redisConnectionString, name: "redis");
 
-// ── Rate limiting ─────────────────────────────────────────────────────────────
+// Rate limiting
 builder.Services.AddRateLimiter(options =>
 {
     options.AddFixedWindowLimiter("auth", limiterOptions =>
@@ -70,16 +66,16 @@ builder.Services.AddRateLimiter(options =>
     options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
 });
 
-// ─────────────────────────────────────────────────────────────────────────────
 var app = builder.Build();
 
-// ── Auto-migrate on startup ───────────────────────────────────────────────────
+// Auto-migrate
 using (var scope = app.Services.CreateScope())
 {
     try
     {
         var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
         await db.Database.MigrateAsync();
+        await DatabaseSeeder.SeedAsync(scope.ServiceProvider);
     }
     catch (Exception ex)
     {
@@ -88,7 +84,7 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
-// ── Middleware pipeline ───────────────────────────────────────────────────────
+// Middleware pipeline
 app.UseExceptionHandler();
 app.UseSerilogRequestLogging();
 app.UseMiddleware<CorrelationIdMiddleware>();

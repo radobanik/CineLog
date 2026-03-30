@@ -74,7 +74,7 @@ public class CreateReviewHandler : IRequestHandler<CreateReviewCommand, ReviewRe
         return new ReviewResponse(
             review.Id,
             review.UserId,
-            user.Username.Value,
+            user.UserName!,
             movie.Title,
             review.Rating.Value,
             review.ReviewText,

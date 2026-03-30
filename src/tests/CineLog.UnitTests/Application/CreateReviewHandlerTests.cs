@@ -43,7 +43,7 @@ public class CreateReviewHandlerTests
 
         var userId = Guid.NewGuid();
         var movieId = Guid.NewGuid();
-        var user = User.Create("testuser", "test@example.com", "hash");
+        var user = new User { Id = Guid.NewGuid(), UserName = "testuser", Email = "test@example.com" };
         var movie = Movie.Create(12345, "Test Movie", MovieType.Movie);
 
         currentUser.UserId.Returns(userId);
@@ -64,7 +64,7 @@ public class CreateReviewHandlerTests
         result.Should().NotBeNull();
         result.Rating.Should().Be(4.0m);
         result.MovieTitle.Should().Be("Test Movie");
-        result.Username.Should().Be(user.Username.Value);
+        result.Username.Should().Be(user.UserName);
     }
 
     [Fact]
@@ -75,7 +75,7 @@ public class CreateReviewHandlerTests
         var userId = Guid.NewGuid();
         currentUser.UserId.Returns(userId);
         userRepo.GetByIdAsync(userId, Arg.Any<CancellationToken>())
-            .Returns(User.Create("testuser", "u@x.com", "hash"));
+            .Returns(new User { Id = Guid.NewGuid(), UserName = "testuser", Email = "u@x.com" });
         movieRepo.GetByIdAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>())
             .Returns((Movie?)null);
 
@@ -96,7 +96,7 @@ public class CreateReviewHandlerTests
 
         currentUser.UserId.Returns(userId);
         userRepo.GetByIdAsync(userId, Arg.Any<CancellationToken>())
-            .Returns(User.Create("testuser", "u@x.com", "hash"));
+            .Returns(new User { Id = Guid.NewGuid(), UserName = "testuser", Email = "u@x.com" });
         movieRepo.GetByIdAsync(movieId, Arg.Any<CancellationToken>())
             .Returns(Movie.Create(1, "Film", MovieType.Movie));
 

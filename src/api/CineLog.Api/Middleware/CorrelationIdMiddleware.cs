@@ -2,6 +2,13 @@ using Serilog.Context;
 
 namespace CineLog.Api.Middleware;
 
+/// <summary>
+/// Attaches a unique ID to every request.
+/// If the client sends an X-Correlation-Id header, that ID is reused.
+/// Otherwise, a new one is generated.
+/// The ID is added to the response headers and to every log line for that request,
+/// so you can trace a single request across client and server logs.
+/// </summary>
 public class CorrelationIdMiddleware
 {
     private const string CorrelationIdHeader = "X-Correlation-Id";

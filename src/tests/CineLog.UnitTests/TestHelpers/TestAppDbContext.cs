@@ -1,5 +1,7 @@
 using CineLog.Domain.Entities;
 using CineLog.Domain.Interfaces;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace CineLog.UnitTests.TestHelpers;
@@ -7,11 +9,10 @@ namespace CineLog.UnitTests.TestHelpers;
 /// <summary>
 /// Lightweight DbContext backed by the InMemory provider for unit tests.
 /// </summary>
-public class TestAppDbContext : DbContext, IAppDbContext
+public class TestAppDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid>, IAppDbContext
 {
     public TestAppDbContext(DbContextOptions<TestAppDbContext> options) : base(options) { }
 
-    public DbSet<User> Users => Set<User>();
     public DbSet<Movie> Movies => Set<Movie>();
     public DbSet<Review> Reviews => Set<Review>();
     public DbSet<ReviewReaction> ReviewReactions => Set<ReviewReaction>();
@@ -26,11 +27,7 @@ public class TestAppDbContext : DbContext, IAppDbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<User>(b =>
-        {
-            b.HasKey(u => u.Id);
-            b.OwnsOne(u => u.Username, n => n.Property(x => x.Value));
-        });
+        base.OnModelCreating(modelBuilder);
 
         modelBuilder.Entity<Movie>(b =>
         {

@@ -1,30 +1,34 @@
-using BCrypt.Net;
+using CineLog.Domain.Entities;
+using CineLog.Domain.Enums;
 using CineLog.Domain.Exceptions;
-using CineLog.Domain.Repositories;
 using MediatR;
+using Microsoft.AspNetCore.Identity;
 
 namespace CineLog.Application.Features.Auth.Login;
 
 public class LoginHandler : IRequestHandler<LoginCommand, AuthResponse>
 {
-    private readonly IUserRepository _userRepository;
+    private readonly UserManager<User> _userManager;
     private readonly IJwtService _jwtService;
 
-    public LoginHandler(IUserRepository userRepository, IJwtService jwtService)
+    public LoginHandler(UserManager<User> userManager, IJwtService jwtService)
     {
-        _userRepository = userRepository;
+        _userManager = userManager;
         _jwtService = jwtService;
     }
 
     public async Task<AuthResponse> Handle(LoginCommand request, CancellationToken cancellationToken)
     {
-        var user = await _userRepository.GetByEmailAsync(request.Email, cancellationToken)
+        var user = await _userManager.FindByEmailAsync(request.Email)
             ?? throw new NotFoundException($"User with email '{request.Email}' not found.");
 
-        if (!BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
+        if (!await _userManager.CheckPasswordAsync(user, request.Password))
             throw new UnauthorizedAccessException("Invalid credentials.");
 
-        var token = _jwtService.GenerateToken(user.Id, user.Username.Value, user.Email, user.Role.ToString());
-        return new AuthResponse(token, user.Id, user.Username.Value);
+        var roles = await _userManager.GetRolesAsync(user);
+        var role = roles.FirstOrDefault() ?? UserRoles.User;
+
+        var token = _jwtService.GenerateToken(user.Id, user.UserName!, user.Email!, role);
+        return new AuthResponse(token, user.Id, user.UserName!);
     }
 }

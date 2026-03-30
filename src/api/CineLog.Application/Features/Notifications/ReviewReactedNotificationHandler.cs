@@ -26,10 +26,10 @@ public class ReviewReactedNotificationHandler : INotificationHandler<ReviewReact
 
         var reactingUser = await _context.Users
             .Where(u => u.Id == notification.ReactedByUserId)
-            .Select(u => new { Username = u.Username.Value })
+            .Select(u => new { u.UserName })
             .FirstOrDefaultAsync(cancellationToken);
 
-        var username = reactingUser?.Username ?? "Someone";
+        var username = reactingUser?.UserName ?? "Someone";
         var reactionType = notification.ReactionType.ToString().ToLower();
 
         await _notificationService.SendAsync(

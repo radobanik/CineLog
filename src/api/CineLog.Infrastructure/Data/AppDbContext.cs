@@ -1,12 +1,13 @@
 using CineLog.Domain.Entities;
 using CineLog.Domain.Interfaces;
-using CineLog.Infrastructure.Data.Configurations;
 using EFCoreSecondLevelCacheInterceptor;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace CineLog.Infrastructure.Data;
 
-public class AppDbContext : DbContext, IAppDbContext
+public class AppDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid>, IAppDbContext
 {
     private readonly SecondLevelCacheInterceptor _cacheInterceptor;
 
@@ -17,7 +18,6 @@ public class AppDbContext : DbContext, IAppDbContext
         _cacheInterceptor = cacheInterceptor;
     }
 
-    public DbSet<User> Users => Set<User>();
     public DbSet<Movie> Movies => Set<Movie>();
     public DbSet<Review> Reviews => Set<Review>();
     public DbSet<ReviewReaction> ReviewReactions => Set<ReviewReaction>();

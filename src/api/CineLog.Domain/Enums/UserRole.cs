@@ -1,7 +1,7 @@
 namespace CineLog.Domain.Enums;
 
-public enum UserRole
+public static class UserRoles
 {
-    User = 0,
-    Admin = 1
+    public const string User = "User";
+    public const string Admin = "Admin";
 }

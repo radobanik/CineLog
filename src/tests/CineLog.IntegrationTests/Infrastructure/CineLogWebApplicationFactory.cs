@@ -25,8 +25,6 @@ public class CineLogWebApplicationFactory : WebApplicationFactory<Program>, IAsy
     {
         builder.ConfigureServices(services =>
         {
-            // ── Replace AppDbContext with Testcontainers connection ────────────
-            // Remove all descriptors that configure DbContextOptions<AppDbContext>
             var toRemove = services
                 .Where(d =>
                     d.ServiceType == typeof(DbContextOptions<AppDbContext>) ||
@@ -40,7 +38,6 @@ public class CineLogWebApplicationFactory : WebApplicationFactory<Program>, IAsy
                     npgsql.MigrationsAssembly(typeof(AppDbContext).Assembly.FullName));
             });
 
-            // ── Replace Redis IDistributedCache with in-memory ─────────────────
             services.RemoveAll<IDistributedCache>();
             services.AddDistributedMemoryCache();
         });

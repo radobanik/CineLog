@@ -10,33 +10,8 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
     {
         builder.ToTable("users");
 
-        builder.HasKey(u => u.Id);
-
-        builder.OwnsOne(u => u.Username, username =>
-        {
-            username.Property(u => u.Value)
-                .HasColumnName("username")
-                .HasColumnType("varchar(30)")
-                .IsRequired();
-        });
-
-        builder.Property(u => u.Email)
-            .HasMaxLength(256)
-            .IsRequired();
-
-        builder.HasIndex(u => u.Email)
-            .IsUnique();
-
-        builder.Property(u => u.PasswordHash)
-            .IsRequired();
-
         builder.Property(u => u.Bio);
         builder.Property(u => u.AvatarUrl);
-        builder.Property(u => u.Role)
-            .HasConversion<string>()
-            .HasMaxLength(20)
-            .IsRequired()
-            .HasDefaultValue(Domain.Enums.UserRole.User);
         builder.Property(u => u.CreatedAt).IsRequired();
 
         builder.HasMany(u => u.Reviews)
