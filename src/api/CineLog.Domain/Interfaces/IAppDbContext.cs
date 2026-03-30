@@ -10,6 +10,8 @@ public interface IAppDbContext
     DbSet<Review> Reviews { get; }
     DbSet<ReviewReaction> ReviewReactions { get; }
     DbSet<UserFollow> UserFollows { get; }
+    DbSet<Genre> Genres { get; }
+    DbSet<MovieGenre> MovieGenres { get; }
     DbSet<Person> Persons { get; }
     DbSet<MovieCast> MovieCast { get; }
     DbSet<MovieCrew> MovieCrew { get; }

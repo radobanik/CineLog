@@ -4,7 +4,7 @@ namespace CineLog.Domain.Entities;
 
 public class Movie
 {
-    private List<string> _genres = [];
+    private readonly List<MovieGenre> _genres = [];
     private readonly List<Review> _reviews = [];
     private readonly List<MovieCast> _cast = [];
     private readonly List<MovieCrew> _crew = [];
@@ -36,7 +36,7 @@ public class Movie
 
     public bool IsManuallyEdited { get; private set; }
 
-    public IReadOnlyCollection<string> Genres => _genres.AsReadOnly();
+    public IReadOnlyCollection<MovieGenre> Genres => _genres.AsReadOnly();
     public IReadOnlyCollection<MovieCast> Cast => _cast.AsReadOnly();
     public IReadOnlyCollection<MovieCrew> Crew => _crew.AsReadOnly();
     public IReadOnlyCollection<MovieProductionCompany> ProductionCompanies => _productionCompanies.AsReadOnly();
@@ -60,7 +60,6 @@ public class Movie
         string? backdropPath,
         DateOnly? releaseDate,
         int? runtimeMinutes,
-        IEnumerable<string> genres,
         string? imdbId = null,
         string? originalTitle = null,
         string? originalLanguage = null,
@@ -76,8 +75,6 @@ public class Movie
         BackdropPath = backdropPath;
         ReleaseDate = releaseDate;
         RuntimeMinutes = runtimeMinutes;
-        _genres.Clear();
-        _genres.AddRange(genres);
         ImdbId = imdbId;
         OriginalTitle = originalTitle;
         OriginalLanguage = originalLanguage;

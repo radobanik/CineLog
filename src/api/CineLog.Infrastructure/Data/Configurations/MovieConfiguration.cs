@@ -1,15 +1,11 @@
-using System.Text.Json;
 using CineLog.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CineLog.Infrastructure.Data.Configurations;
 
 public class MovieConfiguration : IEntityTypeConfiguration<Movie>
 {
-    private static readonly JsonSerializerOptions JsonOptions = new();
-
     public void Configure(EntityTypeBuilder<Movie> builder)
     {
         builder.ToTable("movies");
@@ -43,17 +39,6 @@ public class MovieConfiguration : IEntityTypeConfiguration<Movie>
         builder.Property(m => m.NumberOfSeasons);
         builder.Property(m => m.NumberOfEpisodes);
         builder.Property(m => m.IsManuallyEdited);
-
-        // Genres stored as jsonb — backed by private List<string> _genres field
-        builder.Property<List<string>>("_genres")
-            .HasColumnName("genres")
-            .HasColumnType("jsonb")
-            .HasConversion(
-                new ValueConverter<List<string>, string>(
-                    v => JsonSerializer.Serialize(v, JsonOptions),
-                    v => JsonSerializer.Deserialize<List<string>>(v, JsonOptions) ?? new List<string>()
-                )
-            );
 
         builder.HasMany(m => m.Cast)
             .WithOne(c => c.Movie)

@@ -17,6 +17,8 @@ public class TestAppDbContext : DbContext, IAppDbContext
     public DbSet<Review> Reviews => Set<Review>();
     public DbSet<ReviewReaction> ReviewReactions => Set<ReviewReaction>();
     public DbSet<UserFollow> UserFollows => Set<UserFollow>();
+    public DbSet<Genre> Genres => Set<Genre>();
+    public DbSet<MovieGenre> MovieGenres => Set<MovieGenre>();
     public DbSet<Person> Persons => Set<Person>();
     public DbSet<MovieCast> MovieCast => Set<MovieCast>();
     public DbSet<MovieCrew> MovieCrew => Set<MovieCrew>();
