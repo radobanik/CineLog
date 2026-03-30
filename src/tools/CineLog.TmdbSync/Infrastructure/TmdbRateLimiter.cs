@@ -1,15 +1,21 @@
 namespace CineLog.TmdbSync.Infrastructure;
 
 /// <summary>
-/// Sliding-window rate limiter: 38 requests per 10 seconds (safely under TMDb's 40/10s limit).
+/// Simple fixed-interval rate limiter: enforces a minimum delay between every request
+/// so we never burst anywhere near TMDb's 40-requests-per-10-second limit.
+/// Default: 400 ms between requests ≈ 25 req/10 s.
 /// </summary>
 public sealed class TmdbRateLimiter : IDisposable
 {
-    private const int MaxRequests = 38;
-    private static readonly TimeSpan WindowSize = TimeSpan.FromSeconds(10);
-
+    private readonly TimeSpan _minInterval;
     private readonly SemaphoreSlim _lock = new(1, 1);
-    private readonly Queue<DateTimeOffset> _requestTimestamps = new();
+    private DateTimeOffset _lastRequest = DateTimeOffset.MinValue;
+
+    public TmdbRateLimiter(IConfiguration configuration)
+    {
+        var ms = configuration.GetValue("Sync:RequestIntervalMs", 400);
+        _minInterval = TimeSpan.FromMilliseconds(ms);
+    }
 
     public async Task ThrottleAsync(CancellationToken ct = default)
     {
@@ -17,36 +23,15 @@ public sealed class TmdbRateLimiter : IDisposable
         try
         {
             var now = DateTimeOffset.UtcNow;
-            var windowStart = now - WindowSize;
+            var elapsed = now - _lastRequest;
+            if (elapsed < _minInterval)
+                await Task.Delay(_minInterval - elapsed, ct);
 
-            // Evict timestamps outside the current window
-            while (_requestTimestamps.Count > 0 && _requestTimestamps.Peek() <= windowStart)
-                _requestTimestamps.Dequeue();
-
-            if (_requestTimestamps.Count >= MaxRequests)
-            {
-                // Wait until the oldest request falls outside the window
-                var oldest = _requestTimestamps.Peek();
-                var waitUntil = oldest + WindowSize + TimeSpan.FromMilliseconds(50);
-                var delay = waitUntil - DateTimeOffset.UtcNow;
-                if (delay > TimeSpan.Zero)
-                {
-                    _lock.Release();
-                    await Task.Delay(delay, ct);
-                    await _lock.WaitAsync(ct);
-                }
-                now = DateTimeOffset.UtcNow;
-                windowStart = now - WindowSize;
-                while (_requestTimestamps.Count > 0 && _requestTimestamps.Peek() <= windowStart)
-                    _requestTimestamps.Dequeue();
-            }
-
-            _requestTimestamps.Enqueue(DateTimeOffset.UtcNow);
+            _lastRequest = DateTimeOffset.UtcNow;
         }
         finally
         {
-            if (_lock.CurrentCount == 0)
-                _lock.Release();
+            _lock.Release();
         }
     }
 
