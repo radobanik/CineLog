@@ -35,15 +35,10 @@ public class TvSeriesFullSync(
 
             if (!response.Results.Any()) break;
 
-            var tasks = response.Results
-                .Select(info => SyncTvSeriesAsync(info, ct))
-                .Chunk(_batchSize)
-                .Select(batch => Task.WhenAll(batch));
-
-            foreach (var batch in tasks)
+            foreach (var info in response.Results)
             {
                 if (ct.IsCancellationRequested) break;
-                await batch;
+                await SyncTvSeriesAsync(info, ct);
             }
 
             await checkpoints.SaveAsync(SyncType, page, response.TotalPages, ct);
@@ -77,7 +72,6 @@ public class TvSeriesFullSync(
                     info.BackdropPath,
                     info.FirstAirDate == default ? null : DateOnly.FromDateTime(info.FirstAirDate),
                     runtime is 0 ? null : runtime,
-                    d.Genres.Select(g => g.Name),
                     originalLanguage: d.OriginalLanguage,
                     numberOfSeasons: d.NumberOfSeasons,
                     numberOfEpisodes: d.NumberOfEpisodes);
@@ -86,6 +80,7 @@ public class TvSeriesFullSync(
                 db.Movies.Add(show);
                 await db.SaveChangesAsync(ct);
 
+                await SyncGenresAsync(show.Id, d.Genres.Select(g => (g.Id, g.Name)), ct);
                 await SyncCreditsAsync(show.Id, info.Id, ct);
                 await SyncProductionCompaniesAsync(show.Id, d.ProductionCompanies, ct);
             }
@@ -102,13 +97,13 @@ public class TvSeriesFullSync(
                         info.BackdropPath,
                         info.FirstAirDate == default ? null : DateOnly.FromDateTime(info.FirstAirDate),
                         runtime is 0 ? null : runtime,
-                        d.Genres.Select(g => g.Name),
                         originalLanguage: d.OriginalLanguage,
                         numberOfSeasons: d.NumberOfSeasons,
                         numberOfEpisodes: d.NumberOfEpisodes);
                 }
 
                 await db.SaveChangesAsync(ct);
+                await SyncGenresAsync(existing.Id, d.Genres.Select(g => (g.Id, g.Name)), ct);
                 await SyncCreditsAsync(existing.Id, info.Id, ct);
                 await SyncProductionCompaniesAsync(existing.Id, d.ProductionCompanies, ct);
             }
@@ -116,8 +111,24 @@ public class TvSeriesFullSync(
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
             logger.LogWarning(ex, "Failed to sync TV series TmdbId={TmdbId}", info.Id);
+            db.ChangeTracker.Clear();
             await failures.RecordAsync(SyncType, info.Id, ex, ct);
         }
+    }
+
+    private async Task SyncGenresAsync(Guid movieId, IEnumerable<(int Id, string Name)> genres, CancellationToken ct)
+    {
+        var oldLinks = await db.MovieGenres.Where(mg => mg.MovieId == movieId).ToListAsync(ct);
+        db.MovieGenres.RemoveRange(oldLinks);
+
+        foreach (var g in genres)
+        {
+            if (!await db.Genres.AnyAsync(genre => genre.Id == g.Id, ct))
+                db.Genres.Add(new Genre { Id = g.Id, Name = g.Name });
+            db.MovieGenres.Add(new MovieGenre { MovieId = movieId, GenreId = g.Id });
+        }
+
+        await db.SaveChangesAsync(ct);
     }
 
     private async Task SyncCreditsAsync(Guid movieId, int tmdbId, CancellationToken ct)
@@ -180,7 +191,8 @@ public class TvSeriesFullSync(
 
     private async Task EnsurePersonAsync(int personId, CancellationToken ct)
     {
-        if (!await db.Persons.AnyAsync(p => p.Id == personId, ct))
+        var alreadyTracked = db.ChangeTracker.Entries<Person>().Any(e => e.Entity.Id == personId);
+        if (!alreadyTracked && !await db.Persons.AnyAsync(p => p.Id == personId, ct))
             db.Persons.Add(new Person { Id = personId, Name = "Unknown", SyncedAt = DateTimeOffset.UtcNow });
     }
 }

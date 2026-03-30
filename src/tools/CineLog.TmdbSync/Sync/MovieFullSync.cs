@@ -4,9 +4,11 @@ using CineLog.TmdbSync.Infrastructure;
 using DM.MovieApi.MovieDb.Discover;
 using DM.MovieApi.MovieDb.Movies;
 using Microsoft.EntityFrameworkCore;
+using Genre = CineLog.Domain.Entities.Genre;
 using Movie = CineLog.Domain.Entities.Movie;
 using MovieCast = CineLog.Domain.Entities.MovieCast;
 using MovieCrew = CineLog.Domain.Entities.MovieCrew;
+using MovieGenre = CineLog.Domain.Entities.MovieGenre;
 using Person = CineLog.Domain.Entities.Person;
 using ProductionCompany = CineLog.Domain.Entities.ProductionCompany;
 using MovieProductionCompany = CineLog.Domain.Entities.MovieProductionCompany;
@@ -42,15 +44,10 @@ public class MovieFullSync(
 
             if (!response.Results.Any()) break;
 
-            var tasks = response.Results
-                .Select(info => SyncMovieAsync(info, ct))
-                .Chunk(_batchSize)
-                .Select(batch => Task.WhenAll(batch));
-
-            foreach (var batch in tasks)
+            foreach (var info in response.Results)
             {
                 if (ct.IsCancellationRequested) break;
-                await batch;
+                await SyncMovieAsync(info, ct);
             }
 
             await checkpoints.SaveAsync(SyncType, page, response.TotalPages, ct);
@@ -83,7 +80,6 @@ public class MovieFullSync(
                     info.BackdropPath,
                     info.ReleaseDate == default ? null : DateOnly.FromDateTime(info.ReleaseDate),
                     d.Runtime,
-                    d.Genres.Select(g => g.Name),
                     d.ImdbId,
                     d.OriginalTitle,
                     d.OriginalLanguage,
@@ -96,6 +92,7 @@ public class MovieFullSync(
                 db.Movies.Add(movie);
                 await db.SaveChangesAsync(ct);
 
+                await SyncGenresAsync(movie.Id, d.Genres.Select(g => (g.Id, g.Name)), ct);
                 await SyncCreditsAsync(movie.Id, info.Id, ct);
                 await SyncProductionCompaniesAsync(movie.Id, d.ProductionCompanies, ct);
             }
@@ -112,7 +109,6 @@ public class MovieFullSync(
                         info.BackdropPath,
                         info.ReleaseDate == default ? null : DateOnly.FromDateTime(info.ReleaseDate),
                         d.Runtime,
-                        d.Genres.Select(g => g.Name),
                         d.ImdbId,
                         d.OriginalTitle,
                         d.OriginalLanguage,
@@ -123,6 +119,7 @@ public class MovieFullSync(
                 }
 
                 await db.SaveChangesAsync(ct);
+                await SyncGenresAsync(existing.Id, d.Genres.Select(g => (g.Id, g.Name)), ct);
                 await SyncCreditsAsync(existing.Id, info.Id, ct);
                 await SyncProductionCompaniesAsync(existing.Id, d.ProductionCompanies, ct);
             }
@@ -130,8 +127,24 @@ public class MovieFullSync(
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
             logger.LogWarning(ex, "Failed to sync movie TmdbId={TmdbId}", info.Id);
+            db.ChangeTracker.Clear();
             await failures.RecordAsync(SyncType, info.Id, ex, ct);
         }
+    }
+
+    private async Task SyncGenresAsync(Guid movieId, IEnumerable<(int Id, string Name)> genres, CancellationToken ct)
+    {
+        var oldLinks = await db.MovieGenres.Where(mg => mg.MovieId == movieId).ToListAsync(ct);
+        db.MovieGenres.RemoveRange(oldLinks);
+
+        foreach (var g in genres)
+        {
+            if (!await db.Genres.AnyAsync(genre => genre.Id == g.Id, ct))
+                db.Genres.Add(new Genre { Id = g.Id, Name = g.Name });
+            db.MovieGenres.Add(new MovieGenre { MovieId = movieId, GenreId = g.Id });
+        }
+
+        await db.SaveChangesAsync(ct);
     }
 
     private async Task SyncCreditsAsync(Guid movieId, int tmdbId, CancellationToken ct)
@@ -194,7 +207,8 @@ public class MovieFullSync(
 
     private async Task EnsurePersonAsync(int personId, string name, CancellationToken ct)
     {
-        if (!await db.Persons.AnyAsync(p => p.Id == personId, ct))
+        var alreadyTracked = db.ChangeTracker.Entries<Person>().Any(e => e.Entity.Id == personId);
+        if (!alreadyTracked && !await db.Persons.AnyAsync(p => p.Id == personId, ct))
             db.Persons.Add(new Person { Id = personId, Name = name, SyncedAt = DateTimeOffset.UtcNow });
     }
 }
