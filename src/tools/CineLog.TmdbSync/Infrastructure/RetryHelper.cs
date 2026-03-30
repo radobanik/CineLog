@@ -15,12 +15,11 @@ public static class RetryHelper
             }
             catch (Exception ex) when (ex is not OperationCanceledException && attempt < maxAttempts)
             {
-                var delay = TimeSpan.FromSeconds(Math.Pow(2, attempt)); // 2s, 4s, 8s...
+                var delay = TimeSpan.FromSeconds(Math.Pow(2, attempt)); // 2s, 4s, 8s, ...
                 await Task.Delay(delay, ct);
             }
         }
 
-        // Final attempt — let the exception propagate
         return await operation();
     }
 

@@ -33,14 +33,14 @@ try
     builder.Services.AddSingleton(_ => MovieDbFactory.Create<IApiTVShowRequest>().Value);
     builder.Services.AddSingleton(_ => MovieDbFactory.Create<IApiPeopleRequest>().Value);
     builder.Services.AddSingleton(_ => MovieDbFactory.Create<IApiDiscoverRequest>().Value);
-    builder.Services.AddSingleton(new TmdbDirectClient(bearerToken));
-
     // Database context
     builder.Services.AddDbContext<TmdbSyncDbContext>(options =>
         options.UseNpgsql(connectionString));
 
     // Infrastructure
     builder.Services.AddSingleton<TmdbRateLimiter>();
+    builder.Services.AddSingleton(sp =>
+        new TmdbDirectClient(bearerToken, sp.GetRequiredService<TmdbRateLimiter>()));
     builder.Services.AddScoped<CheckpointService>();
     builder.Services.AddScoped<FailureTracker>();
 

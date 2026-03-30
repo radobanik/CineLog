@@ -22,10 +22,8 @@ public class TmdbSyncDbContext(DbContextOptions<TmdbSyncDbContext> options) : Db
     {
         base.OnModelCreating(modelBuilder);
 
-        // Reuse all entity configurations from Infrastructure
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
 
-        // Sync-only operational tables (not in AppDbContext)
         modelBuilder.Entity<SyncCheckpoint>(b =>
         {
             b.ToTable("sync_checkpoints");
