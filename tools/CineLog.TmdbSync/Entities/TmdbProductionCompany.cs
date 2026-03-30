@@ -1,0 +1,9 @@
+namespace CineLog.TmdbSync.Entities;
+
+public class TmdbProductionCompany
+{
+    public int Id { get; set; }
+    public string Name { get; set; } = null!;
+    public string? LogoPath { get; set; }
+    public string? OriginCountry { get; set; }
+}
