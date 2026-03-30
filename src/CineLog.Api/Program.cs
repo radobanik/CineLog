@@ -1,0 +1,112 @@
+using System.Threading.RateLimiting;
+using Microsoft.EntityFrameworkCore;
+using CineLog.Application.Common;
+using CineLog.Application.Extensions;
+using CineLog.Api.Exceptions;
+using CineLog.Api.Extensions;
+using CineLog.Api.Middleware;
+using CineLog.Api.Services;
+using CineLog.Infrastructure.Data;
+using CineLog.Infrastructure.Extensions;
+using CineLog.Infrastructure.Notifications;
+using Microsoft.AspNetCore.RateLimiting;
+using Serilog;
+
+var builder = WebApplication.CreateBuilder(args);
+
+// ── Serilog ───────────────────────────────────────────────────────────────────
+builder.Host.UseSerilog((ctx, config) =>
+    config.ReadFrom.Configuration(ctx.Configuration)
+          .Enrich.FromLogContext()
+          .Enrich.WithThreadId()
+          .Enrich.WithMachineName()
+          .WriteTo.Console()
+          .WriteTo.File("logs/cinelog-.txt", rollingInterval: Serilog.RollingInterval.Day));
+
+// ── Application + Infrastructure ─────────────────────────────────────────────
+builder.Services
+    .AddApplication()
+    .AddInfrastructure(builder.Configuration);
+
+// ── Auth ──────────────────────────────────────────────────────────────────────
+builder.Services.AddJwtAuth(builder.Configuration);
+builder.Services.AddAuthorization();
+
+// ── MVC ───────────────────────────────────────────────────────────────────────
+builder.Services.AddControllers();
+
+// ── SignalR (already registered in AddInfrastructure, but ensure hub is mapped)
+// builder.Services.AddSignalR(); — already called in AddInfrastructure
+
+// ── Exception handling ────────────────────────────────────────────────────────
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
+
+// ── HTTP context + current user ───────────────────────────────────────────────
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
+
+// ── Swagger ───────────────────────────────────────────────────────────────────
+builder.Services.AddSwaggerWithJwt();
+
+// ── Health checks ─────────────────────────────────────────────────────────────
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? string.Empty;
+var redisConnectionString = builder.Configuration.GetConnectionString("Redis") ?? string.Empty;
+
+builder.Services.AddHealthChecks()
+    .AddNpgSql(connectionString, name: "postgres")
+    .AddRedis(redisConnectionString, name: "redis");
+
+// ── Rate limiting ─────────────────────────────────────────────────────────────
+builder.Services.AddRateLimiter(options =>
+{
+    options.AddFixedWindowLimiter("auth", limiterOptions =>
+    {
+        limiterOptions.PermitLimit = 10;
+        limiterOptions.Window = TimeSpan.FromMinutes(1);
+        limiterOptions.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+        limiterOptions.QueueLimit = 0;
+    });
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
+var app = builder.Build();
+
+// ── Auto-migrate on startup ───────────────────────────────────────────────────
+using (var scope = app.Services.CreateScope())
+{
+    try
+    {
+        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        await db.Database.MigrateAsync();
+    }
+    catch (Exception ex)
+    {
+        var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+        logger.LogWarning(ex, "Database migration or seeding skipped (database may not be available).");
+    }
+}
+
+// ── Middleware pipeline ───────────────────────────────────────────────────────
+app.UseExceptionHandler();
+app.UseSerilogRequestLogging();
+app.UseMiddleware<CorrelationIdMiddleware>();
+app.UseAuthentication();
+app.UseAuthorization();
+app.UseRateLimiter();
+
+app.MapControllers();
+app.MapHub<NotificationHub>("/hubs/notifications");
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
+app.MapHealthChecks("/health");
+
+app.Run();
+
+public partial class Program { }

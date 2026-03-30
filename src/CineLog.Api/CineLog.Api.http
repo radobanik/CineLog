@@ -1,0 +1,6 @@
+@CineLog.Api_HostAddress = http://localhost:5098
+
+GET {{CineLog.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
