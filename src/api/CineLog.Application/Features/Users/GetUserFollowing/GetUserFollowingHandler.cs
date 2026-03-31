@@ -29,8 +29,6 @@ public class GetUserFollowingHandler : IRequestHandler<GetUserFollowingQuery, Pa
             .Take(request.PageSize)
             .ToListAsync(cancellationToken);
 
-        var totalPages = totalCount == 0 ? 0 : (int)Math.Ceiling(totalCount / (double)request.PageSize);
-
-        return new PagedResponse<UserSummaryResponse>(items, request.Page, request.PageSize, totalCount, totalPages);
+        return PagedResponse<UserSummaryResponse>.Create(items, request.Page, request.PageSize, totalCount);
     }
 }

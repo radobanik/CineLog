@@ -5,4 +5,11 @@ public record PagedResponse<T>(
     int Page,
     int PageSize,
     int TotalCount,
-    int TotalPages);
+    int TotalPages)
+{
+    public static PagedResponse<T> Create(List<T> items, int page, int pageSize, int totalCount)
+    {
+        var totalPages = totalCount == 0 ? 0 : (int)Math.Ceiling(totalCount / (double)pageSize);
+        return new PagedResponse<T>(items, page, pageSize, totalCount, totalPages);
+    }
+}

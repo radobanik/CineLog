@@ -51,8 +51,6 @@ public class GetMovieReviewsHandler : IRequestHandler<GetMovieReviewsQuery, Page
             r.LikesCount,
             r.CreatedAt)).ToList();
 
-        var totalPages = totalCount == 0 ? 0 : (int)Math.Ceiling(totalCount / (double)request.PageSize);
-
-        return new PagedResponse<ReviewResponse>(items, request.Page, request.PageSize, totalCount, totalPages);
+        return PagedResponse<ReviewResponse>.Create(items, request.Page, request.PageSize, totalCount);
     }
 }
