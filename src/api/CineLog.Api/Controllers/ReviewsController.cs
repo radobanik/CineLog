@@ -1,8 +1,7 @@
-using CineLog.Application.Common;
 using CineLog.Application.Features.Reviews;
 using CineLog.Application.Features.Reviews.CreateReview;
 using CineLog.Application.Features.Reviews.DeleteReview;
-using CineLog.Application.Features.Reviews.GetMovieReviews;
+using CineLog.Application.Features.Reviews.GetReview;
 using CineLog.Application.Features.Reviews.ReactToReview;
 using CineLog.Application.Features.Reviews.UpdateReview;
 using MediatR;
@@ -20,8 +19,15 @@ public class ReviewsController : ControllerBase
 
     public ReviewsController(ISender sender) => _sender = sender;
 
+    /// <summary>Get a review by id.</summary>
+    [HttpGet("{id:guid}")]
+    [ProducesResponseType(typeof(ReviewResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<ReviewResponse>> GetById(Guid id, CancellationToken ct)
+        => Ok(await _sender.Send(new GetReviewQuery(id), ct));
+
     /// <summary>Create a review for a movie.</summary>
-    [HttpPost("api/reviews")]
+    [HttpPost]
     [ProducesResponseType(typeof(ReviewResponse), StatusCodes.Status200OK)]
     public async Task<ActionResult<ReviewResponse>> Create(
         [FromBody] CreateReviewCommand command,
@@ -29,7 +35,7 @@ public class ReviewsController : ControllerBase
         => Ok(await _sender.Send(command, ct));
 
     /// <summary>Update an existing review.</summary>
-    [HttpPut("api/reviews/{id:guid}")]
+    [HttpPut("{id:guid}")]
     [ProducesResponseType(typeof(ReviewResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<ReviewResponse>> Update(
@@ -39,7 +45,7 @@ public class ReviewsController : ControllerBase
         => Ok(await _sender.Send(command with { ReviewId = id }, ct));
 
     /// <summary>Delete a review.</summary>
-    [HttpDelete("api/reviews/{id:guid}")]
+    [HttpDelete("{id:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Delete(Guid id, CancellationToken ct)
@@ -48,18 +54,8 @@ public class ReviewsController : ControllerBase
         return NoContent();
     }
 
-    /// <summary>Get reviews for a movie.</summary>
-    [HttpGet("api/movies/{movieId:guid}/reviews")]
-    [ProducesResponseType(typeof(PagedResponse<ReviewResponse>), StatusCodes.Status200OK)]
-    public async Task<ActionResult<PagedResponse<ReviewResponse>>> GetMovieReviews(
-        Guid movieId,
-        [FromQuery] int page = 1,
-        [FromQuery] int pageSize = 20,
-        CancellationToken ct = default)
-        => Ok(await _sender.Send(new GetMovieReviewsQuery(movieId, page, pageSize), ct));
-
     /// <summary>React to a review.</summary>
-    [HttpPost("api/reviews/{id:guid}/react")]
+    [HttpPost("{id:guid}/react")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> React(

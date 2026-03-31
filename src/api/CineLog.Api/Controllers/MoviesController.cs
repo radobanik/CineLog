@@ -4,6 +4,8 @@ using CineLog.Application.Features.Movies.DeleteMovie;
 using CineLog.Application.Features.Movies.GetMovieDetail;
 using CineLog.Application.Features.Movies.GetTopRated;
 using CineLog.Application.Features.Movies.SearchMovies;
+using CineLog.Application.Features.Reviews;
+using CineLog.Application.Features.Reviews.GetMovieReviews;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -43,6 +45,16 @@ public class MoviesController : ControllerBase
         [FromQuery] int count = 20,
         CancellationToken ct = default)
         => Ok(await _sender.Send(new GetTopRatedQuery(count), ct));
+
+    /// <summary>Get reviews for a movie.</summary>
+    [HttpGet("{movieId:guid}/reviews")]
+    [ProducesResponseType(typeof(PagedResponse<ReviewResponse>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<PagedResponse<ReviewResponse>>> GetReviews(
+        Guid movieId,
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 20,
+        CancellationToken ct = default)
+        => Ok(await _sender.Send(new GetMovieReviewsQuery(movieId, page, pageSize), ct));
 
     /// <summary>Delete a movie and all its reviews. Admin only.</summary>
     [HttpDelete("{id:guid}")]
