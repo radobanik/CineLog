@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "CineLog.TmdbSync": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "DOTNET_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}

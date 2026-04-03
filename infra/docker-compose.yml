@@ -58,10 +58,10 @@ services:
       dockerfile: src/tools/CineLog.TmdbSync/Dockerfile
     environment:
       - ConnectionStrings__DefaultConnection=Host=postgres;Database=cinelog;Username=postgres;Password=postgres
-      - Tmdb__BearerToken=${TMDB_BEARER_TOKEN}
+      - Tmdb__BearerToken=${TMDB_API_KEY}
       - Sync__IntervalMinutes=1440
-      - Sync__MaxDiscoverPages=500
-      - Sync__PersonPages=20
+      - Sync__MoviesMaxDiscoverPages=500
+      - Sync__PersonMaxDiscoverPages=500
       - Sync__BatchSize=5
     depends_on:
       postgres:

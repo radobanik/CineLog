@@ -17,7 +17,7 @@ COPY src/tools/CineLog.TmdbSync/   src/tools/CineLog.TmdbSync/
 
 RUN dotnet publish src/tools/CineLog.TmdbSync/CineLog.TmdbSync.csproj -c Release -o /publish
 
-FROM mcr.microsoft.com/dotnet/runtime:10.0
+FROM mcr.microsoft.com/dotnet/aspnet:10.0
 WORKDIR /app
 COPY --from=build /publish .
 ENTRYPOINT ["dotnet", "CineLog.TmdbSync.dll"]

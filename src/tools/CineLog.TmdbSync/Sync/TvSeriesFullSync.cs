@@ -18,14 +18,14 @@ public class TvSeriesFullSync(
     IConfiguration configuration)
 {
     private const string SyncType = "tv";
-    private readonly int _maxPages = configuration.GetValue("Sync:MaxDiscoverPages", 500);
+    private readonly int _maxPages = configuration.GetValue("Sync:MoviesMaxDiscoverPages", 500);
 
     public async Task SyncAsync(CancellationToken ct)
     {
         logger.LogInformation("Starting full TV series sync");
         var startPage = await checkpoints.GetLastPageAsync(SyncType, ct) + 1;
 
-        for (var page = startPage; page <= _maxPages && !ct.IsCancellationRequested; page++)
+        for (var page = startPage; (_maxPages == -1 || page <= _maxPages) && !ct.IsCancellationRequested; page++)
         {
             await rateLimiter.ThrottleAsync(ct);
             var response = await RetryHelper.ExecuteAsync(

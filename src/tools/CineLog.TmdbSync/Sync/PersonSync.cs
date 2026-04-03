@@ -13,17 +13,20 @@ public class PersonSync(
     IApiPeopleRequest peopleApi,
     TmdbRateLimiter rateLimiter,
     FailureTracker failures,
-    ILogger<PersonSync> logger)
+    ILogger<PersonSync> logger,
+    IConfiguration configuration)
 {
     private const string SyncType = "persons";
+    private readonly int _maxPersons = configuration.GetValue("Sync:PersonMaxDiscoverPages", 500);
 
     public async Task SyncAsync(CancellationToken ct)
     {
-        var stalePersons = await db.Persons
+        var query = db.Persons
             .Where(p => p.Biography == null)
             .OrderBy(p => p.SyncedAt)
-            .Select(p => new { p.Id, p.IdTmdb })
-            .Take(500)
+            .Select(p => new { p.Id, p.IdTmdb });
+
+        var stalePersons = await (_maxPersons == -1 ? query : query.Take(_maxPersons))
             .ToListAsync(ct);
 
         if (stalePersons.Count == 0)

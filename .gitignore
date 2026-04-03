@@ -52,6 +52,7 @@ ScaffoldingReadMe.txt
 *.env
 appsettings.Local.json
 appsettings.*.local.json
+appsettings.Development.json
 **/secrets.json
 
 # Docker
