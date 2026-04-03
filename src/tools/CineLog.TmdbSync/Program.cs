@@ -17,9 +17,11 @@ try
 {
     var builder = Host.CreateApplicationBuilder(args);
 
+    var seqUrl = builder.Configuration["Serilog:Seq:ServerUrl"] ?? "http://localhost:5341";
     builder.Services.AddSerilog((_, config) => config
         .ReadFrom.Configuration(builder.Configuration)
-        .WriteTo.Console());
+        .WriteTo.Console()
+        .WriteTo.Seq(seqUrl));
 
     var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
         ?? throw new InvalidOperationException("DefaultConnection is not configured.");

@@ -10,17 +10,24 @@ using CineLog.Infrastructure.Extensions;
 using CineLog.Infrastructure.Notifications;
 using Microsoft.AspNetCore.RateLimiting;
 using Serilog;
+using Serilog.Debugging;
 
 var builder = WebApplication.CreateBuilder(args);
 
+SelfLog.Enable(Console.Error);
+
 // Serilog
 builder.Host.UseSerilog((ctx, config) =>
+{
+    var seqUrl = ctx.Configuration["Serilog:Seq:ServerUrl"] ?? "http://localhost:5341";
     config.ReadFrom.Configuration(ctx.Configuration)
           .Enrich.FromLogContext()
           .Enrich.WithThreadId()
           .Enrich.WithMachineName()
           .WriteTo.Console()
-          .WriteTo.File("logs/cinelog-.txt", rollingInterval: Serilog.RollingInterval.Day));
+          .WriteTo.File("logs/cinelog-.txt", rollingInterval: Serilog.RollingInterval.Day)
+          .WriteTo.Seq(seqUrl);
+});
 
 builder.Services
     .AddApplication()

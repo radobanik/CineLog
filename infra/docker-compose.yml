@@ -17,6 +17,7 @@ services:
       - Tmdb__ApiKey=${TMDB_API_KEY}
       - Tmdb__BaseUrl=https://api.themoviedb.org/
       - Elasticsearch__Uri=http://elasticsearch:9200
+      - Serilog__Seq__ServerUrl=http://seq:5341
     depends_on:
       postgres:
         condition: service_healthy
@@ -24,6 +25,8 @@ services:
         condition: service_healthy
       elasticsearch:
         condition: service_healthy
+      seq:
+        condition: service_started
     restart: unless-stopped
 
   postgres:
@@ -63,9 +66,14 @@ services:
       - Sync__MoviesMaxDiscoverPages=500
       - Sync__PersonMaxDiscoverPages=500
       - Sync__BatchSize=5
+      - Serilog__Seq__ServerUrl=http://seq:5341
     depends_on:
       postgres:
         condition: service_healthy
+      seq:
+        condition: service_started
+      api:
+        condition: service_started
     restart: unless-stopped
 
   elasticsearch:
@@ -83,6 +91,18 @@ services:
       interval: 10s
       timeout: 10s
       retries: 10
+    restart: unless-stopped
+
+  seq:
+    image: datalust/seq:latest
+    environment:
+      - ACCEPT_EULA=Y
+      - SEQ_FIRSTRUN_ADMINPASSWORD=admin
+    ports:
+      - "5341:5341"
+      - "5342:80"
+    volumes:
+      - seq_data:/data
     restart: unless-stopped
 
   pgadmin:
@@ -103,3 +123,4 @@ volumes:
   postgres_data:
   pgadmin_data:
   elasticsearch_data:
+  seq_data:
