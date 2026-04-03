@@ -17,12 +17,14 @@ CineLog lets users log movies, write reviews, react to others' reviews, and foll
 | ORM | Entity Framework Core 10 |
 | Auth | JWT Bearer |
 | Real-time | SignalR |
+| Search | Elasticsearch 8 |
+| Logging | Seq |
 | External data | TMDb API |
+| Data sync | CineLog.TmdbSync (background worker) |
 
 ## Documentation
 
 - [Architecture](docs/architecture.md)
-- [API Reference](docs/api.md)
 - [Developer Guide](docs/developer-guide.md)
 
 ## Quick Start

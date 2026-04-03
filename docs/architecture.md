@@ -14,7 +14,13 @@ CineLog has two parts: a .NET MAUI mobile app (Android and iOS) and an ASP.NET C
 
 - **PostgreSQL** — main database
 - **Redis** — query cache (EF Core second-level cache)
+- **Elasticsearch** — full-text search for movies and people. Two indices: `cinelog-movies` and `cinelog-people`. The API creates and populates them on startup.
+- **Seq** — centralized log viewer. Both the API and TmdbSync send logs here. UI at `http://localhost:5342`.
 - **TMDb API** — external source for movie data
+
+## TmdbSync
+
+`CineLog.TmdbSync` is a background worker that runs alongside the API. It fetches movies, TV shows, and people from TMDb and writes them to the shared PostgreSQL database. It runs on a schedule (default: every 24 hours) and tracks its progress so it can resume if interrupted.
 
 ## Notes
 

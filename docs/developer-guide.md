@@ -32,7 +32,9 @@ docker compose up --build -d
 | Service | URL |
 |---|---|
 | API + Swagger | <http://localhost:5000/swagger> |
+| Seq (logs) | <http://localhost:5342> |
 | pgAdmin | <http://localhost:5050> |
+| Elasticsearch | `localhost:9200` |
 | PostgreSQL | `localhost:5432` |
 | Redis | `localhost:6379` |
 
@@ -50,6 +52,22 @@ docker compose down -v
 
 ---
 
+## Seq (Logs)
+
+Seq collects logs from the API and the TmdbSync worker. Open <http://localhost:5342> and log in with `admin` / `admin`. Click **Events** to see the live log stream.
+
+---
+
+## TmdbSync
+
+TmdbSync is a background worker that syncs movies, TV shows, and people from TMDb into the database. It starts automatically with `docker compose up` and runs every 24 hours.
+
+It needs the TMDb API Read Access Token (the same value as `TMDB_API_KEY` in your `.env` file).
+
+To run it locally from the IDE, set `DOTNET_ENVIRONMENT=Development` in your run configuration. This loads `appsettings.Development.json` which has smaller page limits so it finishes quickly.
+
+---
+
 ## Local API Development
 
 Start only the database, Redis and pgAdmin in the background (`-d` runs containers detached so they don't block your terminal):
@@ -61,8 +79,7 @@ docker compose up postgres redis pgadmin -d
 Run the API:
 
 ```bash
-cd src/CineLog
-dotnet run --project src/CineLog.Api/CineLog.Api.csproj
+dotnet run --project src/api/CineLog.Api/CineLog.Api.csproj
 ```
 
 Swagger UI: <http://localhost:5098/swagger>
@@ -117,7 +134,7 @@ Install the EF tools if you haven't already:
 dotnet tool install --global dotnet-ef
 ```
 
-All commands below run from the `src/CineLog/` directory.
+All commands below run from the repository root.
 
 **Add a migration** after changing a domain entity:
 
