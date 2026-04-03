@@ -2,7 +2,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CineLog.Application\CineLog.Application.csproj" />
-    <ProjectReference Include="..\CineLog.Contracts\CineLog.Contracts.csproj" />
     <ProjectReference Include="..\CineLog.Infrastructure\CineLog.Infrastructure.csproj" />
   </ItemGroup>
 
