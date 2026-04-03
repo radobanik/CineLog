@@ -9,7 +9,9 @@ using CineLog.Infrastructure.Data;
 using CineLog.Infrastructure.ExternalApis;
 using CineLog.Infrastructure.Notifications;
 using CineLog.Infrastructure.Repositories;
+using CineLog.Infrastructure.Search;
 using CineLog.Infrastructure.Services;
+using Elastic.Clients.Elasticsearch;
 using EFCoreSecondLevelCacheInterceptor;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -102,6 +104,12 @@ public static class ServiceCollectionExtensions
 
         services.AddScoped<ITmdbClient, TmdbClient>();
         services.AddScoped<IMovieSearchService, MovieSearchService>();
+
+        // Elasticsearch
+        var esUri = configuration["Elasticsearch:Uri"] ?? "http://localhost:9200";
+        var esSettings = new ElasticsearchClientSettings(new Uri(esUri));
+        services.AddSingleton(new ElasticsearchClient(esSettings));
+        services.AddScoped<IElasticSearchService, ElasticSearchService>();
 
         // JWT
         services.AddScoped<IJwtService, JwtService>();

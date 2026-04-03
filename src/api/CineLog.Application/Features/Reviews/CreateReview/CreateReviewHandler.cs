@@ -1,6 +1,7 @@
 using CineLog.Application.Common;
 using CineLog.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using CineLog.Domain.Events;
 using CineLog.Domain.Exceptions;
 using CineLog.Domain.Interfaces;
 using CineLog.Domain.Repositories;
@@ -65,6 +66,7 @@ public class CreateReviewHandler : IRequestHandler<CreateReviewCommand, ReviewRe
         var avgRating = allReviews.Average(r => r.Rating.Value);
         movie.UpdateAverageRating(avgRating, allReviews.Count);
         await _movieRepository.UpdateAsync(movie, cancellationToken);
+        await _publisher.Publish(new MovieSyncEvent(movie.Id), cancellationToken);
 
         foreach (var domainEvent in review.DomainEvents)
             await _publisher.Publish(domainEvent, cancellationToken);

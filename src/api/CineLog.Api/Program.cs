@@ -4,7 +4,6 @@ using CineLog.Application.Common;
 using CineLog.Application.Extensions;
 using CineLog.Api.Exceptions;
 using CineLog.Api.Extensions;
-using CineLog.Api.Middleware;
 using CineLog.Api.Services;
 using CineLog.Infrastructure.Data;
 using CineLog.Infrastructure.Extensions;
@@ -84,10 +83,30 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
+// Elasticsearch
+using (var scope = app.Services.CreateScope())
+{
+    try
+    {
+        var es = scope.ServiceProvider.GetRequiredService<IElasticSearchService>();
+        await es.EnsureIndicesExistAsync();
+
+        if (await es.CountMoviesAsync() == 0)
+        {
+            var sender = scope.ServiceProvider.GetRequiredService<MediatR.ISender>();
+            await sender.Send(new CineLog.Application.Features.Movies.ReindexMovies.ReindexMoviesCommand());
+        }
+    }
+    catch (Exception ex)
+    {
+        var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+        logger.LogWarning(ex, "Elasticsearch setup skipped (Elasticsearch may not be available).");
+    }
+}
+
 // Middleware pipeline
 app.UseExceptionHandler();
 app.UseSerilogRequestLogging();
-app.UseMiddleware<CorrelationIdMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseRateLimiter();
