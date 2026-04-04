@@ -1,8 +1,11 @@
 using CineLog.Application.Common;
+using CineLog.Domain.Enums;
 using CineLog.Domain.Exceptions;
+using CineLog.Domain.Interfaces;
 using CineLog.Domain.Repositories;
 using CineLog.Domain.ValueObjects;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace CineLog.Application.Features.Reviews.UpdateReview;
 
@@ -12,17 +15,20 @@ public class UpdateReviewHandler : IRequestHandler<UpdateReviewCommand, ReviewRe
     private readonly IMovieRepository _movieRepository;
     private readonly IUserRepository _userRepository;
     private readonly ICurrentUserService _currentUser;
+    private readonly IAppDbContext _context;
 
     public UpdateReviewHandler(
         IReviewRepository reviewRepository,
         IMovieRepository movieRepository,
         IUserRepository userRepository,
-        ICurrentUserService currentUser)
+        ICurrentUserService currentUser,
+        IAppDbContext context)
     {
         _reviewRepository = reviewRepository;
         _movieRepository = movieRepository;
         _userRepository = userRepository;
         _currentUser = currentUser;
+        _context = context;
     }
 
     public async Task<ReviewResponse> Handle(UpdateReviewCommand request, CancellationToken cancellationToken)
@@ -42,6 +48,12 @@ public class UpdateReviewHandler : IRequestHandler<UpdateReviewCommand, ReviewRe
         review.Update(Rating.Create(request.Rating), request.ReviewText, request.ContainsSpoilers);
         await _reviewRepository.UpdateAsync(review, cancellationToken);
 
+        var isLiked = await _context.ReviewReactions
+            .AnyAsync(rr => rr.ReviewId == review.Id
+                && rr.UserId == _currentUser.UserId
+                && rr.Type == ReactionType.Like,
+                cancellationToken);
+
         return new ReviewResponse(
             review.Id,
             review.UserId,
@@ -51,6 +63,7 @@ public class UpdateReviewHandler : IRequestHandler<UpdateReviewCommand, ReviewRe
             review.ReviewText,
             review.ContainsSpoilers,
             review.LikesCount,
+            isLiked,
             review.CreatedAt);
     }
 }

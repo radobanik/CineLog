@@ -1,3 +1,5 @@
+using CineLog.Application.Common;
+using CineLog.Domain.Enums;
 using CineLog.Domain.Exceptions;
 using CineLog.Domain.Interfaces;
 using CineLog.Domain.Repositories;
@@ -10,11 +12,13 @@ public class GetReviewHandler : IRequestHandler<GetReviewQuery, ReviewResponse>
 {
     private readonly IReviewRepository _reviewRepository;
     private readonly IAppDbContext _context;
+    private readonly ICurrentUserService _currentUser;
 
-    public GetReviewHandler(IReviewRepository reviewRepository, IAppDbContext context)
+    public GetReviewHandler(IReviewRepository reviewRepository, IAppDbContext context, ICurrentUserService currentUser)
     {
         _reviewRepository = reviewRepository;
         _context = context;
+        _currentUser = currentUser;
     }
 
     public async Task<ReviewResponse> Handle(GetReviewQuery request, CancellationToken cancellationToken)
@@ -32,6 +36,12 @@ public class GetReviewHandler : IRequestHandler<GetReviewQuery, ReviewResponse>
             .Select(m => m.Title)
             .FirstOrDefaultAsync(cancellationToken) ?? string.Empty;
 
+        var isLiked = await _context.ReviewReactions
+            .AnyAsync(rr => rr.ReviewId == review.Id
+                && rr.UserId == _currentUser.UserId
+                && rr.Type == ReactionType.Like,
+                cancellationToken);
+
         return new ReviewResponse(
             review.Id,
             review.UserId,
@@ -41,6 +51,7 @@ public class GetReviewHandler : IRequestHandler<GetReviewQuery, ReviewResponse>
             review.ReviewText,
             review.ContainsSpoilers,
             review.LikesCount,
+            isLiked,
             review.CreatedAt);
     }
 }

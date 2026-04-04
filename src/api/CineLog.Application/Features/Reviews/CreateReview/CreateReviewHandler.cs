@@ -82,6 +82,7 @@ public class CreateReviewHandler : IRequestHandler<CreateReviewCommand, ReviewRe
             review.ReviewText,
             review.ContainsSpoilers,
             review.LikesCount,
+            IsLiked: false,
             review.CreatedAt);
     }
 }

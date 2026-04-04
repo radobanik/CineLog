@@ -1,4 +1,5 @@
 using CineLog.Application.Common;
+using CineLog.Domain.Enums;
 using CineLog.Domain.Interfaces;
 using CineLog.Domain.Repositories;
 using MediatR;
@@ -10,11 +11,13 @@ public class GetMovieReviewsHandler : IRequestHandler<GetMovieReviewsQuery, Page
 {
     private readonly IReviewRepository _reviewRepository;
     private readonly IAppDbContext _context;
+    private readonly ICurrentUserService _currentUser;
 
-    public GetMovieReviewsHandler(IReviewRepository reviewRepository, IAppDbContext context)
+    public GetMovieReviewsHandler(IReviewRepository reviewRepository, IAppDbContext context, ICurrentUserService currentUser)
     {
         _reviewRepository = reviewRepository;
         _context = context;
+        _currentUser = currentUser;
     }
 
     public async Task<PagedResponse<ReviewResponse>> Handle(
@@ -38,6 +41,14 @@ public class GetMovieReviewsHandler : IRequestHandler<GetMovieReviewsQuery, Page
             .Select(m => m.Title)
             .FirstOrDefaultAsync(cancellationToken) ?? string.Empty;
 
+        var reviewIds = reviews.Select(r => r.Id).ToList();
+        var likedIds = await _context.ReviewReactions
+            .Where(rr => rr.UserId == _currentUser.UserId
+                && reviewIds.Contains(rr.ReviewId)
+                && rr.Type == ReactionType.Like)
+            .Select(rr => rr.ReviewId)
+            .ToHashSetAsync(cancellationToken);
+
         var usernameMap = users.ToDictionary(u => u.Id, u => u.UserName ?? string.Empty);
 
         var items = reviews.Select(r => new ReviewResponse(
@@ -49,6 +60,7 @@ public class GetMovieReviewsHandler : IRequestHandler<GetMovieReviewsQuery, Page
             r.ReviewText,
             r.ContainsSpoilers,
             r.LikesCount,
+            likedIds.Contains(r.Id),
             r.CreatedAt)).ToList();
 
         return PagedResponse<ReviewResponse>.Create(items, request.Page, request.PageSize, totalCount);

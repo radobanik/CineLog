@@ -9,4 +9,5 @@ public record ReviewResponse(
     string? ReviewText,
     bool ContainsSpoilers,
     int LikesCount,
+    bool IsLiked,
     DateTimeOffset CreatedAt);

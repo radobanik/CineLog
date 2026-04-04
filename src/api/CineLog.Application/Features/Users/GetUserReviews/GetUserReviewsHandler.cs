@@ -1,5 +1,6 @@
 using CineLog.Application.Common;
 using CineLog.Application.Features.Reviews;
+using CineLog.Domain.Enums;
 using CineLog.Domain.Interfaces;
 using CineLog.Domain.Repositories;
 using MediatR;
@@ -11,11 +12,13 @@ public class GetUserReviewsHandler : IRequestHandler<GetUserReviewsQuery, PagedR
 {
     private readonly IReviewRepository _reviewRepository;
     private readonly IAppDbContext _context;
+    private readonly ICurrentUserService _currentUser;
 
-    public GetUserReviewsHandler(IReviewRepository reviewRepository, IAppDbContext context)
+    public GetUserReviewsHandler(IReviewRepository reviewRepository, IAppDbContext context, ICurrentUserService currentUser)
     {
         _reviewRepository = reviewRepository;
         _context = context;
+        _currentUser = currentUser;
     }
 
     public async Task<PagedResponse<ReviewResponse>> Handle(
@@ -39,6 +42,14 @@ public class GetUserReviewsHandler : IRequestHandler<GetUserReviewsQuery, PagedR
             .Select(u => u.UserName)
             .FirstOrDefaultAsync(cancellationToken) ?? string.Empty;
 
+        var reviewIds = reviews.Select(r => r.Id).ToList();
+        var likedIds = await _context.ReviewReactions
+            .Where(rr => rr.UserId == _currentUser.UserId
+                && reviewIds.Contains(rr.ReviewId)
+                && rr.Type == ReactionType.Like)
+            .Select(rr => rr.ReviewId)
+            .ToHashSetAsync(cancellationToken);
+
         var movieTitleMap = movies.ToDictionary(m => m.Id, m => m.Title);
 
         var items = reviews.Select(r => new ReviewResponse(
@@ -50,6 +61,7 @@ public class GetUserReviewsHandler : IRequestHandler<GetUserReviewsQuery, PagedR
             r.ReviewText,
             r.ContainsSpoilers,
             r.LikesCount,
+            likedIds.Contains(r.Id),
             r.CreatedAt)).ToList();
 
         return PagedResponse<ReviewResponse>.Create(items, request.Page, request.PageSize, totalCount);
