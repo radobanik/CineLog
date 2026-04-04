@@ -3,7 +3,6 @@ using CineLog.Application.Features.Movies;
 using CineLog.Application.Features.Movies.DeleteMovie;
 using CineLog.Application.Features.Movies.GetMovieDetail;
 using CineLog.Application.Features.Movies.GetTopRated;
-using CineLog.Application.Features.Movies.SearchMovies;
 using CineLog.Application.Features.Reviews;
 using CineLog.Application.Features.Reviews.GetMovieReviews;
 using MediatR;
@@ -27,16 +26,6 @@ public class MoviesController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<MovieDetailResponse>> GetById(Guid id, CancellationToken ct)
         => Ok(await _sender.Send(new GetMovieDetailQuery(id), ct));
-
-    /// <summary>Search movies via TMDb.</summary>
-    [HttpGet("search")]
-    [ProducesResponseType(typeof(PagedResponse<MovieSummaryResponse>), StatusCodes.Status200OK)]
-    public async Task<ActionResult<PagedResponse<MovieSummaryResponse>>> Search(
-        [FromQuery] string query,
-        [FromQuery] int page = 1,
-        [FromQuery] int pageSize = 20,
-        CancellationToken ct = default)
-        => Ok(await _sender.Send(new SearchMoviesQuery(query, page, pageSize), ct));
 
     /// <summary>Get top-rated movies.</summary>
     [HttpGet("top-rated")]

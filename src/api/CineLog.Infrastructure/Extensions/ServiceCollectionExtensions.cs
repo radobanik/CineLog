@@ -1,12 +1,10 @@
 using CineLog.Application.Common;
 using CineLog.Application.Features.Auth;
-using CineLog.Application.Features.Movies;
 using CineLog.Domain.Entities;
 using CineLog.Domain.Interfaces;
 using CineLog.Domain.Repositories;
 using CineLog.Infrastructure.Caching;
 using CineLog.Infrastructure.Data;
-using CineLog.Infrastructure.ExternalApis;
 using CineLog.Infrastructure.Notifications;
 using CineLog.Infrastructure.Repositories;
 using CineLog.Infrastructure.Search;
@@ -84,26 +82,6 @@ public static class ServiceCollectionExtensions
 
         // Application-level cache
         services.AddScoped<ICacheService, RedisCacheService>();
-
-        // TMDb HTTP client
-        var tmdbBaseUrl = configuration["Tmdb:BaseUrl"] ?? "https://api.themoviedb.org/";
-        var tmdbApiKey = configuration["Tmdb:ApiKey"] ?? string.Empty;
-
-        services.AddTransient(_ => new TmdbApiKeyHandler(tmdbApiKey));
-
-        services.AddHttpClient("tmdb", client =>
-        {
-            client.BaseAddress = new Uri(tmdbBaseUrl);
-            client.DefaultRequestHeaders.Add("Accept", "application/json");
-        })
-        .AddHttpMessageHandler<TmdbApiKeyHandler>()
-        .AddTransientHttpErrorPolicy(policy =>
-            policy.WaitAndRetryAsync(
-                retryCount: 3,
-                sleepDurationProvider: attempt => TimeSpan.FromSeconds(Math.Pow(2, attempt - 1))));
-
-        services.AddScoped<ITmdbClient, TmdbClient>();
-        services.AddScoped<IMovieSearchService, MovieSearchService>();
 
         // Elasticsearch
         var esUri = configuration["Elasticsearch:Uri"] ?? "http://localhost:9200";
