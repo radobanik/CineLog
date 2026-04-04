@@ -96,6 +96,11 @@ public class Movie
         Popularity = popularity;
     }
 
+    public void UpdateTitle(string title)
+    {
+        Title = title;
+    }
+
     public void MarkAsManuallyEdited()
     {
         IsManuallyEdited = true;
