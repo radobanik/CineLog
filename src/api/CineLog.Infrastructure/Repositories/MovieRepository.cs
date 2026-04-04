@@ -54,4 +54,17 @@ public class MovieRepository : IMovieRepository
 
         return results.AsReadOnly();
     }
+
+    public async Task<IReadOnlyCollection<Movie>> GetNewestAsync(int count, CancellationToken cancellationToken = default)
+    {
+        var results = await _context.Movies
+            .AsNoTracking()
+            .Cacheable()
+            .Where(m => m.ReleaseDate.HasValue)
+            .OrderByDescending(m => m.ReleaseDate)
+            .Take(count)
+            .ToListAsync(cancellationToken);
+
+        return results.AsReadOnly();
+    }
 }

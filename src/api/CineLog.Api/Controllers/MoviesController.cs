@@ -2,7 +2,6 @@ using CineLog.Application.Common;
 using CineLog.Application.Features.Movies;
 using CineLog.Application.Features.Movies.DeleteMovie;
 using CineLog.Application.Features.Movies.GetMovieDetail;
-using CineLog.Application.Features.Movies.GetTopRated;
 using CineLog.Application.Features.Reviews;
 using CineLog.Application.Features.Reviews.GetMovieReviews;
 using MediatR;
@@ -26,14 +25,6 @@ public class MoviesController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<MovieDetailResponse>> GetById(Guid id, CancellationToken ct)
         => Ok(await _sender.Send(new GetMovieDetailQuery(id), ct));
-
-    /// <summary>Get top-rated movies.</summary>
-    [HttpGet("top-rated")]
-    [ProducesResponseType(typeof(List<MovieSummaryResponse>), StatusCodes.Status200OK)]
-    public async Task<ActionResult<List<MovieSummaryResponse>>> GetTopRated(
-        [FromQuery] int count = 20,
-        CancellationToken ct = default)
-        => Ok(await _sender.Send(new GetTopRatedQuery(count), ct));
 
     /// <summary>Get reviews for a movie.</summary>
     [HttpGet("{movieId:guid}/reviews")]

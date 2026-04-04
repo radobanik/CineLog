@@ -10,4 +10,5 @@ public interface IMovieRepository
     Task UpdateAsync(Movie movie, CancellationToken cancellationToken = default);
     Task DeleteAsync(Movie movie, CancellationToken cancellationToken = default);
     Task<IReadOnlyCollection<Movie>> GetTopRatedAsync(int count, CancellationToken cancellationToken = default);
+    Task<IReadOnlyCollection<Movie>> GetNewestAsync(int count, CancellationToken cancellationToken = default);
 }
