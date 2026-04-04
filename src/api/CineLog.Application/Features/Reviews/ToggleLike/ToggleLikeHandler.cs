@@ -1,17 +1,18 @@
 using CineLog.Application.Common;
+using CineLog.Domain.Enums;
 using CineLog.Domain.Exceptions;
 using CineLog.Domain.Repositories;
 using MediatR;
 
-namespace CineLog.Application.Features.Reviews.ReactToReview;
+namespace CineLog.Application.Features.Reviews.ToggleLike;
 
-public class ReactToReviewHandler : IRequestHandler<ReactToReviewCommand>
+public class ToggleLikeHandler : IRequestHandler<ToggleLikeCommand>
 {
     private readonly IReviewRepository _reviewRepository;
     private readonly ICurrentUserService _currentUser;
     private readonly IPublisher _publisher;
 
-    public ReactToReviewHandler(
+    public ToggleLikeHandler(
         IReviewRepository reviewRepository,
         ICurrentUserService currentUser,
         IPublisher publisher)
@@ -21,13 +22,24 @@ public class ReactToReviewHandler : IRequestHandler<ReactToReviewCommand>
         _publisher = publisher;
     }
 
-    public async Task Handle(ReactToReviewCommand request, CancellationToken cancellationToken)
+    public async Task Handle(ToggleLikeCommand request, CancellationToken cancellationToken)
     {
         var review = await _reviewRepository.GetByIdAsync(request.ReviewId, cancellationToken)
             ?? throw new NotFoundException($"Review {request.ReviewId} not found.");
 
-        review.AddReaction(_currentUser.UserId, request.ReactionType);
-        await _reviewRepository.UpdateAsync(review, cancellationToken);
+        var existingLike = review.Reactions
+            .FirstOrDefault(r => r.UserId == _currentUser.UserId && r.Type == ReactionType.Like);
+
+        if (existingLike is not null)
+        {
+            review.RemoveReaction(_currentUser.UserId, ReactionType.Like);
+        }
+        else
+        {
+            review.AddReaction(_currentUser.UserId, ReactionType.Like);
+        }
+
+        await _reviewRepository.UpdateReactionsAsync(review, cancellationToken);
 
         foreach (var domainEvent in review.DomainEvents)
             await _publisher.Publish(domainEvent, cancellationToken);

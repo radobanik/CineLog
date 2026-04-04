@@ -50,7 +50,6 @@ public class CreateReviewHandlerTests
         userRepo.GetByIdAsync(userId, Arg.Any<CancellationToken>()).Returns(user);
         movieRepo.GetByIdAsync(movieId, Arg.Any<CancellationToken>()).Returns(movie);
 
-        // Side-effect: also save to ctx so the rating-recalculation query finds it
         reviewRepo.When(r => r.AddAsync(Arg.Any<Review>(), Arg.Any<CancellationToken>()))
             .Do(ci =>
             {

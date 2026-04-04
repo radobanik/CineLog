@@ -2,7 +2,7 @@ using CineLog.Application.Features.Reviews;
 using CineLog.Application.Features.Reviews.CreateReview;
 using CineLog.Application.Features.Reviews.DeleteReview;
 using CineLog.Application.Features.Reviews.GetReview;
-using CineLog.Application.Features.Reviews.ReactToReview;
+using CineLog.Application.Features.Reviews.ToggleLike;
 using CineLog.Application.Features.Reviews.UpdateReview;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -54,16 +54,13 @@ public class ReviewsController : ControllerBase
         return NoContent();
     }
 
-    /// <summary>React to a review.</summary>
-    [HttpPost("{id:guid}/react")]
+    /// <summary>Toggle like on a review.</summary>
+    [HttpPost("{id:guid}/toggle-like")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> React(
-        Guid id,
-        [FromBody] ReactToReviewCommand command,
-        CancellationToken ct)
+    public async Task<IActionResult> ToggleLike(Guid id, CancellationToken ct)
     {
-        await _sender.Send(command with { ReviewId = id }, ct);
+        await _sender.Send(new ToggleLikeCommand(id), ct);
         return NoContent();
     }
 }

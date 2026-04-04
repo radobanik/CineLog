@@ -57,6 +57,13 @@ public class Review
         _domainEvents.Add(new ReviewReactedEvent(Id, userId, type));
     }
 
+    public void RemoveReaction(Guid userId, ReactionType type)
+    {
+        var reaction = _reactions.FirstOrDefault(r => r.UserId == userId && r.Type == type);
+        if (reaction is null) return;
+        _reactions.Remove(reaction);
+    }
+
     public void Update(Rating rating, string? reviewText, bool containsSpoilers)
     {
         Rating = rating;

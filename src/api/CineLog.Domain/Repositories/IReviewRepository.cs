@@ -9,5 +9,7 @@ public interface IReviewRepository
     Task<IReadOnlyCollection<Review>> GetByMovieIdAsync(Guid movieId, int page, int pageSize, CancellationToken cancellationToken = default);
     Task AddAsync(Review review, CancellationToken cancellationToken = default);
     Task UpdateAsync(Review review, CancellationToken cancellationToken = default);
+    Task UpdateReactionsAsync(Review review, CancellationToken cancellationToken = default);
     Task DeleteAsync(Review review, CancellationToken cancellationToken = default);
+    Task RemoveReactionAsync(ReviewReaction reaction, CancellationToken cancellationToken = default);
 }

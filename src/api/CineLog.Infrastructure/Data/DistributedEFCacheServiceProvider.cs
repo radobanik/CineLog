@@ -30,8 +30,7 @@ public class DistributedEFCacheServiceProvider : IEFCacheServiceProvider
 
     public void ClearAllCachedEntries()
     {
-        // IDistributedCache has no "clear all" — no-op;
-        // production would use Redis FLUSHDB on a dedicated DB.
+        // IDistributedCache has no "clear all" — no-op
         _logger.LogDebug("ClearAllCachedEntries called — no-op on distributed cache.");
     }
 
@@ -81,8 +80,6 @@ public class DistributedEFCacheServiceProvider : IEFCacheServiceProvider
             _logger.LogWarning(ex, "Failed to invalidate EF cache for key {Key}", cacheKey.KeyHash);
         }
     }
-
-    // ── Internal DTOs ─────────────────────────────────────────────────────────
 
     private record EFCachedDataDto(
         EFTableRowsDto? TableRows,
@@ -134,7 +131,11 @@ public class DistributedEFCacheServiceProvider : IEFCacheServiceProvider
                 ? new Dictionary<int, EFTableColumnInfo>()
                 : r.ColumnsInfo.ToDictionary(kvp => kvp.Key, kvp => kvp.Value),
             r.Rows?.Select(row => new EFTableRowDto(
-                row.Values?.Cast<object?>().ToList() ?? [])).ToList() ?? []);
+                row.Values?.Cast<object?>()
+                    .Select(v => new EFTableCellDto(
+                        v is null ? null : JsonSerializer.Serialize(v, v.GetType(), JsonOptions),
+                        v?.GetType().AssemblyQualifiedName))
+                    .ToList() ?? [])).ToList() ?? []);
 
         public EFTableRows ToEFTableRows()
         {
@@ -146,10 +147,18 @@ public class DistributedEFCacheServiceProvider : IEFCacheServiceProvider
                 FieldCount = fc,
                 VisibleFieldCount = vfc,
                 ColumnsInfo = ColumnsInfo ?? new Dictionary<int, EFTableColumnInfo>(),
-                Rows = Rows.Select(r => new EFTableRow(r.Values.Cast<object>().ToList())).ToList()
+                Rows = Rows.Select(r => new EFTableRow(
+                    r.Cells.Select(c =>
+                    {
+                        if (c.ValueJson is null || c.TypeName is null) return (object?)null;
+                        var type = Type.GetType(c.TypeName);
+                        return type is null ? null : JsonSerializer.Deserialize(c.ValueJson, type, JsonOptions);
+                    }).Cast<object>().ToList()
+                )).ToList()
             };
         }
     }
 
-    private record EFTableRowDto(List<object?> Values);
+    private record EFTableRowDto(List<EFTableCellDto> Cells);
+    private record EFTableCellDto(string? ValueJson, string? TypeName);
 }
