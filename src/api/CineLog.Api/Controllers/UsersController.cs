@@ -8,7 +8,6 @@ using CineLog.Application.Features.Users.GetUserFollowing;
 using CineLog.Application.Features.Users.GetUserReviews;
 using CineLog.Application.Features.Users.UnfollowUser;
 using CineLog.Application.Features.Users.UpdateProfile;
-using CineLog.Domain.Repositories;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -21,13 +20,11 @@ namespace CineLog.Api.Controllers;
 public class UsersController : ControllerBase
 {
     private readonly ISender _sender;
-    private readonly IUserRepository _userRepository;
     private readonly ICurrentUserService _currentUser;
 
-    public UsersController(ISender sender, IUserRepository userRepository, ICurrentUserService currentUser)
+    public UsersController(ISender sender, ICurrentUserService currentUser)
     {
         _sender = sender;
-        _userRepository = userRepository;
         _currentUser = currentUser;
     }
 
@@ -45,63 +42,45 @@ public class UsersController : ControllerBase
         CancellationToken ct)
         => Ok(await _sender.Send(command, ct));
 
-    /// <summary>Get user profile by username.</summary>
-    [HttpGet("{username}")]
+    /// <summary>Get user profile by id.</summary>
+    [HttpGet("{id:guid}")]
     [ProducesResponseType(typeof(UserProfileResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<UserProfileResponse>> GetByUsername(
-        string username,
-        CancellationToken ct)
-    {
-        var user = await _userRepository.GetByUsernameAsync(username, ct);
-        if (user is null) return NotFound();
-        return Ok(await _sender.Send(new GetProfileQuery(user.Id), ct));
-    }
+    public async Task<ActionResult<UserProfileResponse>> GetById(Guid id, CancellationToken ct)
+        => Ok(await _sender.Send(new GetProfileQuery(id), ct));
 
     /// <summary>Get a user's reviews.</summary>
-    [HttpGet("{username}/reviews")]
+    [HttpGet("{id:guid}/reviews")]
     [ProducesResponseType(typeof(PagedResponse<ReviewResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<PagedResponse<ReviewResponse>>> GetReviews(
-        string username,
+        Guid id,
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 20,
         CancellationToken ct = default)
-    {
-        var user = await _userRepository.GetByUsernameAsync(username, ct);
-        if (user is null) return NotFound();
-        return Ok(await _sender.Send(new GetUserReviewsQuery(user.Id, page, pageSize), ct));
-    }
+        => Ok(await _sender.Send(new GetUserReviewsQuery(id, page, pageSize), ct));
 
     /// <summary>Get a user's followers.</summary>
-    [HttpGet("{username}/followers")]
+    [HttpGet("{id:guid}/followers")]
     [ProducesResponseType(typeof(PagedResponse<UserSummaryResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<PagedResponse<UserSummaryResponse>>> GetFollowers(
-        string username,
+        Guid id,
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 20,
         CancellationToken ct = default)
-    {
-        var user = await _userRepository.GetByUsernameAsync(username, ct);
-        if (user is null) return NotFound();
-        return Ok(await _sender.Send(new GetUserFollowersQuery(user.Id, page, pageSize), ct));
-    }
+        => Ok(await _sender.Send(new GetUserFollowersQuery(id, page, pageSize), ct));
 
     /// <summary>Get users that a user is following.</summary>
-    [HttpGet("{username}/following")]
+    [HttpGet("{id:guid}/following")]
     [ProducesResponseType(typeof(PagedResponse<UserSummaryResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<PagedResponse<UserSummaryResponse>>> GetFollowing(
-        string username,
+        Guid id,
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 20,
         CancellationToken ct = default)
-    {
-        var user = await _userRepository.GetByUsernameAsync(username, ct);
-        if (user is null) return NotFound();
-        return Ok(await _sender.Send(new GetUserFollowingQuery(user.Id, page, pageSize), ct));
-    }
+        => Ok(await _sender.Send(new GetUserFollowingQuery(id, page, pageSize), ct));
 
     /// <summary>Follow a user.</summary>
     [HttpPost("{id:guid}/follow")]
