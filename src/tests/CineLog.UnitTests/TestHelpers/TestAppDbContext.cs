@@ -24,6 +24,9 @@ public class TestAppDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid
     public DbSet<MovieCrew> MovieCrew => Set<MovieCrew>();
     public DbSet<ProductionCompany> ProductionCompanies => Set<ProductionCompany>();
     public DbSet<MovieProductionCompany> MovieProductionCompanies => Set<MovieProductionCompany>();
+    public DbSet<Watchlist> Watchlists => Set<Watchlist>();
+    public DbSet<WatchlistItem> WatchlistItems => Set<WatchlistItem>();
+    public DbSet<UserFavorite> UserFavorites => Set<UserFavorite>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -59,6 +62,21 @@ public class TestAppDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid
         modelBuilder.Entity<MovieProductionCompany>(b =>
         {
             b.HasKey(mp => new { mp.MovieId, mp.CompanyId });
+        });
+
+        modelBuilder.Entity<Watchlist>(b =>
+        {
+            b.HasKey(w => w.Id);
+        });
+
+        modelBuilder.Entity<WatchlistItem>(b =>
+        {
+            b.HasKey(wi => new { wi.WatchlistId, wi.MovieId });
+        });
+
+        modelBuilder.Entity<UserFavorite>(b =>
+        {
+            b.HasKey(uf => new { uf.UserId, uf.MovieId });
         });
     }
 

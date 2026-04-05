@@ -67,4 +67,64 @@ public class ReviewTests
         review.ReviewText.Should().Be("Actually amazing");
         review.ContainsSpoilers.Should().BeTrue();
     }
+
+    [Fact]
+    public void Update_SetsUpdatedAt()
+    {
+        var review = Review.Create(Guid.NewGuid(), Guid.NewGuid(), 3.0m, null, false);
+        review.UpdatedAt.Should().BeNull();
+
+        var before = DateTimeOffset.UtcNow;
+        review.Update(4.0m, "Better on rewatch", false);
+
+        review.UpdatedAt.Should().NotBeNull();
+        review.UpdatedAt.Should().BeOnOrAfter(before);
+    }
+
+    [Fact]
+    public void RemoveReaction_ExistingReaction_RemovesIt()
+    {
+        var review = Review.Create(Guid.NewGuid(), Guid.NewGuid(), 3.0m, null, false);
+        var userId = Guid.NewGuid();
+        review.AddReaction(userId, ReactionType.Like);
+        review.Reactions.Should().HaveCount(1);
+
+        review.RemoveReaction(userId, ReactionType.Like);
+
+        review.Reactions.Should().BeEmpty();
+    }
+
+    [Fact]
+    public void RemoveReaction_NonExistentReaction_DoesNothing()
+    {
+        var review = Review.Create(Guid.NewGuid(), Guid.NewGuid(), 3.0m, null, false);
+
+        var act = () => review.RemoveReaction(Guid.NewGuid(), ReactionType.Like);
+
+        act.Should().NotThrow();
+        review.Reactions.Should().BeEmpty();
+    }
+
+    [Fact]
+    public void AddReaction_MultipleUsers_EachHasOwnReaction()
+    {
+        var review = Review.Create(Guid.NewGuid(), Guid.NewGuid(), 3.0m, null, false);
+
+        review.AddReaction(Guid.NewGuid(), ReactionType.Like);
+        review.AddReaction(Guid.NewGuid(), ReactionType.Like);
+
+        review.Reactions.Should().HaveCount(2);
+    }
+
+    [Fact]
+    public void Create_SetsCreatedAt_ToUtcNow()
+    {
+        var before = DateTimeOffset.UtcNow;
+
+        var review = Review.Create(Guid.NewGuid(), Guid.NewGuid(), 4.0m, null, false);
+
+        review.CreatedAt.Should().BeOnOrAfter(before);
+        review.CreatedAt.Should().BeOnOrBefore(DateTimeOffset.UtcNow);
+        review.UpdatedAt.Should().BeNull();
+    }
 }
