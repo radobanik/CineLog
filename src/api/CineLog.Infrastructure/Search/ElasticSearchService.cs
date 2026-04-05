@@ -75,6 +75,9 @@ public class ElasticSearchService : IElasticSearchService
     public async Task IndexPersonAsync(PersonSearchDocument doc, CancellationToken ct = default)
         => await _client.IndexAsync(doc, i => i.Index(PeopleIndex).Id(doc.Id), ct);
 
+    public async Task DeletePersonAsync(Guid personId, CancellationToken ct = default)
+        => await _client.DeleteAsync<PersonSearchDocument>(personId.ToString(), d => d.Index(PeopleIndex), ct);
+
     public async Task<PagedResponse<PersonSearchDocument>> SearchPeopleAsync(
         string query, int page, int pageSize, CancellationToken ct = default)
     {

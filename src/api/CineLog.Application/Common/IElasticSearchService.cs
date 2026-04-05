@@ -10,6 +10,7 @@ public interface IElasticSearchService
     Task<PagedResponse<MovieSearchDocument>> SearchMoviesAsync(string query, int page, int pageSize, CancellationToken ct = default);
 
     Task IndexPersonAsync(PersonSearchDocument doc, CancellationToken ct = default);
+    Task DeletePersonAsync(Guid personId, CancellationToken ct = default);
     Task<PagedResponse<PersonSearchDocument>> SearchPeopleAsync(string query, int page, int pageSize, CancellationToken ct = default);
 
     Task BulkIndexMoviesAsync(IEnumerable<MovieSearchDocument> docs, CancellationToken ct = default);

@@ -78,6 +78,7 @@ public static class ServiceCollectionExtensions
         // Repositories
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IMovieRepository, MovieRepository>();
+        services.AddScoped<IPersonRepository, PersonRepository>();
         services.AddScoped<IReviewRepository, ReviewRepository>();
 
         // Application-level cache

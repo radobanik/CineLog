@@ -1,3 +1,8 @@
+using CineLog.Application.Common;
+using CineLog.Application.Features.Movies;
+using CineLog.Application.Features.Movies.SearchMovies;
+using CineLog.Application.Features.People;
+using CineLog.Application.Features.People.SearchPeople;
 using CineLog.Application.Features.Search;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -23,4 +28,24 @@ public class SearchController : ControllerBase
         [FromQuery] int pageSize = 20,
         CancellationToken ct = default)
         => Ok(await _sender.Send(new SearchQuery(query, page, pageSize), ct));
+
+    /// <summary>Search movies.</summary>
+    [HttpGet("movies")]
+    [ProducesResponseType(typeof(PagedResponse<MovieSummaryResponse>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<PagedResponse<MovieSummaryResponse>>> SearchMovies(
+        [FromQuery] string query,
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 20,
+        CancellationToken ct = default)
+        => Ok(await _sender.Send(new SearchMoviesQuery(query, page, pageSize), ct));
+
+    /// <summary>Search people.</summary>
+    [HttpGet("people")]
+    [ProducesResponseType(typeof(PagedResponse<PersonSummaryResponse>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<PagedResponse<PersonSummaryResponse>>> SearchPeople(
+        [FromQuery] string query,
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 20,
+        CancellationToken ct = default)
+        => Ok(await _sender.Send(new SearchPeopleQuery(query, page, pageSize), ct));
 }
