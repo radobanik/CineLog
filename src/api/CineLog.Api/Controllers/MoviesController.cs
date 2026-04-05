@@ -6,6 +6,8 @@ using CineLog.Application.Features.Movies.GetMovieDetail;
 using CineLog.Application.Features.Movies.UpdateMovie;
 using CineLog.Application.Features.Reviews;
 using CineLog.Application.Features.Reviews.GetMovieReviews;
+using CineLog.Application.Features.Users.Favorites.AddToFavorites;
+using CineLog.Application.Features.Users.Favorites.RemoveFromFavorites;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -58,6 +60,27 @@ public class MoviesController : ControllerBase
         [FromQuery] int pageSize = 20,
         CancellationToken ct = default)
         => Ok(await _sender.Send(new GetMovieReviewsQuery(movieId, page, pageSize), ct));
+
+    /// <summary>Add movie to current user's favorites.</summary>
+    [HttpPost("{id:guid}/favorites")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
+    public async Task<IActionResult> AddToFavorites(Guid id, CancellationToken ct)
+    {
+        await _sender.Send(new AddToFavoritesCommand(id), ct);
+        return NoContent();
+    }
+
+    /// <summary>Remove movie from current user's favorites.</summary>
+    [HttpDelete("{id:guid}/favorites")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> RemoveFromFavorites(Guid id, CancellationToken ct)
+    {
+        await _sender.Send(new RemoveFromFavoritesCommand(id), ct);
+        return NoContent();
+    }
 
     /// <summary>Delete a movie and all its reviews.</summary>
     [HttpDelete("{id:guid}")]

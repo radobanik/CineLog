@@ -7,6 +7,8 @@ using CineLog.Application.Features.Users.GetUserFollowers;
 using CineLog.Application.Features.Users.GetUserFollowing;
 using CineLog.Application.Features.Users.GetUserReviews;
 using CineLog.Application.Features.Users.UnfollowUser;
+using CineLog.Application.Features.Movies;
+using CineLog.Application.Features.Users.Favorites.GetFavorites;
 using CineLog.Application.Features.Users.UpdateProfile;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -81,6 +83,12 @@ public class UsersController : ControllerBase
         [FromQuery] int pageSize = 20,
         CancellationToken ct = default)
         => Ok(await _sender.Send(new GetUserFollowingQuery(id, page, pageSize), ct));
+
+    /// <summary>Get current user's favorites.</summary>
+    [HttpGet("me/favorites")]
+    [ProducesResponseType(typeof(List<MovieListItemResponse>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<List<MovieListItemResponse>>> GetFavorites(CancellationToken ct)
+        => Ok(await _sender.Send(new GetFavoritesQuery(), ct));
 
     /// <summary>Follow a user.</summary>
     [HttpPost("{id:guid}/follow")]
