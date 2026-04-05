@@ -1,3 +1,4 @@
+﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
@@ -23,6 +24,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tools", "tools", "{07C2787E-EAC7-C090-1BA3-A61EC2A24D84}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CineLog.TmdbSync", "tools\CineLog.TmdbSync\CineLog.TmdbSync.csproj", "{9304D9DA-22E3-415E-88BC-37D53921F7B7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CineLog.ApiClientGenerator", "tools\CineLog.ApiClientGenerator\CineLog.ApiClientGenerator.csproj", "{E45AA5BD-61A8-4407-A961-D31BD308587F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -118,6 +121,18 @@ Global
 		{9304D9DA-22E3-415E-88BC-37D53921F7B7}.Release|x64.Build.0 = Release|Any CPU
 		{9304D9DA-22E3-415E-88BC-37D53921F7B7}.Release|x86.ActiveCfg = Release|Any CPU
 		{9304D9DA-22E3-415E-88BC-37D53921F7B7}.Release|x86.Build.0 = Release|Any CPU
+		{E45AA5BD-61A8-4407-A961-D31BD308587F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E45AA5BD-61A8-4407-A961-D31BD308587F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E45AA5BD-61A8-4407-A961-D31BD308587F}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{E45AA5BD-61A8-4407-A961-D31BD308587F}.Debug|x64.Build.0 = Debug|Any CPU
+		{E45AA5BD-61A8-4407-A961-D31BD308587F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E45AA5BD-61A8-4407-A961-D31BD308587F}.Debug|x86.Build.0 = Debug|Any CPU
+		{E45AA5BD-61A8-4407-A961-D31BD308587F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E45AA5BD-61A8-4407-A961-D31BD308587F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E45AA5BD-61A8-4407-A961-D31BD308587F}.Release|x64.ActiveCfg = Release|Any CPU
+		{E45AA5BD-61A8-4407-A961-D31BD308587F}.Release|x64.Build.0 = Release|Any CPU
+		{E45AA5BD-61A8-4407-A961-D31BD308587F}.Release|x86.ActiveCfg = Release|Any CPU
+		{E45AA5BD-61A8-4407-A961-D31BD308587F}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -131,5 +146,6 @@ Global
 		{5E5526E1-1767-4564-952B-0E83FD776002} = {0AB3BF05-4346-4AA6-1389-037BE0695223}
 		{B13BD817-5715-4275-AD77-E4D8BFDB067E} = {0AB3BF05-4346-4AA6-1389-037BE0695223}
 		{9304D9DA-22E3-415E-88BC-37D53921F7B7} = {07C2787E-EAC7-C090-1BA3-A61EC2A24D84}
+		{E45AA5BD-61A8-4407-A961-D31BD308587F} = {07C2787E-EAC7-C090-1BA3-A61EC2A24D84}
 	EndGlobalSection
 EndGlobal

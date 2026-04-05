@@ -159,3 +159,64 @@ dotnet ef migrations remove \
   --project src/CineLog.Infrastructure/CineLog.Infrastructure.csproj \
   --startup-project src/CineLog.Api/CineLog.Api.csproj
 ```
+
+---
+
+## API Client Generator
+
+`tools/CineLog.ApiClientGenerator` is a console tool that generates typed C# clients from the running API's OpenAPI spec. It uses NSwag to generate the code and Roslyn to split the output into individual files.
+
+### Output structure
+
+```
+GeneratedClients/
+  Clients/
+    IMoviesClient.cs
+    MoviesClient.cs
+    IReviewsClient.cs
+    ReviewsClient.cs
+    ...
+  Models/
+    MovieDetailResponse.cs
+    ReviewResponse.cs
+    ...
+  Infrastructure/
+    ApiException.cs
+    FileResponse.cs
+    ...
+```
+
+### Configuration
+
+Default values live in `tools/CineLog.ApiClientGenerator/appsettings.json`:
+
+```json
+{
+  "SwaggerUrl": "http://localhost:5098/swagger/v1/swagger.json",
+  "OutputDir": "GeneratedClients",
+  "Namespace": "CineLog.ApiClient"
+}
+```
+
+All three settings can be overridden from the command line.
+
+### Running
+
+Start the API first (see [Local API Development](#local-api-development)), then run from the repository root:
+
+```bash
+# Use defaults from appsettings.json
+dotnet run --project src/tools/CineLog.ApiClientGenerator/CineLog.ApiClientGenerator.csproj
+
+# Override with positional args
+dotnet run --project src/tools/CineLog.ApiClientGenerator/CineLog.ApiClientGenerator.csproj \
+  -- http://localhost:5098/swagger/v1/swagger.json ./GeneratedClients CineLog.ApiClient
+
+# Override with named args
+dotnet run --project src/tools/CineLog.ApiClientGenerator/CineLog.ApiClientGenerator.csproj \
+  -- --SwaggerUrl=http://localhost:5098/swagger/v1/swagger.json \
+     --OutputDir=./GeneratedClients \
+     --Namespace=CineLog.ApiClient
+```
+
+Command-line args take priority over `appsettings.json`. Relative `OutputDir` paths are resolved against the current working directory.
