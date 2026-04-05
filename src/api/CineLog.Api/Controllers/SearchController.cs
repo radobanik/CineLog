@@ -29,15 +29,16 @@ public class SearchController : ControllerBase
         CancellationToken ct = default)
         => Ok(await _sender.Send(new SearchQuery(query, page, pageSize), ct));
 
-    /// <summary>Search movies.</summary>
+    /// <summary>Search movies, optionally filtered by genres.</summary>
     [HttpGet("movies")]
     [ProducesResponseType(typeof(PagedResponse<MovieSummaryResponse>), StatusCodes.Status200OK)]
     public async Task<ActionResult<PagedResponse<MovieSummaryResponse>>> SearchMovies(
         [FromQuery] string query,
+        [FromQuery] List<string>? genres = null,
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 20,
         CancellationToken ct = default)
-        => Ok(await _sender.Send(new SearchMoviesQuery(query, page, pageSize), ct));
+        => Ok(await _sender.Send(new SearchMoviesQuery(query, genres, page, pageSize), ct));
 
     /// <summary>Search people.</summary>
     [HttpGet("people")]

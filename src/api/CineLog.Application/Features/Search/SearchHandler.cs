@@ -14,7 +14,7 @@ public class SearchHandler : IRequestHandler<SearchQuery, SearchResponse>
 
     public async Task<SearchResponse> Handle(SearchQuery request, CancellationToken cancellationToken)
     {
-        var moviesTask = _elasticSearch.SearchMoviesAsync(request.Query, request.Page, request.PageSize, cancellationToken);
+        var moviesTask = _elasticSearch.SearchMoviesAsync(request.Query, request.Page, request.PageSize, null, cancellationToken);
         var peopleTask = _elasticSearch.SearchPeopleAsync(request.Query, request.Page, request.PageSize, cancellationToken);
 
         await Task.WhenAll(moviesTask, peopleTask);

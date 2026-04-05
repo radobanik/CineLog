@@ -37,15 +37,18 @@ public class ElasticSearchService : IElasticSearchService
         => await _client.DeleteAsync<MovieSearchDocument>(movieId.ToString(), d => d.Index(MoviesIndex), ct);
 
     public async Task<PagedResponse<MovieSearchDocument>> SearchMoviesAsync(
-        string query, int page, int pageSize, CancellationToken ct = default)
+        string query, int page, int pageSize, IEnumerable<string>? genres = null, CancellationToken ct = default)
     {
+        var genreList = genres?.ToList();
+
         var response = await _client.SearchAsync<MovieSearchDocument>(s => s
             .Index(MoviesIndex)
             .From((page - 1) * pageSize)
             .Size(pageSize)
             .Query(q => q
-                .Bool(b => b
-                    .Should(
+                .Bool(b =>
+                {
+                    b.Should(
                         s => s.MultiMatch(m => m
                             .Query(query)
                             .Fields(new[] { "title^3", "originalTitle^2", "overview", "genres" })
@@ -61,9 +64,15 @@ public class ElasticSearchService : IElasticSearchService
                             .Query(query)
                             .Boost(2)
                         )
-                    )
-                    .MinimumShouldMatch(1)
-                )
+                    );
+                    b.MinimumShouldMatch(1);
+
+                    if (genreList is { Count: > 0 })
+                        b.Filter(f => f.Terms(t => t
+                            .Field("genres")
+                            .Terms(new TermsQueryField(
+                                genreList.Select(g => FieldValue.String(g)).ToArray()))));
+                })
             ), ct);
 
         var items = response.Documents.ToList();

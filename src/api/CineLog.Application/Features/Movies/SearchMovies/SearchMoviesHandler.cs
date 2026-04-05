@@ -16,7 +16,7 @@ public class SearchMoviesHandler : IRequestHandler<SearchMoviesQuery, PagedRespo
         CancellationToken cancellationToken)
     {
         var result = await _elasticSearch.SearchMoviesAsync(
-            request.Query, request.Page, request.PageSize, cancellationToken);
+            request.Query, request.Page, request.PageSize, request.Genres, cancellationToken);
 
         var items = result.Items
             .Select(d => new MovieSummaryResponse(
