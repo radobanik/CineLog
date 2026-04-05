@@ -44,10 +44,25 @@ public class ElasticSearchService : IElasticSearchService
             .From((page - 1) * pageSize)
             .Size(pageSize)
             .Query(q => q
-                .MultiMatch(m => m
-                    .Query(query)
-                    .Fields(new[] { "title^3", "originalTitle^2", "overview", "genres" })
-                    .Fuzziness(new Fuzziness("AUTO"))
+                .Bool(b => b
+                    .Should(
+                        s => s.MultiMatch(m => m
+                            .Query(query)
+                            .Fields(new[] { "title^3", "originalTitle^2", "overview", "genres" })
+                            .Fuzziness(new Fuzziness("AUTO"))
+                        ),
+                        s => s.MatchPhrasePrefix(m => m
+                            .Field("title")
+                            .Query(query)
+                            .Boost(3)
+                        ),
+                        s => s.MatchPhrasePrefix(m => m
+                            .Field("originalTitle")
+                            .Query(query)
+                            .Boost(2)
+                        )
+                    )
+                    .MinimumShouldMatch(1)
                 )
             ), ct);
 
@@ -68,10 +83,19 @@ public class ElasticSearchService : IElasticSearchService
             .From((page - 1) * pageSize)
             .Size(pageSize)
             .Query(q => q
-                .Match(m => m
-                    .Field(f => f.Name)
-                    .Query(query)
-                    .Fuzziness(new Fuzziness("AUTO"))
+                .Bool(b => b
+                    .Should(
+                        s => s.Match(m => m
+                            .Field(f => f.Name)
+                            .Query(query)
+                            .Fuzziness(new Fuzziness("AUTO"))
+                        ),
+                        s => s.MatchPhrasePrefix(m => m
+                            .Field("name")
+                            .Query(query)
+                        )
+                    )
+                    .MinimumShouldMatch(1)
                 )
             ), ct);
 
