@@ -9,20 +9,19 @@
 
     <!--  Labels  -->
 
-    <Style TargetType="Label" x:Key="HeadlineLarge">
+    <Style TargetType="Label" x:Key="HeadlineLargeLabel">
         <Setter Property="TextColor" Value="{StaticResource OnBackground}" />
         <Setter Property="FontSize" Value="26" />
         <Setter Property="FontAttributes" Value="Bold" />
     </Style>
 
-    <Style TargetType="Label" x:Key="HeadlineMedium">
+    <Style TargetType="Label" x:Key="HeadlineMediumLabel">
         <Setter Property="TextColor" Value="{StaticResource OnBackground}" />
         <Setter Property="FontSize" Value="20" />
         <Setter Property="FontAttributes" Value="Bold" />
     </Style>
 
-    <!--  Section header  -->
-    <Style TargetType="Label" x:Key="SectionHeader">
+    <Style TargetType="Label" x:Key="SectionHeaderLabel">
         <Setter Property="TextColor" Value="{StaticResource OnBackground}" />
         <Setter Property="FontSize" Value="13" />
         <Setter Property="FontAttributes" Value="Bold" />
@@ -30,36 +29,48 @@
         <Setter Property="TextTransform" Value="Uppercase" />
     </Style>
 
-    <!--  Accent text  -->
     <Style TargetType="Label" x:Key="AccentLabel">
         <Setter Property="TextColor" Value="{StaticResource Primary}" />
         <Setter Property="FontSize" Value="14" />
         <Setter Property="FontAttributes" Value="Bold" />
     </Style>
 
-    <Style TargetType="Label" x:Key="BodyLarge">
+    <Style TargetType="Label" x:Key="BodyLargeLabel">
         <Setter Property="TextColor" Value="{StaticResource OnSurface}" />
         <Setter Property="FontSize" Value="16" />
     </Style>
 
-    <Style TargetType="Label" x:Key="BodyMedium">
+    <Style TargetType="Label" x:Key="BodyMediumLabel">
         <Setter Property="TextColor" Value="{StaticResource OnSurface}" />
         <Setter Property="FontSize" Value="14" />
     </Style>
 
-    <Style TargetType="Label" x:Key="Caption">
+    <Style TargetType="Label" x:Key="CaptionLabel">
         <Setter Property="TextColor" Value="{StaticResource TextSecondary}" />
         <Setter Property="FontSize" Value="12" />
     </Style>
 
-    <!--  Font Awesome icons  -->
-    <Style TargetType="Label" x:Key="Icon">
+    <Style TargetType="Label" x:Key="OverlineLabel">
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="FontSize" Value="11" />
+        <Setter Property="CharacterSpacing" Value="1.2" />
+        <Setter Property="TextColor" Value="{StaticResource TextSecondary}" />
+        <Setter Property="TextTransform" Value="Uppercase" />
+    </Style>
+
+    <Style TargetType="Label" x:Key="IconLabel">
         <Setter Property="FontFamily" Value="FASolid" />
         <Setter Property="TextColor" Value="{StaticResource OnSurface}" />
         <Setter Property="FontSize" Value="18" />
     </Style>
 
-    <Style TargetType="Label" x:Key="PrimaryIcon">
+    <Style TargetType="Label" x:Key="SecondaryIconLabel">
+        <Setter Property="FontFamily" Value="FASolid" />
+        <Setter Property="TextColor" Value="{StaticResource TextSecondary}" />
+        <Setter Property="FontSize" Value="16" />
+    </Style>
+
+    <Style TargetType="Label" x:Key="PrimaryIconLabel">
         <Setter Property="FontFamily" Value="FASolid" />
         <Setter Property="TextColor" Value="{StaticResource Primary}" />
         <Setter Property="FontSize" Value="18" />
@@ -85,6 +96,16 @@
         <Setter Property="FontSize" Value="14" />
         <Setter Property="BorderColor" Value="{StaticResource Primary}" />
         <Setter Property="BorderWidth" Value="1.5" />
+        <Setter Property="CornerRadius" Value="20" />
+        <Setter Property="HeightRequest" Value="40" />
+        <Setter Property="Padding" Value="20,0" />
+    </Style>
+
+    <Style TargetType="Button" x:Key="DangerButton">
+        <Setter Property="BackgroundColor" Value="#E53935" />
+        <Setter Property="TextColor" Value="White" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="FontSize" Value="15" />
         <Setter Property="CornerRadius" Value="20" />
         <Setter Property="HeightRequest" Value="40" />
         <Setter Property="Padding" Value="20,0" />
@@ -122,8 +143,7 @@
         <Setter Property="Color" Value="{StaticResource Primary}" />
     </Style>
 
-    <!--  Pill-shaped input field container  -->
-    <Style TargetType="Border" x:Key="InputField">
+    <Style TargetType="Border" x:Key="InputFieldBorder">
         <Setter Property="BackgroundColor" Value="{StaticResource SurfaceVariant}" />
         <Setter Property="StrokeThickness" Value="0" />
         <Setter Property="HeightRequest" Value="56" />
@@ -135,7 +155,6 @@
         </Setter>
     </Style>
 
-    <!--  Borderless entry inside InputField  -->
     <Style TargetType="Entry" x:Key="CleanEntry">
         <Setter Property="BackgroundColor" Value="Transparent" />
         <Setter Property="TextColor" Value="{StaticResource OnSurface}" />

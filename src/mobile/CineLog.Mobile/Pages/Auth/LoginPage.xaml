@@ -21,7 +21,7 @@
                     <RoundRectangle CornerRadius="20" />
                 </Border.StrokeShape>
                 <Label
-                    FontFamily="FASolid"
+                    Style="{StaticResource IconLabel}"
                     FontSize="38"
                     HorizontalOptions="Center"
                     Text="{x:Static helpers:FontAwesomeIcons.Film}"
@@ -32,38 +32,32 @@
             <Label
                 HorizontalOptions="Center"
                 Margin="0,0,0,6"
-                Style="{StaticResource HeadlineLarge}"
+                Style="{StaticResource HeadlineLargeLabel}"
                 Text="CineLog" />
             <Label
                 HorizontalOptions="Center"
                 Margin="0,0,0,48"
-                Style="{StaticResource Caption}"
+                Style="{StaticResource CaptionLabel}"
                 Text="Track films you love" />
 
             <Label
                 Margin="0,0,0,24"
-                Style="{StaticResource HeadlineMedium}"
+                Style="{StaticResource HeadlineMediumLabel}"
                 Text="Sign In" />
 
             <Label
-                CharacterSpacing="1.2"
-                FontAttributes="Bold"
-                FontSize="11"
                 Margin="4,0,0,8"
-                Text="EMAIL"
-                TextColor="{StaticResource TextSecondary}"
-                TextTransform="Uppercase" />
+                Style="{StaticResource OverlineLabel}"
+                Text="EMAIL" />
 
-            <Border Style="{StaticResource InputField}">
+            <Border Style="{StaticResource InputFieldBorder}">
                 <Grid ColumnDefinitions="52,*">
                     <Label
-                        FontFamily="FASolid"
-                        FontSize="16"
                         Grid.Column="0"
                         HorizontalOptions="Center"
-                        Text="{x:Static helpers:FontAwesomeIcons.Envelope}"
-                        TextColor="{StaticResource TextSecondary}"
-                        VerticalOptions="Center" />
+                        Style="{StaticResource SecondaryIconLabel}"
+                        VerticalOptions="Center"
+                        Text="{x:Static helpers:FontAwesomeIcons.Envelope}" />
                     <Entry
                         Grid.Column="1"
                         Keyboard="Email"
@@ -74,23 +68,18 @@
             </Border>
 
             <Label
-                CharacterSpacing="1.2"
-                FontAttributes="Bold"
-                FontSize="11"
                 Margin="4,16,0,8"
-                Text="PASSWORD"
-                TextColor="{StaticResource TextSecondary}"
-                TextTransform="Uppercase" />
-            <Border Style="{StaticResource InputField}">
+                Style="{StaticResource OverlineLabel}"
+                Text="PASSWORD" />
+
+            <Border Style="{StaticResource InputFieldBorder}">
                 <Grid ColumnDefinitions="52,*,52">
                     <Label
-                        FontFamily="FASolid"
-                        FontSize="16"
                         Grid.Column="0"
                         HorizontalOptions="Center"
-                        Text="{x:Static helpers:FontAwesomeIcons.Lock}"
-                        TextColor="{StaticResource TextSecondary}"
-                        VerticalOptions="Center" />
+                        Style="{StaticResource SecondaryIconLabel}"
+                        VerticalOptions="Center"
+                        Text="{x:Static helpers:FontAwesomeIcons.Lock}" />
                     <Entry
                         Grid.Column="1"
                         IsPassword="{Binding IsPasswordVisible, Converter={StaticResource InvertedBoolConverter}}"
@@ -98,13 +87,11 @@
                         Style="{StaticResource CleanEntry}"
                         Text="{Binding Password}" />
                     <Label
-                        FontFamily="FASolid"
-                        FontSize="16"
                         Grid.Column="2"
                         HorizontalOptions="Center"
-                        Text="{x:Static helpers:FontAwesomeIcons.Eye}"
-                        TextColor="{StaticResource TextSecondary}"
-                        VerticalOptions="Center">
+                        Style="{StaticResource SecondaryIconLabel}"
+                        VerticalOptions="Center"
+                        Text="{x:Static helpers:FontAwesomeIcons.Eye}">
                         <Label.Triggers>
                             <DataTrigger
                                 Binding="{Binding IsPasswordVisible}"
@@ -138,11 +125,10 @@
                 Margin="0,40,0,0"
                 Spacing="4">
                 <Label
-                    Style="{StaticResource Caption}"
+                    Style="{StaticResource CaptionLabel}"
                     Text="Don't have an account?"
                     VerticalOptions="Center" />
                 <Label
-                    FontSize="13"
                     Style="{StaticResource AccentLabel}"
                     Text="Sign Up"
                     VerticalOptions="Center">
