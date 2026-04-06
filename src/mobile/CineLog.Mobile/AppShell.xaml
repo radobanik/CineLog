@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Shell
+    x:Class="CineLog.Mobile.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:auth="clr-namespace:CineLog.Mobile.Pages.Auth"
+    Shell.FlyoutBehavior="Disabled"
+    Shell.NavBarIsVisible="False">
+
+    <!-- Auth pages -->
+
+    <ShellContent
+        Route="Login"
+        ContentTemplate="{DataTemplate auth:LoginPage}" />
+
+    <ShellContent
+        Route="Register"
+        ContentTemplate="{DataTemplate auth:RegisterPage}" />
+
+    <!-- Main content, visible after login -->
+
+</Shell>

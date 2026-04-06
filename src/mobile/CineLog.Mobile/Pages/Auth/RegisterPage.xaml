@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="CineLog.Mobile.Pages.Auth.RegisterPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:helpers="clr-namespace:CineLog.Mobile.Helpers"
+    xmlns:vm="clr-namespace:CineLog.Mobile.Core.ViewModels.Auth;assembly=CineLog.Mobile.Core"
+    x:DataType="vm:RegisterViewModel"
+    Shell.NavBarIsVisible="False">
+
+    <ContentPage.Content>
+        <ScrollView>
+            <VerticalStackLayout
+                Padding="32,60,32,32"
+                Spacing="0"
+                VerticalOptions="Center">
+
+                <!-- Back button -->
+                <HorizontalStackLayout Margin="0,0,0,24">
+                    <Button
+                        Style="{StaticResource TextButton}"
+                        Command="{Binding GoToLoginCommand}"
+                        Text="{x:Static helpers:FontAwesomeIcons.ChevronLeft}"
+                        FontFamily="FASolid"
+                        FontSize="18"
+                        Padding="0" />
+                </HorizontalStackLayout>
+
+                <!-- Title -->
+                <Label
+                    Margin="0,0,0,40"
+                    Style="{StaticResource HeadlineMedium}"
+                    Text="{Binding Title}" />
+
+                <!-- Username -->
+                <Grid ColumnDefinitions="44,*" Margin="0,0,0,0">
+                    <Label
+                        Grid.Column="0"
+                        Style="{StaticResource Icon}"
+                        VerticalOptions="Center"
+                        HorizontalOptions="Center"
+                        Text="{x:Static helpers:FontAwesomeIcons.User}" />
+                    <Entry
+                        Grid.Column="1"
+                        Style="{StaticResource FormEntry}"
+                        Placeholder="Username"
+                        Text="{Binding Username}" />
+                </Grid>
+
+                <!-- Email -->
+                <Grid ColumnDefinitions="44,*" Margin="0,8,0,0">
+                    <Label
+                        Grid.Column="0"
+                        Style="{StaticResource Icon}"
+                        VerticalOptions="Center"
+                        HorizontalOptions="Center"
+                        Text="{x:Static helpers:FontAwesomeIcons.Envelope}" />
+                    <Entry
+                        Grid.Column="1"
+                        Style="{StaticResource FormEntry}"
+                        Placeholder="Email"
+                        Keyboard="Email"
+                        Text="{Binding Email}" />
+                </Grid>
+
+                <!-- Password -->
+                <Grid ColumnDefinitions="44,*" Margin="0,8,0,0">
+                    <Label
+                        Grid.Column="0"
+                        Style="{StaticResource Icon}"
+                        VerticalOptions="Center"
+                        HorizontalOptions="Center"
+                        Text="{x:Static helpers:FontAwesomeIcons.Lock}" />
+                    <Entry
+                        Grid.Column="1"
+                        Style="{StaticResource FormEntry}"
+                        Placeholder="Password"
+                        IsPassword="True"
+                        Text="{Binding Password}" />
+                </Grid>
+
+                <!-- Register button -->
+                <Button
+                    Margin="0,32,0,0"
+                    Style="{StaticResource PrimaryButton}"
+                    Command="{Binding RegisterCommand}"
+                    Text="Create Account" />
+
+                <!-- Busy indicator -->
+                <ActivityIndicator
+                    Margin="0,16,0,0"
+                    HorizontalOptions="Center"
+                    IsRunning="{Binding IsBusy}"
+                    IsVisible="{Binding IsBusy}" />
+
+            </VerticalStackLayout>
+        </ScrollView>
+    </ContentPage.Content>
+
+</ContentPage>
