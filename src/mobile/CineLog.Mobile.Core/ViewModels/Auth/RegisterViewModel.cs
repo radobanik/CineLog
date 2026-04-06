@@ -1,3 +1,4 @@
+using CineLog.Mobile.Core.Navigation;
 using CineLog.Mobile.Core.Services.Interfaces;
 using CineLog.Mobile.Core.ViewModels.Base;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -58,7 +59,7 @@ public partial class RegisterViewModel : BaseViewModel
         await ExecuteAsync(async () =>
         {
             await _authService.RegisterAsync(Username, Email, Password);
-            await _navigation.NavigateToRootAsync("//Dashboard");
+            await _navigation.NavigateToRootAsync(Routes.Dashboard);
         });
     }
 
@@ -69,7 +70,7 @@ public partial class RegisterViewModel : BaseViewModel
     private void ToggleConfirmPasswordVisibility() => IsConfirmPasswordVisible = !IsConfirmPasswordVisible;
 
     [RelayCommand]
-    private Task GoToLogin() => _navigation.NavigateBackAsync();
+    private Task GoToLogin() => _navigation.NavigateToRootAsync(Routes.Login);
 
     protected override async Task OnError(Exception ex)
     {

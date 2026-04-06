@@ -47,7 +47,7 @@ public partial class LoginViewModel : BaseViewModel
     private void TogglePasswordVisibility() => IsPasswordVisible = !IsPasswordVisible;
 
     [RelayCommand]
-    private Task GoToRegister() => _navigation.NavigateToAsync("Register");
+    private Task GoToRegister() => _navigation.NavigateToRootAsync(Routes.Register);
 
     protected override async Task OnError(Exception ex)
     {
