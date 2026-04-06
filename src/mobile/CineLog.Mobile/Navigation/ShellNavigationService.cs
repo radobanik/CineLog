@@ -15,6 +15,6 @@ public sealed class ShellNavigationService : INavigationService
     public Task NavigateBackAsync() =>
         Shell.Current.GoToAsync("..");
 
-    public Task NavigateToRootAsync(string absoluteRoute) =>
-        Shell.Current.GoToAsync($"//{absoluteRoute}");
+    public Task NavigateToRootAsync(string route) =>
+        Shell.Current.GoToAsync($"//{route}");
 }

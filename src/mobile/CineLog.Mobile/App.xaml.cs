@@ -1,3 +1,4 @@
+using CineLog.Mobile.Core.Navigation;
 using CineLog.Mobile.Core.Services.Interfaces;
 
 namespace CineLog.Mobile;
@@ -21,8 +22,8 @@ public partial class App : Application
         var restored = await _session.TryRestoreSessionAsync();
 
         if (!restored)
-            await Shell.Current.GoToAsync($"//{Navigation.Routes.Login}");
+            await Shell.Current.GoToAsync($"//{Routes.Login}");
         else
-            await Shell.Current.GoToAsync($"//{Navigation.Routes.Dashboard}");
+            await Shell.Current.GoToAsync($"//{Routes.Dashboard}");
     }
 }

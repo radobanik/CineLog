@@ -6,13 +6,13 @@ namespace CineLog.Mobile.Core.Services;
 
 public sealed class AuthService : IAuthService
 {
-    private readonly IAuthClient     _authClient;
+    private readonly IAuthClient _authClient;
     private readonly ISessionService _session;
 
     public AuthService(IAuthClient authClient, ISessionService session)
     {
         _authClient = authClient;
-        _session    = session;
+        _session = session;
     }
 
     public async Task LoginAsync(string email, string password, CancellationToken ct = default)

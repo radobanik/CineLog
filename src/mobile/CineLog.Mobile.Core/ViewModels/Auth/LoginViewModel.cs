@@ -1,3 +1,4 @@
+using CineLog.Mobile.Core.Navigation;
 using CineLog.Mobile.Core.Services.Interfaces;
 using CineLog.Mobile.Core.ViewModels.Base;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -25,9 +26,9 @@ public partial class LoginViewModel : BaseViewModel
     public LoginViewModel(IAuthService authService, INavigationService navigation, IAlertService alerts)
     {
         _authService = authService;
-        _navigation  = navigation;
-        _alerts      = alerts;
-        Title        = "Sign In";
+        _navigation = navigation;
+        _alerts = alerts;
+        Title = "Sign In";
     }
 
     private bool CanLogin => !string.IsNullOrWhiteSpace(Email) && !string.IsNullOrWhiteSpace(Password);
@@ -38,7 +39,7 @@ public partial class LoginViewModel : BaseViewModel
         await ExecuteAsync(async () =>
         {
             await _authService.LoginAsync(Email, Password);
-            await _navigation.NavigateToRootAsync("//Dashboard");
+            await _navigation.NavigateToRootAsync(Routes.Dashboard);
         });
     }
 
