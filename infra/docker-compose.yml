@@ -18,6 +18,11 @@ services:
       - Tmdb__BaseUrl=https://api.themoviedb.org/
       - Elasticsearch__Uri=http://elasticsearch:9200
       - Serilog__Seq__ServerUrl=http://seq:5341
+      - BlobStorage__Endpoint=http://minio:9000
+      - BlobStorage__AccessKey=cinelog
+      - BlobStorage__SecretKey=cinelog123
+      - BlobStorage__BucketName=cinelog
+      - BlobStorage__PublicBaseUrl=http://localhost:9000/cinelog
     depends_on:
       postgres:
         condition: service_healthy
@@ -27,6 +32,8 @@ services:
         condition: service_healthy
       seq:
         condition: service_started
+      minio-init:
+        condition: service_completed_successfully
     restart: unless-stopped
 
   postgres:
@@ -105,6 +112,36 @@ services:
       - seq_data:/data
     restart: unless-stopped
 
+  minio:
+    image: minio/minio:latest
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: cinelog
+      MINIO_ROOT_PASSWORD: cinelog123
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio_data:/data
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  minio-init:
+    image: minio/mc:latest
+    depends_on:
+      minio:
+        condition: service_healthy
+    entrypoint: >
+      /bin/sh -c "
+        mc alias set local http://minio:9000 cinelog cinelog123;
+        mc mb --ignore-existing local/cinelog;
+        mc anonymous set public local/cinelog;
+      "
+
   pgadmin:
     image: dpage/pgadmin4:latest
     environment:
@@ -124,3 +161,4 @@ volumes:
   pgadmin_data:
   elasticsearch_data:
   seq_data:
+  minio_data:

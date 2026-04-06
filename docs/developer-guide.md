@@ -34,6 +34,8 @@ docker compose up --build -d
 | API + Swagger | <http://localhost:5000/swagger> |
 | Seq (logs) | <http://localhost:5342> |
 | pgAdmin | <http://localhost:5050> |
+| MinIO console | <http://localhost:9001> (cinelog / cinelog123) |
+| MinIO S3 API | `localhost:9000` |
 | Elasticsearch | `localhost:9200` |
 | PostgreSQL | `localhost:5432` |
 | Redis | `localhost:6379` |
@@ -55,6 +57,19 @@ docker compose down -v
 ## Seq (Logs)
 
 Seq collects logs from the API and the TmdbSync worker. Open <http://localhost:5342> and log in with `admin` / `admin`. Click **Events** to see the live log stream.
+
+---
+
+## MinIO (Blob Storage)
+
+MinIO is an S3-compatible object store used for avatar uploads. It starts automatically with `docker compose up`.
+
+- **S3 API**: `http://localhost:9000`
+- **Browser console**: <http://localhost:9001> — login with `cinelog` / `cinelog123`
+
+The `cinelog` bucket is created automatically on startup with public read access. Uploaded files are accessible at `http://localhost:9000/cinelog/<key>`.
+
+The API connects to MinIO via the `BlobStorage` config section.
 
 ---
 

@@ -1,8 +1,10 @@
+using Amazon.S3;
 using CineLog.Application.Common;
 using CineLog.Application.Features.Auth;
 using CineLog.Domain.Entities;
 using CineLog.Domain.Interfaces;
 using CineLog.Domain.Repositories;
+using CineLog.Infrastructure.BlobStorage;
 using CineLog.Infrastructure.Caching;
 using CineLog.Infrastructure.Data;
 using CineLog.Infrastructure.Notifications;
@@ -89,6 +91,15 @@ public static class ServiceCollectionExtensions
         var esSettings = new ElasticsearchClientSettings(new Uri(esUri));
         services.AddSingleton(new ElasticsearchClient(esSettings));
         services.AddScoped<IElasticSearchService, ElasticSearchService>();
+
+        // Blob storage (MinIO)
+        services.Configure<BlobStorageOptions>(configuration.GetSection("BlobStorage"));
+        var blobOptions = configuration.GetSection("BlobStorage").Get<BlobStorageOptions>() ?? new BlobStorageOptions();
+        services.AddSingleton<IAmazonS3>(new AmazonS3Client(
+            blobOptions.AccessKey,
+            blobOptions.SecretKey,
+            new AmazonS3Config { ServiceURL = blobOptions.Endpoint, ForcePathStyle = true }));
+        services.AddScoped<IBlobStorageService, S3BlobStorageService>();
 
         // JWT
         services.AddScoped<IJwtService, JwtService>();

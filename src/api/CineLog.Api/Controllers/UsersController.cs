@@ -10,6 +10,8 @@ using CineLog.Application.Features.Users.UnfollowUser;
 using CineLog.Application.Features.Movies;
 using CineLog.Application.Features.Users.Favorites.GetFavorites;
 using CineLog.Application.Features.Users.UpdateProfile;
+using CineLog.Application.Features.Users.SetUserAvatar;
+using CineLog.Application.Features.Users.UploadAvatar;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -89,6 +91,35 @@ public class UsersController : ControllerBase
     [ProducesResponseType(typeof(List<MovieListItemResponse>), StatusCodes.Status200OK)]
     public async Task<ActionResult<List<MovieListItemResponse>>> GetFavorites(CancellationToken ct)
         => Ok(await _sender.Send(new GetFavoritesQuery(), ct));
+
+    /// <summary>Upload or replace the current user's avatar.</summary>
+    [HttpPut("me/avatar")]
+    [ProducesResponseType(typeof(UploadAvatarResponse), StatusCodes.Status200OK)]
+    public async Task<ActionResult<UploadAvatarResponse>> UploadAvatar(
+        IFormFile file,
+        CancellationToken ct)
+    {
+        using var stream = file.OpenReadStream();
+        var result = await _sender.Send(
+            new UploadAvatarCommand(stream, file.ContentType, file.FileName), ct);
+        return Ok(result);
+    }
+
+    /// <summary>Set avatar for any user (admin only).</summary>
+    [HttpPut("{id:guid}/avatar")]
+    [Authorize(Roles = "Admin")]
+    [ProducesResponseType(typeof(UploadAvatarResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<UploadAvatarResponse>> SetUserAvatar(
+        Guid id,
+        IFormFile file,
+        CancellationToken ct)
+    {
+        using var stream = file.OpenReadStream();
+        var result = await _sender.Send(
+            new SetUserAvatarCommand(id, stream, file.ContentType, file.FileName), ct);
+        return Ok(result);
+    }
 
     /// <summary>Follow a user.</summary>
     [HttpPost("{id:guid}/follow")]
