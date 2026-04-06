@@ -5,5 +5,5 @@ namespace CineLog.Mobile.ApiClient.Models;
 public partial class UploadAvatarResponse
 {
     [Newtonsoft.Json.JsonProperty("avatarUrl", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-    public string? AvatarUrl { get; set; } = default !;
+    public string? AvatarUrl { get; set; } = default!;
 }

@@ -7,9 +7,9 @@ namespace CineLog.Mobile.Core.ViewModels.Auth;
 
 public partial class RegisterViewModel : BaseViewModel
 {
-    private readonly IAuthService       _authService;
+    private readonly IAuthService _authService;
     private readonly INavigationService _navigation;
-    private readonly IAlertService      _alerts;
+    private readonly IAlertService _alerts;
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(RegisterCommand))]
@@ -40,15 +40,15 @@ public partial class RegisterViewModel : BaseViewModel
     public RegisterViewModel(IAuthService authService, INavigationService navigation, IAlertService alerts)
     {
         _authService = authService;
-        _navigation  = navigation;
-        _alerts      = alerts;
-        Title        = "Create Account";
+        _navigation = navigation;
+        _alerts = alerts;
+        Title = "Create Account";
     }
 
     private bool CanRegister =>
-        !string.IsNullOrWhiteSpace(Username)        &&
-        !string.IsNullOrWhiteSpace(Email)           &&
-        !string.IsNullOrWhiteSpace(Password)        &&
+        !string.IsNullOrWhiteSpace(Username) &&
+        !string.IsNullOrWhiteSpace(Email) &&
+        !string.IsNullOrWhiteSpace(Password) &&
         !string.IsNullOrWhiteSpace(ConfirmPassword) &&
         IsTermsAccepted;
 

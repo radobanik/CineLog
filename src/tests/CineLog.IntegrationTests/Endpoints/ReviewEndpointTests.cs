@@ -23,9 +23,9 @@ public class ReviewEndpointTests
 
         var response = await client.PostAsJsonAsync("/api/reviews", new
         {
-            MovieId          = movieId,
-            Rating           = 4.0m,
-            ReviewText       = "Great film",
+            MovieId = movieId,
+            Rating = 4.0m,
+            ReviewText = "Great film",
             ContainsSpoilers = false
         });
 
@@ -46,11 +46,15 @@ public class ReviewEndpointTests
 
         await client.PostAsJsonAsync("/api/reviews", new
         {
-            MovieId = movieId, Rating = 3.0m, ContainsSpoilers = false
+            MovieId = movieId,
+            Rating = 3.0m,
+            ContainsSpoilers = false
         });
         var second = await client.PostAsJsonAsync("/api/reviews", new
         {
-            MovieId = movieId, Rating = 4.0m, ContainsSpoilers = false
+            MovieId = movieId,
+            Rating = 4.0m,
+            ContainsSpoilers = false
         });
 
         second.StatusCode.Should().Be(HttpStatusCode.Conflict);
@@ -65,7 +69,9 @@ public class ReviewEndpointTests
 
         var created = await client.PostAsJsonAsync("/api/reviews", new
         {
-            MovieId = movieId, Rating = 3.5m, ContainsSpoilers = false
+            MovieId = movieId,
+            Rating = 3.5m,
+            ContainsSpoilers = false
         });
         var createdBody = await created.Content.ReadAsStringAsync();
         var reviewId = JsonDocument.Parse(createdBody).RootElement.GetProperty("id").GetGuid();
@@ -99,14 +105,19 @@ public class ReviewEndpointTests
 
         var created = await client.PostAsJsonAsync("/api/reviews", new
         {
-            MovieId = movieId, Rating = 2.0m, ReviewText = "Initially bad", ContainsSpoilers = false
+            MovieId = movieId,
+            Rating = 2.0m,
+            ReviewText = "Initially bad",
+            ContainsSpoilers = false
         });
         var reviewId = JsonDocument.Parse(await created.Content.ReadAsStringAsync())
             .RootElement.GetProperty("id").GetGuid();
 
         var response = await client.PutAsJsonAsync($"/api/reviews/{reviewId}", new
         {
-            Rating = 5.0m, ReviewText = "Actually amazing on rewatch", ContainsSpoilers = true
+            Rating = 5.0m,
+            ReviewText = "Actually amazing on rewatch",
+            ContainsSpoilers = true
         });
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -126,7 +137,9 @@ public class ReviewEndpointTests
 
         var created = await client.PostAsJsonAsync("/api/reviews", new
         {
-            MovieId = movieId, Rating = 3.0m, ContainsSpoilers = false
+            MovieId = movieId,
+            Rating = 3.0m,
+            ContainsSpoilers = false
         });
         var reviewId = JsonDocument.Parse(await created.Content.ReadAsStringAsync())
             .RootElement.GetProperty("id").GetGuid();
@@ -149,7 +162,9 @@ public class ReviewEndpointTests
 
         var created = await authorClient.PostAsJsonAsync("/api/reviews", new
         {
-            MovieId = movieId, Rating = 4.0m, ContainsSpoilers = false
+            MovieId = movieId,
+            Rating = 4.0m,
+            ContainsSpoilers = false
         });
         var reviewId = JsonDocument.Parse(await created.Content.ReadAsStringAsync())
             .RootElement.GetProperty("id").GetGuid();
@@ -170,12 +185,14 @@ public class ReviewEndpointTests
 
         var created = await authorClient.PostAsJsonAsync("/api/reviews", new
         {
-            MovieId = movieId, Rating = 4.5m, ContainsSpoilers = false
+            MovieId = movieId,
+            Rating = 4.5m,
+            ContainsSpoilers = false
         });
         var reviewId = JsonDocument.Parse(await created.Content.ReadAsStringAsync())
             .RootElement.GetProperty("id").GetGuid();
 
-        var first  = await likerClient.PostAsync($"/api/reviews/{reviewId}/toggle-like", null);
+        var first = await likerClient.PostAsync($"/api/reviews/{reviewId}/toggle-like", null);
         var second = await likerClient.PostAsync($"/api/reviews/{reviewId}/toggle-like", null);
 
         first.StatusCode.Should().Be(HttpStatusCode.NoContent);

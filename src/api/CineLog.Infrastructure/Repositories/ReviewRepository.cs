@@ -62,7 +62,7 @@ public class ReviewRepository : IReviewRepository
     {
         var dbContext = (DbContext)_context;
         var currentIds = review.Reactions.Select(r => r.Id).ToList();
-        
+
         await _context.ReviewReactions
             .Where(r => r.ReviewId == review.Id && !currentIds.Contains(r.Id))
             .ExecuteDeleteAsync(cancellationToken);

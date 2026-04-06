@@ -1,8 +1,8 @@
+using CineLog.Mobile.Core.Services.Interfaces;
 using CineLog.Mobile.Navigation;
 using CineLog.Mobile.Pages.Auth;
 using CineLog.Mobile.Pages.Dashboard;
 using CineLog.Mobile.Services;
-using CineLog.Mobile.Core.Services.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace CineLog.Mobile.Extensions;

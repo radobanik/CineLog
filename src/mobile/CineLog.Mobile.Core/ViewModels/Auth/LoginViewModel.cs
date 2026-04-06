@@ -8,9 +8,9 @@ namespace CineLog.Mobile.Core.ViewModels.Auth;
 
 public partial class LoginViewModel : BaseViewModel
 {
-    private readonly IAuthService       _authService;
+    private readonly IAuthService _authService;
     private readonly INavigationService _navigation;
-    private readonly IAlertService      _alerts;
+    private readonly IAlertService _alerts;
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(LoginCommand))]

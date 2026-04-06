@@ -1,8 +1,8 @@
+using System.Reflection;
+using CineLog.Application.Common;
 using CineLog.Domain.Entities;
 using CineLog.Domain.Enums;
-using CineLog.Application.Common;
 using Microsoft.AspNetCore.Identity;
-using System.Reflection;
 
 namespace CineLog.Infrastructure.Data.Seeders;
 

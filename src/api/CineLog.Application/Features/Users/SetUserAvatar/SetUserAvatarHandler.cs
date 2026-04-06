@@ -18,9 +18,9 @@ public class SetUserAvatarHandler : IRequestHandler<SetUserAvatarCommand, Upload
         IUserRepository userRepository,
         IAppDbContext context)
     {
-        _blobStorage    = blobStorage;
+        _blobStorage = blobStorage;
         _userRepository = userRepository;
-        _context        = context;
+        _context = context;
     }
 
     public async Task<UploadAvatarResponse> Handle(SetUserAvatarCommand request, CancellationToken cancellationToken)

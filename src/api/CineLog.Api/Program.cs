@@ -1,14 +1,14 @@
 using System.Threading.RateLimiting;
-using Microsoft.EntityFrameworkCore;
-using CineLog.Application.Common;
-using CineLog.Application.Extensions;
 using CineLog.Api.Exceptions;
 using CineLog.Api.Extensions;
 using CineLog.Api.Services;
+using CineLog.Application.Common;
+using CineLog.Application.Extensions;
 using CineLog.Infrastructure.Data;
 using CineLog.Infrastructure.Extensions;
 using CineLog.Infrastructure.Notifications;
 using Microsoft.AspNetCore.RateLimiting;
+using Microsoft.EntityFrameworkCore;
 using Serilog;
 using Serilog.Debugging;
 

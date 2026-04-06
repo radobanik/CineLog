@@ -5,19 +5,19 @@ namespace CineLog.Mobile.ApiClient.Models;
 public partial class ProblemDetails
 {
     [Newtonsoft.Json.JsonProperty("type", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-    public string? Type { get; set; } = default !;
+    public string? Type { get; set; } = default!;
 
     [Newtonsoft.Json.JsonProperty("title", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-    public string? Title { get; set; } = default !;
+    public string? Title { get; set; } = default!;
 
     [Newtonsoft.Json.JsonProperty("status", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-    public int? Status { get; set; } = default !;
+    public int? Status { get; set; } = default!;
 
     [Newtonsoft.Json.JsonProperty("detail", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-    public string? Detail { get; set; } = default !;
+    public string? Detail { get; set; } = default!;
 
     [Newtonsoft.Json.JsonProperty("instance", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-    public string? Instance { get; set; } = default !;
+    public string? Instance { get; set; } = default!;
 
     private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
     [Newtonsoft.Json.JsonExtensionData]

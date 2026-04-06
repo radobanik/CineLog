@@ -5,17 +5,17 @@ namespace CineLog.Mobile.ApiClient.Models;
 public partial class MovieSummaryResponse
 {
     [Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-    public System.Guid? Id { get; set; } = default !;
+    public System.Guid? Id { get; set; } = default!;
 
     [Newtonsoft.Json.JsonProperty("title", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-    public string? Title { get; set; } = default !;
+    public string? Title { get; set; } = default!;
 
     [Newtonsoft.Json.JsonProperty("posterPath", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-    public string? PosterPath { get; set; } = default !;
+    public string? PosterPath { get; set; } = default!;
 
     [Newtonsoft.Json.JsonProperty("averageRating", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-    public double? AverageRating { get; set; } = default !;
+    public double? AverageRating { get; set; } = default!;
 
     [Newtonsoft.Json.JsonProperty("type", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-    public MovieType? Type { get; set; } = default !;
+    public MovieType? Type { get; set; } = default!;
 }

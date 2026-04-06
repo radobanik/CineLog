@@ -5,5 +5,5 @@ namespace CineLog.Mobile.ApiClient.Models;
 public partial class CreateWatchlistCommand
 {
     [Newtonsoft.Json.JsonProperty("name", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-    public string? Name { get; set; } = default !;
+    public string? Name { get; set; } = default!;
 }

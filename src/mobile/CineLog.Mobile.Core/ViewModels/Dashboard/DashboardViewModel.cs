@@ -7,16 +7,16 @@ namespace CineLog.Mobile.Core.ViewModels.Dashboard;
 
 public partial class DashboardViewModel : BaseViewModel
 {
-    private readonly IAuthService       _authService;
+    private readonly IAuthService _authService;
     private readonly INavigationService _navigation;
-    private readonly IAlertService      _alerts;
+    private readonly IAlertService _alerts;
 
     public DashboardViewModel(IAuthService authService, INavigationService navigation, IAlertService alerts)
     {
         _authService = authService;
-        _navigation  = navigation;
-        _alerts      = alerts;
-        Title        = "Dashboard";
+        _navigation = navigation;
+        _alerts = alerts;
+        Title = "Dashboard";
     }
 
     [RelayCommand]

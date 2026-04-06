@@ -77,8 +77,8 @@ public class MoviesEndpointTests
         var response = await client.PostAsJsonAsync("/api/movies", new
         {
             TmdbId = Random.Shared.Next(100_000, int.MaxValue),
-            Title  = "Admin Created Movie",
-            Type   = 0  // MovieType.Movie
+            Title = "Admin Created Movie",
+            Type = 0  // MovieType.Movie
         });
 
         response.StatusCode.Should().Be(HttpStatusCode.Created);
@@ -96,8 +96,8 @@ public class MoviesEndpointTests
         var response = await client.PostAsJsonAsync("/api/movies", new
         {
             TmdbId = 99999,
-            Title  = "Should Fail",
-            Type   = 0
+            Title = "Should Fail",
+            Type = 0
         });
 
         response.StatusCode.Should().Be(HttpStatusCode.Forbidden);

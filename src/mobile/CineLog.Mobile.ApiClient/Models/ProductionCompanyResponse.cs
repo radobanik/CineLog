@@ -5,14 +5,14 @@ namespace CineLog.Mobile.ApiClient.Models;
 public partial class ProductionCompanyResponse
 {
     [Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-    public System.Guid? Id { get; set; } = default !;
+    public System.Guid? Id { get; set; } = default!;
 
     [Newtonsoft.Json.JsonProperty("name", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-    public string? Name { get; set; } = default !;
+    public string? Name { get; set; } = default!;
 
     [Newtonsoft.Json.JsonProperty("logoPath", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-    public string? LogoPath { get; set; } = default !;
+    public string? LogoPath { get; set; } = default!;
 
     [Newtonsoft.Json.JsonProperty("originCountry", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-    public string? OriginCountry { get; set; } = default !;
+    public string? OriginCountry { get; set; } = default!;
 }

@@ -44,7 +44,7 @@ public class UsersEndpointTests
 
         var response = await client.PutAsJsonAsync("/api/users/me", new
         {
-            Bio       = "Movie enthusiast",
+            Bio = "Movie enthusiast",
             AvatarUrl = "https://example.com/avatar.png"
         });
 

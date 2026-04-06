@@ -1,11 +1,11 @@
-using NSwag;
-using NSwag.CodeGeneration.CSharp;
-using NJsonSchema.CodeGeneration.CSharp;
+using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Extensions.Configuration;
-using System.Text;
+using NJsonSchema.CodeGeneration.CSharp;
+using NSwag;
+using NSwag.CodeGeneration.CSharp;
 
 var config = new ConfigurationBuilder()
     .SetBasePath(AppContext.BaseDirectory)
@@ -13,9 +13,9 @@ var config = new ConfigurationBuilder()
     .AddCommandLine(args)
     .Build();
 
-var swaggerUrl      = args.Length > 0 && !args[0].StartsWith("--") ? args[0] : config["SwaggerUrl"] ?? "http://localhost:5098/swagger/v1/swagger.json";
-var outputDir       = args.Length > 1 && !args[1].StartsWith("--") ? args[1] : config["OutputDir"]  ?? Path.Combine(Directory.GetCurrentDirectory(), "GeneratedClients");
-var clientNamespace = args.Length > 2 && !args[2].StartsWith("--") ? args[2] : config["Namespace"]  ?? "CineLog.ApiClient";
+var swaggerUrl = args.Length > 0 && !args[0].StartsWith("--") ? args[0] : config["SwaggerUrl"] ?? "http://localhost:5098/swagger/v1/swagger.json";
+var outputDir = args.Length > 1 && !args[1].StartsWith("--") ? args[1] : config["OutputDir"] ?? Path.Combine(Directory.GetCurrentDirectory(), "GeneratedClients");
+var clientNamespace = args.Length > 2 && !args[2].StartsWith("--") ? args[2] : config["Namespace"] ?? "CineLog.ApiClient";
 
 if (!Path.IsPathRooted(outputDir))
     outputDir = Path.Combine(Directory.GetCurrentDirectory(), outputDir);
@@ -109,17 +109,17 @@ foreach (var member in typeMembers)
 {
     string? typeName = member switch
     {
-        ClassDeclarationSyntax c     => c.TypeParameterList?.Parameters.Count > 0
+        ClassDeclarationSyntax c => c.TypeParameterList?.Parameters.Count > 0
                                             ? $"{c.Identifier.Text}`{c.TypeParameterList.Parameters.Count}"
                                             : c.Identifier.Text,
         InterfaceDeclarationSyntax i => i.TypeParameterList?.Parameters.Count > 0
                                             ? $"{i.Identifier.Text}`{i.TypeParameterList.Parameters.Count}"
                                             : i.Identifier.Text,
-        EnumDeclarationSyntax e      => e.Identifier.Text,
-        RecordDeclarationSyntax r    => r.TypeParameterList?.Parameters.Count > 0
+        EnumDeclarationSyntax e => e.Identifier.Text,
+        RecordDeclarationSyntax r => r.TypeParameterList?.Parameters.Count > 0
                                             ? $"{r.Identifier.Text}`{r.TypeParameterList.Parameters.Count}"
                                             : r.Identifier.Text,
-        _                            => null
+        _ => null
     };
 
     if (typeName is null) continue;

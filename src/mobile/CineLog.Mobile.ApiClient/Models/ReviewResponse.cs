@@ -5,32 +5,32 @@ namespace CineLog.Mobile.ApiClient.Models;
 public partial class ReviewResponse
 {
     [Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-    public System.Guid? Id { get; set; } = default !;
+    public System.Guid? Id { get; set; } = default!;
 
     [Newtonsoft.Json.JsonProperty("userId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-    public System.Guid? UserId { get; set; } = default !;
+    public System.Guid? UserId { get; set; } = default!;
 
     [Newtonsoft.Json.JsonProperty("username", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-    public string? Username { get; set; } = default !;
+    public string? Username { get; set; } = default!;
 
     [Newtonsoft.Json.JsonProperty("movieTitle", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-    public string? MovieTitle { get; set; } = default !;
+    public string? MovieTitle { get; set; } = default!;
 
     [Newtonsoft.Json.JsonProperty("rating", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-    public double? Rating { get; set; } = default !;
+    public double? Rating { get; set; } = default!;
 
     [Newtonsoft.Json.JsonProperty("reviewText", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-    public string? ReviewText { get; set; } = default !;
+    public string? ReviewText { get; set; } = default!;
 
     [Newtonsoft.Json.JsonProperty("containsSpoilers", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-    public bool? ContainsSpoilers { get; set; } = default !;
+    public bool? ContainsSpoilers { get; set; } = default!;
 
     [Newtonsoft.Json.JsonProperty("likesCount", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-    public int? LikesCount { get; set; } = default !;
+    public int? LikesCount { get; set; } = default!;
 
     [Newtonsoft.Json.JsonProperty("isLiked", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-    public bool? IsLiked { get; set; } = default !;
+    public bool? IsLiked { get; set; } = default!;
 
     [Newtonsoft.Json.JsonProperty("createdAt", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-    public System.DateTimeOffset? CreatedAt { get; set; } = default !;
+    public System.DateTimeOffset? CreatedAt { get; set; } = default!;
 }

@@ -5,24 +5,24 @@ namespace CineLog.Mobile.ApiClient.Models;
 public partial class UpdatePersonCommand
 {
     [Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-    public System.Guid? Id { get; set; } = default !;
+    public System.Guid? Id { get; set; } = default!;
 
     [Newtonsoft.Json.JsonProperty("name", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-    public string? Name { get; set; } = default !;
+    public string? Name { get; set; } = default!;
 
     [Newtonsoft.Json.JsonProperty("profilePath", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-    public string? ProfilePath { get; set; } = default !;
+    public string? ProfilePath { get; set; } = default!;
 
     [Newtonsoft.Json.JsonProperty("biography", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-    public string? Biography { get; set; } = default !;
+    public string? Biography { get; set; } = default!;
 
     [Newtonsoft.Json.JsonProperty("birthday", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
     [Newtonsoft.Json.JsonConverter(typeof(DateFormatConverter))]
-    public System.DateTimeOffset? Birthday { get; set; } = default !;
+    public System.DateTimeOffset? Birthday { get; set; } = default!;
 
     [Newtonsoft.Json.JsonProperty("placeOfBirth", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-    public string? PlaceOfBirth { get; set; } = default !;
+    public string? PlaceOfBirth { get; set; } = default!;
 
     [Newtonsoft.Json.JsonProperty("popularity", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-    public double? Popularity { get; set; } = default !;
+    public double? Popularity { get; set; } = default!;
 }

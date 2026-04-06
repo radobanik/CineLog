@@ -9,9 +9,9 @@ using Movie = CineLog.Domain.Entities.Movie;
 using MovieCast = CineLog.Domain.Entities.MovieCast;
 using MovieCrew = CineLog.Domain.Entities.MovieCrew;
 using MovieGenre = CineLog.Domain.Entities.MovieGenre;
+using MovieProductionCompany = CineLog.Domain.Entities.MovieProductionCompany;
 using Person = CineLog.Domain.Entities.Person;
 using ProductionCompany = CineLog.Domain.Entities.ProductionCompany;
-using MovieProductionCompany = CineLog.Domain.Entities.MovieProductionCompany;
 
 namespace CineLog.TmdbSync.Sync;
 

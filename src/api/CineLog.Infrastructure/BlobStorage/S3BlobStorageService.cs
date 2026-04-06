@@ -20,11 +20,11 @@ public class S3BlobStorageService : IBlobStorageService
     {
         var request = new PutObjectRequest
         {
-            BucketName  = _options.BucketName,
-            Key         = key,
+            BucketName = _options.BucketName,
+            Key = key,
             InputStream = content,
             ContentType = contentType,
-            CannedACL   = S3CannedACL.PublicRead
+            CannedACL = S3CannedACL.PublicRead
         };
 
         await _s3.PutObjectAsync(request, ct);
@@ -37,7 +37,7 @@ public class S3BlobStorageService : IBlobStorageService
         var request = new DeleteObjectRequest
         {
             BucketName = _options.BucketName,
-            Key        = key
+            Key = key
         };
 
         await _s3.DeleteObjectAsync(request, ct);

@@ -68,7 +68,7 @@ public class CineLogWebApplicationFactory : WebApplicationFactory<Program>, IAsy
         var response = await client.PostAsJsonAsync("/api/auth/register", new
         {
             Username = username ?? $"u{Guid.NewGuid():N}"[..12],
-            Email    = email    ?? $"{Guid.NewGuid()}@test.com",
+            Email = email ?? $"{Guid.NewGuid()}@test.com",
             Password = password
         });
         response.EnsureSuccessStatusCode();

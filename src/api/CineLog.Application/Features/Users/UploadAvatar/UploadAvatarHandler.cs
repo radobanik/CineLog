@@ -19,10 +19,10 @@ public class UploadAvatarHandler : IRequestHandler<UploadAvatarCommand, UploadAv
         ICurrentUserService currentUser,
         IAppDbContext context)
     {
-        _blobStorage    = blobStorage;
+        _blobStorage = blobStorage;
         _userRepository = userRepository;
-        _currentUser    = currentUser;
-        _context        = context;
+        _currentUser = currentUser;
+        _context = context;
     }
 
     public async Task<UploadAvatarResponse> Handle(UploadAvatarCommand request, CancellationToken cancellationToken)

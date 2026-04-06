@@ -5,11 +5,11 @@ namespace CineLog.Mobile.ApiClient.Models;
 public partial class AuthResponse
 {
     [Newtonsoft.Json.JsonProperty("token", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-    public string? Token { get; set; } = default !;
+    public string? Token { get; set; } = default!;
 
     [Newtonsoft.Json.JsonProperty("userId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-    public System.Guid? UserId { get; set; } = default !;
+    public System.Guid? UserId { get; set; } = default!;
 
     [Newtonsoft.Json.JsonProperty("username", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-    public string? Username { get; set; } = default !;
+    public string? Username { get; set; } = default!;
 }
