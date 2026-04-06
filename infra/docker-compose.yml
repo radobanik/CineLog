@@ -22,7 +22,7 @@ services:
       - BlobStorage__AccessKey=cinelog
       - BlobStorage__SecretKey=cinelog123
       - BlobStorage__BucketName=cinelog
-      - BlobStorage__PublicBaseUrl=http://localhost:9000/cinelog
+      - BlobStorage__PublicBaseUrl=${MINIO_PUBLIC_URL:-http://localhost:9000/cinelog}
     depends_on:
       postgres:
         condition: service_healthy

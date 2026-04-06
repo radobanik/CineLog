@@ -1,5 +1,56 @@
 # Developer Guide
 
+## Getting started
+
+### 1. Install tools (once)
+
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+- [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0)
+- TMDb API key — free at <https://www.themovidedb.org/settings/api>
+
+If you are testing on a physical device, also install the dev tunnel CLI:
+
+```powershell
+winget install Microsoft.devtunnel
+devtunnel user login
+```
+
+### 2. Set your TMDb key (once)
+
+```powershell
+cd infra
+cp .env.example .env
+# open .env and fill in TMDB_API_KEY
+```
+
+### 3. Start everything
+
+**Emulator — open one terminal:**
+
+```powershell
+cd infra
+docker compose up --build -d
+```
+
+**Physical device — open two terminals:**
+
+```powershell
+# terminal 1 — start the tunnel, keep this open the whole session
+.\infra\dev-tunnel.ps1
+
+# terminal 2 — start the backend after the tunnel is up
+cd infra
+docker compose up --build -d
+```
+
+> Why tunnel first? When the API starts for the first time it seeds the database with image URLs. Those URLs must point to the tunnel, not localhost, so the device can load them. The tunnel URL never changes between sessions, so you only need to rebuild the mobile app once after the very first run.
+
+### 4. Run the mobile app
+
+Build and deploy `CineLog.Mobile` from your IDE.
+
+---
+
 ## Requirements
 
 - [Docker Desktop](https://www.docker.com/products/docker-desktop/)
@@ -174,6 +225,31 @@ dotnet ef migrations remove \
   --project src/CineLog.Infrastructure/CineLog.Infrastructure.csproj \
   --startup-project src/CineLog.Api/CineLog.Api.csproj
 ```
+
+---
+
+## Mobile Dev Tunnel
+
+Physical devices can't reach `localhost`. The tunnel creates a public URL that forwards traffic to your machine.
+
+### Every dev session
+
+Run from the repository root **before** `docker compose up`:
+
+```powershell
+.\infra\dev-tunnel.ps1
+```
+
+Keep this terminal open while you develop. The script does everything automatically:
+
+1. Creates a tunnel named `cinelog` the first time, reuses it after that
+2. Waits for the tunnel to start and reads the real URLs from its output
+3. Writes the API URL into `src/mobile/CineLog.Mobile/appsettings.Development.json`
+4. Adds `MINIO_PUBLIC_URL` to `infra/.env` so the API uses the tunnel address when storing image URLs in the database
+
+Because the tunnel is named and tied to your Microsoft account, **the URL never changes between sessions**. You only need to rebuild the mobile app once after the first run.
+
+Both `appsettings.Development.json` and `infra/.env` are git-ignored, so nothing sensitive gets committed.
 
 ---
 
