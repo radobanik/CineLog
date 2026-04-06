@@ -35,7 +35,7 @@
                 Style="{StaticResource OverlineLabel}"
                 Text="USERNAME" />
             <Border Style="{StaticResource InputFieldBorder}">
-                <Grid ColumnDefinitions="52,*">
+                <Grid ColumnDefinitions="52,*,52">
                     <Label
                         Grid.Column="0"
                         HorizontalOptions="Center"
@@ -55,7 +55,7 @@
                 Style="{StaticResource OverlineLabel}"
                 Text="EMAIL" />
             <Border Style="{StaticResource InputFieldBorder}">
-                <Grid ColumnDefinitions="52,*">
+                <Grid ColumnDefinitions="52,*,52">
                     <Label
                         Grid.Column="0"
                         HorizontalOptions="Center"
