@@ -22,7 +22,7 @@
                 </Border.StrokeShape>
                 <Label
                     Style="{StaticResource IconLabel}"
-                    FontSize="38"
+                    FontSize="54"
                     HorizontalOptions="Center"
                     Text="{x:Static helpers:FontAwesomeIcons.Film}"
                     TextColor="White"
