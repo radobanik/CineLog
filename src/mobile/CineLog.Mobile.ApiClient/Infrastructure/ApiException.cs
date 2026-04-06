@@ -1,26 +1,22 @@
-// AUTO-GENERATED — run CineLog.ApiClientGenerator to regenerate full implementation.
+
 namespace CineLog.Mobile.ApiClient.Infrastructure;
 
-public class ApiException : Exception
+[System.CodeDom.Compiler.GeneratedCode("NSwag", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+public partial class ApiException : System.Exception
 {
-    public int StatusCode { get; }
-    public string? Response { get; }
+    public int StatusCode { get; private set; }
+    public string? Response { get; private set; }
+    public System.Collections.Generic.IReadOnlyDictionary<string, System.Collections.Generic.IEnumerable<string>> Headers { get; private set; }
 
-    public ApiException(string message, int statusCode, string? response, Exception? innerException)
-        : base($"{message}\n\nStatus: {statusCode}\nResponse:\n{response?.Substring(0, Math.Min(512, response.Length))}", innerException)
+    public ApiException(string message, int statusCode, string? response, System.Collections.Generic.IReadOnlyDictionary<string, System.Collections.Generic.IEnumerable<string>> headers, System.Exception? innerException) : base(message + "\n\nStatus: " + statusCode + "\nResponse: \n" + ((response == null) ? "(null)" : response.Substring(0, response.Length >= 512 ? 512 : response.Length)), innerException)
     {
         StatusCode = statusCode;
-        Response   = response;
+        Response = response;
+        Headers = headers;
     }
-}
 
-public class ApiException<TResult> : ApiException
-{
-    public TResult Result { get; }
-
-    public ApiException(string message, int statusCode, string? response, TResult result, Exception? innerException)
-        : base(message, statusCode, response, innerException)
+    public override string ToString()
     {
-        Result = result;
+        return string.Format("HTTP Response: \n\n{0}\n\n{1}", Response, base.ToString());
     }
 }

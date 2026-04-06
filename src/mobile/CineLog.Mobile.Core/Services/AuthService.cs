@@ -20,7 +20,7 @@ public sealed class AuthService : IAuthService
         var response = await _authClient.LoginAsync(
             new LoginCommand { Email = email, Password = password }, ct);
 
-        await _session.SetSessionAsync(response.Token, response.UserId, response.Username);
+        await _session.SetSessionAsync(response.Token!, response.UserId!.Value, response.Username!);
     }
 
     public async Task RegisterAsync(string username, string email, string password, CancellationToken ct = default)
@@ -28,7 +28,7 @@ public sealed class AuthService : IAuthService
         var response = await _authClient.RegisterAsync(
             new RegisterCommand { Username = username, Email = email, Password = password }, ct);
 
-        await _session.SetSessionAsync(response.Token, response.UserId, response.Username);
+        await _session.SetSessionAsync(response.Token!, response.UserId!.Value, response.Username!);
     }
 
     public Task LogoutAsync()

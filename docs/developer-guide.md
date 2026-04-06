@@ -208,8 +208,8 @@ Default values live in `tools/CineLog.ApiClientGenerator/appsettings.json`:
 ```json
 {
   "SwaggerUrl": "http://localhost:5098/swagger/v1/swagger.json",
-  "OutputDir": "GeneratedClients",
-  "Namespace": "CineLog.ApiClient"
+  "OutputDir": "src/mobile/CineLog.Mobile.ApiClient",
+  "Namespace": "CineLog.Mobile.ApiClient"
 }
 ```
 
@@ -225,13 +225,13 @@ dotnet run --project src/tools/CineLog.ApiClientGenerator/CineLog.ApiClientGener
 
 # Override with positional args
 dotnet run --project src/tools/CineLog.ApiClientGenerator/CineLog.ApiClientGenerator.csproj \
-  -- http://localhost:5098/swagger/v1/swagger.json ./GeneratedClients CineLog.ApiClient
+  -- http://localhost:5098/swagger/v1/swagger.json src/mobile/CineLog.Mobile.ApiClient CineLog.Mobile.ApiClient
 
 # Override with named args
 dotnet run --project src/tools/CineLog.ApiClientGenerator/CineLog.ApiClientGenerator.csproj \
   -- --SwaggerUrl=http://localhost:5098/swagger/v1/swagger.json \
-     --OutputDir=./GeneratedClients \
-     --Namespace=CineLog.ApiClient
+     --OutputDir=src/mobile/CineLog.Mobile.ApiClient \
+     --Namespace=CineLog.Mobile.ApiClient
 ```
 
 Command-line args take priority over `appsettings.json`. Relative `OutputDir` paths are resolved against the current working directory.

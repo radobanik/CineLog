@@ -4,14 +4,14 @@ using CineLog.Mobile.ApiClient.Infrastructure;
 namespace CineLog.Mobile.ApiClient.Clients;
 
 [System.CodeDom.Compiler.GeneratedCode("NSwag", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-public partial class AuthClient : IAuthClient
+public partial class DashboardClient : IDashboardClient
 {
     private System.Net.Http.HttpClient _httpClient;
     private static System.Lazy<Newtonsoft.Json.JsonSerializerSettings> _settings = new System.Lazy<Newtonsoft.Json.JsonSerializerSettings>(CreateSerializerSettings, true);
     private Newtonsoft.Json.JsonSerializerSettings _instanceSettings;
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
-    public AuthClient(System.Net.Http.HttpClient httpClient)
+    public DashboardClient(System.Net.Http.HttpClient httpClient)
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
     {
@@ -40,22 +40,22 @@ public partial class AuthClient : IAuthClient
     partial void PrepareRequest(System.Net.Http.HttpClient client, System.Net.Http.HttpRequestMessage request, System.Text.StringBuilder urlBuilder);
     partial void ProcessResponse(System.Net.Http.HttpClient client, System.Net.Http.HttpResponseMessage response);
     /// <summary>
-    /// Register a new user.
+    /// Get top-rated movies.
     /// </summary>
     /// <returns>OK</returns>
     /// <exception cref = "ApiException">A server side error occurred.</exception>
-    public virtual System.Threading.Tasks.Task<AuthResponse> RegisterAsync(RegisterCommand? body)
+    public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<MovieSummaryResponse>> TopRatedMoviesAsync(int? count)
     {
-        return RegisterAsync(body, System.Threading.CancellationToken.None);
+        return TopRatedMoviesAsync(count, System.Threading.CancellationToken.None);
     }
 
     /// <param name = "cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <summary>
-    /// Register a new user.
+    /// Get top-rated movies.
     /// </summary>
     /// <returns>OK</returns>
     /// <exception cref = "ApiException">A server side error occurred.</exception>
-    public virtual async System.Threading.Tasks.Task<AuthResponse> RegisterAsync(RegisterCommand? body, System.Threading.CancellationToken cancellationToken)
+    public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<MovieSummaryResponse>> TopRatedMoviesAsync(int? count, System.Threading.CancellationToken cancellationToken)
     {
         var client_ = _httpClient;
         var disposeClient_ = false;
@@ -63,15 +63,18 @@ public partial class AuthClient : IAuthClient
         {
             using (var request_ = new System.Net.Http.HttpRequestMessage())
             {
-                var json_ = Newtonsoft.Json.JsonConvert.SerializeObject(body, JsonSerializerSettings);
-                var content_ = new System.Net.Http.StringContent(json_);
-                content_.Headers.ContentType = System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json");
-                request_.Content = content_;
-                request_.Method = new System.Net.Http.HttpMethod("POST");
+                request_.Method = new System.Net.Http.HttpMethod("GET");
                 request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("text/plain"));
                 var urlBuilder_ = new System.Text.StringBuilder();
-                // Operation Path: "api/auth/register"
-                urlBuilder_.Append("api/auth/register");
+                // Operation Path: "api/dashboard/top-rated-movies"
+                urlBuilder_.Append("api/dashboard/top-rated-movies");
+                urlBuilder_.Append('?');
+                if (count != null)
+                {
+                    urlBuilder_.Append(System.Uri.EscapeDataString("count")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(count, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
+                }
+
+                urlBuilder_.Length--;
                 PrepareRequest(client_, request_, urlBuilder_);
                 var url_ = urlBuilder_.ToString();
                 request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
@@ -93,7 +96,7 @@ public partial class AuthClient : IAuthClient
                     var status_ = (int)response_.StatusCode;
                     if (status_ == 200)
                     {
-                        var objectResponse_ = await ReadObjectResponseAsync<AuthResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                        var objectResponse_ = await ReadObjectResponseAsync<System.Collections.Generic.ICollection<MovieSummaryResponse>>(response_, headers_, cancellationToken).ConfigureAwait(false);
                         if (objectResponse_.Object == null)
                         {
                             throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
@@ -122,22 +125,22 @@ public partial class AuthClient : IAuthClient
     }
 
     /// <summary>
-    /// Login with email and password.
+    /// Get the latest review activity across all users.
     /// </summary>
     /// <returns>OK</returns>
     /// <exception cref = "ApiException">A server side error occurred.</exception>
-    public virtual System.Threading.Tasks.Task<AuthResponse> LoginAsync(LoginCommand? body)
+    public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<NewActionResponse>> NewActionsAsync(int? count)
     {
-        return LoginAsync(body, System.Threading.CancellationToken.None);
+        return NewActionsAsync(count, System.Threading.CancellationToken.None);
     }
 
     /// <param name = "cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <summary>
-    /// Login with email and password.
+    /// Get the latest review activity across all users.
     /// </summary>
     /// <returns>OK</returns>
     /// <exception cref = "ApiException">A server side error occurred.</exception>
-    public virtual async System.Threading.Tasks.Task<AuthResponse> LoginAsync(LoginCommand? body, System.Threading.CancellationToken cancellationToken)
+    public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<NewActionResponse>> NewActionsAsync(int? count, System.Threading.CancellationToken cancellationToken)
     {
         var client_ = _httpClient;
         var disposeClient_ = false;
@@ -145,15 +148,18 @@ public partial class AuthClient : IAuthClient
         {
             using (var request_ = new System.Net.Http.HttpRequestMessage())
             {
-                var json_ = Newtonsoft.Json.JsonConvert.SerializeObject(body, JsonSerializerSettings);
-                var content_ = new System.Net.Http.StringContent(json_);
-                content_.Headers.ContentType = System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json");
-                request_.Content = content_;
-                request_.Method = new System.Net.Http.HttpMethod("POST");
+                request_.Method = new System.Net.Http.HttpMethod("GET");
                 request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("text/plain"));
                 var urlBuilder_ = new System.Text.StringBuilder();
-                // Operation Path: "api/auth/login"
-                urlBuilder_.Append("api/auth/login");
+                // Operation Path: "api/dashboard/new-actions"
+                urlBuilder_.Append("api/dashboard/new-actions");
+                urlBuilder_.Append('?');
+                if (count != null)
+                {
+                    urlBuilder_.Append(System.Uri.EscapeDataString("count")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(count, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
+                }
+
+                urlBuilder_.Length--;
                 PrepareRequest(client_, request_, urlBuilder_);
                 var url_ = urlBuilder_.ToString();
                 request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
@@ -175,7 +181,92 @@ public partial class AuthClient : IAuthClient
                     var status_ = (int)response_.StatusCode;
                     if (status_ == 200)
                     {
-                        var objectResponse_ = await ReadObjectResponseAsync<AuthResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                        var objectResponse_ = await ReadObjectResponseAsync<System.Collections.Generic.ICollection<NewActionResponse>>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                        if (objectResponse_.Object == null)
+                        {
+                            throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                        }
+
+                        return objectResponse_.Object;
+                    }
+                    else
+                    {
+                        var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
+                        throw new ApiException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
+                    }
+                }
+                finally
+                {
+                    if (disposeResponse_)
+                        response_.Dispose();
+                }
+            }
+        }
+        finally
+        {
+            if (disposeClient_)
+                client_.Dispose();
+        }
+    }
+
+    /// <summary>
+    /// Get the newest movies by release date.
+    /// </summary>
+    /// <returns>OK</returns>
+    /// <exception cref = "ApiException">A server side error occurred.</exception>
+    public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<MovieSummaryResponse>> NewestMoviesAsync(int? count)
+    {
+        return NewestMoviesAsync(count, System.Threading.CancellationToken.None);
+    }
+
+    /// <param name = "cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <summary>
+    /// Get the newest movies by release date.
+    /// </summary>
+    /// <returns>OK</returns>
+    /// <exception cref = "ApiException">A server side error occurred.</exception>
+    public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<MovieSummaryResponse>> NewestMoviesAsync(int? count, System.Threading.CancellationToken cancellationToken)
+    {
+        var client_ = _httpClient;
+        var disposeClient_ = false;
+        try
+        {
+            using (var request_ = new System.Net.Http.HttpRequestMessage())
+            {
+                request_.Method = new System.Net.Http.HttpMethod("GET");
+                request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("text/plain"));
+                var urlBuilder_ = new System.Text.StringBuilder();
+                // Operation Path: "api/dashboard/newest-movies"
+                urlBuilder_.Append("api/dashboard/newest-movies");
+                urlBuilder_.Append('?');
+                if (count != null)
+                {
+                    urlBuilder_.Append(System.Uri.EscapeDataString("count")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(count, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
+                }
+
+                urlBuilder_.Length--;
+                PrepareRequest(client_, request_, urlBuilder_);
+                var url_ = urlBuilder_.ToString();
+                request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
+                PrepareRequest(client_, request_, url_);
+                var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
+                var disposeResponse_ = true;
+                try
+                {
+                    var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                    foreach (var item_ in response_.Headers)
+                        headers_[item_.Key] = item_.Value;
+                    if (response_.Content != null && response_.Content.Headers != null)
+                    {
+                        foreach (var item_ in response_.Content.Headers)
+                            headers_[item_.Key] = item_.Value;
+                    }
+
+                    ProcessResponse(client_, response_);
+                    var status_ = (int)response_.StatusCode;
+                    if (status_ == 200)
+                    {
+                        var objectResponse_ = await ReadObjectResponseAsync<System.Collections.Generic.ICollection<MovieSummaryResponse>>(response_, headers_, cancellationToken).ConfigureAwait(false);
                         if (objectResponse_.Object == null)
                         {
                             throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);

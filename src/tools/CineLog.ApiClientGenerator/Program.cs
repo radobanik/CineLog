@@ -40,13 +40,18 @@ Console.WriteLine($"Namespace   : {clientNamespace}");
 Console.WriteLine($"Output      : {outputDir}");
 Console.WriteLine();
 
-if (Directory.Exists(outputDir))
-    Directory.Delete(outputDir, recursive: true);
 Directory.CreateDirectory(outputDir);
+foreach (var subfolder in new[] { "Clients", "Models", "Infrastructure" })
+{
+    var sub = Path.Combine(outputDir, subfolder);
+    if (Directory.Exists(sub))
+        Directory.Delete(sub, recursive: true);
+}
 
 var settings = new CSharpClientGeneratorSettings
 {
     ClassName = "{controller}Client",
+    OperationNameGenerator = new NSwag.CodeGeneration.OperationNameGenerators.MultipleClientsFromFirstTagAndOperationNameGenerator(),
     GenerateClientClasses = true,
     GenerateClientInterfaces = true,
     GenerateDtoTypes = true,
@@ -104,10 +109,16 @@ foreach (var member in typeMembers)
 {
     string? typeName = member switch
     {
-        ClassDeclarationSyntax c     => c.Identifier.Text,
-        InterfaceDeclarationSyntax i => i.Identifier.Text,
+        ClassDeclarationSyntax c     => c.TypeParameterList?.Parameters.Count > 0
+                                            ? $"{c.Identifier.Text}`{c.TypeParameterList.Parameters.Count}"
+                                            : c.Identifier.Text,
+        InterfaceDeclarationSyntax i => i.TypeParameterList?.Parameters.Count > 0
+                                            ? $"{i.Identifier.Text}`{i.TypeParameterList.Parameters.Count}"
+                                            : i.Identifier.Text,
         EnumDeclarationSyntax e      => e.Identifier.Text,
-        RecordDeclarationSyntax r    => r.Identifier.Text,
+        RecordDeclarationSyntax r    => r.TypeParameterList?.Parameters.Count > 0
+                                            ? $"{r.Identifier.Text}`{r.TypeParameterList.Parameters.Count}"
+                                            : r.Identifier.Text,
         _                            => null
     };
 
@@ -120,8 +131,13 @@ foreach (var member in typeMembers)
     var sb = new StringBuilder();
     foreach (var u in usings)
         sb.AppendLine(u.ToFullString().TrimEnd());
+    if (subfolder == "Clients")
+    {
+        sb.AppendLine($"using {namespaceName}.Models;");
+        sb.AppendLine($"using {namespaceName}.Infrastructure;");
+    }
     sb.AppendLine();
-    sb.AppendLine($"namespace {namespaceName};");
+    sb.AppendLine($"namespace {namespaceName}.{subfolder};");
     sb.AppendLine();
     sb.AppendLine(member.NormalizeWhitespace().ToFullString());
 
@@ -137,13 +153,15 @@ Console.WriteLine($"Generated {fileCount} files in {outputDir}");
 
 static string ClassifyType(string name)
 {
-    if (name.Length > 1 && name[0] == 'I' && char.IsUpper(name[1]) && name.EndsWith("Client"))
+    var baseName = name.Contains('`') ? name[..name.IndexOf('`')] : name;
+
+    if (baseName.Length > 1 && baseName[0] == 'I' && char.IsUpper(baseName[1]) && baseName.EndsWith("Client"))
         return "Clients";
 
-    if (name.EndsWith("Client"))
+    if (baseName.EndsWith("Client"))
         return "Clients";
 
-    if (name is "ApiException" or "FileResponse" or "FileParameter" or "JsonExceptionConverter")
+    if (baseName is "ApiException" or "FileResponse" or "FileParameter" or "JsonExceptionConverter")
         return "Infrastructure";
 
     return "Models";
