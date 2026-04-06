@@ -1,123 +1,126 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
+    Shell.NavBarIsVisible="False"
     x:Class="CineLog.Mobile.Pages.Auth.RegisterPage"
+    x:DataType="vm:RegisterViewModel"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:helpers="clr-namespace:CineLog.Mobile.Helpers"
     xmlns:vm="clr-namespace:CineLog.Mobile.Core.ViewModels.Auth;assembly=CineLog.Mobile.Core"
-    x:DataType="vm:RegisterViewModel"
-    Shell.NavBarIsVisible="False">
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
     <ScrollView>
         <VerticalStackLayout Padding="28,56,28,48" Spacing="0">
 
             <Label
-                Text="{x:Static helpers:FontAwesomeIcons.ChevronLeft}"
                 FontFamily="FASolid"
-                TextColor="{StaticResource OnBackground}"
                 FontSize="20"
-                Margin="0,0,0,24">
+                Margin="0,0,0,24"
+                Text="{x:Static helpers:FontAwesomeIcons.ChevronLeft}"
+                TextColor="{StaticResource OnBackground}">
                 <Label.GestureRecognizers>
                     <TapGestureRecognizer Command="{Binding GoToLoginCommand}" />
                 </Label.GestureRecognizers>
             </Label>
 
             <Label
-                Text="Create Account"
+                Margin="0,0,0,6"
                 Style="{StaticResource HeadlineLarge}"
-                Margin="0,0,0,6" />
+                Text="Create Account" />
             <Label
-                Text="Join the film community"
+                Margin="0,0,0,32"
                 Style="{StaticResource Caption}"
-                Margin="0,0,0,32" />
+                Text="Join the film community" />
 
             <Label
-                Text="USERNAME"
-                FontSize="11"
-                FontAttributes="Bold"
                 CharacterSpacing="1.2"
-                TextTransform="Uppercase"
+                FontAttributes="Bold"
+                FontSize="11"
+                Margin="4,0,0,8"
+                Text="USERNAME"
                 TextColor="{StaticResource TextSecondary}"
-                Margin="4,0,0,8" />
+                TextTransform="Uppercase" />
             <Border Style="{StaticResource InputField}">
                 <Grid ColumnDefinitions="52,*">
                     <Label
-                        Grid.Column="0"
-                        Text="{x:Static helpers:FontAwesomeIcons.User}"
                         FontFamily="FASolid"
-                        TextColor="{StaticResource TextSecondary}"
                         FontSize="16"
+                        Grid.Column="0"
                         HorizontalOptions="Center"
+                        Text="{x:Static helpers:FontAwesomeIcons.User}"
+                        TextColor="{StaticResource TextSecondary}"
                         VerticalOptions="Center" />
                     <Entry
                         Grid.Column="1"
-                        Style="{StaticResource CleanEntry}"
                         Placeholder="filmfanatic"
+                        Style="{StaticResource CleanEntry}"
                         Text="{Binding Username}" />
                 </Grid>
             </Border>
 
             <Label
-                Text="EMAIL"
-                FontSize="11"
-                FontAttributes="Bold"
                 CharacterSpacing="1.2"
-                TextTransform="Uppercase"
+                FontAttributes="Bold"
+                FontSize="11"
+                Margin="4,16,0,8"
+                Text="EMAIL"
                 TextColor="{StaticResource TextSecondary}"
-                Margin="4,16,0,8" />
+                TextTransform="Uppercase" />
             <Border Style="{StaticResource InputField}">
                 <Grid ColumnDefinitions="52,*">
                     <Label
-                        Grid.Column="0"
-                        Text="{x:Static helpers:FontAwesomeIcons.Envelope}"
                         FontFamily="FASolid"
-                        TextColor="{StaticResource TextSecondary}"
                         FontSize="16"
+                        Grid.Column="0"
                         HorizontalOptions="Center"
+                        Text="{x:Static helpers:FontAwesomeIcons.Envelope}"
+                        TextColor="{StaticResource TextSecondary}"
                         VerticalOptions="Center" />
                     <Entry
                         Grid.Column="1"
-                        Style="{StaticResource CleanEntry}"
-                        Placeholder="you@example.com"
                         Keyboard="Email"
+                        Placeholder="you@example.com"
+                        Style="{StaticResource CleanEntry}"
                         Text="{Binding Email}" />
                 </Grid>
             </Border>
 
             <Label
-                Text="PASSWORD"
-                FontSize="11"
-                FontAttributes="Bold"
                 CharacterSpacing="1.2"
-                TextTransform="Uppercase"
+                FontAttributes="Bold"
+                FontSize="11"
+                Margin="4,16,0,8"
+                Text="PASSWORD"
                 TextColor="{StaticResource TextSecondary}"
-                Margin="4,16,0,8" />
+                TextTransform="Uppercase" />
             <Border Style="{StaticResource InputField}">
                 <Grid ColumnDefinitions="52,*,52">
                     <Label
-                        Grid.Column="0"
-                        Text="{x:Static helpers:FontAwesomeIcons.Lock}"
                         FontFamily="FASolid"
-                        TextColor="{StaticResource TextSecondary}"
                         FontSize="16"
+                        Grid.Column="0"
                         HorizontalOptions="Center"
+                        Text="{x:Static helpers:FontAwesomeIcons.Lock}"
+                        TextColor="{StaticResource TextSecondary}"
                         VerticalOptions="Center" />
                     <Entry
                         Grid.Column="1"
-                        Style="{StaticResource CleanEntry}"
-                        Placeholder="••••••••"
                         IsPassword="{Binding IsPasswordVisible, Converter={StaticResource InvertedBoolConverter}}"
+                        Placeholder="••••••••"
+                        Style="{StaticResource CleanEntry}"
                         Text="{Binding Password}" />
                     <Label
-                        Grid.Column="2"
-                        Text="{x:Static helpers:FontAwesomeIcons.Eye}"
                         FontFamily="FASolid"
-                        TextColor="{StaticResource TextSecondary}"
                         FontSize="16"
+                        Grid.Column="2"
                         HorizontalOptions="Center"
+                        Text="{x:Static helpers:FontAwesomeIcons.Eye}"
+                        TextColor="{StaticResource TextSecondary}"
                         VerticalOptions="Center">
                         <Label.Triggers>
-                            <DataTrigger TargetType="Label" Binding="{Binding IsPasswordVisible}" Value="True">
+                            <DataTrigger
+                                Binding="{Binding IsPasswordVisible}"
+                                TargetType="Label"
+                                Value="True">
                                 <Setter Property="Text" Value="{x:Static helpers:FontAwesomeIcons.EyeSlash}" />
                             </DataTrigger>
                         </Label.Triggers>
@@ -129,39 +132,42 @@
             </Border>
 
             <Label
-                Text="CONFIRM PASSWORD"
-                FontSize="11"
-                FontAttributes="Bold"
                 CharacterSpacing="1.2"
-                TextTransform="Uppercase"
+                FontAttributes="Bold"
+                FontSize="11"
+                Margin="4,16,0,8"
+                Text="CONFIRM PASSWORD"
                 TextColor="{StaticResource TextSecondary}"
-                Margin="4,16,0,8" />
+                TextTransform="Uppercase" />
             <Border Style="{StaticResource InputField}">
                 <Grid ColumnDefinitions="52,*,52">
                     <Label
-                        Grid.Column="0"
-                        Text="{x:Static helpers:FontAwesomeIcons.Lock}"
                         FontFamily="FASolid"
-                        TextColor="{StaticResource TextSecondary}"
                         FontSize="16"
+                        Grid.Column="0"
                         HorizontalOptions="Center"
+                        Text="{x:Static helpers:FontAwesomeIcons.Lock}"
+                        TextColor="{StaticResource TextSecondary}"
                         VerticalOptions="Center" />
                     <Entry
                         Grid.Column="1"
-                        Style="{StaticResource CleanEntry}"
-                        Placeholder="••••••••"
                         IsPassword="{Binding IsConfirmPasswordVisible, Converter={StaticResource InvertedBoolConverter}}"
+                        Placeholder="••••••••"
+                        Style="{StaticResource CleanEntry}"
                         Text="{Binding ConfirmPassword}" />
                     <Label
-                        Grid.Column="2"
-                        Text="{x:Static helpers:FontAwesomeIcons.Eye}"
                         FontFamily="FASolid"
-                        TextColor="{StaticResource TextSecondary}"
                         FontSize="16"
+                        Grid.Column="2"
                         HorizontalOptions="Center"
+                        Text="{x:Static helpers:FontAwesomeIcons.Eye}"
+                        TextColor="{StaticResource TextSecondary}"
                         VerticalOptions="Center">
                         <Label.Triggers>
-                            <DataTrigger TargetType="Label" Binding="{Binding IsConfirmPasswordVisible}" Value="True">
+                            <DataTrigger
+                                Binding="{Binding IsConfirmPasswordVisible}"
+                                TargetType="Label"
+                                Value="True">
                                 <Setter Property="Text" Value="{x:Static helpers:FontAwesomeIcons.EyeSlash}" />
                             </DataTrigger>
                         </Label.Triggers>
@@ -172,9 +178,9 @@
                 </Grid>
             </Border>
 
-            <HorizontalStackLayout Spacing="10" Margin="0,20,0,0">
+            <HorizontalStackLayout Margin="0,20,0,0" Spacing="10">
                 <CheckBox IsChecked="{Binding IsTermsAccepted}" VerticalOptions="Center" />
-                <Label VerticalOptions="Center" FontSize="13">
+                <Label FontSize="13" VerticalOptions="Center">
                     <Label.FormattedText>
                         <FormattedString>
                             <Span Text="I agree to the " TextColor="{StaticResource TextSecondary}" />
@@ -187,11 +193,11 @@
             </HorizontalStackLayout>
 
             <Button
-                Text="Create Account"
-                Style="{StaticResource PrimaryButton}"
                 Command="{Binding RegisterCommand}"
                 HorizontalOptions="Fill"
-                Margin="0,24,0,0" />
+                Margin="0,24,0,0"
+                Style="{StaticResource PrimaryButton}"
+                Text="Create Account" />
 
             <ActivityIndicator
                 HorizontalOptions="Center"
@@ -201,16 +207,16 @@
 
             <HorizontalStackLayout
                 HorizontalOptions="Center"
-                Spacing="4"
-                Margin="0,32,0,0">
+                Margin="0,32,0,0"
+                Spacing="4">
                 <Label
-                    Text="Already have an account?"
                     Style="{StaticResource Caption}"
+                    Text="Already have an account?"
                     VerticalOptions="Center" />
                 <Label
-                    Text="Sign In"
-                    Style="{StaticResource AccentLabel}"
                     FontSize="13"
+                    Style="{StaticResource AccentLabel}"
+                    Text="Sign In"
                     VerticalOptions="Center">
                     <Label.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding GoToLoginCommand}" />
