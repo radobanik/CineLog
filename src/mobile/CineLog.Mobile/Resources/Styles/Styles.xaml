@@ -1,18 +1,39 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ResourceDictionary
-    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
-    <!-- Labels -->
+    <!--  Pages  -->
+
+    <Style ApplyToDerivedTypes="True" TargetType="ContentPage">
+        <Setter Property="BackgroundColor" Value="{StaticResource Background}" />
+    </Style>
+
+    <!--  Labels  -->
+
     <Style TargetType="Label" x:Key="HeadlineLarge">
         <Setter Property="TextColor" Value="{StaticResource OnBackground}" />
-        <Setter Property="FontSize" Value="28" />
+        <Setter Property="FontSize" Value="26" />
         <Setter Property="FontAttributes" Value="Bold" />
     </Style>
 
     <Style TargetType="Label" x:Key="HeadlineMedium">
         <Setter Property="TextColor" Value="{StaticResource OnBackground}" />
-        <Setter Property="FontSize" Value="22" />
+        <Setter Property="FontSize" Value="20" />
+        <Setter Property="FontAttributes" Value="Bold" />
+    </Style>
+
+    <!--  Section header  -->
+    <Style TargetType="Label" x:Key="SectionHeader">
+        <Setter Property="TextColor" Value="{StaticResource OnBackground}" />
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="CharacterSpacing" Value="1.5" />
+        <Setter Property="TextTransform" Value="Uppercase" />
+    </Style>
+
+    <!--  Accent text  -->
+    <Style TargetType="Label" x:Key="AccentLabel">
+        <Setter Property="TextColor" Value="{StaticResource Primary}" />
+        <Setter Property="FontSize" Value="14" />
         <Setter Property="FontAttributes" Value="Bold" />
     </Style>
 
@@ -31,7 +52,7 @@
         <Setter Property="FontSize" Value="12" />
     </Style>
 
-    <!-- Icon label using Font Awesome -->
+    <!--  Font Awesome icons  -->
     <Style TargetType="Label" x:Key="Icon">
         <Setter Property="FontFamily" Value="FASolid" />
         <Setter Property="TextColor" Value="{StaticResource OnSurface}" />
@@ -44,51 +65,60 @@
         <Setter Property="FontSize" Value="18" />
     </Style>
 
-    <!-- Buttons -->
+    <!--  Buttons  -->
+
+    <!--  Primary button  -->
     <Style TargetType="Button" x:Key="PrimaryButton">
-        <Setter Property="BackgroundColor"  Value="{StaticResource Primary}" />
-        <Setter Property="TextColor"  Value="{StaticResource OnPrimary}" />
-        <Setter Property="FontAttributes"   Value="Bold" />
-        <Setter Property="FontSize"         Value="16" />
-        <Setter Property="CornerRadius"     Value="12" />
-        <Setter Property="HeightRequest"    Value="52" />
-        <Setter Property="Padding"          Value="24,0" />
+        <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
+        <Setter Property="TextColor" Value="{StaticResource OnPrimary}" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="FontSize" Value="15" />
+        <Setter Property="CornerRadius" Value="20" />
+        <Setter Property="HeightRequest" Value="40" />
+        <Setter Property="Padding" Value="20,0" />
     </Style>
 
+    <!--  Secondary button  -->
     <Style TargetType="Button" x:Key="SecondaryButton">
-        <Setter Property="BackgroundColor"  Value="Transparent" />
-        <Setter Property="TextColor"        Value="{StaticResource Primary}" />
-        <Setter Property="FontSize"         Value="14" />
-        <Setter Property="BorderColor"      Value="{StaticResource Primary}" />
-        <Setter Property="BorderWidth"      Value="1.5" />
-        <Setter Property="CornerRadius"     Value="12" />
-        <Setter Property="HeightRequest"    Value="52" />
-        <Setter Property="Padding"          Value="24,0" />
+        <Setter Property="BackgroundColor" Value="Transparent" />
+        <Setter Property="TextColor" Value="{StaticResource Primary}" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="BorderColor" Value="{StaticResource Primary}" />
+        <Setter Property="BorderWidth" Value="1.5" />
+        <Setter Property="CornerRadius" Value="20" />
+        <Setter Property="HeightRequest" Value="40" />
+        <Setter Property="Padding" Value="20,0" />
     </Style>
 
+    <!--  Text-only button  -->
     <Style TargetType="Button" x:Key="TextButton">
         <Setter Property="BackgroundColor" Value="Transparent" />
-        <Setter Property="TextColor"       Value="{StaticResource Primary}" />
-        <Setter Property="FontSize"        Value="14" />
+        <Setter Property="TextColor" Value="{StaticResource Primary}" />
+        <Setter Property="FontSize" Value="14" />
     </Style>
 
-    <!-- Entries -->
+    <!--  Entries  -->
+
     <Style TargetType="Entry" x:Key="FormEntry">
-        <Setter Property="BackgroundColor"  Value="{StaticResource SurfaceVariant}" />
-        <Setter Property="TextColor"        Value="{StaticResource OnSurface}" />
+        <Setter Property="BackgroundColor" Value="{StaticResource SurfaceVariant}" />
+        <Setter Property="TextColor" Value="{StaticResource OnSurface}" />
         <Setter Property="PlaceholderColor" Value="{StaticResource TextSecondary}" />
-        <Setter Property="FontSize"         Value="15" />
-        <Setter Property="HeightRequest"    Value="52" />
-        <Setter Property="Margin"           Value="0,4" />
+        <Setter Property="FontSize" Value="15" />
+        <Setter Property="HeightRequest" Value="52" />
+        <Setter Property="Margin" Value="0,4" />
     </Style>
 
-    <!-- Pages -->
-    <Style TargetType="ContentPage" ApplyToDerivedTypes="True">
-        <Setter Property="BackgroundColor" Value="{StaticResource Background}" />
-    </Style>
+    <!--  Misc  -->
 
-    <!-- Activity indicator -->
     <Style TargetType="ActivityIndicator">
+        <Setter Property="Color" Value="{StaticResource Primary}" />
+    </Style>
+
+    <Style TargetType="RefreshView">
+        <Setter Property="RefreshColor" Value="{StaticResource Primary}" />
+    </Style>
+
+    <Style TargetType="CheckBox">
         <Setter Property="Color" Value="{StaticResource Primary}" />
     </Style>
 
