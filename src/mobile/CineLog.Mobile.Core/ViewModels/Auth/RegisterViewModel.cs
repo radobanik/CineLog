@@ -23,6 +23,20 @@ public partial class RegisterViewModel : BaseViewModel
     [NotifyCanExecuteChangedFor(nameof(RegisterCommand))]
     private string _password = string.Empty;
 
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(RegisterCommand))]
+    private string _confirmPassword = string.Empty;
+
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(RegisterCommand))]
+    private bool _isTermsAccepted = false;
+
+    [ObservableProperty]
+    private bool _isPasswordVisible = false;
+
+    [ObservableProperty]
+    private bool _isConfirmPasswordVisible = false;
+
     public RegisterViewModel(IAuthService authService, INavigationService navigation, IAlertService alerts)
     {
         _authService = authService;
@@ -32,9 +46,11 @@ public partial class RegisterViewModel : BaseViewModel
     }
 
     private bool CanRegister =>
-        !string.IsNullOrWhiteSpace(Username) &&
-        !string.IsNullOrWhiteSpace(Email)    &&
-        !string.IsNullOrWhiteSpace(Password);
+        !string.IsNullOrWhiteSpace(Username)        &&
+        !string.IsNullOrWhiteSpace(Email)           &&
+        !string.IsNullOrWhiteSpace(Password)        &&
+        !string.IsNullOrWhiteSpace(ConfirmPassword) &&
+        IsTermsAccepted;
 
     [RelayCommand(CanExecute = nameof(CanRegister))]
     private async Task Register()
@@ -45,6 +61,12 @@ public partial class RegisterViewModel : BaseViewModel
             await _navigation.NavigateToRootAsync("//Dashboard");
         });
     }
+
+    [RelayCommand]
+    private void TogglePasswordVisibility() => IsPasswordVisible = !IsPasswordVisible;
+
+    [RelayCommand]
+    private void ToggleConfirmPasswordVisibility() => IsConfirmPasswordVisible = !IsConfirmPasswordVisible;
 
     [RelayCommand]
     private Task GoToLogin() => _navigation.NavigateBackAsync();

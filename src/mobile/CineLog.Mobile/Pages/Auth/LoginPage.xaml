@@ -1,97 +1,158 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
+    Shell.NavBarIsVisible="False"
     x:Class="CineLog.Mobile.Pages.Auth.LoginPage"
+    x:DataType="vm:LoginViewModel"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:helpers="clr-namespace:CineLog.Mobile.Helpers"
     xmlns:vm="clr-namespace:CineLog.Mobile.Core.ViewModels.Auth;assembly=CineLog.Mobile.Core"
-    x:DataType="vm:LoginViewModel"
-    Shell.NavBarIsVisible="False">
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
-    <ContentPage.Content>
-        <ScrollView>
-            <VerticalStackLayout
-                Padding="32,60,32,32"
-                Spacing="0"
-                VerticalOptions="Center">
-
-                <!-- Logo / Brand -->
+    <ScrollView>
+        <VerticalStackLayout Padding="28,64,28,48" Spacing="0">
+            <Border
+                BackgroundColor="{StaticResource Primary}"
+                HeightRequest="80"
+                HorizontalOptions="Center"
+                Margin="0,0,0,16"
+                StrokeThickness="0"
+                WidthRequest="80">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="20" />
+                </Border.StrokeShape>
                 <Label
+                    FontFamily="FASolid"
+                    FontSize="38"
                     HorizontalOptions="Center"
-                    Margin="0,0,0,8"
-                    Style="{StaticResource PrimaryIcon}"
-                    FontSize="56"
-                    Text="{x:Static helpers:FontAwesomeIcons.Film}" />
+                    Text="{x:Static helpers:FontAwesomeIcons.Film}"
+                    TextColor="White"
+                    VerticalOptions="Center" />
+            </Border>
 
-                <Label
-                    HorizontalOptions="Center"
-                    Margin="0,0,0,48"
-                    Style="{StaticResource HeadlineLarge}"
-                    Text="CineLog" />
+            <Label
+                HorizontalOptions="Center"
+                Margin="0,0,0,6"
+                Style="{StaticResource HeadlineLarge}"
+                Text="CineLog" />
+            <Label
+                HorizontalOptions="Center"
+                Margin="0,0,0,48"
+                Style="{StaticResource Caption}"
+                Text="Track films you love" />
 
-                <!-- Email -->
-                <Grid ColumnDefinitions="44,*" Margin="0,0,0,0">
+            <Label
+                Margin="0,0,0,24"
+                Style="{StaticResource HeadlineMedium}"
+                Text="Sign In" />
+
+            <Label
+                CharacterSpacing="1.2"
+                FontAttributes="Bold"
+                FontSize="11"
+                Margin="4,0,0,8"
+                Text="EMAIL"
+                TextColor="{StaticResource TextSecondary}"
+                TextTransform="Uppercase" />
+
+            <Border Style="{StaticResource InputField}">
+                <Grid ColumnDefinitions="52,*">
                     <Label
+                        FontFamily="FASolid"
+                        FontSize="16"
                         Grid.Column="0"
-                        Style="{StaticResource Icon}"
-                        VerticalOptions="Center"
                         HorizontalOptions="Center"
-                        Text="{x:Static helpers:FontAwesomeIcons.Envelope}" />
+                        Text="{x:Static helpers:FontAwesomeIcons.Envelope}"
+                        TextColor="{StaticResource TextSecondary}"
+                        VerticalOptions="Center" />
                     <Entry
                         Grid.Column="1"
-                        Style="{StaticResource FormEntry}"
-                        Placeholder="Email"
                         Keyboard="Email"
+                        Placeholder="you@example.com"
+                        Style="{StaticResource CleanEntry}"
                         Text="{Binding Email}" />
                 </Grid>
+            </Border>
 
-                <!-- Password -->
-                <Grid ColumnDefinitions="44,*" Margin="0,8,0,0">
+            <Label
+                CharacterSpacing="1.2"
+                FontAttributes="Bold"
+                FontSize="11"
+                Margin="4,16,0,8"
+                Text="PASSWORD"
+                TextColor="{StaticResource TextSecondary}"
+                TextTransform="Uppercase" />
+            <Border Style="{StaticResource InputField}">
+                <Grid ColumnDefinitions="52,*,52">
                     <Label
+                        FontFamily="FASolid"
+                        FontSize="16"
                         Grid.Column="0"
-                        Style="{StaticResource Icon}"
-                        VerticalOptions="Center"
                         HorizontalOptions="Center"
-                        Text="{x:Static helpers:FontAwesomeIcons.Lock}" />
+                        Text="{x:Static helpers:FontAwesomeIcons.Lock}"
+                        TextColor="{StaticResource TextSecondary}"
+                        VerticalOptions="Center" />
                     <Entry
                         Grid.Column="1"
-                        Style="{StaticResource FormEntry}"
-                        Placeholder="Password"
-                        IsPassword="True"
+                        IsPassword="{Binding IsPasswordVisible, Converter={StaticResource InvertedBoolConverter}}"
+                        Placeholder="••••••••"
+                        Style="{StaticResource CleanEntry}"
                         Text="{Binding Password}" />
-                </Grid>
-
-                <!-- Login button -->
-                <Button
-                    Margin="0,32,0,0"
-                    Style="{StaticResource PrimaryButton}"
-                    Command="{Binding LoginCommand}"
-                    Text="Sign In" />
-
-                <!-- Busy indicator -->
-                <ActivityIndicator
-                    Margin="0,16,0,0"
-                    HorizontalOptions="Center"
-                    IsRunning="{Binding IsBusy}"
-                    IsVisible="{Binding IsBusy}" />
-
-                <!-- Register link -->
-                <HorizontalStackLayout
-                    Margin="0,24,0,0"
-                    HorizontalOptions="Center"
-                    Spacing="4">
                     <Label
-                        Style="{StaticResource BodyMedium}"
-                        VerticalOptions="Center"
-                        Text="Don't have an account?" />
-                    <Button
-                        Style="{StaticResource TextButton}"
-                        Command="{Binding GoToRegisterCommand}"
-                        Text="Sign Up" />
-                </HorizontalStackLayout>
+                        FontFamily="FASolid"
+                        FontSize="16"
+                        Grid.Column="2"
+                        HorizontalOptions="Center"
+                        Text="{x:Static helpers:FontAwesomeIcons.Eye}"
+                        TextColor="{StaticResource TextSecondary}"
+                        VerticalOptions="Center">
+                        <Label.Triggers>
+                            <DataTrigger
+                                Binding="{Binding IsPasswordVisible}"
+                                TargetType="Label"
+                                Value="True">
+                                <Setter Property="Text" Value="{x:Static helpers:FontAwesomeIcons.EyeSlash}" />
+                            </DataTrigger>
+                        </Label.Triggers>
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding TogglePasswordVisibilityCommand}" />
+                        </Label.GestureRecognizers>
+                    </Label>
+                </Grid>
+            </Border>
 
-            </VerticalStackLayout>
-        </ScrollView>
-    </ContentPage.Content>
+            <Button
+                Command="{Binding LoginCommand}"
+                HorizontalOptions="Fill"
+                Margin="0,32,0,0"
+                Style="{StaticResource PrimaryButton}"
+                Text="Sign In" />
+
+            <ActivityIndicator
+                HorizontalOptions="Center"
+                IsRunning="{Binding IsBusy}"
+                IsVisible="{Binding IsBusy}"
+                Margin="0,16,0,0" />
+
+            <HorizontalStackLayout
+                HorizontalOptions="Center"
+                Margin="0,40,0,0"
+                Spacing="4">
+                <Label
+                    Style="{StaticResource Caption}"
+                    Text="Don't have an account?"
+                    VerticalOptions="Center" />
+                <Label
+                    FontSize="13"
+                    Style="{StaticResource AccentLabel}"
+                    Text="Sign Up"
+                    VerticalOptions="Center">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding GoToRegisterCommand}" />
+                    </Label.GestureRecognizers>
+                </Label>
+            </HorizontalStackLayout>
+
+        </VerticalStackLayout>
+    </ScrollView>
 
 </ContentPage>

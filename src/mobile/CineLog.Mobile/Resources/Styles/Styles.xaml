@@ -122,4 +122,27 @@
         <Setter Property="Color" Value="{StaticResource Primary}" />
     </Style>
 
+    <!--  Pill-shaped input field container  -->
+    <Style TargetType="Border" x:Key="InputField">
+        <Setter Property="BackgroundColor" Value="{StaticResource SurfaceVariant}" />
+        <Setter Property="StrokeThickness" Value="0" />
+        <Setter Property="HeightRequest" Value="56" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="28" />
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--  Borderless entry inside InputField  -->
+    <Style TargetType="Entry" x:Key="CleanEntry">
+        <Setter Property="BackgroundColor" Value="Transparent" />
+        <Setter Property="TextColor" Value="{StaticResource OnSurface}" />
+        <Setter Property="PlaceholderColor" Value="{StaticResource TextSecondary}" />
+        <Setter Property="FontSize" Value="15" />
+        <Setter Property="VerticalOptions" Value="Center" />
+        <Setter Property="Margin" Value="0" />
+    </Style>
+
 </ResourceDictionary>

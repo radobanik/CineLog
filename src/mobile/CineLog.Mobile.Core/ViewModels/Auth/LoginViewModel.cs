@@ -19,6 +19,9 @@ public partial class LoginViewModel : BaseViewModel
     [NotifyCanExecuteChangedFor(nameof(LoginCommand))]
     private string _password = string.Empty;
 
+    [ObservableProperty]
+    private bool _isPasswordVisible = false;
+
     public LoginViewModel(IAuthService authService, INavigationService navigation, IAlertService alerts)
     {
         _authService = authService;
@@ -38,6 +41,9 @@ public partial class LoginViewModel : BaseViewModel
             await _navigation.NavigateToRootAsync("//Dashboard");
         });
     }
+
+    [RelayCommand]
+    private void TogglePasswordVisibility() => IsPasswordVisible = !IsPasswordVisible;
 
     [RelayCommand]
     private Task GoToRegister() => _navigation.NavigateToAsync("Register");
