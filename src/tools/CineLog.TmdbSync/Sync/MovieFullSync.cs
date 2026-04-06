@@ -75,8 +75,8 @@ public class MovieFullSync(
                 var movie = Movie.Create(info.Id, info.Title, MovieType.Movie);
                 movie.UpdateDetails(
                     info.Overview,
-                    info.PosterPath,
-                    info.BackdropPath,
+                    TmdbImage.Url(info.PosterPath),
+                    TmdbImage.Url(info.BackdropPath),
                     info.ReleaseDate == default ? null : DateOnly.FromDateTime(info.ReleaseDate),
                     d.Runtime,
                     d.ImdbId,
@@ -104,8 +104,8 @@ public class MovieFullSync(
                 {
                     existing.UpdateDetails(
                         info.Overview,
-                        info.PosterPath,
-                        info.BackdropPath,
+                        TmdbImage.Url(info.PosterPath),
+                        TmdbImage.Url(info.BackdropPath),
                         info.ReleaseDate == default ? null : DateOnly.FromDateTime(info.ReleaseDate),
                         d.Runtime,
                         d.ImdbId,

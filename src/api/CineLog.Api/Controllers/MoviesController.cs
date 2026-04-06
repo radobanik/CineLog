@@ -3,6 +3,8 @@ using CineLog.Application.Features.Movies;
 using CineLog.Application.Features.Movies.CreateMovie;
 using CineLog.Application.Features.Movies.DeleteMovie;
 using CineLog.Application.Features.Movies.GetMovieDetail;
+using CineLog.Application.Features.Movies.SetMovieBackdrop;
+using CineLog.Application.Features.Movies.SetMoviePoster;
 using CineLog.Application.Features.Movies.UpdateMovie;
 using CineLog.Application.Features.Reviews;
 using CineLog.Application.Features.Reviews.GetMovieReviews;
@@ -80,6 +82,30 @@ public class MoviesController : ControllerBase
     {
         await _sender.Send(new RemoveFromFavoritesCommand(id), ct);
         return NoContent();
+    }
+
+    /// <summary>Set poster image for a movie.</summary>
+    [HttpPut("{id:guid}/poster")]
+    [Authorize(Roles = "Admin")]
+    [ProducesResponseType(typeof(SetMovieImageResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<SetMovieImageResponse>> SetPoster(Guid id, IFormFile file, CancellationToken ct)
+    {
+        using var stream = file.OpenReadStream();
+        var result = await _sender.Send(new SetMoviePosterCommand(id, stream, file.ContentType, file.FileName), ct);
+        return Ok(result);
+    }
+
+    /// <summary>Set backdrop image for a movie.</summary>
+    [HttpPut("{id:guid}/backdrop")]
+    [Authorize(Roles = "Admin")]
+    [ProducesResponseType(typeof(SetMovieImageResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<SetMovieImageResponse>> SetBackdrop(Guid id, IFormFile file, CancellationToken ct)
+    {
+        using var stream = file.OpenReadStream();
+        var result = await _sender.Send(new SetMovieBackdropCommand(id, stream, file.ContentType, file.FileName), ct);
+        return Ok(result);
     }
 
     /// <summary>Delete a movie and all its reviews.</summary>

@@ -59,7 +59,7 @@ public class PersonSync(
             if (existing is null) return;
 
             existing.Name = d.Name;
-            existing.ProfilePath = d.ProfilePath;
+            existing.ProfilePath = TmdbImage.Url(d.ProfilePath);
             existing.Biography = d.Biography?.Length > 5000 ? d.Biography[..5000] : d.Biography;
             existing.Birthday = d.Birthday == default ? null : DateOnly.FromDateTime(d.Birthday);
             existing.PlaceOfBirth = d.PlaceOfBirth;

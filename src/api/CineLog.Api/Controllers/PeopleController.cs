@@ -2,6 +2,7 @@ using CineLog.Application.Features.People;
 using CineLog.Application.Features.People.CreatePerson;
 using CineLog.Application.Features.People.DeletePerson;
 using CineLog.Application.Features.People.GetPerson;
+using CineLog.Application.Features.People.SetPersonPhoto;
 using CineLog.Application.Features.People.UpdatePerson;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -44,6 +45,18 @@ public class PeopleController : ControllerBase
     {
         await _sender.Send(command with { Id = id }, ct);
         return NoContent();
+    }
+
+    /// <summary>Set profile photo for a person.</summary>
+    [HttpPut("{id:guid}/photo")]
+    [Authorize(Roles = "Admin")]
+    [ProducesResponseType(typeof(SetPersonPhotoResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<SetPersonPhotoResponse>> SetPhoto(Guid id, IFormFile file, CancellationToken ct)
+    {
+        using var stream = file.OpenReadStream();
+        var result = await _sender.Send(new SetPersonPhotoCommand(id, stream, file.ContentType, file.FileName), ct);
+        return Ok(result);
     }
 
     /// <summary>Delete a person.</summary>

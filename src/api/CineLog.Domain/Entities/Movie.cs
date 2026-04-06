@@ -101,6 +101,10 @@ public class Movie
         Title = title;
     }
 
+    public void SetPosterPath(string? url) => PosterPath = url;
+
+    public void SetBackdropPath(string? url) => BackdropPath = url;
+
     public void MarkAsManuallyEdited()
     {
         IsManuallyEdited = true;

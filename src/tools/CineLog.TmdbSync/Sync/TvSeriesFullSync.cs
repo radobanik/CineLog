@@ -67,8 +67,8 @@ public class TvSeriesFullSync(
                 var show = Movie.Create(info.Id, info.Name, MovieType.Series);
                 show.UpdateDetails(
                     info.Overview,
-                    info.PosterPath,
-                    info.BackdropPath,
+                    TmdbImage.Url(info.PosterPath),
+                    TmdbImage.Url(info.BackdropPath),
                     info.FirstAirDate == default ? null : DateOnly.FromDateTime(info.FirstAirDate),
                     runtime is 0 ? null : runtime,
                     originalLanguage: d.OriginalLanguage,
@@ -92,8 +92,8 @@ public class TvSeriesFullSync(
                 {
                     existing.UpdateDetails(
                         info.Overview,
-                        info.PosterPath,
-                        info.BackdropPath,
+                        TmdbImage.Url(info.PosterPath),
+                        TmdbImage.Url(info.BackdropPath),
                         info.FirstAirDate == default ? null : DateOnly.FromDateTime(info.FirstAirDate),
                         runtime is 0 ? null : runtime,
                         originalLanguage: d.OriginalLanguage,
