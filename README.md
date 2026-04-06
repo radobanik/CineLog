@@ -1,6 +1,6 @@
 # CineLog
 
-A Letterboxd-inspired movie tracking app — .NET MAUI mobile client backed by an ASP.NET Core REST API.
+A Letterboxd-inspired `.NET MAUI` mobile movie app backed by an `ASP.NET Core` REST API.
 
 ## Overview
 
@@ -19,6 +19,7 @@ CineLog lets users log movies, write reviews, react to others' reviews, and foll
 | Real-time | SignalR |
 | Search | Elasticsearch 8 |
 | Logging | Seq |
+| Blob storage | MinIO |
 | External data | TMDb API |
 | Data sync | CineLog.TmdbSync (background worker) |
 
@@ -26,12 +27,3 @@ CineLog lets users log movies, write reviews, react to others' reviews, and foll
 
 - [Architecture](docs/architecture.md)
 - [Developer Guide](docs/developer-guide.md)
-
-## Quick Start
-
-```bash
-cp .env.example .env      
-docker compose up --build
-```
-
-API (Docker): <http://localhost:5000/swagger>
