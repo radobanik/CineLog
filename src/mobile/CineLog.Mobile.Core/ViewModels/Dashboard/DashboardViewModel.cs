@@ -29,6 +29,13 @@ public partial class DashboardViewModel : BaseViewModel
         });
     }
 
+    [RelayCommand]
+    private async Task GoToProfile()
+    {
+        await _navigation.NavigateToRootAsync(Routes.Profile);
+
+    }
+
     protected override async Task OnError(Exception ex)
     {
         await _alerts.ShowAlertAsync("Error", ex.Message);

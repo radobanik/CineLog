@@ -62,6 +62,7 @@
         <Setter Property="FontFamily" Value="FASolid" />
         <Setter Property="TextColor" Value="{StaticResource OnSurface}" />
         <Setter Property="FontSize" Value="18" />
+        <Setter Property="Padding" Value="10" />
     </Style>
 
     <Style TargetType="Label" x:Key="SecondaryIconLabel">

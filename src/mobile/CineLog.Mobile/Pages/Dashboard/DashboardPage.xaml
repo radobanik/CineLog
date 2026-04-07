@@ -15,6 +15,12 @@
             Text="Dashboard" />
 
         <Button
+            Command="{Binding GoToProfileCommand}"
+            HorizontalOptions="Fill"
+            Style="{StaticResource PrimaryButton}"
+            Text="Go to Profile" />
+
+        <Button
             Command="{Binding LogoutCommand}"
             HorizontalOptions="Fill"
             Style="{StaticResource DangerButton}"

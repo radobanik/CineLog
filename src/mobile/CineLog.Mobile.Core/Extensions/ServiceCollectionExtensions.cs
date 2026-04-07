@@ -4,6 +4,7 @@ using CineLog.Mobile.Core.Services;
 using CineLog.Mobile.Core.Services.Interfaces;
 using CineLog.Mobile.Core.ViewModels.Auth;
 using CineLog.Mobile.Core.ViewModels.Dashboard;
+using CineLog.Mobile.Core.ViewModels.Profile;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace CineLog.Mobile.Core.Extensions;
@@ -43,6 +44,10 @@ public static class ServiceCollectionExtensions
     {
         services.AddTransient<IAuthClient>(sp =>
             new AuthClient(sp.GetRequiredService<IHttpClientFactory>().CreateClient("CineLogApi")));
+        services.AddTransient<IPeopleClient>(sp =>
+            new PeopleClient(sp.GetRequiredService<IHttpClientFactory>().CreateClient("CineLogApi")));
+        services.AddTransient<IUsersClient>(sp =>
+            new UsersClient(sp.GetRequiredService<IHttpClientFactory>().CreateClient("CineLogApi")));
         return services;
     }
 
@@ -57,6 +62,7 @@ public static class ServiceCollectionExtensions
         services.AddTransient<LoginViewModel>();
         services.AddTransient<RegisterViewModel>();
         services.AddTransient<DashboardViewModel>();
+        services.AddTransient<ProfileViewModel>();
         return services;
     }
 }
