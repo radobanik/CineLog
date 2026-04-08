@@ -24,6 +24,6 @@ public partial class App : Application
         if (!restored)
             await Shell.Current.GoToAsync($"//{Routes.Login}");
         else
-            await Shell.Current.GoToAsync($"//{Routes.Dashboard}");
+            await Shell.Current.GoToAsync($"//{Routes.AuthenticatedRoot}");
     }
 }

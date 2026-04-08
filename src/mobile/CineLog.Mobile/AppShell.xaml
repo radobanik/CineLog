@@ -4,7 +4,8 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:auth="clr-namespace:CineLog.Mobile.Pages.Auth"
-    xmlns:dashboard="clr-namespace:CineLog.Mobile.Pages.Dashboard"
+    xmlns:helpers="clr-namespace:CineLog.Mobile.Helpers"
+    xmlns:main="clr-namespace:CineLog.Mobile.Pages.MainPages"
     Shell.FlyoutBehavior="Disabled"
     Shell.NavBarIsVisible="False">
 
@@ -20,8 +21,68 @@
 
     <!-- Main content, visible after login -->
 
-    <ShellContent
-        Route="Dashboard"
-        ContentTemplate="{DataTemplate dashboard:DashboardPage}" />
+    <TabBar Route="MainTabs">
+
+        <Tab
+            Title="Home"
+            Route="Home">
+            <Tab.Icon>
+                <FontImageSource
+                    FontFamily="FASolid"
+                    Glyph="{x:Static helpers:FontAwesomeIcons.Home}"
+                    Size="18" />
+            </Tab.Icon>
+            <ShellContent ContentTemplate="{DataTemplate main:HomePage}" />
+        </Tab>
+
+        <Tab
+            Title="Search"
+            Route="Search">
+            <Tab.Icon>
+                <FontImageSource
+                    FontFamily="FASolid"
+                    Glyph="{x:Static helpers:FontAwesomeIcons.Search}"
+                    Size="18" />
+            </Tab.Icon>
+            <ShellContent ContentTemplate="{DataTemplate main:SearchPage}" />
+        </Tab>
+
+        <Tab
+            Title="Log"
+            Route="Log">
+            <Tab.Icon>
+                <FontImageSource
+                    FontFamily="FASolid"
+                    Glyph="{x:Static helpers:FontAwesomeIcons.Film}"
+                    Size="18" />
+            </Tab.Icon>
+            <ShellContent ContentTemplate="{DataTemplate main:LogPage}" />
+        </Tab>
+
+        <Tab
+            Title="Lists"
+            Route="Lists">
+            <Tab.Icon>
+                <FontImageSource
+                    FontFamily="FASolid"
+                    Glyph="{x:Static helpers:FontAwesomeIcons.Star}"
+                    Size="18" />
+            </Tab.Icon>
+            <ShellContent ContentTemplate="{DataTemplate main:ListsPage}" />
+        </Tab>
+
+        <Tab
+            Title="Profile"
+            Route="Profile">
+            <Tab.Icon>
+                <FontImageSource
+                    FontFamily="FASolid"
+                    Glyph="{x:Static helpers:FontAwesomeIcons.User}"
+                    Size="18" />
+            </Tab.Icon>
+            <ShellContent ContentTemplate="{DataTemplate main:ProfilePage}" />
+        </Tab>
+
+    </TabBar>
 
 </Shell>

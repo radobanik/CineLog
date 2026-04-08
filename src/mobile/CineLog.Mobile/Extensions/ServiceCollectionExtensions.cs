@@ -1,9 +1,9 @@
 using CineLog.Mobile.Core.Services.Interfaces;
 using CineLog.Mobile.Navigation;
 using CineLog.Mobile.Pages.Auth;
-using CineLog.Mobile.Pages.Dashboard;
 using CineLog.Mobile.Services;
 using Microsoft.Extensions.DependencyInjection;
+using CineLog.Mobile.Pages.MainPages;
 
 namespace CineLog.Mobile.Extensions;
 
@@ -29,7 +29,12 @@ public static class ServiceCollectionExtensions
     {
         services.AddTransient<LoginPage>();
         services.AddTransient<RegisterPage>();
-        services.AddTransient<DashboardPage>();
+        services.AddTransient<HomePage>();
+
+        services.AddTransient<SearchPage>();
+        services.AddTransient<LogPage>();
+        services.AddTransient<ListsPage>();
+        services.AddTransient<ProfilePage>();
         return services;
     }
 }

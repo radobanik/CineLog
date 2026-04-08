@@ -39,7 +39,7 @@ public partial class LoginViewModel : BaseViewModel
         await ExecuteAsync(async () =>
         {
             await _authService.LoginAsync(Email, Password);
-            await _navigation.NavigateToRootAsync(Routes.Dashboard);
+            await _navigation.NavigateToRootAsync(Routes.AuthenticatedRoot);
         });
     }
 

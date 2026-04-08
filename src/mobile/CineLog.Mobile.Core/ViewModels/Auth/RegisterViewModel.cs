@@ -59,7 +59,7 @@ public partial class RegisterViewModel : BaseViewModel
         await ExecuteAsync(async () =>
         {
             await _authService.RegisterAsync(Username, Email, Password);
-            await _navigation.NavigateToRootAsync(Routes.Dashboard);
+            await _navigation.NavigateToRootAsync(Routes.AuthenticatedRoot);
         });
     }
 

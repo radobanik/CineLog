@@ -3,15 +3,15 @@ using CineLog.Mobile.Core.Services.Interfaces;
 using CineLog.Mobile.Core.ViewModels.Base;
 using CommunityToolkit.Mvvm.Input;
 
-namespace CineLog.Mobile.Core.ViewModels.Dashboard;
+namespace CineLog.Mobile.Core.ViewModels.Home;
 
-public partial class DashboardViewModel : BaseViewModel
+public partial class HomeViewModel : BaseViewModel
 {
     private readonly IAuthService _authService;
     private readonly INavigationService _navigation;
     private readonly IAlertService _alerts;
 
-    public DashboardViewModel(IAuthService authService, INavigationService navigation, IAlertService alerts)
+    public HomeViewModel(IAuthService authService, INavigationService navigation, IAlertService alerts)
     {
         _authService = authService;
         _navigation = navigation;
