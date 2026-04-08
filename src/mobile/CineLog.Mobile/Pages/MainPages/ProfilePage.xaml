@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="CineLog.Mobile.Pages.MainPages.ProfilePage"
+             Shell.NavBarIsVisible="False"
+             Title="Profile">
+
+    <Grid Padding="28">
+        <VerticalStackLayout
+            Spacing="12"
+            VerticalOptions="Center">
+
+            <Label
+                HorizontalOptions="Center"
+                Style="{StaticResource PrimaryIconLabel}"
+                FontSize="40"
+                Text="{x:Static helpers:FontAwesomeIcons.User}" />
+
+            <Label
+                HorizontalOptions="Center"
+                Style="{StaticResource HeadlineLargeLabel}"
+                Text="Profile" />
+
+            <Label
+                HorizontalOptions="Center"
+                HorizontalTextAlignment="Center"
+                Style="{StaticResource CaptionLabel}"
+                Text="This tab is coming next. For now, only Home is active." />
+
+        </VerticalStackLayout>
+    </Grid>
+</ContentPage>
