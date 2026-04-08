@@ -5,7 +5,8 @@
              xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:helpers="clr-namespace:CineLog.Mobile.Helpers"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:vm="clr-namespace:CineLog.Mobile.Core.ViewModels.Profile;assembly=CineLog.Mobile.Core">
+             xmlns:vm="clr-namespace:CineLog.Mobile.Core.ViewModels.Profile;assembly=CineLog.Mobile.Core"
+             xmlns:models="clr-namespace:CineLog.Mobile.ApiClient.Models;assembly=CineLog.Mobile.ApiClient">
     <ScrollView>
         <VerticalStackLayout Padding="20"
                              Spacing="25">
@@ -86,9 +87,7 @@
             </Border>
             <VerticalStackLayout Spacing="10">
                 <Label Text="FAVORITE FILMS"
-                       FontSize="14"
-                       FontAttributes="Bold"
-                       TextColor="White" />
+                       Style="{StaticResource SectionHeaderLabel}" />
                 <CollectionView HeightRequest="150" ItemsSource="{Binding FavouriteMovies}">
                     <CollectionView.EmptyView>
                         <Label Text="No favorite films yet."
@@ -105,7 +104,7 @@
                             <Border WidthRequest="100"
                                     HeightRequest="150"
                                     StrokeShape="RoundRectangle 8">
-                                <Label Text="Movie Title"
+                                <Label Text="{Binding Title}"
                                        VerticalOptions="End"
                                        Margin="5"
                                        FontSize="10" />
@@ -117,12 +116,10 @@
             <VerticalStackLayout Spacing="15">
                 <Grid ColumnDefinitions="*, Auto">
                     <Label Text="RECENT DIARY"
-                           FontSize="14"
-                           FontAttributes="Bold"
-                           TextColor="White" />
+                           Style="{StaticResource SectionHeaderLabel}" />
                     <Label Grid.Column="1"
                            Text="View all"
-                           TextColor="Green" />
+                           Style="{StaticResource AccentLabel}" />
                 </Grid>
                 <CollectionView ItemsSource="{Binding Reviews}">
                     <CollectionView.EmptyView>
@@ -132,17 +129,17 @@
                                TextColor="Gray" />
                     </CollectionView.EmptyView>
                     <CollectionView.ItemTemplate>
-                        <DataTemplate>
+                        <DataTemplate x:DataType="models:ReviewResponse">
                             <VerticalStackLayout Margin="0,0,0,15">
                                 <Grid ColumnDefinitions="50, 60, *"
                                       ColumnSpacing="15">
                                     <VerticalStackLayout Grid.Column="0"
                                                          VerticalOptions="Center">
-                                        <Label Text="5"
+                                        <Label Text="{Binding CreatedAt, StringFormat='{0:%d}'}"
                                                FontSize="20"
                                                FontAttributes="Bold"
                                                HorizontalOptions="Center" />
-                                        <Label Text="MAR"
+                                        <Label Text="{Binding CreatedAt, StringFormat='{0:MMM}'}"
                                                FontSize="12"
                                                TextColor="Gray"
                                                HorizontalOptions="Center" />
@@ -152,10 +149,8 @@
                                             StrokeShape="RoundRectangle 5" />
                                     <VerticalStackLayout Grid.Column="2"
                                                          VerticalOptions="Center">
-                                        <Label Text="The Brutalist"
+                                        <Label Text="{Binding MovieTitle}"
                                                FontAttributes="Bold" />
-                                        <Label Text="2024"
-                                               TextColor="Gray" />
                                         <HorizontalStackLayout>
                                             <Label Text="★★★★★"
                                                    TextColor="Green" />

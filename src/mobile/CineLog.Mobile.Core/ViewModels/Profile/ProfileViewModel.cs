@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
 using CineLog.Mobile.ApiClient.Clients;
 using CineLog.Mobile.ApiClient.Models;
 using CineLog.Mobile.Core.Navigation;
@@ -70,13 +67,13 @@ public partial class ProfileViewModel : BaseViewModel
             var favouriteResponse = await _usersClient.FavoritesAllAsync();
             if (favouriteResponse != null && favouriteResponse.Count > 0)
             {
-                FavouriteMovies = (MovieListItemResponse[])favouriteResponse;
+                FavouriteMovies = [.. favouriteResponse];
             }
 
             var reviewsResponse = await _usersClient.ReviewsGET3Async(_id, null, null);
             if (reviewsResponse != null && reviewsResponse.Items != null && reviewsResponse.Items.Count > 0)
             {
-                Reviews = (ReviewResponse[])reviewsResponse.Items;
+                Reviews = [.. reviewsResponse.Items];
             }
         });
     }
