@@ -1,7 +1,10 @@
+param(
+    [string]$TunnelName = "cinelog"
+)
+
 Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
 
-$TunnelName = "cinelog"
 $ApiPort    = 5000
 $MinioPort  = 9000
 $BucketName = "cinelog"
