@@ -78,7 +78,6 @@ public partial class ProfileViewModel : BaseViewModel
         });
     }
 
-
     [RelayCommand]
     private async Task ToDashboard()
     {

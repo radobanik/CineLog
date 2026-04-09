@@ -33,7 +33,6 @@ public partial class DashboardViewModel : BaseViewModel
     private async Task GoToProfile()
     {
         await _navigation.NavigateToRootAsync(Routes.Profile);
-
     }
 
     protected override async Task OnError(Exception ex)
