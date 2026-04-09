@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView
+    x:Class="CineLog.Mobile.Views.Home.MovieRailView"
+    x:Name="This"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:models="clr-namespace:CineLog.Mobile.Core.Models.Home;assembly=CineLog.Mobile.Core"
+    xmlns:views="clr-namespace:CineLog.Mobile.Views.Home"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <VerticalStackLayout Spacing="10">
+        <Label
+            Text="{Binding Source={x:Reference This}, Path=Title}"
+            FontSize="20"
+            FontAttributes="Bold"
+            TextColor="White" />
+
+        <CollectionView
+            ItemsSource="{Binding Source={x:Reference This}, Path=ItemsSource}"
+            SelectionMode="None"
+            ItemsUpdatingScrollMode="KeepScrollOffset"
+            RemainingItemsThreshold="2"
+            RemainingItemsThresholdReachedCommand="{Binding Source={x:Reference This}, Path=LoadMoreCommand}"
+            HeightRequest="210">
+
+            <CollectionView.ItemsLayout>
+                <LinearItemsLayout
+                    Orientation="Horizontal"
+                    ItemSpacing="12" />
+            </CollectionView.ItemsLayout>
+
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:HomeMovieItem">
+                    <views:MoviePosterCardView
+                        Title="{Binding Title}"
+                        PosterPath="{Binding PosterPath}"
+                        RatingText="{Binding RatingText}" />
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+
+            <CollectionView.Footer>
+                <Grid Padding="8" WidthRequest="40">
+                    <ActivityIndicator
+                        IsVisible="{Binding Source={x:Reference This}, Path=IsLoadingMore}"
+                        IsRunning="{Binding Source={x:Reference This}, Path=IsLoadingMore}"
+                        Color="#00C030" />
+                </Grid>
+            </CollectionView.Footer>
+        </CollectionView>
+    </VerticalStackLayout>
+</ContentView>

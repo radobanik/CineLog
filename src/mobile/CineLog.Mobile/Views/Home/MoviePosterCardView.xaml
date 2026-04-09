@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView
+    x:Class="CineLog.Mobile.Views.Home.MoviePosterCardView"
+    x:Name="This"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <VerticalStackLayout WidthRequest="115" Spacing="6">
+        <Border
+            HeightRequest="170"
+            StrokeThickness="1"
+            Stroke="#1F252C"
+            StrokeShape="RoundRectangle 12"
+            BackgroundColor="#15191F">
+
+            <Grid>
+                <Image
+                    Source="{Binding Source={x:Reference This}, Path=PosterPath}"
+                    Aspect="AspectFill" />
+
+                <Grid
+                    VerticalOptions="End"
+                    Padding="6"
+                    BackgroundColor="#70000000">
+                    <Label
+                        Text="{Binding Source={x:Reference This}, Path=Title}"
+                        FontSize="11"
+                        TextColor="White"
+                        MaxLines="2"
+                        LineBreakMode="TailTruncation" />
+                </Grid>
+            </Grid>
+        </Border>
+
+        <Label
+            Text="{Binding Source={x:Reference This}, Path=RatingText, StringFormat='★ {0}'}"
+            FontSize="11"
+            TextColor="#A9B0B8"
+            HorizontalTextAlignment="Center" />
+    </VerticalStackLayout>
+</ContentView>

@@ -10,14 +10,21 @@ namespace CineLog.Mobile.Core.ViewModels.Home;
 
 public partial class HomeViewModel : BaseViewModel
 {
-    private const int BrowsePageSize = 24;
+    private const int RailPageSize = 12;
 
     private readonly IAuthService _authService;
     private readonly IHomeService _homeService;
     private readonly INavigationService _navigation;
     private readonly IAlertService _alerts;
 
-    private int _nextBrowsePage = 1;
+    private int _topRatedCount = RailPageSize;
+    private int _newReleaseCount = RailPageSize;
+
+    [ObservableProperty]
+    private bool _isLoadingMoreTopRated;
+
+    [ObservableProperty]
+    private bool _isLoadingMoreNewReleases;
 
     [ObservableProperty]
     private bool _hasLoadedOnce;
@@ -48,34 +55,11 @@ public partial class HomeViewModel : BaseViewModel
             HasError = false;
             ErrorMessage = string.Empty;
 
-            TopRatedMovies.Clear();
-            NewReleaseMovies.Clear();
+            _topRatedCount = RailPageSize;
+            _newReleaseCount = RailPageSize;
 
-            try
-            {
-                var topRated = await _homeService.GetTopRatedMoviesAsync();
-                foreach (var movie in topRated)
-                    TopRatedMovies.Add(movie);
-            }
-            catch (Exception ex)
-            {
-                HasError = true;
-                ErrorMessage = $"Top Rated failed: {ex.Message}";
-            }
-
-            try
-            {
-                var newReleases = await _homeService.GetNewReleaseMoviesAsync();
-                foreach (var movie in newReleases)
-                    NewReleaseMovies.Add(movie);
-            }
-            catch (Exception ex)
-            {
-                HasError = true;
-                ErrorMessage = string.IsNullOrWhiteSpace(ErrorMessage)
-                    ? $"New Releases failed: {ex.Message}"
-                    : $"{ErrorMessage}\nNew Releases failed: {ex.Message}";
-            }
+            await ReloadTopRatedAsync();
+            await ReloadNewReleasesAsync();
 
             HasLoadedOnce = true;
         });
@@ -90,6 +74,89 @@ public partial class HomeViewModel : BaseViewModel
         await Load();
     }
 
+    private async Task ReloadTopRatedAsync(bool appendOnly = false)
+    {
+        var movies = await _homeService.GetTopRatedMoviesAsync(_topRatedCount);
+
+        if (appendOnly)
+            AppendOnlyNewMovies(TopRatedMovies, movies);
+        else
+            ReplaceMovies(TopRatedMovies, movies);
+    }
+
+    private async Task ReloadNewReleasesAsync(bool appendOnly = false)
+    {
+        var movies = await _homeService.GetNewReleaseMoviesAsync(_newReleaseCount);
+
+        if (appendOnly)
+            AppendOnlyNewMovies(NewReleaseMovies, movies);
+        else
+            ReplaceMovies(NewReleaseMovies, movies);
+    }
+
+    private static void ReplaceMovies(
+    ObservableCollection<HomeMovieItem> target,
+    IEnumerable<HomeMovieItem> movies)
+    {
+        target.Clear();
+        foreach (var movie in movies)
+            target.Add(movie);
+    }
+
+    private static void AppendOnlyNewMovies(
+    ObservableCollection<HomeMovieItem> target,
+    IEnumerable<HomeMovieItem> movies)
+    {
+        var existingIds = target.Select(x => x.Id).ToHashSet();
+
+        foreach (var movie in movies.Where(x => !existingIds.Contains(x.Id)))
+            target.Add(movie);
+    }
+    [RelayCommand]
+    public async Task LoadMoreTopRated()
+    {
+        if (IsBusy || IsLoadingMoreTopRated)
+            return;
+
+        try
+        {
+            IsLoadingMoreTopRated = true;
+            _topRatedCount += RailPageSize;
+            await ReloadTopRatedAsync(appendOnly: true);
+        }
+        catch (Exception ex)
+        {
+            HasError = true;
+            ErrorMessage = ex.Message;
+        }
+        finally
+        {
+            IsLoadingMoreTopRated = false;
+        }
+    }
+
+    [RelayCommand]
+    public async Task LoadMoreNewReleases()
+    {
+        if (IsBusy || IsLoadingMoreNewReleases)
+            return;
+
+        try
+        {
+            IsLoadingMoreNewReleases = true;
+            _newReleaseCount += RailPageSize;
+            await ReloadNewReleasesAsync(appendOnly: true);
+        }
+        catch (Exception ex)
+        {
+            HasError = true;
+            ErrorMessage = ex.Message;
+        }
+        finally
+        {
+            IsLoadingMoreNewReleases = false;
+        }
+    }
     [RelayCommand]
     private async Task Logout()
     {
