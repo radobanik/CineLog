@@ -8,14 +8,14 @@ namespace CineLog.Infrastructure.Data.Seeders;
 
 internal static class UserSeeder
 {
-    private record SeedUser(string Username, string Email, string Password, string Role, string AvatarFile);
+    private record SeedUser(string Username, string Email, string Password, string Bio, string Role, string AvatarFile);
 
     private static readonly SeedUser[] Users =
     [
-        new("admin_alice", "alice@cinelog.dev", "Admin1234!", UserRoles.Admin, "avatar_admin_alice.png"),
-        new("admin_bob",   "bob@cinelog.dev",   "Admin1234!", UserRoles.Admin, "avatar_admin_bob.png"),
-        new("user_carol",  "carol@cinelog.dev", "User1234!",  UserRoles.User,  "avatar_admin_carol.png"),
-        new("user_dave",   "dave@cinelog.dev",  "User1234!",  UserRoles.User,  "avatar_admin_dave.png"),
+        new("admin_alice", "alice@cinelog.dev", "Admin1234!", "Obsessive movie buff with a passion for 70s cult classics.", UserRoles.Admin, "avatar_admin_alice.png"),
+        new("admin_bob",   "bob@cinelog.dev",   "Admin1234!", "Harsh rater. I value original screenplays over big budgets.", UserRoles.Admin, "avatar_admin_bob.png"),
+        new("user_carol",  "carol@cinelog.dev", "User1234!",  "Horror junkie and sci-fi nerd. Always hunting for gore.", UserRoles.User,  "avatar_admin_carol.png"),
+        new("user_dave",   "dave@cinelog.dev",  "User1234!",  "Goal: Watch every film in the IMDb Top 250.", UserRoles.User,  "avatar_admin_dave.png"),
     ];
 
     internal static async Task SeedAsync(
@@ -39,6 +39,7 @@ internal static class UserSeeder
                 Id = Guid.NewGuid(),
                 UserName = seed.Username,
                 Email = seed.Email,
+                Bio = seed.Bio,
                 CreatedAt = DateTimeOffset.UtcNow
             };
 
