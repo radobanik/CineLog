@@ -14,5 +14,8 @@ public static class DatabaseSeeder
         var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
         var blobStorage = serviceProvider.GetRequiredService<IBlobStorageService>();
         await UserSeeder.SeedAsync(userManager, roleManager, blobStorage);
+
+        var dbContext = serviceProvider.GetRequiredService<CineLog.Domain.Interfaces.IAppDbContext>();
+        await MovieAndReviewSeeder.SeedAsync(dbContext);
     }
 }
