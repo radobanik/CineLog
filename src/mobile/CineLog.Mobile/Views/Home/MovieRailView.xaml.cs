@@ -3,9 +3,10 @@ using System.Windows.Input;
 
 namespace CineLog.Mobile.Views.Home;
 
-
 public partial class MovieRailView : ContentView
 {
+    private const double LoadMoreThreshold = 140;
+
     public static readonly BindableProperty TitleProperty =
         BindableProperty.Create(nameof(Title), typeof(string), typeof(MovieRailView), string.Empty);
 
@@ -45,5 +46,19 @@ public partial class MovieRailView : ContentView
     {
         get => (bool)GetValue(IsLoadingMoreProperty);
         set => SetValue(IsLoadingMoreProperty, value);
+    }
+
+    private void OnRailScrolled(object? sender, ScrolledEventArgs e)
+    {
+        if (IsLoadingMore || LoadMoreCommand is null)
+            return;
+
+        var distanceToEnd = RailScrollView.ContentSize.Width - (RailScrollView.Width + e.ScrollX);
+
+        if (distanceToEnd > LoadMoreThreshold)
+            return;
+
+        if (LoadMoreCommand.CanExecute(null))
+            LoadMoreCommand.Execute(null);
     }
 }

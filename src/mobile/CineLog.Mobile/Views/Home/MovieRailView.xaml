@@ -14,37 +14,45 @@
             FontAttributes="Bold"
             TextColor="White" />
 
-        <CollectionView
-            ItemsSource="{Binding Source={x:Reference This}, Path=ItemsSource}"
-            SelectionMode="None"
-            ItemsUpdatingScrollMode="KeepScrollOffset"
-            RemainingItemsThreshold="2"
-            RemainingItemsThresholdReachedCommand="{Binding Source={x:Reference This}, Path=LoadMoreCommand}"
-            HeightRequest="210">
+        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
 
-            <CollectionView.ItemsLayout>
-                <LinearItemsLayout
-                    Orientation="Horizontal"
-                    ItemSpacing="12" />
-            </CollectionView.ItemsLayout>
+            <ScrollView
+                x:Name="RailScrollView"
+                Grid.Column="0"
+                Orientation="Horizontal"
+                Scrolled="OnRailScrolled"
+                Margin="0,0,0,10">
 
-            <CollectionView.ItemTemplate>
-                <DataTemplate x:DataType="models:HomeMovieItem">
-                    <views:MoviePosterCardView
-                        Title="{Binding Title}"
-                        PosterPath="{Binding PosterPath}"
-                        RatingText="{Binding RatingText}" />
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
+                <HorizontalStackLayout
+                    Spacing="12"
+                    BindableLayout.ItemsSource="{Binding Source={x:Reference This}, Path=ItemsSource}">
 
-            <CollectionView.Footer>
-                <Grid Padding="8" WidthRequest="40">
-                    <ActivityIndicator
-                        IsVisible="{Binding Source={x:Reference This}, Path=IsLoadingMore}"
-                        IsRunning="{Binding Source={x:Reference This}, Path=IsLoadingMore}"
-                        Color="#00C030" />
-                </Grid>
-            </CollectionView.Footer>
-        </CollectionView>
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="models:HomeMovieItem">
+                            <views:MoviePosterCardView
+                                Title="{Binding Title}"
+                                PosterPath="{Binding PosterPath}"
+                                RatingText="{Binding RatingText}" />
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+
+                </HorizontalStackLayout>
+            </ScrollView>
+
+            <Grid
+                Grid.Column="1"
+                WidthRequest="36"
+                VerticalOptions="Center"
+                IsVisible="{Binding Source={x:Reference This}, Path=IsLoadingMore}">
+
+                <ActivityIndicator
+                    IsVisible="{Binding Source={x:Reference This}, Path=IsLoadingMore}"
+                    IsRunning="{Binding Source={x:Reference This}, Path=IsLoadingMore}"
+                    Color="#00C030"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center" />
+            </Grid>
+
+        </Grid>
     </VerticalStackLayout>
 </ContentView>
