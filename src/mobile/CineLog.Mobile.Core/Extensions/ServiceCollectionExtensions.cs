@@ -44,8 +44,6 @@ public static class ServiceCollectionExtensions
     {
         services.AddTransient<IAuthClient>(sp =>
             new AuthClient(sp.GetRequiredService<IHttpClientFactory>().CreateClient("CineLogApi")));
-        services.AddTransient<IPeopleClient>(sp =>
-            new PeopleClient(sp.GetRequiredService<IHttpClientFactory>().CreateClient("CineLogApi")));
         services.AddTransient<IUsersClient>(sp =>
             new UsersClient(sp.GetRequiredService<IHttpClientFactory>().CreateClient("CineLogApi")));
         return services;
