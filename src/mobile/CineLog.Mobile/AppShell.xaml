@@ -6,8 +6,7 @@
     xmlns:auth="clr-namespace:CineLog.Mobile.Pages.Auth"
     xmlns:helpers="clr-namespace:CineLog.Mobile.Helpers"
     xmlns:main="clr-namespace:CineLog.Mobile.Pages.MainPages"
-    Shell.FlyoutBehavior="Disabled"
-    Shell.NavBarIsVisible="False">
+    Shell.FlyoutBehavior="Disabled">
 
     <!-- Auth pages -->
 

@@ -35,7 +35,7 @@ namespace CineLog.Mobile.Core.Services
         private static IReadOnlyList<HomeMovieItem> MapMovies(IEnumerable<MovieSummaryResponse> movies)
         {
             return [.. movies
-                .Where(movie => movie.Type == movieContentType)
+                //.Where(movie => movie.Type == movieContentType)
                 .Select(movie => new HomeMovieItem
                 {
                     Id = movie.Id ?? Guid.Empty,

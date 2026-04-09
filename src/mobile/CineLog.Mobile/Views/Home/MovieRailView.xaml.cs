@@ -19,6 +19,13 @@ public partial class MovieRailView : ContentView
     public static readonly BindableProperty IsLoadingMoreProperty =
         BindableProperty.Create(nameof(IsLoadingMore), typeof(bool), typeof(MovieRailView), false);
 
+    public static readonly BindableProperty SeeAllCommandProperty =
+        BindableProperty.Create(nameof(SeeAllCommand), typeof(ICommand), typeof(MovieRailView));
+
+    public static readonly BindableProperty ShowSeeAllProperty =
+        BindableProperty.Create(nameof(ShowSeeAll), typeof(bool), typeof(MovieRailView), true);
+
+
     public MovieRailView()
     {
         InitializeComponent();
@@ -46,6 +53,17 @@ public partial class MovieRailView : ContentView
     {
         get => (bool)GetValue(IsLoadingMoreProperty);
         set => SetValue(IsLoadingMoreProperty, value);
+    }
+    public ICommand? SeeAllCommand
+    {
+        get => (ICommand?)GetValue(SeeAllCommandProperty);
+        set => SetValue(SeeAllCommandProperty, value);
+    }
+
+    public bool ShowSeeAll
+    {
+        get => (bool)GetValue(ShowSeeAllProperty);
+        set => SetValue(ShowSeeAllProperty, value);
     }
 
     private void OnRailScrolled(object? sender, ScrolledEventArgs e)

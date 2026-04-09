@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace CineLog.Mobile.Core.Models.Home
+namespace CineLog.Mobile.Core.Models
 {
-    public enum HomeCategory
+    public enum MovieCategory
     {
-        HighestRated,
+        TopRated,
         NewReleases,
         //Popular,
         //NowPlaying,

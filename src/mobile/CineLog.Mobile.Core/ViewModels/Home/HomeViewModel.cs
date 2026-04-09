@@ -11,14 +11,17 @@ namespace CineLog.Mobile.Core.ViewModels.Home;
 public partial class HomeViewModel : BaseViewModel
 {
     private const int RailPageSize = 12;
+    private const int MaxAdditionalLoads = 3;
 
     private readonly IAuthService _authService;
     private readonly IHomeService _homeService;
     private readonly INavigationService _navigation;
-    private readonly IAlertService _alerts;
+    //private readonly IAlertService _alerts;
 
     private int _topRatedCount = RailPageSize;
     private int _newReleaseCount = RailPageSize;
+    private int _topRatedLoadCount;
+    private int _newReleaseLoadCount;
 
     [ObservableProperty]
     private bool _isLoadingMoreTopRated;
@@ -35,15 +38,21 @@ public partial class HomeViewModel : BaseViewModel
     [ObservableProperty]
     private string _errorMessage = string.Empty;
 
+    [ObservableProperty]
+    private bool _canLoadMoreTopRated = true;
+
+    [ObservableProperty]
+    private bool _canLoadMoreNewReleases = true;
+
     public ObservableCollection<HomeMovieItem> TopRatedMovies { get; } = [];
     public ObservableCollection<HomeMovieItem> NewReleaseMovies { get; } = [];
 
-    public HomeViewModel(IAuthService authService, IHomeService homeService, INavigationService navigation, IAlertService alerts)
+    public HomeViewModel(IAuthService authService, IHomeService homeService, INavigationService navigation)//, IAlertService alerts)
     {
         _authService = authService;
         _homeService = homeService;
         _navigation = navigation;
-        _alerts = alerts;
+        //_alerts = alerts;
         Title = "Home";
     }
 
@@ -57,9 +66,38 @@ public partial class HomeViewModel : BaseViewModel
 
             _topRatedCount = RailPageSize;
             _newReleaseCount = RailPageSize;
+            _topRatedLoadCount = 1;
+            _newReleaseLoadCount = 1;
 
-            await ReloadTopRatedAsync();
-            await ReloadNewReleasesAsync();
+            TopRatedMovies.Clear();
+            NewReleaseMovies.Clear();
+
+            //await ReloadTopRatedAsync();
+            //await ReloadNewReleasesAsync();
+
+            try
+            {
+                var topRated = await _homeService.GetTopRatedMoviesAsync(_topRatedCount);
+                ReplaceMovies(TopRatedMovies, topRated);
+            }
+            catch (Exception ex)
+            {
+                HasError = true;
+                ErrorMessage = $"Top Rated failed: {ex.Message}";
+            }
+
+            try
+            {
+                var newReleases = await _homeService.GetNewReleaseMoviesAsync(_newReleaseCount);
+                ReplaceMovies(NewReleaseMovies, newReleases);
+            }
+            catch (Exception ex)
+            {
+                HasError = true;
+                ErrorMessage = string.IsNullOrWhiteSpace(ErrorMessage)
+                    ? $"New Releases failed: {ex.Message}"
+                    : $"{ErrorMessage}\nNew Releases failed: {ex.Message}";
+            }
 
             HasLoadedOnce = true;
         });
@@ -115,14 +153,19 @@ public partial class HomeViewModel : BaseViewModel
     [RelayCommand]
     public async Task LoadMoreTopRated()
     {
-        if (IsBusy || IsLoadingMoreTopRated)
+        if (IsBusy || IsLoadingMoreTopRated || !CanLoadMoreTopRated)
             return;
 
         try
         {
             IsLoadingMoreTopRated = true;
             _topRatedCount += RailPageSize;
+            _topRatedLoadCount++;
+
             await ReloadTopRatedAsync(appendOnly: true);
+
+            if (_topRatedLoadCount >= MaxAdditionalLoads)
+                CanLoadMoreTopRated = false;
         }
         catch (Exception ex)
         {
@@ -138,14 +181,19 @@ public partial class HomeViewModel : BaseViewModel
     [RelayCommand]
     public async Task LoadMoreNewReleases()
     {
-        if (IsBusy || IsLoadingMoreNewReleases)
+        if (IsBusy || IsLoadingMoreNewReleases || !CanLoadMoreNewReleases)
             return;
 
         try
         {
             IsLoadingMoreNewReleases = true;
             _newReleaseCount += RailPageSize;
+            _newReleaseLoadCount++;
+
             await ReloadNewReleasesAsync(appendOnly: true);
+
+            if (_newReleaseLoadCount >= MaxAdditionalLoads)
+                CanLoadMoreNewReleases = false;
         }
         catch (Exception ex)
         {
@@ -157,6 +205,25 @@ public partial class HomeViewModel : BaseViewModel
             IsLoadingMoreNewReleases = false;
         }
     }
+
+    [RelayCommand]
+    public Task GoToTopRated()
+    {
+        return _navigation.NavigateToAsync(Routes.MoviesCategory, new Dictionary<string, object>
+        {
+            ["category"] = "top-rated"
+        });
+    }
+
+    [RelayCommand]
+    public Task GoToNewReleases()
+    {
+        return _navigation.NavigateToAsync(Routes.MoviesCategory, new Dictionary<string, object>
+        {
+            ["category"] = "new-releases"
+        });
+    }
+
     [RelayCommand]
     private async Task Logout()
     {
@@ -167,8 +234,14 @@ public partial class HomeViewModel : BaseViewModel
         });
     }
 
-    protected override async Task OnError(Exception ex)
+    //protected override async Task OnError(Exception ex)
+    //{
+    //    await _alerts.ShowAlertAsync("Error", ex.Message);
+    //}
+    protected override Task OnError(Exception ex)
     {
-        await _alerts.ShowAlertAsync("Error", ex.Message);
+        HasError = true;
+        ErrorMessage = ex.Message;
+        return Task.CompletedTask;
     }
 }

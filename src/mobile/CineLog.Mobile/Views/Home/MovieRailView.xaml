@@ -8,11 +8,26 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
     <VerticalStackLayout Spacing="10">
-        <Label
-            Text="{Binding Source={x:Reference This}, Path=Title}"
-            FontSize="20"
-            FontAttributes="Bold"
-            TextColor="White" />
+        <Grid ColumnDefinitions="*,Auto">
+            <Label
+                Grid.Column="0"
+                Text="{Binding Source={x:Reference This}, Path=Title}"
+                FontSize="20"
+                FontAttributes="Bold"
+                TextColor="White" />
+
+            <Label
+                Grid.Column="1"
+                Text="See all"
+                TextColor="#00CC44"
+                FontSize="14"
+                VerticalTextAlignment="Center"
+                IsVisible="{Binding Source={x:Reference This}, Path=ShowSeeAll}">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding Source={x:Reference This}, Path=SeeAllCommand}" />
+                </Label.GestureRecognizers>
+            </Label>
+        </Grid>
 
         <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
 

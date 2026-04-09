@@ -1,3 +1,6 @@
+using CineLog.Mobile.Core.Navigation;
+using CineLog.Mobile.Pages.Movies;
+
 namespace CineLog.Mobile;
 
 public partial class AppShell : Shell
@@ -14,5 +17,6 @@ public partial class AppShell : Shell
 
         // Example:
         // Routing.RegisterRoute(Navigation.Routes.MovieDetail,  typeof(MovieDetailPage));
+        Routing.RegisterRoute(Routes.MoviesCategory, typeof(MoviesCategoryPage));
     }
 }

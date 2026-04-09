@@ -4,6 +4,7 @@ using CineLog.Mobile.Pages.Auth;
 using CineLog.Mobile.Services;
 using Microsoft.Extensions.DependencyInjection;
 using CineLog.Mobile.Pages.MainPages;
+using CineLog.Mobile.Pages.Movies;
 
 namespace CineLog.Mobile.Extensions;
 
@@ -30,6 +31,7 @@ public static class ServiceCollectionExtensions
         services.AddTransient<LoginPage>();
         services.AddTransient<RegisterPage>();
         services.AddTransient<HomePage>();
+        services.AddTransient<MoviesCategoryPage>();
 
         services.AddTransient<SearchPage>();
         services.AddTransient<LogPage>();

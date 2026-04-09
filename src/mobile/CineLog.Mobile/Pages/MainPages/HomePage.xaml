@@ -62,7 +62,8 @@
                 Title="Top Rated"
                 ItemsSource="{Binding TopRatedMovies}"
                 LoadMoreCommand="{Binding LoadMoreTopRatedCommand}"
-                IsLoadingMore="{Binding IsLoadingMoreTopRated}" />
+                SeeAllCommand="{Binding GoToTopRatedCommand}"
+                IsLoadingMore="{Binding IsLoadingMoreTopRated}" />      
 
             <BoxView HeightRequest="1" Color="#1F252C" />
 
@@ -70,6 +71,7 @@
                 Title="New Releases"
                 ItemsSource="{Binding NewReleaseMovies}"
                 LoadMoreCommand="{Binding LoadMoreNewReleasesCommand}"
+                SeeAllCommand="{Binding GoToNewReleasesCommand}"
                 IsLoadingMore="{Binding IsLoadingMoreNewReleases}" />
 
         </VerticalStackLayout>

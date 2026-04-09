@@ -3,6 +3,7 @@ using CineLog.Mobile.Core.Infrastructure;
 using CineLog.Mobile.Core.Services;
 using CineLog.Mobile.Core.Services.Interfaces;
 using CineLog.Mobile.Core.ViewModels.Auth;
+using CineLog.Mobile.Core.ViewModels.Common;
 using CineLog.Mobile.Core.ViewModels.Home;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -62,6 +63,7 @@ public static class ServiceCollectionExtensions
         services.AddTransient<LoginViewModel>();
         services.AddTransient<RegisterViewModel>();
         services.AddTransient<HomeViewModel>();
+        services.AddTransient<MoviesCategoryViewModel>();
         return services;
     }
 }
