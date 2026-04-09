@@ -43,12 +43,17 @@ public static class ServiceCollectionExtensions
     {
         services.AddTransient<IAuthClient>(sp =>
             new AuthClient(sp.GetRequiredService<IHttpClientFactory>().CreateClient("CineLogApi")));
+
+        services.AddTransient<IDashboardClient>(sp =>
+            new DashboardClient(sp.GetRequiredService<IHttpClientFactory>().CreateClient("CineLogApi")));
+
         return services;
     }
 
     private static IServiceCollection AddCoreServices(this IServiceCollection services)
     {
         services.AddTransient<IAuthService, AuthService>();
+        services.AddTransient<IHomeService, HomeService>();
         return services;
     }
 

@@ -3,23 +3,170 @@
     x:Class="CineLog.Mobile.Pages.MainPages.HomePage"
     x:DataType="vm:HomeViewModel"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:models="clr-namespace:CineLog.Mobile.Core.Models.Home;assembly=CineLog.Mobile.Core"
     xmlns:vm="clr-namespace:CineLog.Mobile.Core.ViewModels.Home;assembly=CineLog.Mobile.Core"
+    xmlns:helpers="clr-namespace:CineLog.Mobile.Helpers"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Shell.NavBarIsVisible="False"
     Title="{Binding Title}">
 
-    <VerticalStackLayout Padding="28" Spacing="16" VerticalOptions="Center">
+    <ScrollView>
+        <VerticalStackLayout Padding="16,20,16,24" Spacing="18">
 
-        <Label
-            HorizontalOptions="Center"
-            Style="{StaticResource HeadlineLargeLabel}"
-            Text="Dashboard" />
+            <HorizontalStackLayout Spacing="10" VerticalOptions="Center">
 
-        <Button
-            Command="{Binding LogoutCommand}"
-            HorizontalOptions="Fill"
-            Style="{StaticResource DangerButton}"
-            Text="Log Out" />
+                <Border
+                    BackgroundColor="{StaticResource Primary}"
+                    HeightRequest="28"
+                    StrokeThickness="0"
+                    WidthRequest="28">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="8" />
+                    </Border.StrokeShape>
 
-    </VerticalStackLayout>
+                    <Label
+                        FontFamily="FASolid"
+                        FontSize="16"
+                        HorizontalOptions="Center"
+                        Text="{x:Static helpers:FontAwesomeIcons.Film}"
+                        TextColor="White"
+                        VerticalOptions="Center" />
+                </Border>
+
+                <Label
+                    Text="CineLog"
+                    FontSize="26"
+                    FontAttributes="Bold"
+                    TextColor="White"
+                    VerticalTextAlignment="Center" />   
+            </HorizontalStackLayout>
+
+            <Label
+                Text="Movies"
+                FontSize="28"
+                FontAttributes="Bold"
+                TextColor="White" />
+
+            <ActivityIndicator
+                IsRunning="{Binding IsBusy}"
+                IsVisible="{Binding IsBusy}"
+                Color="#00C030" />
+
+            <Label
+                IsVisible="{Binding HasError}"
+                Text="{Binding ErrorMessage}"
+                TextColor="#B3B3B3"
+                FontSize="12" />
+
+            <VerticalStackLayout Spacing="10">
+                <Label
+                    Text="Top Rated"
+                    FontSize="20"
+                    FontAttributes="Bold"
+                    TextColor="White" />
+
+                <ScrollView Orientation="Horizontal">
+                    <HorizontalStackLayout
+                        BindableLayout.ItemsSource="{Binding TopRatedMovies}"
+                        Spacing="12">
+
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="models:HomeMovieItem">
+                                <VerticalStackLayout WidthRequest="115" Spacing="6">
+                                    <Border
+                                        HeightRequest="170"
+                                        StrokeThickness="0"
+                                        StrokeShape="RoundRectangle 12"
+                                        BackgroundColor="#1A1E24">
+
+                                        <Grid>
+                                            <Image
+                                                Source="{Binding PosterPath}"
+                                                Aspect="AspectFill" />
+
+                                            <Grid
+                                                VerticalOptions="End"
+                                                Padding="6"
+                                                BackgroundColor="#70000000">
+                                                <Label
+                                                    Text="{Binding Title}"
+                                                    FontSize="11"
+                                                    TextColor="White"
+                                                    MaxLines="2"
+                                                    LineBreakMode="TailTruncation" />
+                                            </Grid>
+                                        </Grid>
+                                    </Border>
+
+                                    <Label
+                                        Text="{Binding RatingText, StringFormat='★ {0}'}"
+                                        FontSize="11"
+                                        TextColor="#A9B0B8"
+                                        HorizontalTextAlignment="Center" />
+                                </VerticalStackLayout>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+
+                    </HorizontalStackLayout>
+                </ScrollView>
+            </VerticalStackLayout>
+
+            <BoxView HeightRequest="1" Color="#1F252C" />
+
+            <VerticalStackLayout Spacing="10">
+                <Label
+                    Text="New Releases"
+                    FontSize="20"
+                    FontAttributes="Bold"
+                    TextColor="White" />
+
+                <ScrollView Orientation="Horizontal">
+                    <HorizontalStackLayout
+                        BindableLayout.ItemsSource="{Binding NewReleaseMovies}"
+                        Spacing="12">
+
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="models:HomeMovieItem">
+                                <VerticalStackLayout WidthRequest="115" Spacing="6">
+                                    <Border
+                                        HeightRequest="170"
+                                        StrokeThickness="0"
+                                        StrokeShape="RoundRectangle 12"
+                                        BackgroundColor="#1A1E24">
+
+                                        <Grid>
+                                            <Image
+                                                Source="{Binding PosterPath}"
+                                                Aspect="AspectFill" />
+
+                                            <Grid
+                                                VerticalOptions="End"
+                                                Padding="6"
+                                                BackgroundColor="#70000000">
+                                                <Label
+                                                    Text="{Binding Title}"
+                                                    FontSize="11"
+                                                    TextColor="White"
+                                                    MaxLines="2"
+                                                    LineBreakMode="TailTruncation" />
+                                            </Grid>
+                                        </Grid>
+                                    </Border>
+
+                                    <Label
+                                        Text="{Binding RatingText, StringFormat='★ {0}'}"
+                                        FontSize="11"
+                                        TextColor="#A9B0B8"
+                                        HorizontalTextAlignment="Center" />
+                                </VerticalStackLayout>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+
+                    </HorizontalStackLayout>
+                </ScrollView>
+            </VerticalStackLayout>
+
+        </VerticalStackLayout>
+    </ScrollView>
 
 </ContentPage>
