@@ -16,7 +16,7 @@ public partial class HomeViewModel : BaseViewModel
     private readonly IAuthService _authService;
     private readonly IHomeService _homeService;
     private readonly INavigationService _navigation;
-    //private readonly IAlertService _alerts;
+    private readonly IAlertService _alerts;
 
     private int _topRatedCount = RailPageSize;
     private int _newReleaseCount = RailPageSize;
@@ -47,12 +47,12 @@ public partial class HomeViewModel : BaseViewModel
     public ObservableCollection<HomeMovieItem> TopRatedMovies { get; } = [];
     public ObservableCollection<HomeMovieItem> NewReleaseMovies { get; } = [];
 
-    public HomeViewModel(IAuthService authService, IHomeService homeService, INavigationService navigation)//, IAlertService alerts)
+    public HomeViewModel(IAuthService authService, IHomeService homeService, INavigationService navigation, IAlertService alerts)
     {
         _authService = authService;
         _homeService = homeService;
         _navigation = navigation;
-        //_alerts = alerts;
+        _alerts = alerts;
         Title = "Home";
     }
 
@@ -69,35 +69,8 @@ public partial class HomeViewModel : BaseViewModel
             _topRatedLoadCount = 1;
             _newReleaseLoadCount = 1;
 
-            TopRatedMovies.Clear();
-            NewReleaseMovies.Clear();
-
-            //await ReloadTopRatedAsync();
-            //await ReloadNewReleasesAsync();
-
-            try
-            {
-                var topRated = await _homeService.GetTopRatedMoviesAsync(_topRatedCount);
-                ReplaceMovies(TopRatedMovies, topRated);
-            }
-            catch (Exception ex)
-            {
-                HasError = true;
-                ErrorMessage = $"Top Rated failed: {ex.Message}";
-            }
-
-            try
-            {
-                var newReleases = await _homeService.GetNewReleaseMoviesAsync(_newReleaseCount);
-                ReplaceMovies(NewReleaseMovies, newReleases);
-            }
-            catch (Exception ex)
-            {
-                HasError = true;
-                ErrorMessage = string.IsNullOrWhiteSpace(ErrorMessage)
-                    ? $"New Releases failed: {ex.Message}"
-                    : $"{ErrorMessage}\nNew Releases failed: {ex.Message}";
-            }
+            await ReloadTopRatedAsync();
+            await ReloadNewReleasesAsync();
 
             HasLoadedOnce = true;
         });
@@ -234,14 +207,8 @@ public partial class HomeViewModel : BaseViewModel
         });
     }
 
-    //protected override async Task OnError(Exception ex)
-    //{
-    //    await _alerts.ShowAlertAsync("Error", ex.Message);
-    //}
-    protected override Task OnError(Exception ex)
+    protected override async Task OnError(Exception ex)
     {
-        HasError = true;
-        ErrorMessage = ex.Message;
-        return Task.CompletedTask;
+        await _alerts.ShowAlertAsync("Error", ex.Message);
     }
 }
