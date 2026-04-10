@@ -5,6 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:auth="clr-namespace:CineLog.Mobile.Pages.Auth"
     xmlns:dashboard="clr-namespace:CineLog.Mobile.Pages.Dashboard"
+    xmlns:profile="clr-namespace:CineLog.Mobile.Pages.Profile"
     Shell.FlyoutBehavior="Disabled"
     Shell.NavBarIsVisible="False">
 
@@ -23,5 +24,9 @@
     <ShellContent
         Route="Dashboard"
         ContentTemplate="{DataTemplate dashboard:DashboardPage}" />
+
+    <ShellContent
+        Route="Profile"
+        ContentTemplate="{DataTemplate profile:ProfilePage}" />
 
 </Shell>

@@ -6,12 +6,9 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace CineLog.Mobile.Core.ViewModels.Auth;
 
-public partial class RegisterViewModel : BaseViewModel
+public partial class RegisterViewModel(IAuthService authService, INavigationService navigation, IAlertService alerts)
+    : BaseViewModel(alerts)
 {
-    private readonly IAuthService _authService;
-    private readonly INavigationService _navigation;
-    private readonly IAlertService _alerts;
-
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(RegisterCommand))]
     private string _username = string.Empty;
@@ -30,21 +27,13 @@ public partial class RegisterViewModel : BaseViewModel
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(RegisterCommand))]
-    private bool _isTermsAccepted = false;
+    private bool _isTermsAccepted;
 
     [ObservableProperty]
-    private bool _isPasswordVisible = false;
+    private bool _isPasswordVisible;
 
     [ObservableProperty]
-    private bool _isConfirmPasswordVisible = false;
-
-    public RegisterViewModel(IAuthService authService, INavigationService navigation, IAlertService alerts)
-    {
-        _authService = authService;
-        _navigation = navigation;
-        _alerts = alerts;
-        Title = "Create Account";
-    }
+    private bool _isConfirmPasswordVisible;
 
     private bool CanRegister =>
         !string.IsNullOrWhiteSpace(Username) &&
@@ -58,8 +47,8 @@ public partial class RegisterViewModel : BaseViewModel
     {
         await ExecuteAsync(async () =>
         {
-            await _authService.RegisterAsync(Username, Email, Password);
-            await _navigation.NavigateToRootAsync(Routes.Dashboard);
+            await authService.RegisterAsync(Username, Email, Password);
+            await navigation.NavigateToRootAsync(Routes.Dashboard);
         });
     }
 
@@ -70,10 +59,7 @@ public partial class RegisterViewModel : BaseViewModel
     private void ToggleConfirmPasswordVisibility() => IsConfirmPasswordVisible = !IsConfirmPasswordVisible;
 
     [RelayCommand]
-    private Task GoToLogin() => _navigation.NavigateToRootAsync(Routes.Login);
+    private Task GoToLogin() => navigation.NavigateToRootAsync(Routes.Login);
 
-    protected override async Task OnError(Exception ex)
-    {
-        await _alerts.ShowAlertAsync("Registration failed", ex.Message);
-    }
+    protected override string ErrorTitle => "Registration failed";
 }

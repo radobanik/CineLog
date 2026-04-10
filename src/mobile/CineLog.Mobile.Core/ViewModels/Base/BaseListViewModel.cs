@@ -1,10 +1,11 @@
 using System.Collections.ObjectModel;
+using CineLog.Mobile.Core.Services.Interfaces;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
 namespace CineLog.Mobile.Core.ViewModels.Base;
 
-public abstract partial class BaseListViewModel<T> : BaseViewModel
+public abstract partial class BaseListViewModel<T>(IAlertService alerts) : BaseViewModel(alerts)
 {
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsEmpty))]
@@ -14,25 +15,21 @@ public abstract partial class BaseListViewModel<T> : BaseViewModel
 
     public bool IsEmpty => !IsBusy && Items.Count == 0;
 
-    [RelayCommand]
-    public async Task LoadAsync()
+    protected override async Task LoadAsync()
     {
-        await ExecuteAsync(async () =>
-        {
-            var items = await FetchAsync();
-            Items.Clear();
-            foreach (var item in items)
-                Items.Add(item);
+        var items = await FetchAsync();
+        Items.Clear();
+        foreach (var item in items)
+            Items.Add(item);
 
-            OnPropertyChanged(nameof(IsEmpty));
-        });
+        OnPropertyChanged(nameof(IsEmpty));
     }
 
     [RelayCommand]
-    public async Task RefreshAsync()
+    protected async Task RefreshAsync()
     {
         IsRefreshing = true;
-        await LoadAsync();
+        await ExecuteAsync(LoadAsync);
         IsRefreshing = false;
     }
 
