@@ -8,14 +8,12 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace CineLog.Mobile.Core.ViewModels.Profile;
 
-public partial class ProfileViewModel : BaseViewModel, IDataViewModel
+public partial class ProfileViewModel(
+    IUsersClient usersClient,
+    INavigationService navigationService,
+    IAlertService alerts)
+    : BaseViewModel(alerts)
 {
-    private readonly IUsersClient _usersClient;
-    private readonly INavigationService _navigationService;
-    private readonly IAlertService _alerts;
-
-    private Guid _id;
-
     [ObservableProperty]
     private string _username = string.Empty;
 
@@ -40,53 +38,40 @@ public partial class ProfileViewModel : BaseViewModel, IDataViewModel
     [ObservableProperty]
     private ReviewResponse[] _reviews = [];
 
-    public ProfileViewModel(IUsersClient usersClient, INavigationService navigationService, IAlertService alerts)
+    protected override async Task LoadAsync()
     {
-        _usersClient = usersClient;
-        _navigationService = navigationService;
-        _alerts = alerts;
-        Title = "Profile";
-    }
-
-    public override Task OnAppearingAsync() => LoadAsync();
-
-    public async Task LoadAsync()
-    {
-        await ExecuteAsync(async () =>
-        {
-            var user = await _usersClient.MeGETAsync();
-            if (user != null)
-            {
-                _id = user.Id ?? Guid.Empty;
-                Username = user.Username ?? string.Empty;
-                Bio = user.Bio ?? string.Empty;
-                AvatarUrl = user.AvatarUrl ?? string.Empty;
-                FilmsCount = user.FilmsCount ?? 0;
-                FollowersCount = user.FollowersCount ?? 0;
-                FollowingCount = user.FollowingCount ?? 0;
-            }
-
-            var favouriteResponse = await _usersClient.FavoritesAllAsync();
-            if (favouriteResponse != null && favouriteResponse.Count > 0)
-                FavouriteMovies = [.. favouriteResponse];
-
-            var reviewsResponse = await _usersClient.ReviewsGET3Async(_id, null, null);
-            if (reviewsResponse?.Items != null && reviewsResponse.Items.Count > 0)
-                Reviews = [.. reviewsResponse.Items];
-        });
+        var userId = await LoadUserAsync();
+        await Task.WhenAll(LoadFavouritesAsync(), LoadReviewsAsync(userId));
     }
 
     [RelayCommand]
-    public Task RefreshAsync() => LoadAsync();
+    private Task NavigateToDashboard() => navigationService.NavigateToRootAsync(Routes.Dashboard);
 
-    [RelayCommand]
-    private async Task ToDashboard()
+    private async Task<Guid> LoadUserAsync()
     {
-        await _navigationService.NavigateToRootAsync(Routes.Dashboard);
+        var user = await usersClient.MeGETAsync();
+
+        Username = user.Username ?? string.Empty;
+        Bio = user.Bio ?? string.Empty;
+        AvatarUrl = user.AvatarUrl ?? string.Empty;
+        FilmsCount = user.FilmsCount ?? 0;
+        FollowersCount = user.FollowersCount ?? 0;
+        FollowingCount = user.FollowingCount ?? 0;
+
+        return user.Id ?? Guid.Empty;
     }
 
-    public override async Task HandleErrorAsync(Exception ex)
+    private async Task LoadFavouritesAsync()
     {
-        await _alerts.ShowAlertAsync("Error", ex.Message);
+        var response = await usersClient.FavoritesAllAsync();
+        if (response.Count > 0)
+            FavouriteMovies = [.. response];
+    }
+
+    private async Task LoadReviewsAsync(Guid userId)
+    {
+        var response = await usersClient.ReviewsGET3Async(userId, null, null);
+        if (response?.Items?.Count > 0)
+            Reviews = [.. response.Items];
     }
 }

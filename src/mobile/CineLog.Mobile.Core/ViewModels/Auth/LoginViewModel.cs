@@ -6,12 +6,9 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace CineLog.Mobile.Core.ViewModels.Auth;
 
-public partial class LoginViewModel : BaseViewModel
+public partial class LoginViewModel(IAuthService authService, INavigationService navigation, IAlertService alerts)
+    : BaseViewModel(alerts)
 {
-    private readonly IAuthService _authService;
-    private readonly INavigationService _navigation;
-    private readonly IAlertService _alerts;
-
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(LoginCommand))]
     private string _email = string.Empty;
@@ -21,15 +18,7 @@ public partial class LoginViewModel : BaseViewModel
     private string _password = string.Empty;
 
     [ObservableProperty]
-    private bool _isPasswordVisible = false;
-
-    public LoginViewModel(IAuthService authService, INavigationService navigation, IAlertService alerts)
-    {
-        _authService = authService;
-        _navigation = navigation;
-        _alerts = alerts;
-        Title = "Sign In";
-    }
+    private bool _isPasswordVisible;
 
     private bool CanLogin => !string.IsNullOrWhiteSpace(Email) && !string.IsNullOrWhiteSpace(Password);
 
@@ -38,8 +27,8 @@ public partial class LoginViewModel : BaseViewModel
     {
         await ExecuteAsync(async () =>
         {
-            await _authService.LoginAsync(Email, Password);
-            await _navigation.NavigateToRootAsync(Routes.Dashboard);
+            await authService.LoginAsync(Email, Password);
+            await navigation.NavigateToRootAsync(Routes.Dashboard);
         });
     }
 
@@ -47,10 +36,7 @@ public partial class LoginViewModel : BaseViewModel
     private void TogglePasswordVisibility() => IsPasswordVisible = !IsPasswordVisible;
 
     [RelayCommand]
-    private Task GoToRegister() => _navigation.NavigateToRootAsync(Routes.Register);
+    private Task GoToRegister() => navigation.NavigateToRootAsync(Routes.Register);
 
-    public override async Task HandleErrorAsync(Exception ex)
-    {
-        await _alerts.ShowAlertAsync("Login failed", ex.Message);
-    }
+    protected override string ErrorTitle => "Login failed";
 }

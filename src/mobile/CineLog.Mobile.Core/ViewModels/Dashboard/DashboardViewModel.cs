@@ -5,38 +5,23 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace CineLog.Mobile.Core.ViewModels.Dashboard;
 
-public partial class DashboardViewModel : BaseViewModel
+public partial class DashboardViewModel(IAuthService authService, INavigationService navigation, IAlertService alerts)
+    : BaseViewModel(alerts)
 {
-    private readonly IAuthService _authService;
-    private readonly INavigationService _navigation;
-    private readonly IAlertService _alerts;
-
-    public DashboardViewModel(IAuthService authService, INavigationService navigation, IAlertService alerts)
-    {
-        _authService = authService;
-        _navigation = navigation;
-        _alerts = alerts;
-        Title = "Dashboard";
-    }
-
     [RelayCommand]
     private async Task Logout()
     {
         await ExecuteAsync(async () =>
         {
-            await _authService.LogoutAsync();
-            await _navigation.NavigateToRootAsync(Routes.Login);
+            await authService.LogoutAsync();
+            await navigation.NavigateToRootAsync(Routes.Login);
         });
     }
 
     [RelayCommand]
     private async Task GoToProfile()
     {
-        await _navigation.NavigateToRootAsync(Routes.Profile);
+        await navigation.NavigateToRootAsync(Routes.Profile);
     }
 
-    public override async Task HandleErrorAsync(Exception ex)
-    {
-        await _alerts.ShowAlertAsync("Error", ex.Message);
-    }
 }
