@@ -13,6 +13,7 @@
                 <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <converters:InvertedBoolConverter x:Key="InvertedBoolConverter" />
+            <converters:RatingToStarsConverter x:Key="RatingToStarsConverter" />
         </ResourceDictionary>
     </Application.Resources>
 

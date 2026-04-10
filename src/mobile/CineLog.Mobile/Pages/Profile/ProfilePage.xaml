@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ContentPage Shell.NavBarIsVisible="False"
-             x:Class="CineLog.Mobile.Pages.Profile.ProfilePage"
-             x:DataType="vm:ProfileViewModel"
-             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:helpers="clr-namespace:CineLog.Mobile.Helpers"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:vm="clr-namespace:CineLog.Mobile.Core.ViewModels.Profile;assembly=CineLog.Mobile.Core"
-             xmlns:models="clr-namespace:CineLog.Mobile.ApiClient.Models;assembly=CineLog.Mobile.ApiClient">
+<pages:BasePage Shell.NavBarIsVisible="False"
+               x:Class="CineLog.Mobile.Pages.Profile.ProfilePage"
+               x:DataType="vm:ProfileViewModel"
+               xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+               xmlns:helpers="clr-namespace:CineLog.Mobile.Helpers"
+               xmlns:pages="clr-namespace:CineLog.Mobile.Pages"
+               xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+               xmlns:vm="clr-namespace:CineLog.Mobile.Core.ViewModels.Profile;assembly=CineLog.Mobile.Core"
+               xmlns:models="clr-namespace:CineLog.Mobile.ApiClient.Models;assembly=CineLog.Mobile.ApiClient">
     <ScrollView>
         <VerticalStackLayout Padding="20"
                              Spacing="25">
@@ -14,74 +15,71 @@
                 <Label Text="{x:Static helpers:FontAwesomeIcons.ChevronLeft}"
                        Style="{StaticResource IconLabel}">
                     <Label.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding ToDashboardCommand}"/>
+                        <TapGestureRecognizer Command="{Binding NavigateToDashboardCommand}"/>
                     </Label.GestureRecognizers>
                 </Label>
-                
+
                 <Label Text="Profile" Grid.Column="1"
                        Style="{StaticResource HeadlineLargeLabel}" />
                 <Label Grid.Column="2"
                        Text="{x:Static helpers:FontAwesomeIcons.Edit}"
                        Style="{StaticResource IconLabel}" />
             </Grid>
-            <HorizontalStackLayout Spacing="15">
+            <Grid ColumnDefinitions="80, *"
+                  ColumnSpacing="15">
                 <Border WidthRequest="80"
                         HeightRequest="80"
                         StrokeShape="RoundRectangle 40">
                     <Image Source="{Binding AvatarUrl}" />
                 </Border>
-                <VerticalStackLayout VerticalOptions="Center">
+                <VerticalStackLayout Grid.Column="1"
+                                     VerticalOptions="Center">
                     <Label Text="{Binding Username}"
-                           FontSize="20"
-                           FontAttributes="Bold"
-                           TextColor="White" />
-                    <ActivityIndicator IsVisible="{Binding IsBusy}"
-                                       Grid.Column="1"
-                                       IsRunning="{Binding IsBusy}" />
+                           Style="{StaticResource HeadlineMediumLabel}" />
                     <Label Text="{Binding Bio}"
-                           TextColor="White"
+                           Style="{StaticResource BodyMediumLabel}"
                            Margin="0,5,0,0" />
                 </VerticalStackLayout>
-            </HorizontalStackLayout>
-            <Border BackgroundColor="#1A1A1A"
+            </Grid>
+            <ActivityIndicator IsVisible="{Binding IsBusy}"
+                               IsRunning="{Binding IsBusy}"
+                               HorizontalOptions="Center" />
+            <Border BackgroundColor="{StaticResource Surface}"
                     Padding="15"
                     StrokeShape="RoundRectangle 10">
                 <Grid ColumnDefinitions="*, *, *, *">
                     <VerticalStackLayout Grid.Column="0"
                                          HorizontalOptions="Center">
                         <Label Text="{Binding FilmsCount}"
-                               FontAttributes="Bold"
+                               Style="{StaticResource HeadlineMediumLabel}"
                                HorizontalOptions="Center" />
                         <Label Text="FILMS"
-                               FontSize="10"
-                               TextColor="Gray" />
+                               Style="{StaticResource OverlineLabel}" />
                     </VerticalStackLayout>
                     <VerticalStackLayout Grid.Column="1"
                                          HorizontalOptions="Center">
+                        <!-- TODO: hardcoded value -->
                         <Label Text="67"
-                               FontAttributes="Bold"
+                               Style="{StaticResource HeadlineMediumLabel}"
                                HorizontalOptions="Center" />
                         <Label Text="THIS YEAR"
-                               FontSize="10"
-                               TextColor="Gray" />
+                               Style="{StaticResource OverlineLabel}" />
                     </VerticalStackLayout>
                     <VerticalStackLayout Grid.Column="2"
                                          HorizontalOptions="Center">
-                        <Label Text="12"
-                               FontAttributes="Bold"
+                        <Label Text="{Binding FollowersCount}"
+                               Style="{StaticResource HeadlineMediumLabel}"
                                HorizontalOptions="Center" />
-                        <Label Text="LISTS"
-                               FontSize="10"
-                               TextColor="Gray" />
+                        <Label Text="FOLLOWERS"
+                               Style="{StaticResource OverlineLabel}" />
                     </VerticalStackLayout>
                     <VerticalStackLayout Grid.Column="3"
                                          HorizontalOptions="Center">
                         <Label Text="{Binding FollowingCount}"
-                               FontAttributes="Bold"
+                               Style="{StaticResource HeadlineMediumLabel}"
                                HorizontalOptions="Center" />
                         <Label Text="FOLLOWING"
-                               FontSize="10"
-                               TextColor="Gray" />
+                               Style="{StaticResource OverlineLabel}" />
                     </VerticalStackLayout>
                 </Grid>
             </Border>
@@ -91,23 +89,27 @@
                 <CollectionView HeightRequest="150" ItemsSource="{Binding FavouriteMovies}">
                     <CollectionView.EmptyView>
                         <Label Text="No favorite films yet."
+                               Style="{StaticResource CaptionLabel}"
                                HorizontalOptions="Center"
-                               VerticalOptions="Center"
-                               TextColor="Gray" />
+                               VerticalOptions="Center" />
                     </CollectionView.EmptyView>
                     <CollectionView.ItemsLayout>
                         <LinearItemsLayout Orientation="Horizontal"
                                            ItemSpacing="10" />
                     </CollectionView.ItemsLayout>
                     <CollectionView.ItemTemplate>
-                        <DataTemplate>
+                        <DataTemplate x:DataType="models:MovieListItemResponse">
                             <Border WidthRequest="100"
                                     HeightRequest="150"
                                     StrokeShape="RoundRectangle 8">
-                                <Label Text="{Binding Title}"
-                                       VerticalOptions="End"
-                                       Margin="5"
-                                       FontSize="10" />
+                                <Grid>
+                                    <Image Source="{Binding PosterPath}"
+                                           Aspect="AspectFill" />
+                                    <Label Text="{Binding Title}"
+                                           Style="{StaticResource CaptionLabel}"
+                                           VerticalOptions="End"
+                                           Margin="5" />
+                                </Grid>
                             </Border>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
@@ -124,41 +126,48 @@
                 <CollectionView ItemsSource="{Binding Reviews}">
                     <CollectionView.EmptyView>
                         <Label Text="No recent diary entries."
+                               Style="{StaticResource CaptionLabel}"
                                HorizontalOptions="Center"
-                               VerticalOptions="Center"
-                               TextColor="Gray" />
+                               VerticalOptions="Center" />
                     </CollectionView.EmptyView>
                     <CollectionView.ItemTemplate>
                         <DataTemplate x:DataType="models:ReviewResponse">
                             <VerticalStackLayout Margin="0,0,0,15">
-                                <Grid ColumnDefinitions="50, 60, *"
+                                <Grid ColumnDefinitions="50, *, Auto"
                                       ColumnSpacing="15">
                                     <VerticalStackLayout Grid.Column="0"
                                                          VerticalOptions="Center">
                                         <Label Text="{Binding CreatedAt, StringFormat='{0:%d}'}"
-                                               FontSize="20"
-                                               FontAttributes="Bold"
+                                               Style="{StaticResource HeadlineMediumLabel}"
                                                HorizontalOptions="Center" />
                                         <Label Text="{Binding CreatedAt, StringFormat='{0:MMM}'}"
-                                               FontSize="12"
-                                               TextColor="Gray"
+                                               Style="{StaticResource CaptionLabel}"
                                                HorizontalOptions="Center" />
                                     </VerticalStackLayout>
-                                    <Border Grid.Column="1"
-                                            HeightRequest="80"
-                                            StrokeShape="RoundRectangle 5" />
-                                    <VerticalStackLayout Grid.Column="2"
+                                    <VerticalStackLayout Grid.Column="1"
                                                          VerticalOptions="Center">
-                                        <Label Text="{Binding MovieTitle}"
-                                               FontAttributes="Bold" />
-                                        <HorizontalStackLayout>
-                                            <Label Text="★★★★★"
-                                                   TextColor="Green" />
+                                        <HorizontalStackLayout Spacing="6">
+                                            <Label Text="{Binding MovieTitle}"
+                                                   Style="{StaticResource BodyLargeLabel}"
+                                                   FontAttributes="Bold" />
+                                            <Label Text="{Binding Rating, Converter={StaticResource RatingToStarsConverter}}"
+                                                   Style="{StaticResource RatingLabel}"
+                                                   VerticalOptions="Center" />
                                         </HorizontalStackLayout>
+                                        <Label Text="{Binding ReviewText}"
+                                               Style="{StaticResource CaptionLabel}" />
                                     </VerticalStackLayout>
+                                    <HorizontalStackLayout Grid.Column="2"
+                                                           VerticalOptions="Center"
+                                                           Spacing="4">
+                                        <Label Text="{Binding LikesCount}"
+                                               Style="{StaticResource CaptionLabel}" />
+                                        <Label Text="{x:Static helpers:FontAwesomeIcons.ThumbsUp}"
+                                               Style="{StaticResource SecondaryIconLabel}" />
+                                    </HorizontalStackLayout>
                                 </Grid>
                                 <BoxView HeightRequest="1"
-                                         Color="#333333"
+                                         Color="{StaticResource Divider}"
                                          Margin="0,15,0,0" />
                             </VerticalStackLayout>
                         </DataTemplate>
@@ -167,4 +176,4 @@
             </VerticalStackLayout>
         </VerticalStackLayout>
     </ScrollView>
-</ContentPage>
+</pages:BasePage>

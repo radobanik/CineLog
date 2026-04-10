@@ -29,6 +29,12 @@
         <Setter Property="TextTransform" Value="Uppercase" />
     </Style>
 
+    <Style TargetType="Label" x:Key="RatingLabel">
+        <Setter Property="TextColor" Value="{StaticResource Primary}" />
+        <Setter Property="FontFamily" Value="FASolid" />
+        <Setter Property="FontSize" Value="14" />
+    </Style>
+
     <Style TargetType="Label" x:Key="AccentLabel">
         <Setter Property="TextColor" Value="{StaticResource Primary}" />
         <Setter Property="FontSize" Value="14" />

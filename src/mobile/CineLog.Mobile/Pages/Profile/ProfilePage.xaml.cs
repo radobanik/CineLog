@@ -2,20 +2,11 @@ using CineLog.Mobile.Core.ViewModels.Profile;
 
 namespace CineLog.Mobile.Pages.Profile;
 
-public partial class ProfilePage : ContentPage
+public partial class ProfilePage : BasePage
 {
-	public ProfilePage(ProfileViewModel vm)
-	{
-		InitializeComponent();
-        BindingContext = vm;
-	}
-
-    protected override void OnAppearing()
+    public ProfilePage(ProfileViewModel vm)
     {
-        base.OnAppearing();
-        if (BindingContext is ProfileViewModel vm)
-        {
-            vm.LoadProfileCommand.Execute(null);
-        }
+        InitializeComponent();
+        BindingContext = vm;
     }
 }
