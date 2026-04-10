@@ -35,7 +35,7 @@ public partial class DashboardViewModel : BaseViewModel
         await _navigation.NavigateToRootAsync(Routes.Profile);
     }
 
-    protected override async Task OnError(Exception ex)
+    public override async Task HandleErrorAsync(Exception ex)
     {
         await _alerts.ShowAlertAsync("Error", ex.Message);
     }

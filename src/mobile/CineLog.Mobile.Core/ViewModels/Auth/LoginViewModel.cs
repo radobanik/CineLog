@@ -49,7 +49,7 @@ public partial class LoginViewModel : BaseViewModel
     [RelayCommand]
     private Task GoToRegister() => _navigation.NavigateToRootAsync(Routes.Register);
 
-    protected override async Task OnError(Exception ex)
+    public override async Task HandleErrorAsync(Exception ex)
     {
         await _alerts.ShowAlertAsync("Login failed", ex.Message);
     }

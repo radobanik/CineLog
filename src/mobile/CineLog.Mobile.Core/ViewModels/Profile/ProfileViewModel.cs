@@ -8,7 +8,7 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace CineLog.Mobile.Core.ViewModels.Profile;
 
-public partial class ProfileViewModel : BaseViewModel
+public partial class ProfileViewModel : BaseViewModel, IDataViewModel
 {
     private readonly IUsersClient _usersClient;
     private readonly INavigationService _navigationService;
@@ -48,8 +48,9 @@ public partial class ProfileViewModel : BaseViewModel
         Title = "Profile";
     }
 
-    [RelayCommand]
-    private async Task LoadProfileAsync()
+    public override Task OnAppearingAsync() => LoadAsync();
+
+    public async Task LoadAsync()
     {
         await ExecuteAsync(async () =>
         {
@@ -64,19 +65,19 @@ public partial class ProfileViewModel : BaseViewModel
                 FollowersCount = user.FollowersCount ?? 0;
                 FollowingCount = user.FollowingCount ?? 0;
             }
+
             var favouriteResponse = await _usersClient.FavoritesAllAsync();
             if (favouriteResponse != null && favouriteResponse.Count > 0)
-            {
                 FavouriteMovies = [.. favouriteResponse];
-            }
 
             var reviewsResponse = await _usersClient.ReviewsGET3Async(_id, null, null);
-            if (reviewsResponse != null && reviewsResponse.Items != null && reviewsResponse.Items.Count > 0)
-            {
+            if (reviewsResponse?.Items != null && reviewsResponse.Items.Count > 0)
                 Reviews = [.. reviewsResponse.Items];
-            }
         });
     }
+
+    [RelayCommand]
+    public Task RefreshAsync() => LoadAsync();
 
     [RelayCommand]
     private async Task ToDashboard()
@@ -84,8 +85,8 @@ public partial class ProfileViewModel : BaseViewModel
         await _navigationService.NavigateToRootAsync(Routes.Dashboard);
     }
 
-    protected override async Task OnError(Exception error)
+    public override async Task HandleErrorAsync(Exception ex)
     {
-        await _alerts.ShowAlertAsync("Error", error.Message);
+        await _alerts.ShowAlertAsync("Error", ex.Message);
     }
 }

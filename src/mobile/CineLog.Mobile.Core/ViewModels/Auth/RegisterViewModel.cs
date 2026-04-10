@@ -72,7 +72,7 @@ public partial class RegisterViewModel : BaseViewModel
     [RelayCommand]
     private Task GoToLogin() => _navigation.NavigateToRootAsync(Routes.Login);
 
-    protected override async Task OnError(Exception ex)
+    public override async Task HandleErrorAsync(Exception ex)
     {
         await _alerts.ShowAlertAsync("Registration failed", ex.Message);
     }
