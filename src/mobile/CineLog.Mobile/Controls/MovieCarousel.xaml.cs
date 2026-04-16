@@ -3,29 +3,29 @@ using System.Windows.Input;
 
 namespace CineLog.Mobile.Controls;
 
-public partial class MovieRail : ContentView
+public partial class MovieCarousel : ContentView
 {
     private const double LoadMoreThreshold = 140;
 
     public static readonly BindableProperty TitleProperty =
-        BindableProperty.Create(nameof(Title), typeof(string), typeof(MovieRail), string.Empty);
+        BindableProperty.Create(nameof(Title), typeof(string), typeof(MovieCarousel), string.Empty);
 
     public static readonly BindableProperty ItemsSourceProperty =
-        BindableProperty.Create(nameof(ItemsSource), typeof(IEnumerable), typeof(MovieRail));
+        BindableProperty.Create(nameof(ItemsSource), typeof(IEnumerable), typeof(MovieCarousel));
 
     public static readonly BindableProperty LoadMoreCommandProperty =
-        BindableProperty.Create(nameof(LoadMoreCommand), typeof(ICommand), typeof(MovieRail));
+        BindableProperty.Create(nameof(LoadMoreCommand), typeof(ICommand), typeof(MovieCarousel));
 
     public static readonly BindableProperty IsLoadingMoreProperty =
-        BindableProperty.Create(nameof(IsLoadingMore), typeof(bool), typeof(MovieRail), false);
+        BindableProperty.Create(nameof(IsLoadingMore), typeof(bool), typeof(MovieCarousel), false);
 
     public static readonly BindableProperty SeeAllCommandProperty =
-        BindableProperty.Create(nameof(SeeAllCommand), typeof(ICommand), typeof(MovieRail));
+        BindableProperty.Create(nameof(SeeAllCommand), typeof(ICommand), typeof(MovieCarousel));
 
     public static readonly BindableProperty ShowSeeAllProperty =
-        BindableProperty.Create(nameof(ShowSeeAll), typeof(bool), typeof(MovieRail), true);
+        BindableProperty.Create(nameof(ShowSeeAll), typeof(bool), typeof(MovieCarousel), true);
 
-    public MovieRail()
+    public MovieCarousel()
     {
         InitializeComponent();
     }
