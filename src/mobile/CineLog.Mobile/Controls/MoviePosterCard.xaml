@@ -6,7 +6,14 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
     <VerticalStackLayout WidthRequest="115" Spacing="6">
-        <Border Style="{StaticResource PosterCardBorder}" HeightRequest="170">
+        <Border
+            HeightRequest="170"
+            BackgroundColor="{StaticResource Surface}"
+            Stroke="{StaticResource Border}"
+            StrokeThickness="1">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="12" />
+            </Border.StrokeShape>
             <Grid>
                 <Image
                     Source="{Binding Source={x:Reference This}, Path=PosterPath}"
