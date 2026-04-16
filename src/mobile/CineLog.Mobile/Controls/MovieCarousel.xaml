@@ -3,24 +3,21 @@
     x:Class="CineLog.Mobile.Controls.MovieCarousel"
     x:Name="This"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:models="clr-namespace:CineLog.Mobile.Core.Models.Home;assembly=CineLog.Mobile.Core"
     xmlns:controls="clr-namespace:CineLog.Mobile.Controls"
+    xmlns:models="clr-namespace:CineLog.Mobile.Core.Models.Home;assembly=CineLog.Mobile.Core"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
     <VerticalStackLayout Spacing="10">
-        <Grid ColumnDefinitions="*,Auto">
+        <Grid ColumnDefinitions="*, Auto">
             <Label
                 Grid.Column="0"
-                Text="{Binding Source={x:Reference This}, Path=Title}"
-                FontSize="20"
-                FontAttributes="Bold"
-                TextColor="White" />
+                Style="{StaticResource HeadlineMediumLabel}"
+                Text="{Binding Source={x:Reference This}, Path=Title}" />
 
             <Label
                 Grid.Column="1"
+                Style="{StaticResource AccentLabel}"
                 Text="See all"
-                TextColor="#00CC44"
-                FontSize="14"
                 VerticalTextAlignment="Center"
                 IsVisible="{Binding Source={x:Reference This}, Path=ShowSeeAll}">
                 <Label.GestureRecognizers>
@@ -29,8 +26,7 @@
             </Label>
         </Grid>
 
-        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
-
+        <Grid ColumnDefinitions="*, Auto" ColumnSpacing="10">
             <ScrollView
                 x:Name="RailScrollView"
                 Grid.Column="0"
@@ -54,20 +50,12 @@
                 </HorizontalStackLayout>
             </ScrollView>
 
-            <Grid
+            <ActivityIndicator
                 Grid.Column="1"
                 WidthRequest="36"
                 VerticalOptions="Center"
-                IsVisible="{Binding Source={x:Reference This}, Path=IsLoadingMore}">
-
-                <ActivityIndicator
-                    IsVisible="{Binding Source={x:Reference This}, Path=IsLoadingMore}"
-                    IsRunning="{Binding Source={x:Reference This}, Path=IsLoadingMore}"
-                    Color="#00C030"
-                    HorizontalOptions="Center"
-                    VerticalOptions="Center" />
-            </Grid>
-
+                IsVisible="{Binding Source={x:Reference This}, Path=IsLoadingMore}"
+                IsRunning="{Binding Source={x:Reference This}, Path=IsLoadingMore}" />
         </Grid>
     </VerticalStackLayout>
 </ContentView>

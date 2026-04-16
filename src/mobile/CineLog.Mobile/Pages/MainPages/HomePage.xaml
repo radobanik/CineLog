@@ -3,13 +3,13 @@
     x:Class="CineLog.Mobile.Pages.MainPages.HomePage"
     x:DataType="vm:HomeViewModel"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:controls="clr-namespace:CineLog.Mobile.Controls"
     xmlns:helpers="clr-namespace:CineLog.Mobile.Helpers"
     xmlns:pages="clr-namespace:CineLog.Mobile.Pages"
-    xmlns:controls="clr-namespace:CineLog.Mobile.Controls"
     xmlns:vm="clr-namespace:CineLog.Mobile.Core.ViewModels.Home;assembly=CineLog.Mobile.Core"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    Shell.NavBarIsVisible="False"
-    BackgroundColor="#0B0D10">
+    BackgroundColor="{StaticResource BackgroundDeep}"
+    Shell.NavBarIsVisible="False">
 
     <ScrollView>
         <VerticalStackLayout Padding="16,20,16,24" Spacing="18">
@@ -23,49 +23,42 @@
                     <Border.StrokeShape>
                         <RoundRectangle CornerRadius="8" />
                     </Border.StrokeShape>
-
                     <Label
                         FontFamily="FASolid"
                         FontSize="16"
                         HorizontalOptions="Center"
                         Text="{x:Static helpers:FontAwesomeIcons.Film}"
-                        TextColor="White"
+                        TextColor="{StaticResource OnPrimary}"
                         VerticalOptions="Center" />
                 </Border>
 
                 <Label
+                    Style="{StaticResource HeadlineLargeLabel}"
                     Text="CineLog"
-                    FontSize="26"
-                    FontAttributes="Bold"
-                    TextColor="White"
                     VerticalTextAlignment="Center" />
             </HorizontalStackLayout>
 
             <Label
-                Text="Movies"
-                FontSize="28"
-                FontAttributes="Bold"
-                TextColor="White" />
+                Style="{StaticResource PageTitleLabel}"
+                Text="Movies" />
 
             <ActivityIndicator
                 IsRunning="{Binding IsBusy}"
-                IsVisible="{Binding IsBusy}"
-                Color="#00C030" />
+                IsVisible="{Binding IsBusy}" />
 
             <Label
+                Style="{StaticResource CaptionLabel}"
                 IsVisible="{Binding HasError}"
-                Text="{Binding ErrorMessage}"
-                TextColor="#B3B3B3"
-                FontSize="12" />
+                Text="{Binding ErrorMessage}" />
 
             <controls:MovieCarousel
                 Title="Top Rated"
                 ItemsSource="{Binding TopRatedMovies}"
                 LoadMoreCommand="{Binding LoadMoreTopRatedCommand}"
                 SeeAllCommand="{Binding GoToTopRatedCommand}"
-                IsLoadingMore="{Binding IsLoadingMoreTopRated}" />      
+                IsLoadingMore="{Binding IsLoadingMoreTopRated}" />
 
-            <BoxView HeightRequest="1" Color="#1F252C" />
+            <BoxView Style="{StaticResource ListDivider}" />
 
             <controls:MovieCarousel
                 Title="New Releases"

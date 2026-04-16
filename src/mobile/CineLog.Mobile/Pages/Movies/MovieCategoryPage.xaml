@@ -3,29 +3,29 @@
     x:Class="CineLog.Mobile.Pages.Movies.MoviesCategoryPage"
     x:DataType="vm:MoviesCategoryViewModel"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:controls="clr-namespace:CineLog.Mobile.Controls"
     xmlns:models="clr-namespace:CineLog.Mobile.Core.Models.Home;assembly=CineLog.Mobile.Core"
     xmlns:pages="clr-namespace:CineLog.Mobile.Pages"
     xmlns:vm="clr-namespace:CineLog.Mobile.Core.ViewModels.Common;assembly=CineLog.Mobile.Core"
-    xmlns:controls="clr-namespace:CineLog.Mobile.Controls"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    BackgroundColor="#0B0D10"
+    BackgroundColor="{StaticResource BackgroundDeep}"
+    Shell.BackgroundColor="{StaticResource Primary}"
+    Shell.ForegroundColor="{StaticResource OnPrimary}"
     Shell.NavBarIsVisible="True"
-    Shell.BackgroundColor="#00CC44"
-    Shell.ForegroundColor="White"
-    Shell.TitleColor="White">
+    Shell.TitleColor="{StaticResource OnPrimary}">
 
     <CollectionView
         ItemsSource="{Binding Movies}"
-        SelectionMode="None"
         RemainingItemsThreshold="6"
-        RemainingItemsThresholdReachedCommand="{Binding LoadMoreCommand}">
+        RemainingItemsThresholdReachedCommand="{Binding LoadMoreCommand}"
+        SelectionMode="None">
 
         <CollectionView.ItemsLayout>
             <GridItemsLayout
+                HorizontalItemSpacing="12"
                 Orientation="Vertical"
                 Span="3"
-                VerticalItemSpacing="12"
-                HorizontalItemSpacing="12" />
+                VerticalItemSpacing="12" />
         </CollectionView.ItemsLayout>
 
         <CollectionView.ItemTemplate>
@@ -40,10 +40,9 @@
         <CollectionView.Footer>
             <VerticalStackLayout Padding="0,12,0,24">
                 <ActivityIndicator
-                    IsVisible="{Binding IsLoadingMore}"
+                    HorizontalOptions="Center"
                     IsRunning="{Binding IsLoadingMore}"
-                    Color="#00C030"
-                    HorizontalOptions="Center" />
+                    IsVisible="{Binding IsLoadingMore}" />
             </VerticalStackLayout>
         </CollectionView.Footer>
     </CollectionView>
