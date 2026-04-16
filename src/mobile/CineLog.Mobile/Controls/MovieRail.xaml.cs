@@ -3,30 +3,29 @@ using System.Windows.Input;
 
 namespace CineLog.Mobile.Controls;
 
-public partial class MovieRailView : ContentView
+public partial class MovieRail : ContentView
 {
     private const double LoadMoreThreshold = 140;
 
     public static readonly BindableProperty TitleProperty =
-        BindableProperty.Create(nameof(Title), typeof(string), typeof(MovieRailView), string.Empty);
+        BindableProperty.Create(nameof(Title), typeof(string), typeof(MovieRail), string.Empty);
 
     public static readonly BindableProperty ItemsSourceProperty =
-        BindableProperty.Create(nameof(ItemsSource), typeof(IEnumerable), typeof(MovieRailView));
+        BindableProperty.Create(nameof(ItemsSource), typeof(IEnumerable), typeof(MovieRail));
 
     public static readonly BindableProperty LoadMoreCommandProperty =
-        BindableProperty.Create(nameof(LoadMoreCommand), typeof(ICommand), typeof(MovieRailView));
+        BindableProperty.Create(nameof(LoadMoreCommand), typeof(ICommand), typeof(MovieRail));
 
     public static readonly BindableProperty IsLoadingMoreProperty =
-        BindableProperty.Create(nameof(IsLoadingMore), typeof(bool), typeof(MovieRailView), false);
+        BindableProperty.Create(nameof(IsLoadingMore), typeof(bool), typeof(MovieRail), false);
 
     public static readonly BindableProperty SeeAllCommandProperty =
-        BindableProperty.Create(nameof(SeeAllCommand), typeof(ICommand), typeof(MovieRailView));
+        BindableProperty.Create(nameof(SeeAllCommand), typeof(ICommand), typeof(MovieRail));
 
     public static readonly BindableProperty ShowSeeAllProperty =
-        BindableProperty.Create(nameof(ShowSeeAll), typeof(bool), typeof(MovieRailView), true);
+        BindableProperty.Create(nameof(ShowSeeAll), typeof(bool), typeof(MovieRail), true);
 
-
-    public MovieRailView()
+    public MovieRail()
     {
         InitializeComponent();
     }
@@ -54,6 +53,7 @@ public partial class MovieRailView : ContentView
         get => (bool)GetValue(IsLoadingMoreProperty);
         set => SetValue(IsLoadingMoreProperty, value);
     }
+
     public ICommand? SeeAllCommand
     {
         get => (ICommand?)GetValue(SeeAllCommandProperty);

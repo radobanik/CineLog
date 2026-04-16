@@ -30,7 +30,7 @@
 
         <CollectionView.ItemTemplate>
             <DataTemplate x:DataType="models:HomeMovieItem">
-                <controls:MoviePosterCardView
+                <controls:MoviePosterCard
                     Title="{Binding Title}"
                     PosterPath="{Binding PosterPath}"
                     RatingText="{Binding RatingText}" />

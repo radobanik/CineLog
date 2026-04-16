@@ -1,18 +1,17 @@
 namespace CineLog.Mobile.Controls;
 
-
-public partial class MoviePosterCardView : ContentView
+public partial class MoviePosterCard : ContentView
 {
     public static readonly BindableProperty TitleProperty =
-        BindableProperty.Create(nameof(Title), typeof(string), typeof(MoviePosterCardView), string.Empty);
+        BindableProperty.Create(nameof(Title), typeof(string), typeof(MoviePosterCard), string.Empty);
 
     public static readonly BindableProperty PosterPathProperty =
-        BindableProperty.Create(nameof(PosterPath), typeof(string), typeof(MoviePosterCardView));
+        BindableProperty.Create(nameof(PosterPath), typeof(string), typeof(MoviePosterCard));
 
     public static readonly BindableProperty RatingTextProperty =
-        BindableProperty.Create(nameof(RatingText), typeof(string), typeof(MoviePosterCardView), "-");
+        BindableProperty.Create(nameof(RatingText), typeof(string), typeof(MoviePosterCard), "-");
 
-    public MoviePosterCardView()
+    public MoviePosterCard()
     {
         InitializeComponent();
     }
