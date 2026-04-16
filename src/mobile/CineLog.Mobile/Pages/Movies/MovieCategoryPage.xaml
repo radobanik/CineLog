@@ -6,7 +6,7 @@
     xmlns:models="clr-namespace:CineLog.Mobile.Core.Models.Home;assembly=CineLog.Mobile.Core"
     xmlns:pages="clr-namespace:CineLog.Mobile.Pages"
     xmlns:vm="clr-namespace:CineLog.Mobile.Core.ViewModels.Common;assembly=CineLog.Mobile.Core"
-    xmlns:views="clr-namespace:CineLog.Mobile.Views.Home"
+    xmlns:controls="clr-namespace:CineLog.Mobile.Controls"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     BackgroundColor="#0B0D10"
     Shell.NavBarIsVisible="True"
@@ -30,7 +30,7 @@
 
         <CollectionView.ItemTemplate>
             <DataTemplate x:DataType="models:HomeMovieItem">
-                <views:MoviePosterCardView
+                <controls:MoviePosterCardView
                     Title="{Binding Title}"
                     PosterPath="{Binding PosterPath}"
                     RatingText="{Binding RatingText}" />

@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Windows.Input;
 
-namespace CineLog.Mobile.Views.Home;
+namespace CineLog.Mobile.Controls;
 
 public partial class MovieRailView : ContentView
 {

@@ -5,7 +5,7 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:helpers="clr-namespace:CineLog.Mobile.Helpers"
     xmlns:pages="clr-namespace:CineLog.Mobile.Pages"
-    xmlns:views="clr-namespace:CineLog.Mobile.Views.Home"
+    xmlns:controls="clr-namespace:CineLog.Mobile.Controls"
     xmlns:vm="clr-namespace:CineLog.Mobile.Core.ViewModels.Home;assembly=CineLog.Mobile.Core"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     Shell.NavBarIsVisible="False"
@@ -58,7 +58,7 @@
                 TextColor="#B3B3B3"
                 FontSize="12" />
 
-            <views:MovieRailView
+            <controls:MovieRailView
                 Title="Top Rated"
                 ItemsSource="{Binding TopRatedMovies}"
                 LoadMoreCommand="{Binding LoadMoreTopRatedCommand}"
@@ -67,7 +67,7 @@
 
             <BoxView HeightRequest="1" Color="#1F252C" />
 
-            <views:MovieRailView
+            <controls:MovieRailView
                 Title="New Releases"
                 ItemsSource="{Binding NewReleaseMovies}"
                 LoadMoreCommand="{Binding LoadMoreNewReleasesCommand}"
