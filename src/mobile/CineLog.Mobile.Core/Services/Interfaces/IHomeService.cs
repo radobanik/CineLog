@@ -1,16 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
 using CineLog.Mobile.Core.Models.Home;
-using CineLog.Mobile.Core.Models.Review;
 
-namespace CineLog.Mobile.Core.Services.Interfaces
+namespace CineLog.Mobile.Core.Services.Interfaces;
+
+public interface IHomeService
 {
-    public interface IHomeService
-    {
-        Task<IReadOnlyList<MovieItem>> GetTopRatedMoviesAsync(int count, CancellationToken ct = default);
-        Task<IReadOnlyList<MovieItem>> GetNewReleaseMoviesAsync(int count, CancellationToken ct = default);
-        Task<IReadOnlyList<ReviewItem>> GetRecentReviewsAsync(int count, CancellationToken ct = default);
-
-    }
+    Task<IReadOnlyList<MovieItem>> GetTopRatedMoviesAsync(int count, CancellationToken ct = default);
+    Task<IReadOnlyList<MovieItem>> GetNewReleaseMoviesAsync(int count, CancellationToken ct = default);
 }

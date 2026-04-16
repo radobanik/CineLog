@@ -59,6 +59,7 @@ public static class ServiceCollectionExtensions
     {
         services.AddTransient<IAuthService, AuthService>();
         services.AddTransient<IHomeService, HomeService>();
+        services.AddTransient<IProfileService, ProfileService>();
         return services;
     }
 
