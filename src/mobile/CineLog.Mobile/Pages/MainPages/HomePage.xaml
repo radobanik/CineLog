@@ -3,7 +3,6 @@
     x:Class="CineLog.Mobile.Pages.MainPages.HomePage"
     x:DataType="vm:HomeViewModel"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:controls="clr-namespace:CineLog.Mobile.Controls"
     xmlns:helpers="clr-namespace:CineLog.Mobile.Helpers"
     xmlns:pages="clr-namespace:CineLog.Mobile.Pages"
     xmlns:vm="clr-namespace:CineLog.Mobile.Core.ViewModels.Home;assembly=CineLog.Mobile.Core"
@@ -51,7 +50,7 @@
                 IsVisible="{Binding HasError}"
                 Text="{Binding ErrorMessage}" />
 
-            <controls:MovieCarousel
+            <MovieCarousel
                 Title="Top Rated"
                 ItemsSource="{Binding TopRatedMovies}"
                 LoadMoreCommand="{Binding LoadMoreTopRatedCommand}"
@@ -60,7 +59,7 @@
 
             <BoxView Style="{StaticResource ListDivider}" />
 
-            <controls:MovieCarousel
+            <MovieCarousel
                 Title="New Releases"
                 ItemsSource="{Binding NewReleaseMovies}"
                 LoadMoreCommand="{Binding LoadMoreNewReleasesCommand}"

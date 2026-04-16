@@ -3,7 +3,6 @@
     x:Class="CineLog.Mobile.Controls.MovieCarousel"
     x:Name="This"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:controls="clr-namespace:CineLog.Mobile.Controls"
     xmlns:models="clr-namespace:CineLog.Mobile.Core.Models.Home;assembly=CineLog.Mobile.Core"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
@@ -40,7 +39,7 @@
 
                     <BindableLayout.ItemTemplate>
                         <DataTemplate x:DataType="models:HomeMovieItem">
-                            <controls:MoviePosterCard
+                            <MoviePosterCard
                                 Title="{Binding Title}"
                                 PosterPath="{Binding PosterPath}"
                                 RatingText="{Binding RatingText}" />
