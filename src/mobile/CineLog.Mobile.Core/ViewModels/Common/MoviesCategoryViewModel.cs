@@ -29,7 +29,7 @@ namespace CineLog.Mobile.Core.ViewModels.Common
         [ObservableProperty]
         private bool _isLoadingMore;
 
-        public ObservableCollection<HomeMovieItem> Movies { get; } = [];
+        public ObservableCollection<MovieItem> Movies { get; } = [];
 
         private readonly IMovieNavigationContext _movieNav;
 
@@ -100,7 +100,7 @@ namespace CineLog.Mobile.Core.ViewModels.Common
             }
         }
 
-        private Task<IReadOnlyList<HomeMovieItem>> GetMoviesAsync(int count)
+        private Task<IReadOnlyList<MovieItem>> GetMoviesAsync(int count)
         {
             return _category == MovieCategory.TopRated
                 ? _homeService.GetTopRatedMoviesAsync(count)

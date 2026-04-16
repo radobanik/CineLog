@@ -8,8 +8,8 @@ namespace CineLog.Mobile.Core.Services.Interfaces
 {
     public interface IHomeService
     {
-        Task<IReadOnlyList<HomeMovieItem>> GetTopRatedMoviesAsync(int count, CancellationToken ct = default);
-        Task<IReadOnlyList<HomeMovieItem>> GetNewReleaseMoviesAsync(int count, CancellationToken ct = default);
+        Task<IReadOnlyList<MovieItem>> GetTopRatedMoviesAsync(int count, CancellationToken ct = default);
+        Task<IReadOnlyList<MovieItem>> GetNewReleaseMoviesAsync(int count, CancellationToken ct = default);
         Task<IReadOnlyList<ReviewItem>> GetRecentReviewsAsync(int count, CancellationToken ct = default);
 
     }

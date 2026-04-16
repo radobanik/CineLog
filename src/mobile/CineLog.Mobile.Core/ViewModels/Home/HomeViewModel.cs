@@ -45,8 +45,8 @@ public partial class HomeViewModel : BaseViewModel
     [ObservableProperty]
     private bool _canLoadMoreNewReleases = true;
 
-    public ObservableCollection<HomeMovieItem> TopRatedMovies { get; } = [];
-    public ObservableCollection<HomeMovieItem> NewReleaseMovies { get; } = [];
+    public ObservableCollection<MovieItem> TopRatedMovies { get; } = [];
+    public ObservableCollection<MovieItem> NewReleaseMovies { get; } = [];
 
     public HomeViewModel(IAuthService authService, IHomeService homeService, INavigationService navigation, IMovieNavigationContext movieNav, IAlertService alerts)
         : base(alerts)
@@ -116,8 +116,8 @@ public partial class HomeViewModel : BaseViewModel
     }
 
     private static void ReplaceMovies(
-    ObservableCollection<HomeMovieItem> target,
-    IEnumerable<HomeMovieItem> movies)
+    ObservableCollection<MovieItem> target,
+    IEnumerable<MovieItem> movies)
     {
         target.Clear();
         foreach (var movie in movies)
@@ -125,8 +125,8 @@ public partial class HomeViewModel : BaseViewModel
     }
 
     private static void AppendOnlyNewMovies(
-    ObservableCollection<HomeMovieItem> target,
-    IEnumerable<HomeMovieItem> movies)
+    ObservableCollection<MovieItem> target,
+    IEnumerable<MovieItem> movies)
     {
         var existingIds = target.Select(x => x.Id).ToHashSet();
 

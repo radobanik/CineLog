@@ -38,7 +38,7 @@
                     BindableLayout.ItemsSource="{Binding Source={x:Reference This}, Path=ItemsSource}">
 
                     <BindableLayout.ItemTemplate>
-                        <DataTemplate x:DataType="models:HomeMovieItem">
+                        <DataTemplate x:DataType="models:MovieItem">
                             <MoviePosterCard
                                 Title="{Binding Title}"
                                 PosterPath="{Binding PosterPath}"

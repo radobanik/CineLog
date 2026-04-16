@@ -22,13 +22,13 @@ namespace CineLog.Mobile.Core.Services
             _dashboardClient = dashboardClient;
         }
 
-        public async Task<IReadOnlyList<HomeMovieItem>> GetTopRatedMoviesAsync(int count, CancellationToken ct = default)
+        public async Task<IReadOnlyList<MovieItem>> GetTopRatedMoviesAsync(int count, CancellationToken ct = default)
         {
             var topRatedMovies = await _dashboardClient.TopRatedMoviesAsync(count, ct);
             return MapMovies(topRatedMovies);
         }
 
-        public async Task<IReadOnlyList<HomeMovieItem>> GetNewReleaseMoviesAsync(int count, CancellationToken ct = default)
+        public async Task<IReadOnlyList<MovieItem>> GetNewReleaseMoviesAsync(int count, CancellationToken ct = default)
         {
             var newReleaseMovies = await _dashboardClient.NewestMoviesAsync(count, ct);
             return MapMovies(newReleaseMovies);
@@ -42,11 +42,11 @@ namespace CineLog.Mobile.Core.Services
            
         }
 
-        private static IReadOnlyList<HomeMovieItem> MapMovies(IEnumerable<MovieSummaryResponse> movies)
+        private static IReadOnlyList<MovieItem> MapMovies(IEnumerable<MovieSummaryResponse> movies)
         {
             return [.. movies
                 //.Where(movie => movie.Type == movieContentType)
-                .Select(movie => new HomeMovieItem
+                .Select(movie => new MovieItem
                 {
                     Id = movie.Id ?? Guid.Empty,
                     Title = movie.Title ?? string.Empty,
