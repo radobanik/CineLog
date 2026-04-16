@@ -16,6 +16,9 @@ public static class SwaggerExtensions
                 Description = "Movie logging and review API"
             });
 
+            options.CustomOperationIds(e =>
+                $"{e.ActionDescriptor.RouteValues["controller"]}_{e.ActionDescriptor.RouteValues["action"]}");
+
             var xmlFile = $"{System.Reflection.Assembly.GetExecutingAssembly().GetName().Name}.xml";
             var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
             if (File.Exists(xmlPath))
