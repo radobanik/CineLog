@@ -36,7 +36,8 @@ namespace CineLog.Mobile.Core.ViewModels.Common
 
         public ObservableCollection<HomeMovieItem> Movies { get; } = [];
 
-        public MoviesCategoryViewModel(IHomeService homeService)
+        public MoviesCategoryViewModel(IHomeService homeService, IAlertService alerts)
+            : base(alerts)
         {
             _homeService = homeService;
         }
@@ -105,7 +106,7 @@ namespace CineLog.Mobile.Core.ViewModels.Common
                 : _homeService.GetNewReleaseMoviesAsync(count);
         }
 
-        protected override Task OnError(Exception ex)
+        public override Task HandleErrorAsync(Exception ex)
         {
             HasError = true;
             ErrorMessage = ex.Message;

@@ -16,7 +16,6 @@ public partial class HomeViewModel : BaseViewModel
     private readonly IAuthService _authService;
     private readonly IHomeService _homeService;
     private readonly INavigationService _navigation;
-    private readonly IAlertService _alerts;
 
     private int _topRatedCount = RailPageSize;
     private int _newReleaseCount = RailPageSize;
@@ -48,11 +47,11 @@ public partial class HomeViewModel : BaseViewModel
     public ObservableCollection<HomeMovieItem> NewReleaseMovies { get; } = [];
 
     public HomeViewModel(IAuthService authService, IHomeService homeService, INavigationService navigation, IAlertService alerts)
+        : base(alerts)
     {
         _authService = authService;
         _homeService = homeService;
         _navigation = navigation;
-        _alerts = alerts;
         Title = "Home";
     }
 
@@ -207,8 +206,10 @@ public partial class HomeViewModel : BaseViewModel
         });
     }
 
-    protected override async Task OnError(Exception ex)
+    public override async Task HandleErrorAsync(Exception ex)
     {
-        await _alerts.ShowAlertAsync("Error", ex.Message);
+        HasError = true;
+        ErrorMessage = ex.Message;
+        await base.HandleErrorAsync(ex);
     }
 }
