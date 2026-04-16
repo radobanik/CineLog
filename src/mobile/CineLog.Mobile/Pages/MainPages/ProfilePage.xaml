@@ -3,6 +3,7 @@
     x:Class="CineLog.Mobile.Pages.MainPages.ProfilePage"
     x:DataType="vm:ProfileViewModel"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:controls="clr-namespace:CineLog.Mobile.Controls"
     xmlns:helpers="clr-namespace:CineLog.Mobile.Helpers"
     xmlns:models="clr-namespace:CineLog.Mobile.ApiClient.Models;assembly=CineLog.Mobile.ApiClient"
     xmlns:pages="clr-namespace:CineLog.Mobile.Pages"
@@ -91,7 +92,7 @@
 
             <VerticalStackLayout Spacing="10">
                 <Label Style="{StaticResource SectionHeaderLabel}" Text="FAVORITE FILMS" />
-                <CollectionView HeightRequest="150" ItemsSource="{Binding FavouriteMovies}">
+                <CollectionView ItemsSource="{Binding FavouriteMovies}">
                     <CollectionView.EmptyView>
                         <Label
                             Style="{StaticResource CaptionLabel}"
@@ -104,19 +105,10 @@
                     </CollectionView.ItemsLayout>
                     <CollectionView.ItemTemplate>
                         <DataTemplate x:DataType="models:MovieListItemResponse">
-                            <Border
-                                WidthRequest="100"
-                                HeightRequest="150"
-                                StrokeShape="RoundRectangle 8">
-                                <Grid>
-                                    <Image Source="{Binding PosterPath}" Aspect="AspectFill" />
-                                    <Label
-                                        Style="{StaticResource CaptionLabel}"
-                                        Text="{Binding Title}"
-                                        VerticalOptions="End"
-                                        Margin="5" />
-                                </Grid>
-                            </Border>
+                            <controls:MoviePosterCard
+                                Title="{Binding Title}"
+                                PosterPath="{Binding PosterPath}"
+                                RatingText="{Binding AverageRating, StringFormat='{0:F1}'}" />
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
                 </CollectionView>
