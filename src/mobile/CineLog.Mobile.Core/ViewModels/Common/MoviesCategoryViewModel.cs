@@ -47,8 +47,6 @@ namespace CineLog.Mobile.Core.ViewModels.Common
             return Load();
         }
 
-        protected override Task LoadAsync() => Load();
-
         [RelayCommand]
         public async Task Load()
         {
