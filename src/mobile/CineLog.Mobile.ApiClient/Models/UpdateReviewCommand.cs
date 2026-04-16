@@ -5,14 +5,14 @@ namespace CineLog.Mobile.ApiClient.Models;
 public partial class UpdateReviewCommand
 {
     [Newtonsoft.Json.JsonProperty("reviewId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-    public System.Guid? ReviewId { get; set; } = default!;
+    public System.Guid? ReviewId { get; set; } = default !;
 
     [Newtonsoft.Json.JsonProperty("rating", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-    public double? Rating { get; set; } = default!;
+    public double? Rating { get; set; } = default !;
 
     [Newtonsoft.Json.JsonProperty("reviewText", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-    public string? ReviewText { get; set; } = default!;
+    public string? ReviewText { get; set; } = default !;
 
     [Newtonsoft.Json.JsonProperty("containsSpoilers", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-    public bool? ContainsSpoilers { get; set; } = default!;
+    public bool? ContainsSpoilers { get; set; } = default !;
 }

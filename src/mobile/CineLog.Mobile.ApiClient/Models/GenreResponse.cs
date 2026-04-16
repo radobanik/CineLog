@@ -5,8 +5,8 @@ namespace CineLog.Mobile.ApiClient.Models;
 public partial class GenreResponse
 {
     [Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-    public System.Guid? Id { get; set; } = default!;
+    public System.Guid? Id { get; set; } = default !;
 
     [Newtonsoft.Json.JsonProperty("name", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-    public string? Name { get; set; } = default!;
+    public string? Name { get; set; } = default !;
 }

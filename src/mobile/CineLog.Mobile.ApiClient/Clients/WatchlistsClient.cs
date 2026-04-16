@@ -1,5 +1,5 @@
-using CineLog.Mobile.ApiClient.Infrastructure;
 using CineLog.Mobile.ApiClient.Models;
+using CineLog.Mobile.ApiClient.Infrastructure;
 
 namespace CineLog.Mobile.ApiClient.Clients;
 
@@ -44,9 +44,9 @@ public partial class WatchlistsClient : IWatchlistsClient
     /// </summary>
     /// <returns>OK</returns>
     /// <exception cref = "ApiException">A server side error occurred.</exception>
-    public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<WatchlistSummaryResponse>> WatchlistsAllAsync()
+    public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<WatchlistSummaryResponse>> GetAllAsync()
     {
-        return WatchlistsAllAsync(System.Threading.CancellationToken.None);
+        return GetAllAsync(System.Threading.CancellationToken.None);
     }
 
     /// <param name = "cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
@@ -55,7 +55,7 @@ public partial class WatchlistsClient : IWatchlistsClient
     /// </summary>
     /// <returns>OK</returns>
     /// <exception cref = "ApiException">A server side error occurred.</exception>
-    public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<WatchlistSummaryResponse>> WatchlistsAllAsync(System.Threading.CancellationToken cancellationToken)
+    public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<WatchlistSummaryResponse>> GetAllAsync(System.Threading.CancellationToken cancellationToken)
     {
         var client_ = _httpClient;
         var disposeClient_ = false;
@@ -122,9 +122,9 @@ public partial class WatchlistsClient : IWatchlistsClient
     /// </summary>
     /// <returns>Created</returns>
     /// <exception cref = "ApiException">A server side error occurred.</exception>
-    public virtual System.Threading.Tasks.Task<System.Guid> WatchlistsPOSTAsync(CreateWatchlistCommand? body)
+    public virtual System.Threading.Tasks.Task<System.Guid> CreateAsync(CreateWatchlistCommand? body)
     {
-        return WatchlistsPOSTAsync(body, System.Threading.CancellationToken.None);
+        return CreateAsync(body, System.Threading.CancellationToken.None);
     }
 
     /// <param name = "cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
@@ -133,7 +133,7 @@ public partial class WatchlistsClient : IWatchlistsClient
     /// </summary>
     /// <returns>Created</returns>
     /// <exception cref = "ApiException">A server side error occurred.</exception>
-    public virtual async System.Threading.Tasks.Task<System.Guid> WatchlistsPOSTAsync(CreateWatchlistCommand? body, System.Threading.CancellationToken cancellationToken)
+    public virtual async System.Threading.Tasks.Task<System.Guid> CreateAsync(CreateWatchlistCommand? body, System.Threading.CancellationToken cancellationToken)
     {
         var client_ = _httpClient;
         var disposeClient_ = false;
@@ -204,9 +204,9 @@ public partial class WatchlistsClient : IWatchlistsClient
     /// </summary>
     /// <returns>OK</returns>
     /// <exception cref = "ApiException">A server side error occurred.</exception>
-    public virtual System.Threading.Tasks.Task<WatchlistDetailResponse> WatchlistsGETAsync(System.Guid id)
+    public virtual System.Threading.Tasks.Task<WatchlistDetailResponse> GetByIdAsync(System.Guid id)
     {
-        return WatchlistsGETAsync(id, System.Threading.CancellationToken.None);
+        return GetByIdAsync(id, System.Threading.CancellationToken.None);
     }
 
     /// <param name = "cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
@@ -215,7 +215,7 @@ public partial class WatchlistsClient : IWatchlistsClient
     /// </summary>
     /// <returns>OK</returns>
     /// <exception cref = "ApiException">A server side error occurred.</exception>
-    public virtual async System.Threading.Tasks.Task<WatchlistDetailResponse> WatchlistsGETAsync(System.Guid id, System.Threading.CancellationToken cancellationToken)
+    public virtual async System.Threading.Tasks.Task<WatchlistDetailResponse> GetByIdAsync(System.Guid id, System.Threading.CancellationToken cancellationToken)
     {
         if (id == null)
             throw new System.ArgumentNullException("id");
@@ -295,9 +295,9 @@ public partial class WatchlistsClient : IWatchlistsClient
     /// </summary>
     /// <returns>No Content</returns>
     /// <exception cref = "ApiException">A server side error occurred.</exception>
-    public virtual System.Threading.Tasks.Task WatchlistsDELETEAsync(System.Guid id)
+    public virtual System.Threading.Tasks.Task DeleteAsync(System.Guid id)
     {
-        return WatchlistsDELETEAsync(id, System.Threading.CancellationToken.None);
+        return DeleteAsync(id, System.Threading.CancellationToken.None);
     }
 
     /// <param name = "cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
@@ -306,7 +306,7 @@ public partial class WatchlistsClient : IWatchlistsClient
     /// </summary>
     /// <returns>No Content</returns>
     /// <exception cref = "ApiException">A server side error occurred.</exception>
-    public virtual async System.Threading.Tasks.Task WatchlistsDELETEAsync(System.Guid id, System.Threading.CancellationToken cancellationToken)
+    public virtual async System.Threading.Tasks.Task DeleteAsync(System.Guid id, System.Threading.CancellationToken cancellationToken)
     {
         if (id == null)
             throw new System.ArgumentNullException("id");
@@ -379,9 +379,9 @@ public partial class WatchlistsClient : IWatchlistsClient
     /// </summary>
     /// <returns>No Content</returns>
     /// <exception cref = "ApiException">A server side error occurred.</exception>
-    public virtual System.Threading.Tasks.Task MoviesPOST2Async(System.Guid id, System.Guid movieId)
+    public virtual System.Threading.Tasks.Task AddMovieAsync(System.Guid id, System.Guid movieId)
     {
-        return MoviesPOST2Async(id, movieId, System.Threading.CancellationToken.None);
+        return AddMovieAsync(id, movieId, System.Threading.CancellationToken.None);
     }
 
     /// <param name = "cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
@@ -390,7 +390,7 @@ public partial class WatchlistsClient : IWatchlistsClient
     /// </summary>
     /// <returns>No Content</returns>
     /// <exception cref = "ApiException">A server side error occurred.</exception>
-    public virtual async System.Threading.Tasks.Task MoviesPOST2Async(System.Guid id, System.Guid movieId, System.Threading.CancellationToken cancellationToken)
+    public virtual async System.Threading.Tasks.Task AddMovieAsync(System.Guid id, System.Guid movieId, System.Threading.CancellationToken cancellationToken)
     {
         if (id == null)
             throw new System.ArgumentNullException("id");
@@ -478,9 +478,9 @@ public partial class WatchlistsClient : IWatchlistsClient
     /// </summary>
     /// <returns>No Content</returns>
     /// <exception cref = "ApiException">A server side error occurred.</exception>
-    public virtual System.Threading.Tasks.Task MoviesDELETE2Async(System.Guid id, System.Guid movieId)
+    public virtual System.Threading.Tasks.Task RemoveMovieAsync(System.Guid id, System.Guid movieId)
     {
-        return MoviesDELETE2Async(id, movieId, System.Threading.CancellationToken.None);
+        return RemoveMovieAsync(id, movieId, System.Threading.CancellationToken.None);
     }
 
     /// <param name = "cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
@@ -489,7 +489,7 @@ public partial class WatchlistsClient : IWatchlistsClient
     /// </summary>
     /// <returns>No Content</returns>
     /// <exception cref = "ApiException">A server side error occurred.</exception>
-    public virtual async System.Threading.Tasks.Task MoviesDELETE2Async(System.Guid id, System.Guid movieId, System.Threading.CancellationToken cancellationToken)
+    public virtual async System.Threading.Tasks.Task RemoveMovieAsync(System.Guid id, System.Guid movieId, System.Threading.CancellationToken cancellationToken)
     {
         if (id == null)
             throw new System.ArgumentNullException("id");

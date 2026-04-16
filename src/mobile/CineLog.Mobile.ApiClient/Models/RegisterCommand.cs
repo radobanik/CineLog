@@ -5,11 +5,11 @@ namespace CineLog.Mobile.ApiClient.Models;
 public partial class RegisterCommand
 {
     [Newtonsoft.Json.JsonProperty("username", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-    public string? Username { get; set; } = default!;
+    public string? Username { get; set; } = default !;
 
     [Newtonsoft.Json.JsonProperty("email", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-    public string? Email { get; set; } = default!;
+    public string? Email { get; set; } = default !;
 
     [Newtonsoft.Json.JsonProperty("password", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-    public string? Password { get; set; } = default!;
+    public string? Password { get; set; } = default !;
 }

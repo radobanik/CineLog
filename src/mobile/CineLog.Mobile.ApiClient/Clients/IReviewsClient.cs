@@ -1,5 +1,5 @@
-using CineLog.Mobile.ApiClient.Infrastructure;
 using CineLog.Mobile.ApiClient.Models;
+using CineLog.Mobile.ApiClient.Infrastructure;
 
 namespace CineLog.Mobile.ApiClient.Clients;
 
@@ -11,53 +11,53 @@ public partial interface IReviewsClient
     /// </summary>
     /// <returns>OK</returns>
     /// <exception cref = "ApiException">A server side error occurred.</exception>
-    System.Threading.Tasks.Task<ReviewResponse> ReviewsGET2Async(System.Guid id);
+    System.Threading.Tasks.Task<ReviewResponse> GetByIdAsync(System.Guid id);
     /// <param name = "cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <summary>
     /// Get a review by id.
     /// </summary>
     /// <returns>OK</returns>
     /// <exception cref = "ApiException">A server side error occurred.</exception>
-    System.Threading.Tasks.Task<ReviewResponse> ReviewsGET2Async(System.Guid id, System.Threading.CancellationToken cancellationToken);
+    System.Threading.Tasks.Task<ReviewResponse> GetByIdAsync(System.Guid id, System.Threading.CancellationToken cancellationToken);
     /// <summary>
     /// Update an existing review.
     /// </summary>
     /// <returns>OK</returns>
     /// <exception cref = "ApiException">A server side error occurred.</exception>
-    System.Threading.Tasks.Task<ReviewResponse> ReviewsPUTAsync(System.Guid id, UpdateReviewCommand? body);
+    System.Threading.Tasks.Task<ReviewResponse> UpdateAsync(System.Guid id, UpdateReviewCommand? body);
     /// <param name = "cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <summary>
     /// Update an existing review.
     /// </summary>
     /// <returns>OK</returns>
     /// <exception cref = "ApiException">A server side error occurred.</exception>
-    System.Threading.Tasks.Task<ReviewResponse> ReviewsPUTAsync(System.Guid id, UpdateReviewCommand? body, System.Threading.CancellationToken cancellationToken);
+    System.Threading.Tasks.Task<ReviewResponse> UpdateAsync(System.Guid id, UpdateReviewCommand? body, System.Threading.CancellationToken cancellationToken);
     /// <summary>
     /// Delete a review.
     /// </summary>
     /// <returns>No Content</returns>
     /// <exception cref = "ApiException">A server side error occurred.</exception>
-    System.Threading.Tasks.Task ReviewsDELETEAsync(System.Guid id);
+    System.Threading.Tasks.Task DeleteAsync(System.Guid id);
     /// <param name = "cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <summary>
     /// Delete a review.
     /// </summary>
     /// <returns>No Content</returns>
     /// <exception cref = "ApiException">A server side error occurred.</exception>
-    System.Threading.Tasks.Task ReviewsDELETEAsync(System.Guid id, System.Threading.CancellationToken cancellationToken);
+    System.Threading.Tasks.Task DeleteAsync(System.Guid id, System.Threading.CancellationToken cancellationToken);
     /// <summary>
     /// Create a review for a movie.
     /// </summary>
     /// <returns>OK</returns>
     /// <exception cref = "ApiException">A server side error occurred.</exception>
-    System.Threading.Tasks.Task<ReviewResponse> ReviewsPOSTAsync(CreateReviewCommand? body);
+    System.Threading.Tasks.Task<ReviewResponse> CreateAsync(CreateReviewCommand? body);
     /// <param name = "cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <summary>
     /// Create a review for a movie.
     /// </summary>
     /// <returns>OK</returns>
     /// <exception cref = "ApiException">A server side error occurred.</exception>
-    System.Threading.Tasks.Task<ReviewResponse> ReviewsPOSTAsync(CreateReviewCommand? body, System.Threading.CancellationToken cancellationToken);
+    System.Threading.Tasks.Task<ReviewResponse> CreateAsync(CreateReviewCommand? body, System.Threading.CancellationToken cancellationToken);
     /// <summary>
     /// Toggle like on a review.
     /// </summary>

@@ -1,5 +1,5 @@
-using CineLog.Mobile.ApiClient.Infrastructure;
 using CineLog.Mobile.ApiClient.Models;
+using CineLog.Mobile.ApiClient.Infrastructure;
 
 namespace CineLog.Mobile.ApiClient.Clients;
 
@@ -44,9 +44,9 @@ public partial class MoviesClient : IMoviesClient
     /// </summary>
     /// <returns>Created</returns>
     /// <exception cref = "ApiException">A server side error occurred.</exception>
-    public virtual System.Threading.Tasks.Task<System.Guid> MoviesPOSTAsync(CreateMovieCommand? body)
+    public virtual System.Threading.Tasks.Task<System.Guid> CreateAsync(CreateMovieCommand? body)
     {
-        return MoviesPOSTAsync(body, System.Threading.CancellationToken.None);
+        return CreateAsync(body, System.Threading.CancellationToken.None);
     }
 
     /// <param name = "cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
@@ -55,7 +55,7 @@ public partial class MoviesClient : IMoviesClient
     /// </summary>
     /// <returns>Created</returns>
     /// <exception cref = "ApiException">A server side error occurred.</exception>
-    public virtual async System.Threading.Tasks.Task<System.Guid> MoviesPOSTAsync(CreateMovieCommand? body, System.Threading.CancellationToken cancellationToken)
+    public virtual async System.Threading.Tasks.Task<System.Guid> CreateAsync(CreateMovieCommand? body, System.Threading.CancellationToken cancellationToken)
     {
         var client_ = _httpClient;
         var disposeClient_ = false;
@@ -126,9 +126,9 @@ public partial class MoviesClient : IMoviesClient
     /// </summary>
     /// <returns>No Content</returns>
     /// <exception cref = "ApiException">A server side error occurred.</exception>
-    public virtual System.Threading.Tasks.Task MoviesPUTAsync(System.Guid id, UpdateMovieCommand? body)
+    public virtual System.Threading.Tasks.Task UpdateAsync(System.Guid id, UpdateMovieCommand? body)
     {
-        return MoviesPUTAsync(id, body, System.Threading.CancellationToken.None);
+        return UpdateAsync(id, body, System.Threading.CancellationToken.None);
     }
 
     /// <param name = "cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
@@ -137,7 +137,7 @@ public partial class MoviesClient : IMoviesClient
     /// </summary>
     /// <returns>No Content</returns>
     /// <exception cref = "ApiException">A server side error occurred.</exception>
-    public virtual async System.Threading.Tasks.Task MoviesPUTAsync(System.Guid id, UpdateMovieCommand? body, System.Threading.CancellationToken cancellationToken)
+    public virtual async System.Threading.Tasks.Task UpdateAsync(System.Guid id, UpdateMovieCommand? body, System.Threading.CancellationToken cancellationToken)
     {
         if (id == null)
             throw new System.ArgumentNullException("id");
@@ -214,9 +214,9 @@ public partial class MoviesClient : IMoviesClient
     /// </summary>
     /// <returns>OK</returns>
     /// <exception cref = "ApiException">A server side error occurred.</exception>
-    public virtual System.Threading.Tasks.Task<MovieDetailResponse> MoviesGETAsync(System.Guid id)
+    public virtual System.Threading.Tasks.Task<MovieDetailResponse> GetByIdAsync(System.Guid id)
     {
-        return MoviesGETAsync(id, System.Threading.CancellationToken.None);
+        return GetByIdAsync(id, System.Threading.CancellationToken.None);
     }
 
     /// <param name = "cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
@@ -225,7 +225,7 @@ public partial class MoviesClient : IMoviesClient
     /// </summary>
     /// <returns>OK</returns>
     /// <exception cref = "ApiException">A server side error occurred.</exception>
-    public virtual async System.Threading.Tasks.Task<MovieDetailResponse> MoviesGETAsync(System.Guid id, System.Threading.CancellationToken cancellationToken)
+    public virtual async System.Threading.Tasks.Task<MovieDetailResponse> GetByIdAsync(System.Guid id, System.Threading.CancellationToken cancellationToken)
     {
         if (id == null)
             throw new System.ArgumentNullException("id");
@@ -305,9 +305,9 @@ public partial class MoviesClient : IMoviesClient
     /// </summary>
     /// <returns>No Content</returns>
     /// <exception cref = "ApiException">A server side error occurred.</exception>
-    public virtual System.Threading.Tasks.Task MoviesDELETEAsync(System.Guid id)
+    public virtual System.Threading.Tasks.Task DeleteAsync(System.Guid id)
     {
-        return MoviesDELETEAsync(id, System.Threading.CancellationToken.None);
+        return DeleteAsync(id, System.Threading.CancellationToken.None);
     }
 
     /// <param name = "cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
@@ -316,7 +316,7 @@ public partial class MoviesClient : IMoviesClient
     /// </summary>
     /// <returns>No Content</returns>
     /// <exception cref = "ApiException">A server side error occurred.</exception>
-    public virtual async System.Threading.Tasks.Task MoviesDELETEAsync(System.Guid id, System.Threading.CancellationToken cancellationToken)
+    public virtual async System.Threading.Tasks.Task DeleteAsync(System.Guid id, System.Threading.CancellationToken cancellationToken)
     {
         if (id == null)
             throw new System.ArgumentNullException("id");
@@ -389,9 +389,9 @@ public partial class MoviesClient : IMoviesClient
     /// </summary>
     /// <returns>OK</returns>
     /// <exception cref = "ApiException">A server side error occurred.</exception>
-    public virtual System.Threading.Tasks.Task<ReviewResponsePagedResponse> ReviewsGETAsync(System.Guid movieId, int? page, int? pageSize)
+    public virtual System.Threading.Tasks.Task<ReviewResponsePagedResponse> GetReviewsAsync(System.Guid movieId, int? page, int? pageSize)
     {
-        return ReviewsGETAsync(movieId, page, pageSize, System.Threading.CancellationToken.None);
+        return GetReviewsAsync(movieId, page, pageSize, System.Threading.CancellationToken.None);
     }
 
     /// <param name = "cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
@@ -400,7 +400,7 @@ public partial class MoviesClient : IMoviesClient
     /// </summary>
     /// <returns>OK</returns>
     /// <exception cref = "ApiException">A server side error occurred.</exception>
-    public virtual async System.Threading.Tasks.Task<ReviewResponsePagedResponse> ReviewsGETAsync(System.Guid movieId, int? page, int? pageSize, System.Threading.CancellationToken cancellationToken)
+    public virtual async System.Threading.Tasks.Task<ReviewResponsePagedResponse> GetReviewsAsync(System.Guid movieId, int? page, int? pageSize, System.Threading.CancellationToken cancellationToken)
     {
         if (movieId == null)
             throw new System.ArgumentNullException("movieId");
@@ -483,9 +483,9 @@ public partial class MoviesClient : IMoviesClient
     /// </summary>
     /// <returns>No Content</returns>
     /// <exception cref = "ApiException">A server side error occurred.</exception>
-    public virtual System.Threading.Tasks.Task FavoritesPOSTAsync(System.Guid id)
+    public virtual System.Threading.Tasks.Task AddToFavoritesAsync(System.Guid id)
     {
-        return FavoritesPOSTAsync(id, System.Threading.CancellationToken.None);
+        return AddToFavoritesAsync(id, System.Threading.CancellationToken.None);
     }
 
     /// <param name = "cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
@@ -494,7 +494,7 @@ public partial class MoviesClient : IMoviesClient
     /// </summary>
     /// <returns>No Content</returns>
     /// <exception cref = "ApiException">A server side error occurred.</exception>
-    public virtual async System.Threading.Tasks.Task FavoritesPOSTAsync(System.Guid id, System.Threading.CancellationToken cancellationToken)
+    public virtual async System.Threading.Tasks.Task AddToFavoritesAsync(System.Guid id, System.Threading.CancellationToken cancellationToken)
     {
         if (id == null)
             throw new System.ArgumentNullException("id");
@@ -579,9 +579,9 @@ public partial class MoviesClient : IMoviesClient
     /// </summary>
     /// <returns>No Content</returns>
     /// <exception cref = "ApiException">A server side error occurred.</exception>
-    public virtual System.Threading.Tasks.Task FavoritesDELETEAsync(System.Guid id)
+    public virtual System.Threading.Tasks.Task RemoveFromFavoritesAsync(System.Guid id)
     {
-        return FavoritesDELETEAsync(id, System.Threading.CancellationToken.None);
+        return RemoveFromFavoritesAsync(id, System.Threading.CancellationToken.None);
     }
 
     /// <param name = "cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
@@ -590,7 +590,7 @@ public partial class MoviesClient : IMoviesClient
     /// </summary>
     /// <returns>No Content</returns>
     /// <exception cref = "ApiException">A server side error occurred.</exception>
-    public virtual async System.Threading.Tasks.Task FavoritesDELETEAsync(System.Guid id, System.Threading.CancellationToken cancellationToken)
+    public virtual async System.Threading.Tasks.Task RemoveFromFavoritesAsync(System.Guid id, System.Threading.CancellationToken cancellationToken)
     {
         if (id == null)
             throw new System.ArgumentNullException("id");
@@ -664,9 +664,9 @@ public partial class MoviesClient : IMoviesClient
     /// </summary>
     /// <returns>OK</returns>
     /// <exception cref = "ApiException">A server side error occurred.</exception>
-    public virtual System.Threading.Tasks.Task<SetMovieImageResponse> PosterAsync(System.Guid id, FileParameter file)
+    public virtual System.Threading.Tasks.Task<SetMovieImageResponse> SetPosterAsync(System.Guid id, FileParameter file)
     {
-        return PosterAsync(id, file, System.Threading.CancellationToken.None);
+        return SetPosterAsync(id, file, System.Threading.CancellationToken.None);
     }
 
     /// <param name = "cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
@@ -675,7 +675,7 @@ public partial class MoviesClient : IMoviesClient
     /// </summary>
     /// <returns>OK</returns>
     /// <exception cref = "ApiException">A server side error occurred.</exception>
-    public virtual async System.Threading.Tasks.Task<SetMovieImageResponse> PosterAsync(System.Guid id, FileParameter file, System.Threading.CancellationToken cancellationToken)
+    public virtual async System.Threading.Tasks.Task<SetMovieImageResponse> SetPosterAsync(System.Guid id, FileParameter file, System.Threading.CancellationToken cancellationToken)
     {
         if (id == null)
             throw new System.ArgumentNullException("id");
@@ -771,9 +771,9 @@ public partial class MoviesClient : IMoviesClient
     /// </summary>
     /// <returns>OK</returns>
     /// <exception cref = "ApiException">A server side error occurred.</exception>
-    public virtual System.Threading.Tasks.Task<SetMovieImageResponse> BackdropAsync(System.Guid id, FileParameter file)
+    public virtual System.Threading.Tasks.Task<SetMovieImageResponse> SetBackdropAsync(System.Guid id, FileParameter file)
     {
-        return BackdropAsync(id, file, System.Threading.CancellationToken.None);
+        return SetBackdropAsync(id, file, System.Threading.CancellationToken.None);
     }
 
     /// <param name = "cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
@@ -782,7 +782,7 @@ public partial class MoviesClient : IMoviesClient
     /// </summary>
     /// <returns>OK</returns>
     /// <exception cref = "ApiException">A server side error occurred.</exception>
-    public virtual async System.Threading.Tasks.Task<SetMovieImageResponse> BackdropAsync(System.Guid id, FileParameter file, System.Threading.CancellationToken cancellationToken)
+    public virtual async System.Threading.Tasks.Task<SetMovieImageResponse> SetBackdropAsync(System.Guid id, FileParameter file, System.Threading.CancellationToken cancellationToken)
     {
         if (id == null)
             throw new System.ArgumentNullException("id");

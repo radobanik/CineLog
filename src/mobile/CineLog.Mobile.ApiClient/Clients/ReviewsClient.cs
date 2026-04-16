@@ -1,5 +1,5 @@
-using CineLog.Mobile.ApiClient.Infrastructure;
 using CineLog.Mobile.ApiClient.Models;
+using CineLog.Mobile.ApiClient.Infrastructure;
 
 namespace CineLog.Mobile.ApiClient.Clients;
 
@@ -44,9 +44,9 @@ public partial class ReviewsClient : IReviewsClient
     /// </summary>
     /// <returns>OK</returns>
     /// <exception cref = "ApiException">A server side error occurred.</exception>
-    public virtual System.Threading.Tasks.Task<ReviewResponse> ReviewsGET2Async(System.Guid id)
+    public virtual System.Threading.Tasks.Task<ReviewResponse> GetByIdAsync(System.Guid id)
     {
-        return ReviewsGET2Async(id, System.Threading.CancellationToken.None);
+        return GetByIdAsync(id, System.Threading.CancellationToken.None);
     }
 
     /// <param name = "cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
@@ -55,7 +55,7 @@ public partial class ReviewsClient : IReviewsClient
     /// </summary>
     /// <returns>OK</returns>
     /// <exception cref = "ApiException">A server side error occurred.</exception>
-    public virtual async System.Threading.Tasks.Task<ReviewResponse> ReviewsGET2Async(System.Guid id, System.Threading.CancellationToken cancellationToken)
+    public virtual async System.Threading.Tasks.Task<ReviewResponse> GetByIdAsync(System.Guid id, System.Threading.CancellationToken cancellationToken)
     {
         if (id == null)
             throw new System.ArgumentNullException("id");
@@ -135,9 +135,9 @@ public partial class ReviewsClient : IReviewsClient
     /// </summary>
     /// <returns>OK</returns>
     /// <exception cref = "ApiException">A server side error occurred.</exception>
-    public virtual System.Threading.Tasks.Task<ReviewResponse> ReviewsPUTAsync(System.Guid id, UpdateReviewCommand? body)
+    public virtual System.Threading.Tasks.Task<ReviewResponse> UpdateAsync(System.Guid id, UpdateReviewCommand? body)
     {
-        return ReviewsPUTAsync(id, body, System.Threading.CancellationToken.None);
+        return UpdateAsync(id, body, System.Threading.CancellationToken.None);
     }
 
     /// <param name = "cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
@@ -146,7 +146,7 @@ public partial class ReviewsClient : IReviewsClient
     /// </summary>
     /// <returns>OK</returns>
     /// <exception cref = "ApiException">A server side error occurred.</exception>
-    public virtual async System.Threading.Tasks.Task<ReviewResponse> ReviewsPUTAsync(System.Guid id, UpdateReviewCommand? body, System.Threading.CancellationToken cancellationToken)
+    public virtual async System.Threading.Tasks.Task<ReviewResponse> UpdateAsync(System.Guid id, UpdateReviewCommand? body, System.Threading.CancellationToken cancellationToken)
     {
         if (id == null)
             throw new System.ArgumentNullException("id");
@@ -230,9 +230,9 @@ public partial class ReviewsClient : IReviewsClient
     /// </summary>
     /// <returns>No Content</returns>
     /// <exception cref = "ApiException">A server side error occurred.</exception>
-    public virtual System.Threading.Tasks.Task ReviewsDELETEAsync(System.Guid id)
+    public virtual System.Threading.Tasks.Task DeleteAsync(System.Guid id)
     {
-        return ReviewsDELETEAsync(id, System.Threading.CancellationToken.None);
+        return DeleteAsync(id, System.Threading.CancellationToken.None);
     }
 
     /// <param name = "cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
@@ -241,7 +241,7 @@ public partial class ReviewsClient : IReviewsClient
     /// </summary>
     /// <returns>No Content</returns>
     /// <exception cref = "ApiException">A server side error occurred.</exception>
-    public virtual async System.Threading.Tasks.Task ReviewsDELETEAsync(System.Guid id, System.Threading.CancellationToken cancellationToken)
+    public virtual async System.Threading.Tasks.Task DeleteAsync(System.Guid id, System.Threading.CancellationToken cancellationToken)
     {
         if (id == null)
             throw new System.ArgumentNullException("id");
@@ -314,9 +314,9 @@ public partial class ReviewsClient : IReviewsClient
     /// </summary>
     /// <returns>OK</returns>
     /// <exception cref = "ApiException">A server side error occurred.</exception>
-    public virtual System.Threading.Tasks.Task<ReviewResponse> ReviewsPOSTAsync(CreateReviewCommand? body)
+    public virtual System.Threading.Tasks.Task<ReviewResponse> CreateAsync(CreateReviewCommand? body)
     {
-        return ReviewsPOSTAsync(body, System.Threading.CancellationToken.None);
+        return CreateAsync(body, System.Threading.CancellationToken.None);
     }
 
     /// <param name = "cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
@@ -325,7 +325,7 @@ public partial class ReviewsClient : IReviewsClient
     /// </summary>
     /// <returns>OK</returns>
     /// <exception cref = "ApiException">A server side error occurred.</exception>
-    public virtual async System.Threading.Tasks.Task<ReviewResponse> ReviewsPOSTAsync(CreateReviewCommand? body, System.Threading.CancellationToken cancellationToken)
+    public virtual async System.Threading.Tasks.Task<ReviewResponse> CreateAsync(CreateReviewCommand? body, System.Threading.CancellationToken cancellationToken)
     {
         var client_ = _httpClient;
         var disposeClient_ = false;

@@ -5,11 +5,11 @@ namespace CineLog.Mobile.ApiClient.Models;
 public partial class UserInfo
 {
     [Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-    public System.Guid? Id { get; set; } = default!;
+    public System.Guid? Id { get; set; } = default !;
 
     [Newtonsoft.Json.JsonProperty("username", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-    public string? Username { get; set; } = default!;
+    public string? Username { get; set; } = default !;
 
     [Newtonsoft.Json.JsonProperty("avatarUrl", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-    public string? AvatarUrl { get; set; } = default!;
+    public string? AvatarUrl { get; set; } = default !;
 }

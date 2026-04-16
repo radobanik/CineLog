@@ -1,5 +1,5 @@
-using CineLog.Mobile.ApiClient.Infrastructure;
 using CineLog.Mobile.ApiClient.Models;
+using CineLog.Mobile.ApiClient.Infrastructure;
 
 namespace CineLog.Mobile.ApiClient.Clients;
 

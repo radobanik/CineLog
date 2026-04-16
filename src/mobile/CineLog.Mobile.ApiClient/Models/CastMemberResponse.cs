@@ -5,17 +5,17 @@ namespace CineLog.Mobile.ApiClient.Models;
 public partial class CastMemberResponse
 {
     [Newtonsoft.Json.JsonProperty("personId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-    public System.Guid? PersonId { get; set; } = default!;
+    public System.Guid? PersonId { get; set; } = default !;
 
     [Newtonsoft.Json.JsonProperty("name", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-    public string? Name { get; set; } = default!;
+    public string? Name { get; set; } = default !;
 
     [Newtonsoft.Json.JsonProperty("character", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-    public string? Character { get; set; } = default!;
+    public string? Character { get; set; } = default !;
 
     [Newtonsoft.Json.JsonProperty("order", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-    public int? Order { get; set; } = default!;
+    public int? Order { get; set; } = default !;
 
     [Newtonsoft.Json.JsonProperty("profilePath", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-    public string? ProfilePath { get; set; } = default!;
+    public string? ProfilePath { get; set; } = default !;
 }

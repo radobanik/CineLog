@@ -9,13 +9,13 @@ public sealed class HomeService(IDashboardClient dashboardClient) : IHomeService
 {
     public async Task<IReadOnlyList<MovieItem>> GetTopRatedMoviesAsync(int count, CancellationToken ct = default)
     {
-        var movies = await dashboardClient.TopRatedMoviesAsync(count, ct);
+        var movies = await dashboardClient.GetTopRatedAsync(count, ct);
         return MapMovies(movies);
     }
 
     public async Task<IReadOnlyList<MovieItem>> GetNewReleaseMoviesAsync(int count, CancellationToken ct = default)
     {
-        var movies = await dashboardClient.NewestMoviesAsync(count, ct);
+        var movies = await dashboardClient.GetNewestAsync(count, ct);
         return MapMovies(movies);
     }
 

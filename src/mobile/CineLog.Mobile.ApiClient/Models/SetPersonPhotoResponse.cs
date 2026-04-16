@@ -5,5 +5,5 @@ namespace CineLog.Mobile.ApiClient.Models;
 public partial class SetPersonPhotoResponse
 {
     [Newtonsoft.Json.JsonProperty("url", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-    public string? Url { get; set; } = default!;
+    public string? Url { get; set; } = default !;
 }

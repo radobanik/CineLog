@@ -1,5 +1,5 @@
-using CineLog.Mobile.ApiClient.Infrastructure;
 using CineLog.Mobile.ApiClient.Models;
+using CineLog.Mobile.ApiClient.Infrastructure;
 
 namespace CineLog.Mobile.ApiClient.Clients;
 
@@ -44,9 +44,9 @@ public partial class UsersClient : IUsersClient
     /// </summary>
     /// <returns>OK</returns>
     /// <exception cref = "ApiException">A server side error occurred.</exception>
-    public virtual System.Threading.Tasks.Task<UserProfileResponse> MeGETAsync()
+    public virtual System.Threading.Tasks.Task<UserProfileResponse> GetMeAsync()
     {
-        return MeGETAsync(System.Threading.CancellationToken.None);
+        return GetMeAsync(System.Threading.CancellationToken.None);
     }
 
     /// <param name = "cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
@@ -55,7 +55,7 @@ public partial class UsersClient : IUsersClient
     /// </summary>
     /// <returns>OK</returns>
     /// <exception cref = "ApiException">A server side error occurred.</exception>
-    public virtual async System.Threading.Tasks.Task<UserProfileResponse> MeGETAsync(System.Threading.CancellationToken cancellationToken)
+    public virtual async System.Threading.Tasks.Task<UserProfileResponse> GetMeAsync(System.Threading.CancellationToken cancellationToken)
     {
         var client_ = _httpClient;
         var disposeClient_ = false;
@@ -122,9 +122,9 @@ public partial class UsersClient : IUsersClient
     /// </summary>
     /// <returns>OK</returns>
     /// <exception cref = "ApiException">A server side error occurred.</exception>
-    public virtual System.Threading.Tasks.Task<UserProfileResponse> MePUTAsync(UpdateProfileCommand? body)
+    public virtual System.Threading.Tasks.Task<UserProfileResponse> UpdateMeAsync(UpdateProfileCommand? body)
     {
-        return MePUTAsync(body, System.Threading.CancellationToken.None);
+        return UpdateMeAsync(body, System.Threading.CancellationToken.None);
     }
 
     /// <param name = "cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
@@ -133,7 +133,7 @@ public partial class UsersClient : IUsersClient
     /// </summary>
     /// <returns>OK</returns>
     /// <exception cref = "ApiException">A server side error occurred.</exception>
-    public virtual async System.Threading.Tasks.Task<UserProfileResponse> MePUTAsync(UpdateProfileCommand? body, System.Threading.CancellationToken cancellationToken)
+    public virtual async System.Threading.Tasks.Task<UserProfileResponse> UpdateMeAsync(UpdateProfileCommand? body, System.Threading.CancellationToken cancellationToken)
     {
         var client_ = _httpClient;
         var disposeClient_ = false;
@@ -204,9 +204,9 @@ public partial class UsersClient : IUsersClient
     /// </summary>
     /// <returns>OK</returns>
     /// <exception cref = "ApiException">A server side error occurred.</exception>
-    public virtual System.Threading.Tasks.Task<UserProfileResponse> UsersAsync(System.Guid id)
+    public virtual System.Threading.Tasks.Task<UserProfileResponse> GetByIdAsync(System.Guid id)
     {
-        return UsersAsync(id, System.Threading.CancellationToken.None);
+        return GetByIdAsync(id, System.Threading.CancellationToken.None);
     }
 
     /// <param name = "cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
@@ -215,7 +215,7 @@ public partial class UsersClient : IUsersClient
     /// </summary>
     /// <returns>OK</returns>
     /// <exception cref = "ApiException">A server side error occurred.</exception>
-    public virtual async System.Threading.Tasks.Task<UserProfileResponse> UsersAsync(System.Guid id, System.Threading.CancellationToken cancellationToken)
+    public virtual async System.Threading.Tasks.Task<UserProfileResponse> GetByIdAsync(System.Guid id, System.Threading.CancellationToken cancellationToken)
     {
         if (id == null)
             throw new System.ArgumentNullException("id");
@@ -295,9 +295,9 @@ public partial class UsersClient : IUsersClient
     /// </summary>
     /// <returns>OK</returns>
     /// <exception cref = "ApiException">A server side error occurred.</exception>
-    public virtual System.Threading.Tasks.Task<ReviewResponsePagedResponse> ReviewsGET3Async(System.Guid id, int? page, int? pageSize)
+    public virtual System.Threading.Tasks.Task<ReviewResponsePagedResponse> GetReviewsAsync(System.Guid id, int? page, int? pageSize)
     {
-        return ReviewsGET3Async(id, page, pageSize, System.Threading.CancellationToken.None);
+        return GetReviewsAsync(id, page, pageSize, System.Threading.CancellationToken.None);
     }
 
     /// <param name = "cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
@@ -306,7 +306,7 @@ public partial class UsersClient : IUsersClient
     /// </summary>
     /// <returns>OK</returns>
     /// <exception cref = "ApiException">A server side error occurred.</exception>
-    public virtual async System.Threading.Tasks.Task<ReviewResponsePagedResponse> ReviewsGET3Async(System.Guid id, int? page, int? pageSize, System.Threading.CancellationToken cancellationToken)
+    public virtual async System.Threading.Tasks.Task<ReviewResponsePagedResponse> GetReviewsAsync(System.Guid id, int? page, int? pageSize, System.Threading.CancellationToken cancellationToken)
     {
         if (id == null)
             throw new System.ArgumentNullException("id");
@@ -399,9 +399,9 @@ public partial class UsersClient : IUsersClient
     /// </summary>
     /// <returns>OK</returns>
     /// <exception cref = "ApiException">A server side error occurred.</exception>
-    public virtual System.Threading.Tasks.Task<UserSummaryResponsePagedResponse> FollowersAsync(System.Guid id, int? page, int? pageSize)
+    public virtual System.Threading.Tasks.Task<UserSummaryResponsePagedResponse> GetFollowersAsync(System.Guid id, int? page, int? pageSize)
     {
-        return FollowersAsync(id, page, pageSize, System.Threading.CancellationToken.None);
+        return GetFollowersAsync(id, page, pageSize, System.Threading.CancellationToken.None);
     }
 
     /// <param name = "cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
@@ -410,7 +410,7 @@ public partial class UsersClient : IUsersClient
     /// </summary>
     /// <returns>OK</returns>
     /// <exception cref = "ApiException">A server side error occurred.</exception>
-    public virtual async System.Threading.Tasks.Task<UserSummaryResponsePagedResponse> FollowersAsync(System.Guid id, int? page, int? pageSize, System.Threading.CancellationToken cancellationToken)
+    public virtual async System.Threading.Tasks.Task<UserSummaryResponsePagedResponse> GetFollowersAsync(System.Guid id, int? page, int? pageSize, System.Threading.CancellationToken cancellationToken)
     {
         if (id == null)
             throw new System.ArgumentNullException("id");
@@ -503,9 +503,9 @@ public partial class UsersClient : IUsersClient
     /// </summary>
     /// <returns>OK</returns>
     /// <exception cref = "ApiException">A server side error occurred.</exception>
-    public virtual System.Threading.Tasks.Task<UserSummaryResponsePagedResponse> FollowingAsync(System.Guid id, int? page, int? pageSize)
+    public virtual System.Threading.Tasks.Task<UserSummaryResponsePagedResponse> GetFollowingAsync(System.Guid id, int? page, int? pageSize)
     {
-        return FollowingAsync(id, page, pageSize, System.Threading.CancellationToken.None);
+        return GetFollowingAsync(id, page, pageSize, System.Threading.CancellationToken.None);
     }
 
     /// <param name = "cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
@@ -514,7 +514,7 @@ public partial class UsersClient : IUsersClient
     /// </summary>
     /// <returns>OK</returns>
     /// <exception cref = "ApiException">A server side error occurred.</exception>
-    public virtual async System.Threading.Tasks.Task<UserSummaryResponsePagedResponse> FollowingAsync(System.Guid id, int? page, int? pageSize, System.Threading.CancellationToken cancellationToken)
+    public virtual async System.Threading.Tasks.Task<UserSummaryResponsePagedResponse> GetFollowingAsync(System.Guid id, int? page, int? pageSize, System.Threading.CancellationToken cancellationToken)
     {
         if (id == null)
             throw new System.ArgumentNullException("id");
@@ -607,9 +607,9 @@ public partial class UsersClient : IUsersClient
     /// </summary>
     /// <returns>OK</returns>
     /// <exception cref = "ApiException">A server side error occurred.</exception>
-    public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<MovieListItemResponse>> FavoritesAllAsync()
+    public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<MovieListItemResponse>> GetFavoritesAsync()
     {
-        return FavoritesAllAsync(System.Threading.CancellationToken.None);
+        return GetFavoritesAsync(System.Threading.CancellationToken.None);
     }
 
     /// <param name = "cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
@@ -618,7 +618,7 @@ public partial class UsersClient : IUsersClient
     /// </summary>
     /// <returns>OK</returns>
     /// <exception cref = "ApiException">A server side error occurred.</exception>
-    public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<MovieListItemResponse>> FavoritesAllAsync(System.Threading.CancellationToken cancellationToken)
+    public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<MovieListItemResponse>> GetFavoritesAsync(System.Threading.CancellationToken cancellationToken)
     {
         var client_ = _httpClient;
         var disposeClient_ = false;
@@ -685,9 +685,9 @@ public partial class UsersClient : IUsersClient
     /// </summary>
     /// <returns>OK</returns>
     /// <exception cref = "ApiException">A server side error occurred.</exception>
-    public virtual System.Threading.Tasks.Task<UploadAvatarResponse> AvatarAsync(FileParameter file)
+    public virtual System.Threading.Tasks.Task<UploadAvatarResponse> UploadAvatarAsync(FileParameter file)
     {
-        return AvatarAsync(file, System.Threading.CancellationToken.None);
+        return UploadAvatarAsync(file, System.Threading.CancellationToken.None);
     }
 
     /// <param name = "cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
@@ -696,7 +696,7 @@ public partial class UsersClient : IUsersClient
     /// </summary>
     /// <returns>OK</returns>
     /// <exception cref = "ApiException">A server side error occurred.</exception>
-    public virtual async System.Threading.Tasks.Task<UploadAvatarResponse> AvatarAsync(FileParameter file, System.Threading.CancellationToken cancellationToken)
+    public virtual async System.Threading.Tasks.Task<UploadAvatarResponse> UploadAvatarAsync(FileParameter file, System.Threading.CancellationToken cancellationToken)
     {
         var client_ = _httpClient;
         var disposeClient_ = false;
@@ -778,9 +778,9 @@ public partial class UsersClient : IUsersClient
     /// </summary>
     /// <returns>OK</returns>
     /// <exception cref = "ApiException">A server side error occurred.</exception>
-    public virtual System.Threading.Tasks.Task<UploadAvatarResponse> Avatar2Async(System.Guid id, FileParameter file)
+    public virtual System.Threading.Tasks.Task<UploadAvatarResponse> SetUserAvatarAsync(System.Guid id, FileParameter file)
     {
-        return Avatar2Async(id, file, System.Threading.CancellationToken.None);
+        return SetUserAvatarAsync(id, file, System.Threading.CancellationToken.None);
     }
 
     /// <param name = "cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
@@ -789,7 +789,7 @@ public partial class UsersClient : IUsersClient
     /// </summary>
     /// <returns>OK</returns>
     /// <exception cref = "ApiException">A server side error occurred.</exception>
-    public virtual async System.Threading.Tasks.Task<UploadAvatarResponse> Avatar2Async(System.Guid id, FileParameter file, System.Threading.CancellationToken cancellationToken)
+    public virtual async System.Threading.Tasks.Task<UploadAvatarResponse> SetUserAvatarAsync(System.Guid id, FileParameter file, System.Threading.CancellationToken cancellationToken)
     {
         if (id == null)
             throw new System.ArgumentNullException("id");
@@ -885,9 +885,9 @@ public partial class UsersClient : IUsersClient
     /// </summary>
     /// <returns>No Content</returns>
     /// <exception cref = "ApiException">A server side error occurred.</exception>
-    public virtual System.Threading.Tasks.Task FollowPOSTAsync(System.Guid id)
+    public virtual System.Threading.Tasks.Task FollowAsync(System.Guid id)
     {
-        return FollowPOSTAsync(id, System.Threading.CancellationToken.None);
+        return FollowAsync(id, System.Threading.CancellationToken.None);
     }
 
     /// <param name = "cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
@@ -896,7 +896,7 @@ public partial class UsersClient : IUsersClient
     /// </summary>
     /// <returns>No Content</returns>
     /// <exception cref = "ApiException">A server side error occurred.</exception>
-    public virtual async System.Threading.Tasks.Task FollowPOSTAsync(System.Guid id, System.Threading.CancellationToken cancellationToken)
+    public virtual async System.Threading.Tasks.Task FollowAsync(System.Guid id, System.Threading.CancellationToken cancellationToken)
     {
         if (id == null)
             throw new System.ArgumentNullException("id");
@@ -981,9 +981,9 @@ public partial class UsersClient : IUsersClient
     /// </summary>
     /// <returns>No Content</returns>
     /// <exception cref = "ApiException">A server side error occurred.</exception>
-    public virtual System.Threading.Tasks.Task FollowDELETEAsync(System.Guid id)
+    public virtual System.Threading.Tasks.Task UnfollowAsync(System.Guid id)
     {
-        return FollowDELETEAsync(id, System.Threading.CancellationToken.None);
+        return UnfollowAsync(id, System.Threading.CancellationToken.None);
     }
 
     /// <param name = "cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
@@ -992,7 +992,7 @@ public partial class UsersClient : IUsersClient
     /// </summary>
     /// <returns>No Content</returns>
     /// <exception cref = "ApiException">A server side error occurred.</exception>
-    public virtual async System.Threading.Tasks.Task FollowDELETEAsync(System.Guid id, System.Threading.CancellationToken cancellationToken)
+    public virtual async System.Threading.Tasks.Task UnfollowAsync(System.Guid id, System.Threading.CancellationToken cancellationToken)
     {
         if (id == null)
             throw new System.ArgumentNullException("id");

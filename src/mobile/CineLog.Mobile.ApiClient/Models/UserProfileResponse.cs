@@ -5,23 +5,23 @@ namespace CineLog.Mobile.ApiClient.Models;
 public partial class UserProfileResponse
 {
     [Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-    public System.Guid? Id { get; set; } = default!;
+    public System.Guid? Id { get; set; } = default !;
 
     [Newtonsoft.Json.JsonProperty("username", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-    public string? Username { get; set; } = default!;
+    public string? Username { get; set; } = default !;
 
     [Newtonsoft.Json.JsonProperty("bio", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-    public string? Bio { get; set; } = default!;
+    public string? Bio { get; set; } = default !;
 
     [Newtonsoft.Json.JsonProperty("avatarUrl", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-    public string? AvatarUrl { get; set; } = default!;
+    public string? AvatarUrl { get; set; } = default !;
 
     [Newtonsoft.Json.JsonProperty("filmsCount", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-    public int? FilmsCount { get; set; } = default!;
+    public int? FilmsCount { get; set; } = default !;
 
     [Newtonsoft.Json.JsonProperty("followersCount", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-    public int? FollowersCount { get; set; } = default!;
+    public int? FollowersCount { get; set; } = default !;
 
     [Newtonsoft.Json.JsonProperty("followingCount", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-    public int? FollowingCount { get; set; } = default!;
+    public int? FollowingCount { get; set; } = default !;
 }

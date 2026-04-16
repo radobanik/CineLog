@@ -1,5 +1,5 @@
-using CineLog.Mobile.ApiClient.Infrastructure;
 using CineLog.Mobile.ApiClient.Models;
+using CineLog.Mobile.ApiClient.Infrastructure;
 
 namespace CineLog.Mobile.ApiClient.Clients;
 
@@ -44,9 +44,9 @@ public partial class DashboardClient : IDashboardClient
     /// </summary>
     /// <returns>OK</returns>
     /// <exception cref = "ApiException">A server side error occurred.</exception>
-    public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<MovieSummaryResponse>> TopRatedMoviesAsync(int? count)
+    public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<MovieSummaryResponse>> GetTopRatedAsync(int? count)
     {
-        return TopRatedMoviesAsync(count, System.Threading.CancellationToken.None);
+        return GetTopRatedAsync(count, System.Threading.CancellationToken.None);
     }
 
     /// <param name = "cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
@@ -55,7 +55,7 @@ public partial class DashboardClient : IDashboardClient
     /// </summary>
     /// <returns>OK</returns>
     /// <exception cref = "ApiException">A server side error occurred.</exception>
-    public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<MovieSummaryResponse>> TopRatedMoviesAsync(int? count, System.Threading.CancellationToken cancellationToken)
+    public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<MovieSummaryResponse>> GetTopRatedAsync(int? count, System.Threading.CancellationToken cancellationToken)
     {
         var client_ = _httpClient;
         var disposeClient_ = false;
@@ -129,9 +129,9 @@ public partial class DashboardClient : IDashboardClient
     /// </summary>
     /// <returns>OK</returns>
     /// <exception cref = "ApiException">A server side error occurred.</exception>
-    public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<NewActionResponse>> NewActionsAsync(int? count)
+    public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<NewActionResponse>> GetNewActionsAsync(int? count)
     {
-        return NewActionsAsync(count, System.Threading.CancellationToken.None);
+        return GetNewActionsAsync(count, System.Threading.CancellationToken.None);
     }
 
     /// <param name = "cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
@@ -140,7 +140,7 @@ public partial class DashboardClient : IDashboardClient
     /// </summary>
     /// <returns>OK</returns>
     /// <exception cref = "ApiException">A server side error occurred.</exception>
-    public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<NewActionResponse>> NewActionsAsync(int? count, System.Threading.CancellationToken cancellationToken)
+    public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<NewActionResponse>> GetNewActionsAsync(int? count, System.Threading.CancellationToken cancellationToken)
     {
         var client_ = _httpClient;
         var disposeClient_ = false;
@@ -214,9 +214,9 @@ public partial class DashboardClient : IDashboardClient
     /// </summary>
     /// <returns>OK</returns>
     /// <exception cref = "ApiException">A server side error occurred.</exception>
-    public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<MovieSummaryResponse>> NewestMoviesAsync(int? count)
+    public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<MovieSummaryResponse>> GetNewestAsync(int? count)
     {
-        return NewestMoviesAsync(count, System.Threading.CancellationToken.None);
+        return GetNewestAsync(count, System.Threading.CancellationToken.None);
     }
 
     /// <param name = "cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
@@ -225,7 +225,7 @@ public partial class DashboardClient : IDashboardClient
     /// </summary>
     /// <returns>OK</returns>
     /// <exception cref = "ApiException">A server side error occurred.</exception>
-    public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<MovieSummaryResponse>> NewestMoviesAsync(int? count, System.Threading.CancellationToken cancellationToken)
+    public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<MovieSummaryResponse>> GetNewestAsync(int? count, System.Threading.CancellationToken cancellationToken)
     {
         var client_ = _httpClient;
         var disposeClient_ = false;

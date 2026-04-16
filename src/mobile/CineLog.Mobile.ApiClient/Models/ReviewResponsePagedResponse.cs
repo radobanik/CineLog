@@ -5,17 +5,17 @@ namespace CineLog.Mobile.ApiClient.Models;
 public partial class ReviewResponsePagedResponse
 {
     [Newtonsoft.Json.JsonProperty("items", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-    public System.Collections.Generic.ICollection<ReviewResponse>? Items { get; set; } = default!;
+    public System.Collections.Generic.ICollection<ReviewResponse>? Items { get; set; } = default !;
 
     [Newtonsoft.Json.JsonProperty("page", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-    public int? Page { get; set; } = default!;
+    public int? Page { get; set; } = default !;
 
     [Newtonsoft.Json.JsonProperty("pageSize", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-    public int? PageSize { get; set; } = default!;
+    public int? PageSize { get; set; } = default !;
 
     [Newtonsoft.Json.JsonProperty("totalCount", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-    public int? TotalCount { get; set; } = default!;
+    public int? TotalCount { get; set; } = default !;
 
     [Newtonsoft.Json.JsonProperty("totalPages", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-    public int? TotalPages { get; set; } = default!;
+    public int? TotalPages { get; set; } = default !;
 }

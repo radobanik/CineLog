@@ -1,5 +1,5 @@
-using CineLog.Mobile.ApiClient.Infrastructure;
 using CineLog.Mobile.ApiClient.Models;
+using CineLog.Mobile.ApiClient.Infrastructure;
 
 namespace CineLog.Mobile.ApiClient.Clients;
 
@@ -139,9 +139,9 @@ public partial class SearchClient : ISearchClient
     /// </summary>
     /// <returns>OK</returns>
     /// <exception cref = "ApiException">A server side error occurred.</exception>
-    public virtual System.Threading.Tasks.Task<MovieSummaryResponsePagedResponse> MoviesGET2Async(string? query, System.Collections.Generic.IEnumerable<string>? genres, int? page, int? pageSize)
+    public virtual System.Threading.Tasks.Task<MovieSummaryResponsePagedResponse> SearchMoviesAsync(string? query, System.Collections.Generic.IEnumerable<string>? genres, int? page, int? pageSize)
     {
-        return MoviesGET2Async(query, genres, page, pageSize, System.Threading.CancellationToken.None);
+        return SearchMoviesAsync(query, genres, page, pageSize, System.Threading.CancellationToken.None);
     }
 
     /// <param name = "cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
@@ -150,7 +150,7 @@ public partial class SearchClient : ISearchClient
     /// </summary>
     /// <returns>OK</returns>
     /// <exception cref = "ApiException">A server side error occurred.</exception>
-    public virtual async System.Threading.Tasks.Task<MovieSummaryResponsePagedResponse> MoviesGET2Async(string? query, System.Collections.Generic.IEnumerable<string>? genres, int? page, int? pageSize, System.Threading.CancellationToken cancellationToken)
+    public virtual async System.Threading.Tasks.Task<MovieSummaryResponsePagedResponse> SearchMoviesAsync(string? query, System.Collections.Generic.IEnumerable<string>? genres, int? page, int? pageSize, System.Threading.CancellationToken cancellationToken)
     {
         var client_ = _httpClient;
         var disposeClient_ = false;
@@ -242,9 +242,9 @@ public partial class SearchClient : ISearchClient
     /// </summary>
     /// <returns>OK</returns>
     /// <exception cref = "ApiException">A server side error occurred.</exception>
-    public virtual System.Threading.Tasks.Task<PersonSummaryResponsePagedResponse> PeopleGET2Async(string? query, int? page, int? pageSize)
+    public virtual System.Threading.Tasks.Task<PersonSummaryResponsePagedResponse> SearchPeopleAsync(string? query, int? page, int? pageSize)
     {
-        return PeopleGET2Async(query, page, pageSize, System.Threading.CancellationToken.None);
+        return SearchPeopleAsync(query, page, pageSize, System.Threading.CancellationToken.None);
     }
 
     /// <param name = "cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
@@ -253,7 +253,7 @@ public partial class SearchClient : ISearchClient
     /// </summary>
     /// <returns>OK</returns>
     /// <exception cref = "ApiException">A server side error occurred.</exception>
-    public virtual async System.Threading.Tasks.Task<PersonSummaryResponsePagedResponse> PeopleGET2Async(string? query, int? page, int? pageSize, System.Threading.CancellationToken cancellationToken)
+    public virtual async System.Threading.Tasks.Task<PersonSummaryResponsePagedResponse> SearchPeopleAsync(string? query, int? page, int? pageSize, System.Threading.CancellationToken cancellationToken)
     {
         var client_ = _httpClient;
         var disposeClient_ = false;

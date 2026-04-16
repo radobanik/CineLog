@@ -10,7 +10,7 @@ public sealed class ProfileService(IUsersClient usersClient) : IProfileService
 {
     public async Task<UserProfile> GetProfileAsync(CancellationToken ct = default)
     {
-        var user = await usersClient.MeGETAsync(ct);
+        var user = await usersClient.GetMeAsync(ct);
         return new UserProfile
         {
             Id = user.Id ?? Guid.Empty,
@@ -25,7 +25,7 @@ public sealed class ProfileService(IUsersClient usersClient) : IProfileService
 
     public async Task<IReadOnlyList<MovieItem>> GetFavouriteMoviesAsync(CancellationToken ct = default)
     {
-        var movies = await usersClient.FavoritesAllAsync(ct);
+        var movies = await usersClient.GetFavoritesAsync(ct);
         return [.. movies.Select(m => new MovieItem
         {
             Id = m.Id ?? Guid.Empty,
@@ -37,7 +37,7 @@ public sealed class ProfileService(IUsersClient usersClient) : IProfileService
 
     public async Task<IReadOnlyList<ReviewItem>> GetReviewsAsync(Guid userId, CancellationToken ct = default)
     {
-        var response = await usersClient.ReviewsGET3Async(userId, null, null, ct);
+        var response = await usersClient.GetReviewsAsync(userId, null, null, ct);
         return [.. (response?.Items ?? []).Select(r => new ReviewItem
         {
             Id = r.Id ?? Guid.Empty,

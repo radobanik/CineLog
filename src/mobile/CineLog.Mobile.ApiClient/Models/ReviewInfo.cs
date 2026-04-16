@@ -5,24 +5,24 @@ namespace CineLog.Mobile.ApiClient.Models;
 public partial class ReviewInfo
 {
     [Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-    public System.Guid? Id { get; set; } = default!;
+    public System.Guid? Id { get; set; } = default !;
 
     [Newtonsoft.Json.JsonProperty("rating", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-    public double? Rating { get; set; } = default!;
+    public double? Rating { get; set; } = default !;
 
     [Newtonsoft.Json.JsonProperty("reviewText", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-    public string? ReviewText { get; set; } = default!;
+    public string? ReviewText { get; set; } = default !;
 
     [Newtonsoft.Json.JsonProperty("containsSpoilers", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-    public bool? ContainsSpoilers { get; set; } = default!;
+    public bool? ContainsSpoilers { get; set; } = default !;
 
     [Newtonsoft.Json.JsonProperty("watchedOn", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
     [Newtonsoft.Json.JsonConverter(typeof(DateFormatConverter))]
-    public System.DateTimeOffset? WatchedOn { get; set; } = default!;
+    public System.DateTimeOffset? WatchedOn { get; set; } = default !;
 
     [Newtonsoft.Json.JsonProperty("likesCount", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-    public int? LikesCount { get; set; } = default!;
+    public int? LikesCount { get; set; } = default !;
 
     [Newtonsoft.Json.JsonProperty("createdAt", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-    public System.DateTimeOffset? CreatedAt { get; set; } = default!;
+    public System.DateTimeOffset? CreatedAt { get; set; } = default !;
 }
