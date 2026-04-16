@@ -35,7 +35,7 @@
                 Margin="4,0,0,8"
                 Style="{StaticResource OverlineLabel}"
                 Text="USERNAME" />
-            <Border Style="{StaticResource InputFieldBorder}">
+            <Border Style="{StaticResource InputFieldBorder}" HeightRequest="56">
                 <Grid ColumnDefinitions="52,*,52">
                     <Label
                         Grid.Column="0"
@@ -47,6 +47,8 @@
                         Grid.Column="1"
                         Placeholder="filmfanatic"
                         Style="{StaticResource CleanEntry}"
+                        VerticalOptions="Center"
+                        Margin="0"
                         Text="{Binding Username}" />
                 </Grid>
             </Border>
@@ -55,7 +57,7 @@
                 Margin="4,16,0,8"
                 Style="{StaticResource OverlineLabel}"
                 Text="EMAIL" />
-            <Border Style="{StaticResource InputFieldBorder}">
+            <Border Style="{StaticResource InputFieldBorder}" HeightRequest="56">
                 <Grid ColumnDefinitions="52,*,52">
                     <Label
                         Grid.Column="0"
@@ -68,6 +70,8 @@
                         Keyboard="Email"
                         Placeholder="you@example.com"
                         Style="{StaticResource CleanEntry}"
+                        VerticalOptions="Center"
+                        Margin="0"
                         Text="{Binding Email}" />
                 </Grid>
             </Border>
@@ -76,7 +80,7 @@
                 Margin="4,16,0,8"
                 Style="{StaticResource OverlineLabel}"
                 Text="PASSWORD" />
-            <Border Style="{StaticResource InputFieldBorder}">
+            <Border Style="{StaticResource InputFieldBorder}" HeightRequest="56">
                 <Grid ColumnDefinitions="52,*,52">
                     <Label
                         Grid.Column="0"
@@ -89,6 +93,8 @@
                         IsPassword="{Binding IsPasswordVisible, Converter={StaticResource InvertedBoolConverter}}"
                         Placeholder="••••••••"
                         Style="{StaticResource CleanEntry}"
+                        VerticalOptions="Center"
+                        Margin="0"
                         Text="{Binding Password}" />
                     <Label
                         Grid.Column="2"
@@ -115,7 +121,7 @@
                 Margin="4,16,0,8"
                 Style="{StaticResource OverlineLabel}"
                 Text="CONFIRM PASSWORD" />
-            <Border Style="{StaticResource InputFieldBorder}">
+            <Border Style="{StaticResource InputFieldBorder}" HeightRequest="56">
                 <Grid ColumnDefinitions="52,*,52">
                     <Label
                         Grid.Column="0"
@@ -128,6 +134,8 @@
                         IsPassword="{Binding IsConfirmPasswordVisible, Converter={StaticResource InvertedBoolConverter}}"
                         Placeholder="••••••••"
                         Style="{StaticResource CleanEntry}"
+                        VerticalOptions="Center"
+                        Margin="0"
                         Text="{Binding ConfirmPassword}" />
                     <Label
                         Grid.Column="2"

@@ -65,14 +65,11 @@
     <Style TargetType="Label" x:Key="PosterTitleLabel">
         <Setter Property="TextColor" Value="{StaticResource OnBackground}" />
         <Setter Property="FontSize" Value="11" />
-        <Setter Property="MaxLines" Value="2" />
-        <Setter Property="LineBreakMode" Value="TailTruncation" />
     </Style>
 
     <Style TargetType="Label" x:Key="PosterRatingLabel">
         <Setter Property="TextColor" Value="{StaticResource TextSecondary}" />
         <Setter Property="FontSize" Value="11" />
-        <Setter Property="HorizontalTextAlignment" Value="Center" />
     </Style>
 
     <Style TargetType="Label" x:Key="OverlineLabel">
@@ -87,7 +84,6 @@
         <Setter Property="FontFamily" Value="FASolid" />
         <Setter Property="TextColor" Value="{StaticResource OnSurface}" />
         <Setter Property="FontSize" Value="18" />
-        <Setter Property="Padding" Value="10" />
     </Style>
 
     <Style TargetType="Label" x:Key="SecondaryIconLabel">
@@ -172,8 +168,6 @@
     <Style TargetType="Border" x:Key="InputFieldBorder">
         <Setter Property="BackgroundColor" Value="{StaticResource SurfaceVariant}" />
         <Setter Property="StrokeThickness" Value="0" />
-        <Setter Property="HeightRequest" Value="56" />
-        <Setter Property="Padding" Value="0" />
         <Setter Property="StrokeShape">
             <Setter.Value>
                 <RoundRectangle CornerRadius="28" />
@@ -186,15 +180,12 @@
         <Setter Property="TextColor" Value="{StaticResource OnSurface}" />
         <Setter Property="PlaceholderColor" Value="{StaticResource TextSecondary}" />
         <Setter Property="FontSize" Value="15" />
-        <Setter Property="VerticalOptions" Value="Center" />
-        <Setter Property="Margin" Value="0" />
     </Style>
 
     <!--  Cards / Containers  -->
 
     <Style TargetType="Border" x:Key="PosterCardBorder">
         <Setter Property="BackgroundColor" Value="{StaticResource Surface}" />
-        <Setter Property="HeightRequest" Value="170" />
         <Setter Property="Stroke" Value="{StaticResource Border}" />
         <Setter Property="StrokeThickness" Value="1" />
         <Setter Property="StrokeShape">
@@ -217,7 +208,6 @@
 
     <Style TargetType="Border" x:Key="StatsBorder">
         <Setter Property="BackgroundColor" Value="{StaticResource Surface}" />
-        <Setter Property="Padding" Value="15" />
         <Setter Property="StrokeThickness" Value="0" />
         <Setter Property="StrokeShape">
             <Setter.Value>

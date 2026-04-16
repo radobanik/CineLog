@@ -20,7 +20,8 @@
                 <Label
                     Grid.Column="1"
                     Style="{StaticResource IconLabel}"
-                    Text="{x:Static helpers:FontAwesomeIcons.Edit}" />
+                    Text="{x:Static helpers:FontAwesomeIcons.Edit}"
+                    Padding="10" />
             </Grid>
 
             <Grid ColumnDefinitions="Auto, *" ColumnSpacing="15">
@@ -43,7 +44,7 @@
                 IsRunning="{Binding IsBusy}"
                 IsVisible="{Binding IsBusy}" />
 
-            <Border Style="{StaticResource StatsBorder}">
+            <Border Style="{StaticResource StatsBorder}" Padding="15">
                 <Grid ColumnDefinitions="*, *, *, *">
                     <VerticalStackLayout Grid.Column="0" HorizontalOptions="Center">
                         <Label

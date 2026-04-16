@@ -6,7 +6,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
     <VerticalStackLayout WidthRequest="115" Spacing="6">
-        <Border Style="{StaticResource PosterCardBorder}">
+        <Border Style="{StaticResource PosterCardBorder}" HeightRequest="170">
             <Grid>
                 <Image
                     Source="{Binding Source={x:Reference This}, Path=PosterPath}"
@@ -18,13 +18,16 @@
                     BackgroundColor="#70000000">
                     <Label
                         Style="{StaticResource PosterTitleLabel}"
-                        Text="{Binding Source={x:Reference This}, Path=Title}" />
+                        Text="{Binding Source={x:Reference This}, Path=Title}"
+                        MaxLines="2"
+                        LineBreakMode="TailTruncation" />
                 </Grid>
             </Grid>
         </Border>
 
         <Label
             Style="{StaticResource PosterRatingLabel}"
-            Text="{Binding Source={x:Reference This}, Path=RatingText, StringFormat='★ {0}'}" />
+            Text="{Binding Source={x:Reference This}, Path=RatingText, StringFormat='★ {0}'}"
+            HorizontalTextAlignment="Center" />
     </VerticalStackLayout>
 </ContentView>
