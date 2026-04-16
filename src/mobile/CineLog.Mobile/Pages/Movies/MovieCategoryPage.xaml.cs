@@ -1,10 +1,9 @@
 using CineLog.Mobile.Core.Models;
 using CineLog.Mobile.Core.ViewModels.Common;
-using CineLog.Mobile.Core.ViewModels.Home;
 
 namespace CineLog.Mobile.Pages.Movies;
 
-public partial class MoviesCategoryPage : ContentPage, IQueryAttributable
+public partial class MoviesCategoryPage : BasePage, IQueryAttributable
 {
     private readonly MoviesCategoryViewModel _vm;
 
@@ -13,14 +12,6 @@ public partial class MoviesCategoryPage : ContentPage, IQueryAttributable
         InitializeComponent();
         BindingContext = vm;
         _vm = vm;
-    }
-
-    protected override async void OnAppearing()
-    {
-        base.OnAppearing();
-
-        if (_vm.Movies.Count == 0)
-            await _vm.LoadCommand.ExecuteAsync(null);
     }
 
     public void ApplyQueryAttributes(IDictionary<string, object> query)
@@ -38,6 +29,7 @@ public partial class MoviesCategoryPage : ContentPage, IQueryAttributable
 
         _vm.SetCategory(category);
     }
+
     protected override bool OnBackButtonPressed()
     {
         MainThread.BeginInvokeOnMainThread(async () =>

@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage
+<pages:BasePage
     Shell.NavBarIsVisible="False"
     x:Class="CineLog.Mobile.Pages.Auth.LoginPage"
     x:DataType="vm:LoginViewModel"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:helpers="clr-namespace:CineLog.Mobile.Helpers"
+    xmlns:pages="clr-namespace:CineLog.Mobile.Pages"
     xmlns:vm="clr-namespace:CineLog.Mobile.Core.ViewModels.Auth;assembly=CineLog.Mobile.Core"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
@@ -141,4 +142,4 @@
         </VerticalStackLayout>
     </ScrollView>
 
-</ContentPage>
+</pages:BasePage>

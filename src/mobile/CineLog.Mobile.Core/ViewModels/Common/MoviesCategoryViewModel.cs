@@ -48,6 +48,8 @@ namespace CineLog.Mobile.Core.ViewModels.Common
             Title = _category == MovieCategory.TopRated ? "Top Rated" : "New Releases";
         }
 
+        protected override Task LoadAsync() => Load();
+
         [RelayCommand]
         public async Task Load()
         {

@@ -1,9 +1,9 @@
 namespace CineLog.Mobile.Pages.MainPages;
 
-public partial class ListsPage : ContentPage
+public partial class ListsPage : BasePage
 {
-	public ListsPage()
-	{
-		InitializeComponent();
-	}
+    public ListsPage()
+    {
+        InitializeComponent();
+    }
 }

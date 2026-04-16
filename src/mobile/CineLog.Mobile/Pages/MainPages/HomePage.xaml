@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage
+<pages:BasePage
     x:Class="CineLog.Mobile.Pages.MainPages.HomePage"
     x:DataType="vm:HomeViewModel"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:helpers="clr-namespace:CineLog.Mobile.Helpers"
+    xmlns:pages="clr-namespace:CineLog.Mobile.Pages"
     xmlns:views="clr-namespace:CineLog.Mobile.Views.Home"
     xmlns:vm="clr-namespace:CineLog.Mobile.Core.ViewModels.Home;assembly=CineLog.Mobile.Core"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     Shell.NavBarIsVisible="False"
-    Title="{Binding Title}"
     BackgroundColor="#0B0D10">
 
     <ScrollView>
@@ -76,4 +76,4 @@
 
         </VerticalStackLayout>
     </ScrollView>
-</ContentPage>
+</pages:BasePage>

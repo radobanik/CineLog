@@ -1,9 +1,9 @@
 namespace CineLog.Mobile.Pages.MainPages;
 
-public partial class SearchPage : ContentPage
+public partial class SearchPage : BasePage
 {
-	public SearchPage()
-	{
-		InitializeComponent();
-	}
+    public SearchPage()
+    {
+        InitializeComponent();
+    }
 }

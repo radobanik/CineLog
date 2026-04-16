@@ -55,6 +55,14 @@ public partial class HomeViewModel : BaseViewModel
         Title = "Home";
     }
 
+    public override Task OnAppearingAsync()
+    {
+        if (HasLoadedOnce && (TopRatedMovies.Count > 0 || NewReleaseMovies.Count > 0))
+            return Task.CompletedTask;
+
+        return Load();
+    }
+
     [RelayCommand]
     public async Task Load()
     {
