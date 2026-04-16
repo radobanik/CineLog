@@ -23,14 +23,5 @@ public partial class MoviesCategoryPage : BasePage, IQueryAttributable
         _vm.SetCategory(category);
     }
 
-    protected override bool OnBackButtonPressed()
-    {
-        MainThread.BeginInvokeOnMainThread(async () =>
-        {
-            if (Shell.Current?.Navigation?.NavigationStack?.Count > 1)
-                await Shell.Current.GoToAsync("..");
-        });
 
-        return true;
-    }
 }
