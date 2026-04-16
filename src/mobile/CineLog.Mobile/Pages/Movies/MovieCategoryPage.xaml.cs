@@ -16,16 +16,9 @@ public partial class MoviesCategoryPage : BasePage, IQueryAttributable
 
     public void ApplyQueryAttributes(IDictionary<string, object> query)
     {
-        var category = MovieCategory.TopRated;
-
-        if (query.TryGetValue("category", out var categoryObj) && categoryObj is string rawCategory)
-        {
-            category = rawCategory switch
-            {
-                "new-releases" => MovieCategory.NewReleases,
-                _ => MovieCategory.TopRated
-            };
-        }
+        var category = query.TryGetValue("category", out var raw) && raw is string s && s == "new-releases"
+            ? MovieCategory.NewReleases
+            : MovieCategory.TopRated;
 
         _vm.SetCategory(category);
     }

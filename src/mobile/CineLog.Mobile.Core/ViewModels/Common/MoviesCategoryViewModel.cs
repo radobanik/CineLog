@@ -1,15 +1,10 @@
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Text;
 using CineLog.Mobile.Core.Models;
 using CineLog.Mobile.Core.Models.Home;
 using CineLog.Mobile.Core.Services.Interfaces;
 using CineLog.Mobile.Core.ViewModels.Base;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using static System.Net.WebRequestMethods;
-
 
 namespace CineLog.Mobile.Core.ViewModels.Common
 {
