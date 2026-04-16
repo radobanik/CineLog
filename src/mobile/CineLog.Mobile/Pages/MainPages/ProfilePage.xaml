@@ -3,6 +3,7 @@
     x:Class="CineLog.Mobile.Pages.MainPages.ProfilePage"
     x:DataType="vm:ProfileViewModel"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:controls="clr-namespace:CineLog.Mobile.Controls"
     xmlns:helpers="clr-namespace:CineLog.Mobile.Helpers"
     xmlns:home="clr-namespace:CineLog.Mobile.Core.Models.Home;assembly=CineLog.Mobile.Core"
     xmlns:review="clr-namespace:CineLog.Mobile.Core.Models.Review;assembly=CineLog.Mobile.Core"
@@ -105,7 +106,7 @@
                     </CollectionView.ItemsLayout>
                     <CollectionView.ItemTemplate>
                         <DataTemplate x:DataType="home:MovieItem">
-                            <MoviePosterCard
+                            <controls:MoviePosterCard
                                 Title="{Binding Title}"
                                 PosterPath="{Binding PosterPath}"
                                 RatingText="{Binding RatingText}" />
