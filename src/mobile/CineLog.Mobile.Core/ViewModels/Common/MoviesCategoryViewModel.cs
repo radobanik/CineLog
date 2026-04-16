@@ -31,16 +31,20 @@ namespace CineLog.Mobile.Core.ViewModels.Common
 
         public ObservableCollection<HomeMovieItem> Movies { get; } = [];
 
-        public MoviesCategoryViewModel(IHomeService homeService, IAlertService alerts)
+        private readonly IMovieNavigationContext _movieNav;
+
+        public MoviesCategoryViewModel(IHomeService homeService, IMovieNavigationContext movieNav, IAlertService alerts)
             : base(alerts)
         {
             _homeService = homeService;
+            _movieNav = movieNav;
         }
 
-        public void SetCategory(MovieCategory category)
+        public override Task OnAppearingAsync()
         {
-            _category = category;
+            _category = _movieNav.Category;
             Title = _category == MovieCategory.TopRated ? "Top Rated" : "New Releases";
+            return Load();
         }
 
         protected override Task LoadAsync() => Load();

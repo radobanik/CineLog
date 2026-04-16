@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using CineLog.Mobile.Core.Models;
 using CineLog.Mobile.Core.Models.Home;
 using CineLog.Mobile.Core.Navigation;
 using CineLog.Mobile.Core.Services.Interfaces;
@@ -16,6 +17,7 @@ public partial class HomeViewModel : BaseViewModel
     private readonly IAuthService _authService;
     private readonly IHomeService _homeService;
     private readonly INavigationService _navigation;
+    private readonly IMovieNavigationContext _movieNav;
 
     private int _topRatedCount = RailPageSize;
     private int _newReleaseCount = RailPageSize;
@@ -46,12 +48,13 @@ public partial class HomeViewModel : BaseViewModel
     public ObservableCollection<HomeMovieItem> TopRatedMovies { get; } = [];
     public ObservableCollection<HomeMovieItem> NewReleaseMovies { get; } = [];
 
-    public HomeViewModel(IAuthService authService, IHomeService homeService, INavigationService navigation, IAlertService alerts)
+    public HomeViewModel(IAuthService authService, IHomeService homeService, INavigationService navigation, IMovieNavigationContext movieNav, IAlertService alerts)
         : base(alerts)
     {
         _authService = authService;
         _homeService = homeService;
         _navigation = navigation;
+        _movieNav = movieNav;
         Title = "Home";
     }
 
@@ -189,19 +192,15 @@ public partial class HomeViewModel : BaseViewModel
     [RelayCommand]
     public Task GoToTopRated()
     {
-        return _navigation.NavigateToAsync(Routes.MoviesCategory, new Dictionary<string, object>
-        {
-            ["category"] = "top-rated"
-        });
+        _movieNav.Category = MovieCategory.TopRated;
+        return _navigation.NavigateToAsync(Routes.MoviesCategory);
     }
 
     [RelayCommand]
     public Task GoToNewReleases()
     {
-        return _navigation.NavigateToAsync(Routes.MoviesCategory, new Dictionary<string, object>
-        {
-            ["category"] = "new-releases"
-        });
+        _movieNav.Category = MovieCategory.NewReleases;
+        return _navigation.NavigateToAsync(Routes.MoviesCategory);
     }
 
     [RelayCommand]

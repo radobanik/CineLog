@@ -19,6 +19,7 @@ public static class ServiceCollectionExtensions
 
     private static IServiceCollection AddMauiServices(this IServiceCollection services)
     {
+        services.AddSingleton<IMovieNavigationContext, MovieNavigationContext>();
         services.AddSingleton<ISecureStorageService, MauiSecureStorageService>();
         services.AddSingleton<INavigationService, ShellNavigationService>();
         services.AddSingleton<IAlertService, MauiAlertService>();
