@@ -31,6 +31,7 @@
                 x:Name="RailScrollView"
                 Grid.Column="0"
                 Orientation="Horizontal"
+                HorizontalScrollBarVisibility="Never"
                 Scrolled="OnRailScrolled"
                 Margin="0,0,0,10">
 
