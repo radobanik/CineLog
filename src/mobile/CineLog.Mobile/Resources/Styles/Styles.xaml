@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
+    <!--  Shell  -->
+
+    <Style ApplyToDerivedTypes="True" TargetType="Shell">
+        <Setter Property="Shell.TabBarBackgroundColor" Value="{StaticResource Primary}" />
+        <Setter Property="Shell.TabBarForegroundColor" Value="{StaticResource OnPrimary}" />
+        <Setter Property="Shell.TabBarTitleColor" Value="{StaticResource OnPrimary}" />
+        <Setter Property="Shell.TabBarUnselectedColor" Value="{StaticResource TabBarUnselected}" />
+    </Style>
+
     <!--  Pages  -->
 
     <Style ApplyToDerivedTypes="True" TargetType="ContentPage">

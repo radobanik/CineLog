@@ -20,12 +20,7 @@
 
     <!-- Main content, visible after login -->
 
-    <TabBar
-        Route="MainTabs"
-        Shell.TabBarBackgroundColor="#00CC44"
-        Shell.TabBarForegroundColor="White"
-        Shell.TabBarTitleColor="White"
-        Shell.TabBarUnselectedColor="#D9D9D9">
+    <TabBar Route="MainTabs">
 
         <Tab
             Title="Home"
