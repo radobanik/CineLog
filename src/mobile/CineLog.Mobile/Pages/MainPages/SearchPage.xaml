@@ -6,7 +6,6 @@
     xmlns:controls="clr-namespace:CineLog.Mobile.Controls"
     xmlns:helpers="clr-namespace:CineLog.Mobile.Helpers"
     xmlns:home="clr-namespace:CineLog.Mobile.Core.Models.Home;assembly=CineLog.Mobile.Core"
-    xmlns:search="clr-namespace:CineLog.Mobile.Core.Models.Search;assembly=CineLog.Mobile.Core"
     xmlns:pages="clr-namespace:CineLog.Mobile.Pages"
     xmlns:vm="clr-namespace:CineLog.Mobile.Core.ViewModels.Search;assembly=CineLog.Mobile.Core"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
@@ -32,7 +31,7 @@
                         x:Name="SearchEntry"
                         Grid.Column="1"
                         Style="{StaticResource CleanEntry}"
-                        Placeholder="Movies, people..."
+                        Placeholder="Search films..."
                         Text="{Binding SearchQuery}"
                         Margin="10,0" />
                     <Label
@@ -68,7 +67,7 @@
                 <Label
                     Style="{StaticResource BodyMediumLabel}"
                     HorizontalOptions="Center"
-                    Text="Search for movies and people" />
+                    Text="Search for films" />
             </VerticalStackLayout>
 
             <ActivityIndicator
@@ -77,61 +76,21 @@
                 IsRunning="{Binding IsBusy}"
                 IsVisible="{Binding IsBusy}" />
 
-            <ScrollView IsVisible="{Binding HasResults}">
-                <VerticalStackLayout Spacing="20" Padding="0,0,0,24">
-
-                    <VerticalStackLayout Spacing="10" IsVisible="{Binding HasMovies}">
-                        <Label Style="{StaticResource SectionHeaderLabel}" Text="Movies" />
-                        <CollectionView ItemsSource="{Binding Movies}">
-                            <CollectionView.ItemsLayout>
-                                <LinearItemsLayout Orientation="Horizontal" ItemSpacing="10" />
-                            </CollectionView.ItemsLayout>
-                            <CollectionView.ItemTemplate>
-                                <DataTemplate x:DataType="home:MovieItem">
-                                    <controls:MoviePosterCard
-                                        Title="{Binding Title}"
-                                        PosterPath="{Binding PosterPath}"
-                                        RatingText="{Binding RatingText}" />
-                                </DataTemplate>
-                            </CollectionView.ItemTemplate>
-                        </CollectionView>
-                    </VerticalStackLayout>
-
-                    <VerticalStackLayout Spacing="10" IsVisible="{Binding HasPeople}">
-                        <Label Style="{StaticResource SectionHeaderLabel}" Text="People" />
-                        <CollectionView ItemsSource="{Binding People}">
-                            <CollectionView.ItemsLayout>
-                                <LinearItemsLayout Orientation="Horizontal" ItemSpacing="10" />
-                            </CollectionView.ItemsLayout>
-                            <CollectionView.ItemTemplate>
-                                <DataTemplate x:DataType="search:PersonItem">
-                                    <VerticalStackLayout WidthRequest="90" Spacing="6">
-                                        <Border
-                                            HeightRequest="90"
-                                            WidthRequest="90"
-                                            BackgroundColor="{StaticResource Surface}"
-                                            StrokeThickness="0">
-                                            <Border.StrokeShape>
-                                                <RoundRectangle CornerRadius="45" />
-                                            </Border.StrokeShape>
-                                            <Image
-                                                Source="{Binding ProfilePath}"
-                                                Aspect="AspectFill" />
-                                        </Border>
-                                        <Label
-                                            Style="{StaticResource PosterTitleLabel}"
-                                            Text="{Binding Name}"
-                                            HorizontalTextAlignment="Center"
-                                            MaxLines="2"
-                                            LineBreakMode="TailTruncation" />
-                                    </VerticalStackLayout>
-                                </DataTemplate>
-                            </CollectionView.ItemTemplate>
-                        </CollectionView>
-                    </VerticalStackLayout>
-
-                </VerticalStackLayout>
-            </ScrollView>
+            <CollectionView
+                ItemsSource="{Binding Movies}"
+                IsVisible="{Binding HasResults}">
+                <CollectionView.ItemsLayout>
+                    <GridItemsLayout Orientation="Vertical" Span="3" HorizontalItemSpacing="10" VerticalItemSpacing="10" />
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="home:MovieItem">
+                        <controls:MoviePosterCard
+                            Title="{Binding Title}"
+                            PosterPath="{Binding PosterPath}"
+                            RatingText="{Binding RatingText}" />
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
 
             <VerticalStackLayout
                 VerticalOptions="Center"
