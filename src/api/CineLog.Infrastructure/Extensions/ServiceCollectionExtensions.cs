@@ -10,6 +10,7 @@ using CineLog.Infrastructure.Data;
 using CineLog.Infrastructure.Notifications;
 using CineLog.Infrastructure.Repositories;
 using CineLog.Infrastructure.Search;
+using Microsoft.Extensions.Hosting;
 using CineLog.Infrastructure.Services;
 using EFCoreSecondLevelCacheInterceptor;
 using Elastic.Clients.Elasticsearch;
@@ -91,6 +92,7 @@ public static class ServiceCollectionExtensions
         var esSettings = new ElasticsearchClientSettings(new Uri(esUri));
         services.AddSingleton(new ElasticsearchClient(esSettings));
         services.AddScoped<IElasticSearchService, ElasticSearchService>();
+        services.AddHostedService<ElasticSyncBackgroundService>();
 
         // Blob storage (MinIO)
         services.Configure<BlobStorageOptions>(configuration.GetSection("BlobStorage"));

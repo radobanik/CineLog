@@ -1,6 +1,8 @@
 using CineLog.Application.Common;
 using Elastic.Clients.Elasticsearch;
+using Elastic.Clients.Elasticsearch.Core.Bulk;
 using Elastic.Clients.Elasticsearch.QueryDsl;
+using Microsoft.Extensions.Logging;
 
 namespace CineLog.Infrastructure.Search;
 
@@ -10,8 +12,13 @@ public class ElasticSearchService : IElasticSearchService
     private const string PeopleIndex = "cinelog-people";
 
     private readonly ElasticsearchClient _client;
+    private readonly ILogger<ElasticSearchService> _logger;
 
-    public ElasticSearchService(ElasticsearchClient client) => _client = client;
+    public ElasticSearchService(ElasticsearchClient client, ILogger<ElasticSearchService> logger)
+    {
+        _client = client;
+        _logger = logger;
+    }
 
     public async Task EnsureIndicesExistAsync(CancellationToken ct = default)
     {
@@ -122,9 +129,15 @@ public class ElasticSearchService : IElasticSearchService
         var docList = docs.ToList();
         if (docList.Count == 0) return;
 
-        await _client.BulkAsync(b => b
-            .Index(MoviesIndex)
-            .IndexMany(docList, (op, doc) => op.Id(doc.Id)), ct);
+        var operations = docList
+            .Select(doc => (IBulkOperation)new BulkIndexOperation<MovieSearchDocument>(doc) { Id = doc.Id })
+            .ToList();
+
+        var response = await _client.BulkAsync(new BulkRequest(MoviesIndex) { Operations = operations }, ct);
+
+        if (response.Errors)
+            foreach (var item in response.ItemsWithErrors)
+                _logger.LogError("ES bulk movie index error [{Id}]: {Error}", item.Id, item.Error?.Reason);
     }
 
     public async Task BulkIndexPeopleAsync(IEnumerable<PersonSearchDocument> docs, CancellationToken ct = default)
@@ -132,8 +145,14 @@ public class ElasticSearchService : IElasticSearchService
         var docList = docs.ToList();
         if (docList.Count == 0) return;
 
-        await _client.BulkAsync(b => b
-            .Index(PeopleIndex)
-            .IndexMany(docList, (op, doc) => op.Id(doc.Id)), ct);
+        var operations = docList
+            .Select(doc => (IBulkOperation)new BulkIndexOperation<PersonSearchDocument>(doc) { Id = doc.Id })
+            .ToList();
+
+        var response = await _client.BulkAsync(new BulkRequest(PeopleIndex) { Operations = operations }, ct);
+
+        if (response.Errors)
+            foreach (var item in response.ItemsWithErrors)
+                _logger.LogError("ES bulk people index error [{Id}]: {Error}", item.Id, item.Error?.Reason);
     }
 }
