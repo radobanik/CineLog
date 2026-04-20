@@ -26,7 +26,23 @@
                     Padding="10" />
             </Grid>
 
-            <Grid ColumnDefinitions="Auto, *" ColumnSpacing="15">
+            <!--  Profile header: skeleton  -->
+            <Grid
+                ColumnDefinitions="Auto, *"
+                ColumnSpacing="15"
+                IsVisible="{Binding IsBusy}">
+                <controls:SkeletonView WidthRequest="80" HeightRequest="80" CornerRadius="40" />
+                <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="8">
+                    <controls:SkeletonView HeightRequest="20" WidthRequest="140" CornerRadius="4" />
+                    <controls:SkeletonView HeightRequest="14" WidthRequest="200" CornerRadius="4" />
+                </VerticalStackLayout>
+            </Grid>
+
+            <!--  Profile header: real content  -->
+            <Grid
+                ColumnDefinitions="Auto, *"
+                ColumnSpacing="15"
+                IsVisible="{Binding IsNotBusy}">
                 <Border
                     WidthRequest="80"
                     HeightRequest="80"
@@ -47,15 +63,18 @@
                 </VerticalStackLayout>
             </Grid>
 
-            <ActivityIndicator
-                HorizontalOptions="Center"
-                IsRunning="{Binding IsBusy}"
+            <!--  Stats: skeleton  -->
+            <controls:SkeletonView
+                HeightRequest="72"
+                CornerRadius="10"
                 IsVisible="{Binding IsBusy}" />
 
+            <!--  Stats: real content  -->
             <Border
                 Padding="15"
                 BackgroundColor="{StaticResource Surface}"
-                StrokeThickness="0">
+                StrokeThickness="0"
+                IsVisible="{Binding IsNotBusy}">
                 <Border.StrokeShape>
                     <RoundRectangle CornerRadius="10" />
                 </Border.StrokeShape>
@@ -91,9 +110,15 @@
                 </Grid>
             </Border>
 
+            <!--  Favorite Films  -->
             <VerticalStackLayout Spacing="10">
                 <Label Style="{StaticResource SectionHeaderLabel}" Text="FAVORITE FILMS" />
-                <CollectionView ItemsSource="{Binding FavouriteMovies}">
+
+                <!--  Skeleton  -->
+                <controls:FavouriteFilmsSkeleton IsVisible="{Binding IsBusy}" />
+
+                <!--  Real content  -->
+                <CollectionView ItemsSource="{Binding FavouriteMovies}" IsVisible="{Binding IsNotBusy}">
                     <CollectionView.EmptyView>
                         <Label
                             Style="{StaticResource CaptionLabel}"
@@ -115,6 +140,7 @@
                 </CollectionView>
             </VerticalStackLayout>
 
+            <!--  Recent Diary  -->
             <VerticalStackLayout Spacing="15">
                 <Grid ColumnDefinitions="*, Auto">
                     <Label Style="{StaticResource SectionHeaderLabel}" Text="RECENT DIARY" />
@@ -123,7 +149,12 @@
                         Style="{StaticResource AccentLabel}"
                         Text="View all" />
                 </Grid>
-                <CollectionView ItemsSource="{Binding Reviews}">
+
+                <!--  Skeleton  -->
+                <controls:DiaryListSkeleton IsVisible="{Binding IsBusy}" />
+
+                <!--  Real content  -->
+                <CollectionView ItemsSource="{Binding Reviews}" IsVisible="{Binding IsNotBusy}">
                     <CollectionView.EmptyView>
                         <Label
                             Style="{StaticResource CaptionLabel}"
