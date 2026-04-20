@@ -8,5 +8,8 @@ public partial class SearchPage : BasePage
     {
         InitializeComponent();
         BindingContext = vm;
+
+        SearchEntry.Focused += (_, _) => Shell.SetTabBarIsVisible(this, false);
+        SearchEntry.Unfocused += (_, _) => Shell.SetTabBarIsVisible(this, true);
     }
 }

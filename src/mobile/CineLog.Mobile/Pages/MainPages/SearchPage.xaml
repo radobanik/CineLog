@@ -29,6 +29,7 @@
                         TextColor="{StaticResource TextSecondary}"
                         VerticalOptions="Center" />
                     <Entry
+                        x:Name="SearchEntry"
                         Grid.Column="1"
                         Style="{StaticResource CleanEntry}"
                         Placeholder="Movies, people..."
