@@ -6,6 +6,7 @@ using CineLog.Mobile.Core.ViewModels.Auth;
 using CineLog.Mobile.Core.ViewModels.Common;
 using CineLog.Mobile.Core.ViewModels.Home;
 using CineLog.Mobile.Core.ViewModels.Profile;
+using CineLog.Mobile.Core.ViewModels.Search;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace CineLog.Mobile.Core.Extensions;
@@ -52,6 +53,9 @@ public static class ServiceCollectionExtensions
         services.AddTransient<IDashboardClient>(sp =>
             new DashboardClient(sp.GetRequiredService<IHttpClientFactory>().CreateClient("CineLogApi")));
 
+        services.AddTransient<ISearchClient>(sp =>
+            new SearchClient(sp.GetRequiredService<IHttpClientFactory>().CreateClient("CineLogApi")));
+
         return services;
     }
 
@@ -60,6 +64,7 @@ public static class ServiceCollectionExtensions
         services.AddTransient<IAuthService, AuthService>();
         services.AddTransient<IHomeService, HomeService>();
         services.AddTransient<IProfileService, ProfileService>();
+        services.AddTransient<ISearchService, SearchService>();
         return services;
     }
 
@@ -70,6 +75,7 @@ public static class ServiceCollectionExtensions
         services.AddTransient<HomeViewModel>();
         services.AddTransient<MoviesCategoryViewModel>();
         services.AddTransient<ProfileViewModel>();
+        services.AddTransient<SearchViewModel>();
         return services;
     }
 }

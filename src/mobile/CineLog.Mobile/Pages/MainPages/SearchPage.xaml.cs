@@ -1,9 +1,12 @@
+using CineLog.Mobile.Core.ViewModels.Search;
+
 namespace CineLog.Mobile.Pages.MainPages;
 
 public partial class SearchPage : BasePage
 {
-    public SearchPage()
+    public SearchPage(SearchViewModel vm)
     {
         InitializeComponent();
+        BindingContext = vm;
     }
 }
