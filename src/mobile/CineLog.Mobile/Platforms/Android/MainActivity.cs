@@ -4,6 +4,7 @@ using Android.OS;
 using Android.Views;
 using Android.Views.InputMethods;
 using Android.Widget;
+using Android.Window;
 using AndroidX.Core.View;
 using AView = Android.Views.View;
 
@@ -24,6 +25,9 @@ public class MainActivity : MauiAppCompatActivity
 {
     protected override void OnCreate(Bundle? savedInstanceState)
     {
+        if (OperatingSystem.IsAndroidVersionAtLeast(31))
+            SplashScreen.SetOnExitAnimationListener(new SplashExitListener());
+
         WindowCompat.SetDecorFitsSystemWindows(Window!, true);
         base.OnCreate(savedInstanceState);
         WindowCompat.SetDecorFitsSystemWindows(Window!, false);
@@ -99,5 +103,10 @@ public class MainActivity : MauiAppCompatActivity
     {
         public WindowInsetsCompat? OnApplyWindowInsets(AView? v, WindowInsetsCompat? insets)
             => handler(insets);
+    }
+
+    private sealed class SplashExitListener : Java.Lang.Object, ISplashScreenOnExitAnimationListener
+    {
+        public void OnSplashScreenExit(SplashScreenView view) => view.Remove();
     }
 }
