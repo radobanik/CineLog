@@ -70,11 +70,18 @@
                     Text="Search for films" />
             </VerticalStackLayout>
 
-            <ActivityIndicator
-                VerticalOptions="Center"
-                HorizontalOptions="Center"
-                IsRunning="{Binding IsBusy}"
-                IsVisible="{Binding IsBusy}" />
+            <CollectionView
+                x:Name="SkeletonGrid"
+                IsVisible="{Binding ShowSkeleton}">
+                <CollectionView.ItemsLayout>
+                    <GridItemsLayout Orientation="Vertical" Span="3" HorizontalItemSpacing="10" VerticalItemSpacing="10" />
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <controls:SkeletonMoviePosterCard />
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
 
             <CollectionView
                 ItemsSource="{Binding Movies}"

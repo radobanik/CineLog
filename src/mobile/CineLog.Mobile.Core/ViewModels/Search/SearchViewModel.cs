@@ -35,7 +35,8 @@ public partial class SearchViewModel : BaseViewModel
 
     public bool ShowEmptyState => string.IsNullOrWhiteSpace(SearchQuery);
     public bool HasQuery => !string.IsNullOrWhiteSpace(SearchQuery);
-    public bool HasResults => HasMovies;
+    public bool HasResults => HasMovies && !IsBusy;
+    public bool ShowSkeleton => IsBusy;
     public bool ShowNoResults => HasSearched && !IsBusy && !HasResults && !ShowEmptyState;
 
     public ObservableCollection<MovieItem> Movies { get; } = [];
@@ -105,6 +106,8 @@ public partial class SearchViewModel : BaseViewModel
             }
 
             IsBusy = true;
+            OnPropertyChanged(nameof(ShowSkeleton));
+            OnPropertyChanged(nameof(HasResults));
             _currentPage = 1;
             var (movies, hasMore) = await _searchService.SearchMoviesAsync(query, _currentPage, cts.Token);
 
@@ -124,7 +127,11 @@ public partial class SearchViewModel : BaseViewModel
         finally
         {
             if (!cts.IsCancellationRequested)
+            {
                 IsBusy = false;
+                OnPropertyChanged(nameof(ShowSkeleton));
+                OnPropertyChanged(nameof(HasResults));
+            }
         }
     }
 }
