@@ -11,6 +11,7 @@ public partial class SearchViewModel : BaseViewModel
 {
     private readonly ISearchService _searchService;
     private CancellationTokenSource? _searchCts;
+    private int _currentPage;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(ShowEmptyState))]
@@ -25,6 +26,12 @@ public partial class SearchViewModel : BaseViewModel
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(ShowNoResults))]
     private bool _hasSearched;
+
+    [ObservableProperty]
+    private bool _isLoadingMore;
+
+    [ObservableProperty]
+    private bool _canLoadMore;
 
     public bool ShowEmptyState => string.IsNullOrWhiteSpace(SearchQuery);
     public bool HasQuery => !string.IsNullOrWhiteSpace(SearchQuery);
@@ -50,6 +57,33 @@ public partial class SearchViewModel : BaseViewModel
         SearchQuery = string.Empty;
     }
 
+    [RelayCommand]
+    private async Task LoadMore()
+    {
+        if (IsLoadingMore || !CanLoadMore || IsBusy) return;
+
+        try
+        {
+            IsLoadingMore = true;
+            _currentPage++;
+            var (movies, hasMore) = await _searchService.SearchMoviesAsync(SearchQuery, _currentPage);
+
+            foreach (var movie in movies)
+                Movies.Add(movie);
+
+            CanLoadMore = hasMore;
+        }
+        catch (Exception ex)
+        {
+            _currentPage--;
+            await HandleErrorAsync(ex);
+        }
+        finally
+        {
+            IsLoadingMore = false;
+        }
+    }
+
     private async Task PerformSearchAsync(string query)
     {
         _searchCts?.Cancel();
@@ -65,17 +99,21 @@ public partial class SearchViewModel : BaseViewModel
                 Movies.Clear();
                 HasMovies = false;
                 HasSearched = false;
+                CanLoadMore = false;
+                _currentPage = 0;
                 return;
             }
 
             IsBusy = true;
-            var movies = await _searchService.SearchMoviesAsync(query, cts.Token);
+            _currentPage = 1;
+            var (movies, hasMore) = await _searchService.SearchMoviesAsync(query, _currentPage, cts.Token);
 
             Movies.Clear();
             foreach (var movie in movies)
                 Movies.Add(movie);
 
             HasMovies = Movies.Count > 0;
+            CanLoadMore = hasMore;
             HasSearched = true;
         }
         catch (OperationCanceledException) { }

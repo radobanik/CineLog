@@ -78,7 +78,9 @@
 
             <CollectionView
                 ItemsSource="{Binding Movies}"
-                IsVisible="{Binding HasResults}">
+                IsVisible="{Binding HasResults}"
+                RemainingItemsThreshold="4"
+                RemainingItemsThresholdReachedCommand="{Binding LoadMoreCommand}">
                 <CollectionView.ItemsLayout>
                     <GridItemsLayout Orientation="Vertical" Span="3" HorizontalItemSpacing="10" VerticalItemSpacing="10" />
                 </CollectionView.ItemsLayout>
@@ -90,6 +92,12 @@
                             RatingText="{Binding RatingText}" />
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
+                <CollectionView.Footer>
+                    <ActivityIndicator
+                        IsRunning="{Binding IsLoadingMore}"
+                        IsVisible="{Binding IsLoadingMore}"
+                        Margin="0,8" />
+                </CollectionView.Footer>
             </CollectionView>
 
             <VerticalStackLayout
