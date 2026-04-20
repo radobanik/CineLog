@@ -26,7 +26,12 @@
                     Padding="10" />
             </Grid>
 
-            <Grid ColumnDefinitions="Auto, *" ColumnSpacing="15">
+            <controls:ProfileHeaderSkeleton IsVisible="{Binding IsBusy}" />
+
+            <Grid
+                ColumnDefinitions="Auto, *"
+                ColumnSpacing="15"
+                IsVisible="{Binding IsNotBusy}">
                 <Border
                     WidthRequest="80"
                     HeightRequest="80"
@@ -47,15 +52,13 @@
                 </VerticalStackLayout>
             </Grid>
 
-            <ActivityIndicator
-                HorizontalOptions="Center"
-                IsRunning="{Binding IsBusy}"
-                IsVisible="{Binding IsBusy}" />
+            <controls:ProfileStatsSkeleton IsVisible="{Binding IsBusy}" />
 
             <Border
                 Padding="15"
                 BackgroundColor="{StaticResource Surface}"
-                StrokeThickness="0">
+                StrokeThickness="0"
+                IsVisible="{Binding IsNotBusy}">
                 <Border.StrokeShape>
                     <RoundRectangle CornerRadius="10" />
                 </Border.StrokeShape>
@@ -93,7 +96,10 @@
 
             <VerticalStackLayout Spacing="10">
                 <Label Style="{StaticResource SectionHeaderLabel}" Text="FAVORITE FILMS" />
-                <CollectionView ItemsSource="{Binding FavouriteMovies}">
+
+                <controls:FavouriteFilmsSkeleton IsVisible="{Binding IsBusy}" />
+
+                <CollectionView ItemsSource="{Binding FavouriteMovies}" IsVisible="{Binding IsNotBusy}">
                     <CollectionView.EmptyView>
                         <Label
                             Style="{StaticResource CaptionLabel}"
@@ -123,7 +129,10 @@
                         Style="{StaticResource AccentLabel}"
                         Text="View all" />
                 </Grid>
-                <CollectionView ItemsSource="{Binding Reviews}">
+
+                <controls:DiaryListSkeleton IsVisible="{Binding IsBusy}" />
+
+                <CollectionView ItemsSource="{Binding Reviews}" IsVisible="{Binding IsNotBusy}">
                     <CollectionView.EmptyView>
                         <Label
                             Style="{StaticResource CaptionLabel}"

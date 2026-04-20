@@ -26,7 +26,14 @@
             </Label>
         </Grid>
 
-        <Grid ColumnDefinitions="*, Auto" ColumnSpacing="10">
+        <controls:MovieCarouselSkeleton
+            Margin="0,0,0,10"
+            IsVisible="{Binding Source={x:Reference This}, Path=IsLoading}" />
+
+        <Grid
+            ColumnDefinitions="*, Auto"
+            ColumnSpacing="10"
+            IsVisible="{Binding Source={x:Reference This}, Path=IsLoading, Converter={StaticResource InvertedBoolConverter}}">
             <ScrollView
                 x:Name="RailScrollView"
                 Grid.Column="0"

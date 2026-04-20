@@ -42,10 +42,6 @@
                 Style="{StaticResource PageTitleLabel}"
                 Text="Movies" />
 
-            <ActivityIndicator
-                IsRunning="{Binding IsBusy}"
-                IsVisible="{Binding IsBusy}" />
-
             <Label
                 Style="{StaticResource CaptionLabel}"
                 IsVisible="{Binding HasError}"
@@ -56,7 +52,8 @@
                 ItemsSource="{Binding TopRatedMovies}"
                 LoadMoreCommand="{Binding LoadMoreTopRatedCommand}"
                 SeeAllCommand="{Binding GoToTopRatedCommand}"
-                IsLoadingMore="{Binding IsLoadingMoreTopRated}" />
+                IsLoadingMore="{Binding IsLoadingMoreTopRated}"
+                IsLoading="{Binding IsBusy}" />
 
             <BoxView Style="{StaticResource ListDivider}" />
 
@@ -65,7 +62,8 @@
                 ItemsSource="{Binding NewReleaseMovies}"
                 LoadMoreCommand="{Binding LoadMoreNewReleasesCommand}"
                 SeeAllCommand="{Binding GoToNewReleasesCommand}"
-                IsLoadingMore="{Binding IsLoadingMoreNewReleases}" />
+                IsLoadingMore="{Binding IsLoadingMoreNewReleases}"
+                IsLoading="{Binding IsBusy}" />
 
         </VerticalStackLayout>
     </ScrollView>

@@ -25,6 +25,9 @@ public partial class MovieCarousel : ContentView
     public static readonly BindableProperty ShowSeeAllProperty =
         BindableProperty.Create(nameof(ShowSeeAll), typeof(bool), typeof(MovieCarousel), true);
 
+    public static readonly BindableProperty IsLoadingProperty =
+        BindableProperty.Create(nameof(IsLoading), typeof(bool), typeof(MovieCarousel), false);
+
     public MovieCarousel()
     {
         InitializeComponent();
@@ -64,6 +67,12 @@ public partial class MovieCarousel : ContentView
     {
         get => (bool)GetValue(ShowSeeAllProperty);
         set => SetValue(ShowSeeAllProperty, value);
+    }
+
+    public bool IsLoading
+    {
+        get => (bool)GetValue(IsLoadingProperty);
+        set => SetValue(IsLoadingProperty, value);
     }
 
     private void OnRailScrolled(object? sender, ScrolledEventArgs e)
