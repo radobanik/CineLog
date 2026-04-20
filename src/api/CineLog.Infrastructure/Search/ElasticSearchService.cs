@@ -56,20 +56,14 @@ public class ElasticSearchService : IElasticSearchService
                 .Bool(b =>
                 {
                     b.Should(
-                        s => s.MultiMatch(m => m
+                        s => s.Match(m => m
+                            .Field("title")
                             .Query(query)
-                            .Fields(new[] { "title^3", "originalTitle^2", "overview", "genres" })
                             .Fuzziness(new Fuzziness("AUTO"))
                         ),
                         s => s.MatchPhrasePrefix(m => m
                             .Field("title")
                             .Query(query)
-                            .Boost(3)
-                        ),
-                        s => s.MatchPhrasePrefix(m => m
-                            .Field("originalTitle")
-                            .Query(query)
-                            .Boost(2)
                         )
                     );
                     b.MinimumShouldMatch(1);
