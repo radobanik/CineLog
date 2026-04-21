@@ -15,6 +15,14 @@ public static class MauiProgram
         builder
             .UseMauiApp<App>()
             .UseMauiCommunityToolkit()
+            .ConfigureMauiHandlers(handlers =>
+            {
+#if ANDROID
+                handlers.AddHandler<Shell, CineLog.Mobile.Platforms.Android.CustomShellRenderer>();
+#elif IOS
+                handlers.AddHandler<Shell, CineLog.Mobile.Platforms.iOS.CustomShellRenderer>();
+#endif
+            })
             .ConfigureFonts(fonts =>
             {
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
