@@ -8,38 +8,11 @@
     xmlns:pages="clr-namespace:CineLog.Mobile.Pages"
     xmlns:vm="clr-namespace:CineLog.Mobile.Core.ViewModels.Home;assembly=CineLog.Mobile.Core"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    Shell.NavBarIsVisible="False">
+    ShowMenuButton="True"
+    Title="Movies">
 
     <ScrollView>
-        <VerticalStackLayout Padding="16,20,16,24" Spacing="18">
-
-            <HorizontalStackLayout Spacing="10" VerticalOptions="Center">
-                <Border
-                    BackgroundColor="{StaticResource Primary}"
-                    HeightRequest="28"
-                    StrokeThickness="0"
-                    WidthRequest="28">
-                    <Border.StrokeShape>
-                        <RoundRectangle CornerRadius="8" />
-                    </Border.StrokeShape>
-                    <Label
-                        FontFamily="FASolid"
-                        FontSize="16"
-                        HorizontalOptions="Center"
-                        Text="{x:Static helpers:FontAwesomeIcons.Film}"
-                        TextColor="{StaticResource OnPrimary}"
-                        VerticalOptions="Center" />
-                </Border>
-
-                <Label
-                    Style="{StaticResource HeadlineLargeLabel}"
-                    Text="CineLog"
-                    VerticalTextAlignment="Center" />
-            </HorizontalStackLayout>
-
-            <Label
-                Style="{StaticResource PageTitleLabel}"
-                Text="Movies" />
+        <VerticalStackLayout Padding="16,16,16,24" Spacing="18">
 
             <Label
                 Style="{StaticResource CaptionLabel}"
@@ -66,4 +39,5 @@
 
         </VerticalStackLayout>
     </ScrollView>
+
 </pages:BasePage>
