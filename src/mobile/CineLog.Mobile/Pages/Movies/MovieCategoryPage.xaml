@@ -7,12 +7,7 @@
     xmlns:models="clr-namespace:CineLog.Mobile.Core.Models.Home;assembly=CineLog.Mobile.Core"
     xmlns:pages="clr-namespace:CineLog.Mobile.Pages"
     xmlns:vm="clr-namespace:CineLog.Mobile.Core.ViewModels.Common;assembly=CineLog.Mobile.Core"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    BackgroundColor="{StaticResource BackgroundDeep}"
-    Shell.BackgroundColor="{StaticResource Primary}"
-    Shell.ForegroundColor="{StaticResource OnPrimary}"
-    Shell.NavBarIsVisible="True"
-    Shell.TitleColor="{StaticResource OnPrimary}">
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
     <Grid>
         <controls:MovieGridSkeleton IsVisible="{Binding IsBusy}" />
@@ -51,4 +46,5 @@
             </CollectionView.Footer>
         </CollectionView>
     </Grid>
+
 </pages:BasePage>

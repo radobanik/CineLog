@@ -9,49 +9,39 @@
     xmlns:pages="clr-namespace:CineLog.Mobile.Pages"
     xmlns:vm="clr-namespace:CineLog.Mobile.Core.ViewModels.Search;assembly=CineLog.Mobile.Core"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    BackgroundColor="{StaticResource BackgroundDeep}"
-    Shell.NavBarIsVisible="False">
+    ShowMenuButton="True"
+    Title="Search">
 
-    <Grid RowDefinitions="Auto, *" Padding="16,20,16,0">
+    <Grid RowDefinitions="Auto, *">
 
-        <VerticalStackLayout Grid.Row="0" Spacing="12" Margin="0,0,0,16">
+        <Border Grid.Row="0" Style="{StaticResource InputFieldBorder}" Margin="16,12">
+            <Grid ColumnDefinitions="Auto, *, Auto" Padding="16,0">
+                <Label
+                    Grid.Column="0"
+                    Style="{StaticResource SecondaryIconLabel}"
+                    Text="{x:Static helpers:FontAwesomeIcons.Search}"
+                    VerticalOptions="Center" />
+                <Entry
+                    x:Name="SearchEntry"
+                    Grid.Column="1"
+                    Style="{StaticResource CleanEntry}"
+                    Placeholder="Search films..."
+                    Text="{Binding SearchQuery}"
+                    Margin="10,0" />
+                <Label
+                    Grid.Column="2"
+                    Style="{StaticResource SecondaryIconLabel}"
+                    Text="{x:Static helpers:FontAwesomeIcons.Times}"
+                    VerticalOptions="Center"
+                    IsVisible="{Binding HasQuery}">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding ClearCommand}" />
+                    </Label.GestureRecognizers>
+                </Label>
+            </Grid>
+        </Border>
 
-            <Label Style="{StaticResource PageTitleLabel}" Text="Search" />
-
-            <Border Style="{StaticResource InputFieldBorder}">
-                <Grid ColumnDefinitions="Auto, *, Auto" Padding="16,0">
-                    <Label
-                        Grid.Column="0"
-                        FontFamily="FASolid"
-                        FontSize="15"
-                        Text="{x:Static helpers:FontAwesomeIcons.Search}"
-                        TextColor="{StaticResource TextSecondary}"
-                        VerticalOptions="Center" />
-                    <Entry
-                        x:Name="SearchEntry"
-                        Grid.Column="1"
-                        Style="{StaticResource CleanEntry}"
-                        Placeholder="Search films..."
-                        Text="{Binding SearchQuery}"
-                        Margin="10,0" />
-                    <Label
-                        Grid.Column="2"
-                        FontFamily="FASolid"
-                        FontSize="15"
-                        Text="{x:Static helpers:FontAwesomeIcons.Times}"
-                        TextColor="{StaticResource TextSecondary}"
-                        VerticalOptions="Center"
-                        IsVisible="{Binding HasQuery}">
-                        <Label.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding ClearCommand}" />
-                        </Label.GestureRecognizers>
-                    </Label>
-                </Grid>
-            </Border>
-
-        </VerticalStackLayout>
-
-        <Grid Grid.Row="1">
+        <Grid Grid.Row="1" Padding="16,0">
 
             <VerticalStackLayout
                 VerticalOptions="Center"
@@ -59,11 +49,10 @@
                 Spacing="12"
                 IsVisible="{Binding ShowEmptyState}">
                 <Label
-                    FontFamily="FASolid"
+                    Style="{StaticResource PrimaryIconLabel}"
                     FontSize="40"
                     HorizontalOptions="Center"
-                    Text="{x:Static helpers:FontAwesomeIcons.Search}"
-                    TextColor="{StaticResource Primary}" />
+                    Text="{x:Static helpers:FontAwesomeIcons.Search}" />
                 <Label
                     Style="{StaticResource BodyMediumLabel}"
                     HorizontalOptions="Center"
@@ -110,18 +99,20 @@
             <VerticalStackLayout
                 VerticalOptions="Center"
                 HorizontalOptions="Center"
-                Spacing="8"
+                Spacing="12"
                 IsVisible="{Binding ShowNoResults}">
+                <Label
+                    Style="{StaticResource PrimaryIconLabel}"
+                    FontSize="40"
+                    HorizontalOptions="Center"
+                    Text="{x:Static helpers:FontAwesomeIcons.SearchMinus}" />
                 <Label
                     Style="{StaticResource BodyMediumLabel}"
                     HorizontalOptions="Center"
                     Text="No results found" />
-                <Label
-                    Style="{StaticResource CaptionLabel}"
-                    HorizontalOptions="Center"
-                    Text="Try a different search term" />
             </VerticalStackLayout>
 
         </Grid>
     </Grid>
+
 </pages:BasePage>

@@ -13,31 +13,14 @@ public partial class SearchViewModel : BaseViewModel
     private CancellationTokenSource? _searchCts;
     private int _currentPage;
 
-    [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(ShowEmptyState))]
-    [NotifyPropertyChangedFor(nameof(HasQuery))]
-    private string _searchQuery = string.Empty;
-
-    [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(ShowNoResults))]
-    [NotifyPropertyChangedFor(nameof(HasResults))]
-    private bool _hasMovies;
-
-    [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(ShowNoResults))]
-    private bool _hasSearched;
-
-    [ObservableProperty]
-    private bool _isLoadingMore;
-
-    [ObservableProperty]
-    private bool _canLoadMore;
-
-    public bool ShowEmptyState => string.IsNullOrWhiteSpace(SearchQuery);
-    public bool HasQuery => !string.IsNullOrWhiteSpace(SearchQuery);
-    public bool HasResults => HasMovies && !IsBusy;
-    public bool ShowSkeleton => IsBusy;
-    public bool ShowNoResults => HasSearched && !IsBusy && !HasResults && !ShowEmptyState;
+    [ObservableProperty] private string _searchQuery = string.Empty;
+    [ObservableProperty] private bool _showEmptyState = true;
+    [ObservableProperty] private bool _showSkeleton;
+    [ObservableProperty] private bool _hasResults;
+    [ObservableProperty] private bool _showNoResults;
+    [ObservableProperty] private bool _hasQuery;
+    [ObservableProperty] private bool _isLoadingMore;
+    [ObservableProperty] private bool _canLoadMore;
 
     public ObservableCollection<MovieItem> Movies { get; } = [];
 
@@ -49,6 +32,7 @@ public partial class SearchViewModel : BaseViewModel
 
     partial void OnSearchQueryChanged(string value)
     {
+        HasQuery = !string.IsNullOrWhiteSpace(value);
         _ = PerformSearchAsync(value);
     }
 
@@ -98,16 +82,18 @@ public partial class SearchViewModel : BaseViewModel
             if (string.IsNullOrWhiteSpace(query))
             {
                 Movies.Clear();
-                HasMovies = false;
-                HasSearched = false;
                 CanLoadMore = false;
                 _currentPage = 0;
+                ShowEmptyState = true;
+                ShowNoResults = false;
+                HasResults = false;
                 return;
             }
 
-            IsBusy = true;
-            OnPropertyChanged(nameof(ShowSkeleton));
-            OnPropertyChanged(nameof(HasResults));
+            ShowEmptyState = false;
+            ShowNoResults = false;
+            ShowSkeleton = true;
+            HasResults = false;
             _currentPage = 1;
             var (movies, hasMore) = await _searchService.SearchMoviesAsync(query, _currentPage, cts.Token);
 
@@ -115,9 +101,9 @@ public partial class SearchViewModel : BaseViewModel
             foreach (var movie in movies)
                 Movies.Add(movie);
 
-            HasMovies = Movies.Count > 0;
+            HasResults = Movies.Count > 0;
+            ShowNoResults = !HasResults;
             CanLoadMore = hasMore;
-            HasSearched = true;
         }
         catch (OperationCanceledException) { }
         catch (Exception ex)
@@ -127,11 +113,7 @@ public partial class SearchViewModel : BaseViewModel
         finally
         {
             if (!cts.IsCancellationRequested)
-            {
-                IsBusy = false;
-                OnPropertyChanged(nameof(ShowSkeleton));
-                OnPropertyChanged(nameof(HasResults));
-            }
+                ShowSkeleton = false;
         }
     }
 }
