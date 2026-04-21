@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView
+    x:Class="CineLog.Mobile.Controls.SkeletonMoviePosterCard"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <VerticalStackLayout WidthRequest="115" Spacing="6">
+
+        <Border
+            HeightRequest="170"
+            BackgroundColor="{StaticResource Surface}"
+            StrokeThickness="0">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="12" />
+            </Border.StrokeShape>
+        </Border>
+
+        <BoxView
+            HeightRequest="10"
+            WidthRequest="70"
+            CornerRadius="4"
+            Color="{StaticResource Surface}"
+            HorizontalOptions="Center" />
+
+    </VerticalStackLayout>
+</ContentView>

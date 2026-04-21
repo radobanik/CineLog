@@ -22,6 +22,8 @@ public partial class ProfileViewModel(IProfileService profileService, IAlertServ
 
     protected override async Task LoadAsync()
     {
+        Title = "Profile";
+
         var profile = await profileService.GetProfileAsync();
 
         Username = profile.Username;

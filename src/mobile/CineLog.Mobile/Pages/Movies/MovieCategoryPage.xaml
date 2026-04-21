@@ -7,43 +7,44 @@
     xmlns:models="clr-namespace:CineLog.Mobile.Core.Models.Home;assembly=CineLog.Mobile.Core"
     xmlns:pages="clr-namespace:CineLog.Mobile.Pages"
     xmlns:vm="clr-namespace:CineLog.Mobile.Core.ViewModels.Common;assembly=CineLog.Mobile.Core"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    BackgroundColor="{StaticResource BackgroundDeep}"
-    Shell.BackgroundColor="{StaticResource Primary}"
-    Shell.ForegroundColor="{StaticResource OnPrimary}"
-    Shell.NavBarIsVisible="True"
-    Shell.TitleColor="{StaticResource OnPrimary}">
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
-    <CollectionView
-        ItemsSource="{Binding Movies}"
-        RemainingItemsThreshold="6"
-        RemainingItemsThresholdReachedCommand="{Binding LoadMoreCommand}"
-        SelectionMode="None">
+    <Grid>
+        <controls:MovieGridSkeleton IsVisible="{Binding IsBusy}" />
 
-        <CollectionView.ItemsLayout>
-            <GridItemsLayout
-                HorizontalItemSpacing="12"
-                Orientation="Vertical"
-                Span="3"
-                VerticalItemSpacing="12" />
-        </CollectionView.ItemsLayout>
+        <CollectionView
+            ItemsSource="{Binding Movies}"
+            RemainingItemsThreshold="6"
+            RemainingItemsThresholdReachedCommand="{Binding LoadMoreCommand}"
+            SelectionMode="None"
+            IsVisible="{Binding IsNotBusy}">
 
-        <CollectionView.ItemTemplate>
-            <DataTemplate x:DataType="models:MovieItem">
-                <controls:MoviePosterCard
-                    Title="{Binding Title}"
-                    PosterPath="{Binding PosterPath}"
-                    RatingText="{Binding RatingText}" />
-            </DataTemplate>
-        </CollectionView.ItemTemplate>
+            <CollectionView.ItemsLayout>
+                <GridItemsLayout
+                    HorizontalItemSpacing="12"
+                    Orientation="Vertical"
+                    Span="3"
+                    VerticalItemSpacing="12" />
+            </CollectionView.ItemsLayout>
 
-        <CollectionView.Footer>
-            <VerticalStackLayout Padding="0,12,0,24">
-                <ActivityIndicator
-                    HorizontalOptions="Center"
-                    IsRunning="{Binding IsLoadingMore}"
-                    IsVisible="{Binding IsLoadingMore}" />
-            </VerticalStackLayout>
-        </CollectionView.Footer>
-    </CollectionView>
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:MovieItem">
+                    <controls:MoviePosterCard
+                        Title="{Binding Title}"
+                        PosterPath="{Binding PosterPath}"
+                        RatingText="{Binding RatingText}" />
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+
+            <CollectionView.Footer>
+                <VerticalStackLayout Padding="0,12,0,24">
+                    <ActivityIndicator
+                        HorizontalOptions="Center"
+                        IsRunning="{Binding IsLoadingMore}"
+                        IsVisible="{Binding IsLoadingMore}" />
+                </VerticalStackLayout>
+            </CollectionView.Footer>
+        </CollectionView>
+    </Grid>
+
 </pages:BasePage>

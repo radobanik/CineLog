@@ -98,7 +98,11 @@ using (var scope = app.Services.CreateScope())
         var es = scope.ServiceProvider.GetRequiredService<IElasticSearchService>();
         await es.EnsureIndicesExistAsync();
 
-        if (await es.CountMoviesAsync() == 0)
+        var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        var dbCount = await dbContext.Movies.CountAsync();
+        var esCount = await es.CountMoviesAsync();
+
+        if (esCount != dbCount)
         {
             var sender = scope.ServiceProvider.GetRequiredService<MediatR.ISender>();
             await sender.Send(new CineLog.Application.Features.Movies.ReindexMovies.ReindexMoviesCommand());

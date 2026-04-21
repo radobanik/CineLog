@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView
+    x:Class="CineLog.Mobile.Controls.ReviewItemSkeleton"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:controls="clr-namespace:CineLog.Mobile.Controls"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <Grid ColumnDefinitions="50, *, Auto" ColumnSpacing="15">
+        <VerticalStackLayout Grid.Column="0" VerticalOptions="Center" Spacing="4">
+            <controls:SkeletonView HeightRequest="20" WidthRequest="28" CornerRadius="4" HorizontalOptions="Center" />
+            <controls:SkeletonView HeightRequest="12" WidthRequest="24" CornerRadius="4" HorizontalOptions="Center" />
+        </VerticalStackLayout>
+        <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="6">
+            <controls:SkeletonView HeightRequest="16" WidthRequest="140" CornerRadius="4" />
+            <controls:SkeletonView HeightRequest="12" WidthRequest="200" CornerRadius="4" />
+        </VerticalStackLayout>
+        <controls:SkeletonView
+            Grid.Column="2"
+            HeightRequest="16"
+            WidthRequest="30"
+            CornerRadius="4"
+            VerticalOptions="Center" />
+    </Grid>
+</ContentView>

@@ -31,6 +31,7 @@ public class MainActivity : MauiAppCompatActivity
         WindowCompat.SetDecorFitsSystemWindows(Window!, true);
         base.OnCreate(savedInstanceState);
         WindowCompat.SetDecorFitsSystemWindows(Window!, false);
+        Window!.SetSoftInputMode(SoftInput.AdjustNothing);
 
         var decorView = Window!.DecorView;
         ViewCompat.SetOnApplyWindowInsetsListener(decorView, new InsetHandler());
@@ -61,8 +62,7 @@ public class MainActivity : MauiAppCompatActivity
         {
             if (v is null || insets is null) return insets;
             var bars = insets.GetInsets(WindowInsetsCompat.Type.SystemBars());
-            var ime = insets.GetInsets(WindowInsetsCompat.Type.Ime());
-            v.SetPadding(bars.Left, bars.Top, bars.Right, Math.Max(bars.Bottom, ime.Bottom));
+            v.SetPadding(bars.Left, bars.Top, bars.Right, bars.Bottom);
             return WindowInsetsCompat.Consumed;
         }
     }

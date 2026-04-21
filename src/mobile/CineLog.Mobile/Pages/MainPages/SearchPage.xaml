@@ -1,34 +1,118 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<pages:BasePage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:pages="clr-namespace:CineLog.Mobile.Pages"
-             xmlns:helpers="clr-namespace:CineLog.Mobile.Helpers"
-             x:Class="CineLog.Mobile.Pages.MainPages.SearchPage"
-             Shell.NavBarIsVisible="False"
-             Title="SearchPage">
+<pages:BasePage
+    x:Class="CineLog.Mobile.Pages.MainPages.SearchPage"
+    x:DataType="vm:SearchViewModel"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:controls="clr-namespace:CineLog.Mobile.Controls"
+    xmlns:helpers="clr-namespace:CineLog.Mobile.Helpers"
+    xmlns:home="clr-namespace:CineLog.Mobile.Core.Models.Home;assembly=CineLog.Mobile.Core"
+    xmlns:pages="clr-namespace:CineLog.Mobile.Pages"
+    xmlns:vm="clr-namespace:CineLog.Mobile.Core.ViewModels.Search;assembly=CineLog.Mobile.Core"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    ShowMenuButton="True"
+    Title="Search">
 
-    <Grid Padding="28">
-        <VerticalStackLayout
-            Spacing="12"
-            VerticalOptions="Center">
+    <Grid RowDefinitions="Auto, *">
 
-            <Label
+        <Border Grid.Row="0" Style="{StaticResource InputFieldBorder}" Margin="16,12">
+            <Grid ColumnDefinitions="Auto, *, Auto" Padding="16,0">
+                <Label
+                    Grid.Column="0"
+                    Style="{StaticResource SecondaryIconLabel}"
+                    Text="{x:Static helpers:FontAwesomeIcons.Search}"
+                    VerticalOptions="Center" />
+                <Entry
+                    x:Name="SearchEntry"
+                    Grid.Column="1"
+                    Style="{StaticResource CleanEntry}"
+                    Placeholder="Search films..."
+                    Text="{Binding SearchQuery}"
+                    Margin="10,0" />
+                <Label
+                    Grid.Column="2"
+                    Style="{StaticResource SecondaryIconLabel}"
+                    Text="{x:Static helpers:FontAwesomeIcons.Times}"
+                    VerticalOptions="Center"
+                    IsVisible="{Binding HasQuery}">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding ClearCommand}" />
+                    </Label.GestureRecognizers>
+                </Label>
+            </Grid>
+        </Border>
+
+        <Grid Grid.Row="1" Padding="16,0">
+
+            <VerticalStackLayout
+                VerticalOptions="Center"
                 HorizontalOptions="Center"
-                Style="{StaticResource PrimaryIconLabel}"
-                FontSize="40"
-                Text="{x:Static helpers:FontAwesomeIcons.Search}" />
+                Spacing="12"
+                IsVisible="{Binding ShowEmptyState}">
+                <Label
+                    Style="{StaticResource PrimaryIconLabel}"
+                    FontSize="40"
+                    HorizontalOptions="Center"
+                    Text="{x:Static helpers:FontAwesomeIcons.Search}" />
+                <Label
+                    Style="{StaticResource BodyMediumLabel}"
+                    HorizontalOptions="Center"
+                    Text="Search for films" />
+            </VerticalStackLayout>
 
-            <Label
+            <CollectionView
+                x:Name="SkeletonGrid"
+                IsVisible="{Binding ShowSkeleton}">
+                <CollectionView.ItemsLayout>
+                    <GridItemsLayout Orientation="Vertical" Span="3" HorizontalItemSpacing="10" VerticalItemSpacing="10" />
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <controls:SkeletonMoviePosterCard />
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <CollectionView
+                ItemsSource="{Binding Movies}"
+                IsVisible="{Binding HasResults}"
+                RemainingItemsThreshold="4"
+                RemainingItemsThresholdReachedCommand="{Binding LoadMoreCommand}">
+                <CollectionView.ItemsLayout>
+                    <GridItemsLayout Orientation="Vertical" Span="3" HorizontalItemSpacing="10" VerticalItemSpacing="10" />
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="home:MovieItem">
+                        <controls:MoviePosterCard
+                            Title="{Binding Title}"
+                            PosterPath="{Binding PosterPath}"
+                            RatingText="{Binding RatingText}" />
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+                <CollectionView.Footer>
+                    <ActivityIndicator
+                        IsRunning="{Binding IsLoadingMore}"
+                        IsVisible="{Binding IsLoadingMore}"
+                        Margin="0,8" />
+                </CollectionView.Footer>
+            </CollectionView>
+
+            <VerticalStackLayout
+                VerticalOptions="Center"
                 HorizontalOptions="Center"
-                Style="{StaticResource HeadlineLargeLabel}"
-                Text="Search" />
+                Spacing="12"
+                IsVisible="{Binding ShowNoResults}">
+                <Label
+                    Style="{StaticResource PrimaryIconLabel}"
+                    FontSize="40"
+                    HorizontalOptions="Center"
+                    Text="{x:Static helpers:FontAwesomeIcons.SearchMinus}" />
+                <Label
+                    Style="{StaticResource BodyMediumLabel}"
+                    HorizontalOptions="Center"
+                    Text="No results found" />
+            </VerticalStackLayout>
 
-            <Label
-                HorizontalOptions="Center"
-                HorizontalTextAlignment="Center"
-                Style="{StaticResource CaptionLabel}"
-                Text="Placeholder for now" />
-
-        </VerticalStackLayout>
+        </Grid>
     </Grid>
+
 </pages:BasePage>
