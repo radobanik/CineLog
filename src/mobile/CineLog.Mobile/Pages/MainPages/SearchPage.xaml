@@ -9,7 +9,6 @@
     xmlns:pages="clr-namespace:CineLog.Mobile.Pages"
     xmlns:vm="clr-namespace:CineLog.Mobile.Core.ViewModels.Search;assembly=CineLog.Mobile.Core"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    BackgroundColor="{StaticResource BackgroundDeep}"
     Shell.NavBarIsVisible="False">
 
     <Grid RowDefinitions="Auto, *" Padding="16,20,16,0">

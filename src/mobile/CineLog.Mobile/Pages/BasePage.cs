@@ -1,10 +1,16 @@
 using CineLog.Mobile.Core.ViewModels.Base;
+using CineLog.Mobile.Helpers;
 
 namespace CineLog.Mobile.Pages;
 
 public abstract class BasePage : ContentPage
 {
     private IViewModel? _viewModel;
+
+    public BasePage()
+    {
+        BackgroundColor = AppColors.Background;
+    }
 
     protected override void OnBindingContextChanged()
     {

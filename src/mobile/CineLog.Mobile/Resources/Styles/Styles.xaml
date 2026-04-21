@@ -4,10 +4,10 @@
     <!--  Shell  -->
 
     <Style ApplyToDerivedTypes="True" TargetType="Shell">
-        <Setter Property="Shell.TabBarBackgroundColor" Value="{StaticResource Primary}" />
-        <Setter Property="Shell.TabBarForegroundColor" Value="{StaticResource OnPrimary}" />
-        <Setter Property="Shell.TabBarTitleColor" Value="{StaticResource OnPrimary}" />
-        <Setter Property="Shell.TabBarUnselectedColor" Value="{StaticResource TabBarUnselected}" />
+        <Setter Property="Shell.TabBarBackgroundColor" Value="{StaticResource BackgroundDeep}" />
+        <Setter Property="Shell.TabBarForegroundColor" Value="{StaticResource Primary}" />
+        <Setter Property="Shell.TabBarTitleColor" Value="{StaticResource Primary}" />
+        <Setter Property="Shell.TabBarUnselectedColor" Value="{StaticResource TextDisabled}" />
     </Style>
 
     <!--  Pages  -->
