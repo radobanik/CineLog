@@ -18,10 +18,8 @@
             <Grid ColumnDefinitions="Auto, *, Auto" Padding="16,0">
                 <Label
                     Grid.Column="0"
-                    FontFamily="FASolid"
-                    FontSize="15"
+                    Style="{StaticResource SecondaryIconLabel}"
                     Text="{x:Static helpers:FontAwesomeIcons.Search}"
-                    TextColor="{StaticResource TextSecondary}"
                     VerticalOptions="Center" />
                 <Entry
                     x:Name="SearchEntry"
@@ -32,10 +30,8 @@
                     Margin="10,0" />
                 <Label
                     Grid.Column="2"
-                    FontFamily="FASolid"
-                    FontSize="15"
+                    Style="{StaticResource SecondaryIconLabel}"
                     Text="{x:Static helpers:FontAwesomeIcons.Times}"
-                    TextColor="{StaticResource TextSecondary}"
                     VerticalOptions="Center"
                     IsVisible="{Binding HasQuery}">
                     <Label.GestureRecognizers>
@@ -53,11 +49,10 @@
                 Spacing="12"
                 IsVisible="{Binding ShowEmptyState}">
                 <Label
-                    FontFamily="FASolid"
+                    Style="{StaticResource PrimaryIconLabel}"
                     FontSize="40"
                     HorizontalOptions="Center"
-                    Text="{x:Static helpers:FontAwesomeIcons.Search}"
-                    TextColor="{StaticResource Primary}" />
+                    Text="{x:Static helpers:FontAwesomeIcons.Search}" />
                 <Label
                     Style="{StaticResource BodyMediumLabel}"
                     HorizontalOptions="Center"
@@ -104,16 +99,17 @@
             <VerticalStackLayout
                 VerticalOptions="Center"
                 HorizontalOptions="Center"
-                Spacing="8"
+                Spacing="12"
                 IsVisible="{Binding ShowNoResults}">
+                <Label
+                    Style="{StaticResource PrimaryIconLabel}"
+                    FontSize="40"
+                    HorizontalOptions="Center"
+                    Text="{x:Static helpers:FontAwesomeIcons.SearchMinus}" />
                 <Label
                     Style="{StaticResource BodyMediumLabel}"
                     HorizontalOptions="Center"
                     Text="No results found" />
-                <Label
-                    Style="{StaticResource CaptionLabel}"
-                    HorizontalOptions="Center"
-                    Text="Try a different search term" />
             </VerticalStackLayout>
 
         </Grid>

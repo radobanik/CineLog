@@ -13,6 +13,7 @@ public static class FontAwesomeIcons
 
     public const string Home = "\uf015";
     public const string Search = "\uf002";
+    public const string SearchMinus = "\uf010";
     public const string List = "\uf03a";
     public const string Heart = "\uf004";
     public const string Star = "\uf005";
