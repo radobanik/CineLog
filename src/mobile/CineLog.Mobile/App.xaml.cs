@@ -1,29 +1,25 @@
-using CineLog.Mobile.Core.Navigation;
 using CineLog.Mobile.Core.Services.Interfaces;
 
 namespace CineLog.Mobile;
 
 public partial class App : Application
 {
-    private readonly ISessionService _session;
-
     public App(ISessionService session, AppShell shell)
     {
         InitializeComponent();
-        _session = session;
-        MainPage = shell;
+        MainPage = new ContentPage { BackgroundColor = Color.FromArgb("#0B0D10") };
+        _ = InitializeAsync(session, shell);
     }
 
-    protected override async void OnStart()
+    private async Task InitializeAsync(ISessionService session, AppShell shell)
     {
-        base.OnStart();
-
-        // Restore persisted session on launch
-        var restored = await _session.TryRestoreSessionAsync();
+        var restored = await session.TryRestoreSessionAsync();
 
         if (!restored)
-            await Shell.Current.GoToAsync($"//{Routes.Login}");
+            shell.CurrentItem = shell.Items.OfType<ShellContent>().First(x => x.Route == "Login");
         else
-            await Shell.Current.GoToAsync($"//{Routes.AuthenticatedRoot}");
+            shell.CurrentItem = shell.Items.OfType<TabBar>().First();
+
+        MainPage = shell;
     }
 }
