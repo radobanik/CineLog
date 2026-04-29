@@ -1,3 +1,4 @@
+using CineLog.Mobile.Core.Navigation;
 using CineLog.Mobile.Core.Services.Interfaces;
 
 namespace CineLog.Mobile;
@@ -7,7 +8,9 @@ public partial class App : Application
     public App(ISessionService session, AppShell shell)
     {
         InitializeComponent();
-        MainPage = new ContentPage { BackgroundColor = Color.FromArgb("#0B0D10") };
+
+        MainPage = new ContentPage { BackgroundColor = (Color)Resources["Background"] };
+
         _ = InitializeAsync(session, shell);
     }
 
@@ -15,11 +18,12 @@ public partial class App : Application
     {
         var restored = await session.TryRestoreSessionAsync();
 
-        if (!restored)
-            shell.CurrentItem = shell.Items.OfType<ShellContent>().First(x => x.Route == "Login");
-        else
-            shell.CurrentItem = shell.Items.OfType<TabBar>().First();
-
         MainPage = shell;
+
+        var route = restored
+            ? $"//{Routes.AuthenticatedRoot}"
+            : $"//{Routes.Login}";
+
+        await shell.GoToAsync(route);
     }
 }
