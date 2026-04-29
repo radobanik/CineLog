@@ -1,4 +1,4 @@
-using CineLog.Mobile.Core.Models.Home;
+using CineLog.Mobile.Core.Models;
 
 namespace CineLog.Mobile.Core.Services.Interfaces;
 

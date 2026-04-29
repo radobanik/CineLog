@@ -1,4 +1,4 @@
-namespace CineLog.Mobile.Core.Models.Home;
+namespace CineLog.Mobile.Core.Models;
 
 public sealed class MovieItem
 {
