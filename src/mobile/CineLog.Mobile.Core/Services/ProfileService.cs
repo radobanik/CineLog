@@ -11,6 +11,7 @@ public sealed class ProfileService(IUsersClient usersClient) : IProfileService
     public async Task<UserProfile> GetProfileAsync(CancellationToken ct = default)
     {
         var user = await usersClient.GetMeAsync(ct);
+
         return new UserProfile
         {
             Id = user.Id ?? Guid.Empty,
