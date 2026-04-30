@@ -60,14 +60,14 @@
 
         <Tab
             Title="Lists"
-            Route="Lists">
+            Route="Lists">  
             <Tab.Icon>
                 <FontImageSource
                     FontFamily="FASolid"
-                    Glyph="{x:Static helpers:FontAwesomeIcons.Star}"
-                    Size="18" />
+                    Glyph="{x:Static helpers:FontAwesomeIcons.List}"
+                    Size="18" />    
             </Tab.Icon>
-            <ShellContent ContentTemplate="{DataTemplate main:ListsPage}" />
+            <ShellContent ContentTemplate="{DataTemplate main:WatchListsPage}" />
         </Tab>
 
         <Tab

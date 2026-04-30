@@ -35,7 +35,7 @@ public static class ServiceCollectionExtensions
         services.AddTransient<MoviesCategoryPage>();
         services.AddTransient<SearchPage>();
         services.AddTransient<LogPage>();
-        services.AddTransient<ListsPage>();
+        services.AddTransient<WatchListsPage>();
         services.AddTransient<ProfilePage>();
         return services;
     }

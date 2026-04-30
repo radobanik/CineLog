@@ -48,4 +48,10 @@
     </MauiXaml>
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Update="Pages\MainPages\WatchListPage.xaml.cs">
+      <DependentUpon>WatchListPage.xaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
 </Project>
