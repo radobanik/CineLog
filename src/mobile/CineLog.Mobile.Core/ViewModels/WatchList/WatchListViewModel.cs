@@ -116,7 +116,7 @@ public partial class WatchListViewModel(
     [RelayCommand]
     private void ToggleWatchListOptions(WatchListRowViewModel? row)
     {
-        if (row is null || row.IsFavorites)
+        if (row is null)
             return;
 
         foreach (var item in Lists)

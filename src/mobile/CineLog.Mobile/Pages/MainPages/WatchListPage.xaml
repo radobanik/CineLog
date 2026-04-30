@@ -97,7 +97,6 @@
                                             VerticalOptions="Center"
                                             BackgroundColor="Transparent"
                                             TextColor="{StaticResource TextSecondary}"
-                                            IsEnabled="{Binding CanEdit}"
                                             Command="{Binding Source={x:Reference ThisPage}, Path=BindingContext.ToggleWatchListOptionsCommand}"
                                             CommandParameter="{Binding .}" />
 
@@ -129,11 +128,20 @@
                                             FontSize="15"
                                             TextColor="{StaticResource OnSurface}"
                                             LineBreakMode="NoWrap"
-                                            FontAutoScalingEnabled="False">
+                                            FontAutoScalingEnabled="False"
+                                            IsEnabled="{Binding CanEdit}">
+                                            <Label.Triggers>
+                                                <DataTrigger
+                                                    TargetType="Label"
+                                                    Binding="{Binding CanEdit}"
+                                                    Value="False">
+                                                    <Setter Property="TextColor" Value="{StaticResource TextDisabled}" />
+                                                </DataTrigger>
+                                            </Label.Triggers>
                                             <Label.GestureRecognizers>
                                                 <TapGestureRecognizer
                                                     Command="{Binding Source={x:Reference ThisPage}, Path=BindingContext.StartEditWatchListCommand}"
-                                                    CommandParameter="{Binding .}" />
+                                                    CommandParameter="{Binding .}" />   
                                             </Label.GestureRecognizers>
                                         </Label>
 
@@ -142,13 +150,23 @@
                                             FontSize="15"
                                             TextColor="{StaticResource Error}"
                                             LineBreakMode="NoWrap"
-                                            FontAutoScalingEnabled="False">
+                                            FontAutoScalingEnabled="False"
+                                            IsEnabled="{Binding CanDelete}">    
+                                            <Label.Triggers>
+                                                <DataTrigger
+                                                    TargetType="Label"
+                                                    Binding="{Binding CanDelete}"
+                                                    Value="False">                      
+                                                    <Setter Property="TextColor" Value="{StaticResource TextDisabled}" />
+                                                </DataTrigger>
+                                            </Label.Triggers>
                                             <Label.GestureRecognizers>
                                                 <TapGestureRecognizer
                                                     Command="{Binding Source={x:Reference ThisPage}, Path=BindingContext.DeleteWatchListCommand}"
-                                                    CommandParameter="{Binding .}" />
+                                                    CommandParameter="{Binding .}" />   
                                             </Label.GestureRecognizers>
                                         </Label>
+
                                     </VerticalStackLayout>
                                 </Border>
                             </AbsoluteLayout>
