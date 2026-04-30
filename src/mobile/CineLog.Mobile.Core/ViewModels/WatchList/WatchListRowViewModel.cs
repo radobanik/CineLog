@@ -25,4 +25,5 @@ public partial class WatchListRowViewModel(WatchListCollectionItem item) : Obser
             : string.IsNullOrWhiteSpace(Name)
                 ? "?"
                 : Name[..1].ToUpperInvariant();
+    public string? IconFontFamily => IsFavorites ? "FASolid" : null;
 }
