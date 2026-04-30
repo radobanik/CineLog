@@ -86,3 +86,6 @@ _TeamCity*
 *.bak
 *.orig
 *.DotSettings.user
+
+# Codex
+.codex-temp/

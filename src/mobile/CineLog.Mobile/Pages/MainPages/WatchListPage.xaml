@@ -1,288 +1,319 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <pages:BasePage
-    x:Class="CineLog.Mobile.Pages.MainPages.WatchListsPage"
     x:Name="ThisPage"
-    x:DataType="vm:WatchListViewModel"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:helpers="clr-namespace:CineLog.Mobile.Helpers"
-    xmlns:models="clr-namespace:CineLog.Mobile.Core.Models;assembly=CineLog.Mobile.Core"
     xmlns:pages="clr-namespace:CineLog.Mobile.Pages"
-    xmlns:vm="clr-namespace:CineLog.Mobile.Core.ViewModels.WatchList;assembly=CineLog.Mobile.Core"
-    xmlns:watchlist="clr-namespace:CineLog.Mobile.Core.Models.WatchList;assembly=CineLog.Mobile.Core"
+    x:Class="CineLog.Mobile.Pages.MainPages.WatchListsPage"
     ShowMenuButton="True"
-    Title="Lists">
+    Title="WatchLists"
+    BackgroundColor="{StaticResource Background}">
 
-    <Grid Padding="16" RowDefinitions="Auto,*" RowSpacing="16">
+    <Grid Padding="24" RowDefinitions="*">
 
-        <!-- Lists overview -->
-        <Grid
-            Grid.Row="0"
-            ColumnDefinitions="*,Auto"
-            ColumnSpacing="10"
-            IsVisible="{Binding ShowWatchLists}">
+        <Grid IsVisible="{Binding ShowWatchLists}">
 
-            <Border Style="{StaticResource InputFieldBorder}" HeightRequest="48">
-                <Entry
-                    Margin="16,0"
-                    Placeholder="New list name"
-                    ReturnCommand="{Binding CreateWatchListCommand}"
-                    Style="{StaticResource CleanEntry}"
-                    Text="{Binding NewWatchListName}" />
-            </Border>
-
-            <Button
-                Grid.Column="1"
-                Command="{Binding CreateWatchListCommand}"
-                FontFamily="FASolid"
-                Text="{x:Static helpers:FontAwesomeIcons.Plus}"
-                Style="{StaticResource PrimaryButton}"
-                WidthRequest="48"
-                Padding="0" />
-        </Grid>
-
-        <Grid Grid.Row="1">
-
-            <CollectionView
-                ItemsSource="{Binding Lists}"
-                IsVisible="{Binding ShowWatchLists}"
-                SelectionMode="None">
-
-                <CollectionView.EmptyView>
-                    <VerticalStackLayout
-                        HorizontalOptions="Center"
-                        VerticalOptions="Center"
-                        Spacing="12">
-                        <Label
-                            HorizontalOptions="Center"
-                            Style="{StaticResource PrimaryIconLabel}"
-                            FontSize="40"
-                            Text="{x:Static helpers:FontAwesomeIcons.List}" />
-                        <Label
-                            HorizontalOptions="Center"
-                            Style="{StaticResource CaptionLabel}"
-                            Text="No lists yet." />
-                    </VerticalStackLayout>
-                </CollectionView.EmptyView>
-
-                <CollectionView.ItemsLayout>
-                    <LinearItemsLayout Orientation="Vertical" ItemSpacing="12" />
-                </CollectionView.ItemsLayout>
-
-                <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="watchlist:WatchListCollectionItem">
-                        <Border
-                            Padding="16"
-                            BackgroundColor="{StaticResource Surface}"
-                            Stroke="{StaticResource Border}"
-                            StrokeThickness="1">
-
-                            <Border.StrokeShape>
-                                <RoundRectangle CornerRadius="12" />
-                            </Border.StrokeShape>
-
-                            <Border.GestureRecognizers>
-                                <TapGestureRecognizer
-                                    Command="{Binding Source={x:Reference ThisPage}, Path=BindingContext.OpenWatchListCommand}"
-                                    CommandParameter="{Binding .}" />
-                            </Border.GestureRecognizers>
-
-                            <Grid ColumnDefinitions="44,*,44,24" ColumnSpacing="12">
-                                <Border
-                                    WidthRequest="44"
-                                    HeightRequest="44"
-                                    BackgroundColor="{StaticResource SurfaceVariant}"
-                                    StrokeThickness="0">
-                                    <Border.StrokeShape>
-                                        <RoundRectangle CornerRadius="22" />
-                                    </Border.StrokeShape>
-
-                                    <Label
-                                        HorizontalOptions="Center"
-                                        VerticalOptions="Center"
-                                        Style="{StaticResource PrimaryIconLabel}"
-                                        Text="{x:Static helpers:FontAwesomeIcons.List}" />
-                                </Border>
-
-                                <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
-                                    <Label
-                                        Style="{StaticResource BodyLargeLabel}"
-                                        FontAttributes="Bold"
-                                        Text="{Binding Name}" />
-                                    <Label
-                                        Style="{StaticResource CaptionLabel}"
-                                        Text="{Binding ItemCount, StringFormat='{0} films'}" />
-                                </VerticalStackLayout>
-
-                                <Button
-                                    Grid.Column="2"
-                                    BackgroundColor="Transparent"
-                                    Command="{Binding Source={x:Reference ThisPage}, Path=BindingContext.DeleteWatchListCommand}"
-                                    CommandParameter="{Binding .}"
-                                    FontFamily="FASolid"
-                                    IsEnabled="{Binding CanDelete}"
-                                    Text="{x:Static helpers:FontAwesomeIcons.Trash}"
-                                    TextColor="{StaticResource Error}"
-                                    WidthRequest="44"
-                                    Padding="0">
-                                    <Button.Triggers>
-                                        <DataTrigger
-                                            TargetType="Button"
-                                            Binding="{Binding CanDelete}"
-                                            Value="False">
-                                            <Setter Property="TextColor" Value="{StaticResource TextDisabled}" />
-                                            <Setter Property="Opacity" Value="0.35" />
-                                        </DataTrigger>
-                                    </Button.Triggers>
-                                </Button>
-
-                                <Label
-                                    Grid.Column="3"
-                                    VerticalOptions="Center"
-                                    Style="{StaticResource SecondaryIconLabel}"
-                                    Text="{x:Static helpers:FontAwesomeIcons.ChevronRight}" />
-                            </Grid>
-                        </Border>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
-
-            <!-- Expanded list view -->
-            <Grid
-                IsVisible="{Binding ShowMovies}"
-                RowDefinitions="Auto,*"
-                RowSpacing="14">
-
-                <Grid Grid.Row="0" ColumnDefinitions="44,*,44" ColumnSpacing="10">
-                    <Button
-                        BackgroundColor="Transparent"
-                        Command="{Binding BackToListsCommand}"
-                        FontFamily="FASolid"
-                        Text="{x:Static helpers:FontAwesomeIcons.ChevronLeft}"
-                        TextColor="{StaticResource OnSurface}"
-                        WidthRequest="44"
-                        Padding="0" />
-
-                    <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
-                        <Label
-                            Style="{StaticResource HeadlineMediumLabel}"
-                            Text="{Binding SelectedWatchList.Name}" />
-                        <Label
-                            Style="{StaticResource CaptionLabel}"
-                            Text="{Binding SelectedWatchList.ItemCount, StringFormat='{0} films'}" />
-                    </VerticalStackLayout>
-
-                    <Button
-                        Grid.Column="2"
-                        BackgroundColor="Transparent"
-                        Command="{Binding DeleteWatchListCommand}"
-                        CommandParameter="{Binding SelectedWatchList}"
-                        FontFamily="FASolid"
-                        IsEnabled="{Binding SelectedWatchList.CanDelete}"
-                        Text="{x:Static helpers:FontAwesomeIcons.Trash}"
-                        TextColor="{StaticResource Error}"
-                        WidthRequest="44"
-                        Padding="0">
-                        <Button.Triggers>
-                            <DataTrigger
-                                TargetType="Button"
-                                Binding="{Binding SelectedWatchList.CanDelete}"
-                                Value="False">
-                                <Setter Property="TextColor" Value="{StaticResource TextDisabled}" />
-                                <Setter Property="Opacity" Value="0.35" />
-                            </DataTrigger>
-                        </Button.Triggers>
-                    </Button>
-                </Grid>
-
+            <RefreshView Command="{Binding LoadCommand}">
                 <CollectionView
-                    Grid.Row="1"
-                    ItemsSource="{Binding Movies}"
-                    RemainingItemsThreshold="4"
-                    RemainingItemsThresholdReachedCommand="{Binding LoadMoreCommand}"
-                    SelectionMode="None">
-
-                    <CollectionView.EmptyView>
-                        <VerticalStackLayout
-                            HorizontalOptions="Center"
-                            VerticalOptions="Center"
-                            Spacing="12">
-                            <Label
-                                HorizontalOptions="Center"
-                                Style="{StaticResource PrimaryIconLabel}"
-                                FontSize="40"
-                                Text="{x:Static helpers:FontAwesomeIcons.Film}" />
-                            <Label
-                                HorizontalOptions="Center"
-                                Style="{StaticResource CaptionLabel}"
-                                Text="No movies in this list." />
-                        </VerticalStackLayout>
-                    </CollectionView.EmptyView>
-
-                    <CollectionView.ItemsLayout>
-                        <LinearItemsLayout Orientation="Vertical" ItemSpacing="12" />
-                    </CollectionView.ItemsLayout>
+                    ItemsSource="{Binding Lists}"
+                    SelectionMode="None"
+                    Margin="0,8,0,88">
 
                     <CollectionView.ItemTemplate>
-                        <DataTemplate x:DataType="models:MovieItem">
+                        <DataTemplate>
                             <Border
-                                Padding="12"
+                                Margin="0,0,0,12"
+                                Padding="16"
                                 BackgroundColor="{StaticResource Surface}"
                                 Stroke="{StaticResource Border}"
                                 StrokeThickness="1">
 
                                 <Border.StrokeShape>
-                                    <RoundRectangle CornerRadius="12" />
+                                    <RoundRectangle CornerRadius="10" />
                                 </Border.StrokeShape>
 
-                                <Grid ColumnDefinitions="72,*,44" ColumnSpacing="12">
+                                <Grid ColumnDefinitions="52,*,88" ColumnSpacing="12">
+
                                     <Border
-                                        WidthRequest="72"
-                                        HeightRequest="104"
+                                        WidthRequest="44"
+                                        HeightRequest="44"
                                         BackgroundColor="{StaticResource SurfaceVariant}"
-                                        StrokeThickness="0">
+                                        StrokeThickness="0"
+                                        VerticalOptions="Center">
+
                                         <Border.StrokeShape>
-                                            <RoundRectangle CornerRadius="8" />
+                                            <RoundRectangle CornerRadius="22" />
                                         </Border.StrokeShape>
 
-                                        <Image
-                                            Source="{Binding PosterPath}"
-                                            Aspect="AspectFill" />
+                                        <Label
+                                            Text="{Binding IconText}"
+                                            TextColor="{StaticResource Primary}"
+                                            FontSize="20"
+                                            FontAttributes="Bold"
+                                            HorizontalOptions="Center"
+                                            VerticalOptions="Center" />
                                     </Border>
 
-                                    <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="5">
+                                    <VerticalStackLayout
+                                        Grid.Column="1"
+                                        Spacing="2"
+                                        VerticalOptions="Center">
+
                                         <Label
-                                            Style="{StaticResource BodyLargeLabel}"
+                                            Text="{Binding Name}"
+                                            TextColor="{StaticResource OnSurface}"
+                                            FontSize="16"
                                             FontAttributes="Bold"
-                                            Text="{Binding Title}" />
+                                            LineBreakMode="TailTruncation" />
+
                                         <Label
-                                            Style="{StaticResource PosterRatingLabel}"
-                                            Text="{Binding RatingText, StringFormat='★ {0}'}" />
+                                            Text="{Binding CountText}"
+                                            TextColor="{StaticResource TextSecondary}"
+                                            FontSize="13" />
                                     </VerticalStackLayout>
 
-                                    <Button
+                                    <Grid
                                         Grid.Column="2"
-                                        BackgroundColor="Transparent"
-                                        Command="{Binding Source={x:Reference ThisPage}, Path=BindingContext.RemoveMovieCommand}"
-                                        CommandParameter="{Binding .}"
-                                        FontFamily="FASolid"
-                                        Text="{x:Static helpers:FontAwesomeIcons.Trash}"
-                                        TextColor="{StaticResource TextSecondary}"
-                                        WidthRequest="44"
-                                        Padding="0" />
+                                        HorizontalOptions="End"
+                                        VerticalOptions="Center"
+                                        WidthRequest="88">
+
+                                        <Button
+                                            Text="⋯"
+                                            FontSize="24"
+                                            Padding="0"
+                                            WidthRequest="44"
+                                            HeightRequest="44"
+                                            HorizontalOptions="End"
+                                            BackgroundColor="Transparent"
+                                            TextColor="{StaticResource TextSecondary}"
+                                            IsEnabled="{Binding CanEdit}"
+                                            Command="{Binding Source={x:Reference ThisPage}, Path=BindingContext.ToggleWatchListOptionsCommand}"
+                                            CommandParameter="{Binding .}" />
+
+                                        <Border
+                                            IsVisible="{Binding IsOptionsOpen}"
+                                            HorizontalOptions="End"
+                                            VerticalOptions="Center"
+                                            Margin="0,0,38,0"
+                                            Padding="10,8"
+                                            BackgroundColor="{StaticResource Overlay}"
+                                            Stroke="{StaticResource Border}"
+                                            StrokeThickness="1"
+                                            ZIndex="10">
+
+                                            <Border.StrokeShape>
+                                                <RoundRectangle CornerRadius="6" />
+                                            </Border.StrokeShape>
+
+                                            <VerticalStackLayout Spacing="8">
+                                                <Label
+                                                    Text="Edit"
+                                                    FontSize="14"
+                                                    TextColor="{StaticResource OnSurface}">
+                                                    <Label.GestureRecognizers>
+                                                        <TapGestureRecognizer
+                                                            Command="{Binding Source={x:Reference ThisPage}, Path=BindingContext.StartEditWatchListCommand}"
+                                                            CommandParameter="{Binding .}" />
+                                                    </Label.GestureRecognizers>
+                                                </Label>
+
+                                                <Label
+                                                    Text="Delete"
+                                                    FontSize="14"
+                                                    TextColor="{StaticResource Error}">
+                                                    <Label.GestureRecognizers>
+                                                        <TapGestureRecognizer
+                                                            Command="{Binding Source={x:Reference ThisPage}, Path=BindingContext.DeleteWatchListCommand}"
+                                                            CommandParameter="{Binding .}" />
+                                                    </Label.GestureRecognizers>
+                                                </Label>
+                                            </VerticalStackLayout>
+                                        </Border>
+                                    </Grid>
+
+                                    <Grid.GestureRecognizers>
+                                        <TapGestureRecognizer
+                                            Command="{Binding Source={x:Reference ThisPage}, Path=BindingContext.OpenWatchListCommand}"
+                                            CommandParameter="{Binding .}" />
+                                    </Grid.GestureRecognizers>
                                 </Grid>
                             </Border>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
-
-                    <CollectionView.Footer>
-                        <ActivityIndicator
-                            IsRunning="{Binding IsLoadingMore}"
-                            IsVisible="{Binding IsLoadingMore}"
-                            Margin="0,12" />
-                    </CollectionView.Footer>
                 </CollectionView>
+            </RefreshView>
+
+            <Grid
+                IsVisible="{Binding IsCreatingWatchList}"
+                BackgroundColor="#99000000"
+                ZIndex="20">
+
+                <Border
+                    Padding="20"
+                    WidthRequest="320"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center"
+                    BackgroundColor="{StaticResource Surface}"
+                    Stroke="{StaticResource Border}"
+                    StrokeThickness="1">        
+
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="12" />
+                    </Border.StrokeShape>
+
+                    <VerticalStackLayout Spacing="16">
+                        <Label
+                            Text="New watchlist"
+                            TextColor="{StaticResource OnSurface}"
+                            FontSize="18"
+                            FontAttributes="Bold"
+                            HorizontalOptions="Center" />       
+
+                        <Grid ColumnDefinitions="*,44" ColumnSpacing="8">
+                            <Entry
+                    Text="{Binding NewWatchListName}"
+                    Placeholder="List name"
+                    PlaceholderColor="{StaticResource TextSecondary}"
+                    TextColor="{StaticResource OnSurface}"
+                    ReturnCommand="{Binding ConfirmCreateWatchListCommand}"
+                    BackgroundColor="Transparent" />
+
+                            <Button
+                    Grid.Column="1"
+                    Text="✓"
+                    FontSize="18"
+                    Padding="0"
+                    BackgroundColor="Transparent"
+                    TextColor="{StaticResource Primary}"
+                    Command="{Binding ConfirmCreateWatchListCommand}" />
+                        </Grid>
+
+                        <Button
+                Text="Cancel"
+                BackgroundColor="Transparent"
+                TextColor="{StaticResource TextSecondary}"
+                Command="{Binding CancelCreateWatchListCommand}" />
+                    </VerticalStackLayout>
+                </Border>
             </Grid>
+
+
+            <Button
+                Text="+"
+                FontSize="28"
+                FontAttributes="Bold"
+                WidthRequest="56"
+                HeightRequest="56"
+                CornerRadius="28"
+                Padding="0"
+                HorizontalOptions="End"
+                VerticalOptions="End"
+                Margin="0,0,0,16"
+                BackgroundColor="{StaticResource Primary}"
+                TextColor="{StaticResource OnPrimary}"
+                Command="{Binding ShowCreateWatchListCommand}" />
+        </Grid>
+
+        <Grid IsVisible="{Binding ShowMovies}" RowDefinitions="Auto,*">
+
+            <Grid ColumnDefinitions="44,*" Padding="0,4,0,16">
+                <Button
+                    Text="‹"
+                    FontSize="28"
+                    Padding="0"
+                    BackgroundColor="Transparent"
+                    TextColor="{StaticResource OnBackground}"
+                    Command="{Binding BackToListsCommand}" />
+
+                <Label
+                    Grid.Column="1"
+                    Text="{Binding SelectedWatchList.Name}"
+                    TextColor="{StaticResource OnBackground}"
+                    FontSize="22"
+                    FontAttributes="Bold"
+                    VerticalOptions="Center"
+                    LineBreakMode="TailTruncation" />
+            </Grid>
+
+            <CollectionView
+                Grid.Row="1"
+                ItemsSource="{Binding Movies}"
+                RemainingItemsThreshold="3"
+                RemainingItemsThresholdReachedCommand="{Binding LoadMoreCommand}"
+                SelectionMode="None">
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Border
+                            Margin="0,0,0,12"
+                            Padding="12"
+                            BackgroundColor="{StaticResource Surface}"
+                            Stroke="{StaticResource Border}"
+                            StrokeThickness="1">
+
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="10" />
+                            </Border.StrokeShape>
+
+                            <Grid ColumnDefinitions="64,*,44" ColumnSpacing="12">
+
+                                <Border
+                                    WidthRequest="56"
+                                    HeightRequest="76"
+                                    BackgroundColor="{StaticResource SurfaceVariant}"
+                                    StrokeThickness="0">
+
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="6" />
+                                    </Border.StrokeShape>
+
+                                    <Image
+                                        Source="{Binding PosterPath}"
+                                        Aspect="AspectFill" />
+                                </Border>
+
+                                <VerticalStackLayout
+                                    Grid.Column="1"
+                                    Spacing="4"
+                                    VerticalOptions="Center">
+
+                                    <Label
+                                        Text="{Binding Title}"
+                                        TextColor="{StaticResource OnSurface}"
+                                        FontSize="15"
+                                        FontAttributes="Bold"
+                                        LineBreakMode="TailTruncation" />
+
+                                    <Label
+                                        Text="{Binding RatingText}"
+                                        TextColor="{StaticResource Primary}"
+                                        FontSize="13" />
+                                </VerticalStackLayout>
+
+                                <Button
+                                    Grid.Column="2"
+                                    Text="✕"
+                                    Padding="0"
+                                    WidthRequest="40"
+                                    HeightRequest="40"
+                                    BackgroundColor="Transparent"
+                                    TextColor="{StaticResource Error}"
+                                    Command="{Binding Source={x:Reference ThisPage}, Path=BindingContext.RemoveMovieCommand}"
+                                    CommandParameter="{Binding .}" />
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+
+                <CollectionView.Footer>
+                    <ActivityIndicator
+                        IsRunning="{Binding IsLoadingMore}"
+                        IsVisible="{Binding IsLoadingMore}"
+                        Color="{StaticResource Primary}"
+                        Margin="0,12" />
+                </CollectionView.Footer>
+            </CollectionView>
         </Grid>
     </Grid>
 </pages:BasePage>
