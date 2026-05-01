@@ -1,3 +1,4 @@
+using System.Xml.Linq;
 using CineLog.Mobile.Core.Models.WatchList;
 using CommunityToolkit.Mvvm.ComponentModel;
 
@@ -8,14 +9,27 @@ public partial class WatchListRowViewModel(WatchListCollectionItem item) : Obser
     public WatchListCollectionItem Item { get; } = item;
 
     public Guid Id => Item.Id;
-    public string Name => Item.Name;
-    public int ItemCount => Item.ItemCount;
     public bool IsFavorites => Item.IsFavorites;
-    public bool CanEdit => !Item.IsFavorites;
-    public bool CanDelete => !Item.IsFavorites;
+    public bool CanEdit => Item.CanEdit;
+    public bool CanDelete => Item.CanDelete;
 
     [ObservableProperty]
-    private bool _isOptionsOpen;
+    [NotifyPropertyChangedFor(nameof(IconText))]
+    private string _name = item.Name;
+
+    public int ItemCount
+    {
+        get => Item.ItemCount;
+        set
+        {
+            if (Item.ItemCount == value)
+                return;
+
+            Item.ItemCount = value;
+            OnPropertyChanged();
+            OnPropertyChanged(nameof(CountText));
+        }
+    }
 
     public string CountText => ItemCount == 1 ? "1 movie" : $"{ItemCount} movies";
 
@@ -25,5 +39,12 @@ public partial class WatchListRowViewModel(WatchListCollectionItem item) : Obser
             : string.IsNullOrWhiteSpace(Name)
                 ? "?"
                 : Name[..1].ToUpperInvariant();
-    public string? IconFontFamily => IsFavorites ? "FASolid" : null;
+
+    [ObservableProperty]
+    private bool _isOptionsOpen;
+
+    public void RenameLocally(string name)
+    {
+        Name = name.Trim();
+    }
 }

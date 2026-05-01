@@ -1,6 +1,4 @@
 using System.Collections.ObjectModel;
-using CineLog.Mobile.Core.Models;
-using CineLog.Mobile.Core.Models.WatchList;
 using CineLog.Mobile.Core.Services.Interfaces;
 using CineLog.Mobile.Core.ViewModels.Base;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -10,32 +8,23 @@ namespace CineLog.Mobile.Core.ViewModels.WatchList;
 
 public partial class WatchListViewModel(
     IWatchListService watchListService,
-    IAlertService alerts) : BaseViewModel(alerts)
+    IAlertService alerts,
+    WatchListMoviesViewModel moviesViewModel) : BaseViewModel(alerts)
 {
-    private const int MoviePageSize = 12;
-
-    private readonly List<MovieItem> _allMovies = [];
-    private int _currentPage;
+    private WatchListRowViewModel? _openOptionsRow;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(ShowWatchLists))]
     [NotifyPropertyChangedFor(nameof(ShowMovies))]
-    private WatchListCollectionItem? _selectedWatchList;
+    private bool _isViewingMovies;
 
-    [ObservableProperty] private string _newWatchListName = string.Empty;
-    [ObservableProperty] private bool _hasWatchLists;
-    [ObservableProperty] private bool _hasMovies;
-    [ObservableProperty] private bool _canLoadMore;
-    [ObservableProperty] private bool _isLoadingMore;
-    [ObservableProperty] private bool _isCreatingWatchList;
-    [ObservableProperty] private string _editingWatchListName = string.Empty;
-    [ObservableProperty] private WatchListRowViewModel? _watchListBeingEdited;
+    public bool ShowWatchLists => !IsViewingMovies;
+    public bool ShowMovies => IsViewingMovies;
+    public bool HasWatchLists => Lists.Count > 0;
 
-    public bool ShowWatchLists => SelectedWatchList is null;
-    public bool ShowMovies => SelectedWatchList is not null;
-
+    public WatchListNameFormViewModel NameForm { get; } = new();
+    public WatchListMoviesViewModel MoviesViewModel { get; } = moviesViewModel;
     public ObservableCollection<WatchListRowViewModel> Lists { get; } = [];
-    public ObservableCollection<MovieItem> Movies { get; } = [];
 
     protected override async Task LoadAsync()
     {
@@ -49,33 +38,8 @@ public partial class WatchListViewModel(
     [RelayCommand]
     private void ShowCreateWatchList()
     {
-        CloseOptions();
-        NewWatchListName = string.Empty;
-        IsCreatingWatchList = true;
-    }
-
-    [RelayCommand]
-    private void CancelCreateWatchList()
-    {
-        NewWatchListName = string.Empty;
-        IsCreatingWatchList = false;
-    }
-
-    [RelayCommand]
-    private async Task ConfirmCreateWatchList()
-    {
-        var name = NewWatchListName.Trim();
-
-        if (string.IsNullOrWhiteSpace(name))
-            return;
-
-        await ExecuteAsync(async () =>
-        {
-            await watchListService.CreateWatchListAsync(name);
-            NewWatchListName = string.Empty;
-            IsCreatingWatchList = false;
-            await ReloadWatchListsAsync();
-        });
+        SetOptionsRow(null);
+        NameForm.BeginCreate();
     }
 
     [RelayCommand]
@@ -84,33 +48,22 @@ public partial class WatchListViewModel(
         if (row is null)
             return;
 
-        CloseOptions();
+        SetOptionsRow(null);
 
         await ExecuteAsync(async () =>
         {
-            SelectedWatchList = row.Item;
+            await MoviesViewModel.OpenAsync(row);
+            IsViewingMovies = true;
             Title = row.Name;
-
-            _allMovies.Clear();
-            _allMovies.AddRange(await watchListService.GetMoviesAsync(row.Item));
-
-            Movies.Clear();
-            _currentPage = 0;
-            LoadNextMoviePage();
         });
     }
 
     [RelayCommand]
     private void BackToLists()
     {
-        SelectedWatchList = null;
+        IsViewingMovies = false;
         Title = "WatchLists";
-
-        Movies.Clear();
-        _allMovies.Clear();
-
-        HasMovies = false;
-        CanLoadMore = false;
+        MoviesViewModel.Clear();
     }
 
     [RelayCommand]
@@ -119,8 +72,7 @@ public partial class WatchListViewModel(
         if (row is null)
             return;
 
-        foreach (var item in Lists)
-            item.IsOptionsOpen = item == row && !item.IsOptionsOpen;
+        SetOptionsRow(_openOptionsRow == row ? null : row);
     }
 
     [RelayCommand]
@@ -129,31 +81,43 @@ public partial class WatchListViewModel(
         if (row is null || !row.CanEdit)
             return;
 
-        CloseOptions();
-
-        WatchListBeingEdited = row;
-        EditingWatchListName = row.Name;
+        SetOptionsRow(null);
+        NameForm.BeginRename(row);
     }
 
     [RelayCommand]
-    private async Task ConfirmEditWatchList()
+    private async Task ConfirmNameForm()
     {
-        if (WatchListBeingEdited is null)
+        var name = NameForm.Name.Trim();
+
+        if (string.IsNullOrWhiteSpace(name))
             return;
 
-        await alerts.ShowAlertAsync(
-            "Not implemented",
-            "Renaming watchlists needs a backend endpoint first.");
+        if (NameForm.IsCreateMode)
+        {
+            await ExecuteAsync(async () =>
+            {
+                await watchListService.CreateWatchListAsync(name);
+                NameForm.Close();
+                await ReloadWatchListsAsync();
+            });
 
-        WatchListBeingEdited = null;
-        EditingWatchListName = string.Empty;
+            return;
+        }
+
+        if (NameForm.IsRenameMode && NameForm.TargetRow is not null)
+        {
+            NameForm.TargetRow.RenameLocally(name);
+            NameForm.Close();
+
+            await alerts.ShowToastAsync("Renamed locally. Backend update is not implemented yet.");
+        }
     }
 
     [RelayCommand]
-    private void CancelEditWatchList()
+    private void CancelNameForm()
     {
-        WatchListBeingEdited = null;
-        EditingWatchListName = string.Empty;
+        NameForm.Close();
     }
 
     [RelayCommand]
@@ -162,56 +126,16 @@ public partial class WatchListViewModel(
         if (row is null || !row.CanDelete)
             return;
 
-        CloseOptions();
+        SetOptionsRow(null);
 
         await ExecuteAsync(async () =>
         {
             await watchListService.DeleteWatchListAsync(row.Item);
             Lists.Remove(row);
 
-            if (SelectedWatchList?.Id == row.Id)
-                BackToLists();
-
-            HasWatchLists = Lists.Count > 0;
+            OnPropertyChanged(nameof(HasWatchLists));
             await alerts.ShowToastAsync("List deleted.");
         });
-    }
-
-    [RelayCommand]
-    private async Task RemoveMovie(MovieItem? movie)
-    {
-        if (movie is null || SelectedWatchList is null)
-            return;
-
-        await ExecuteAsync(async () =>
-        {
-            await watchListService.RemoveMovieFromWatchListAsync(SelectedWatchList, movie.Id);
-
-            _allMovies.RemoveAll(x => x.Id == movie.Id);
-            Movies.Remove(movie);
-
-            SelectedWatchList.ItemCount = Math.Max(0, SelectedWatchList.ItemCount - 1);
-            HasMovies = Movies.Count > 0;
-            CanLoadMore = Movies.Count < _allMovies.Count;
-
-            await alerts.ShowToastAsync(
-                SelectedWatchList.IsFavorites
-                    ? "Removed from favorites."
-                    : "Movie removed from list.");
-        });
-    }
-
-    [RelayCommand]
-    private Task LoadMore()
-    {
-        if (IsLoadingMore || !CanLoadMore)
-            return Task.CompletedTask;
-
-        IsLoadingMore = true;
-        LoadNextMoviePage();
-        IsLoadingMore = false;
-
-        return Task.CompletedTask;
     }
 
     private async Task ReloadWatchListsAsync()
@@ -221,27 +145,17 @@ public partial class WatchListViewModel(
         foreach (var list in await watchListService.GetWatchListsAsync())
             Lists.Add(new WatchListRowViewModel(list));
 
-        HasWatchLists = Lists.Count > 0;
+        OnPropertyChanged(nameof(HasWatchLists));
     }
 
-    private void LoadNextMoviePage()
+    private void SetOptionsRow(WatchListRowViewModel? row)
     {
-        var nextMovies = _allMovies
-            .Skip(_currentPage * MoviePageSize)
-            .Take(MoviePageSize)
-            .ToList();
+        if (_openOptionsRow is not null)
+            _openOptionsRow.IsOptionsOpen = false;
 
-        foreach (var movie in nextMovies)
-            Movies.Add(movie);
+        _openOptionsRow = row;
 
-        _currentPage++;
-        HasMovies = Movies.Count > 0;
-        CanLoadMore = Movies.Count < _allMovies.Count;
-    }
-
-    private void CloseOptions()
-    {
-        foreach (var item in Lists)
-            item.IsOptionsOpen = false;
+        if (_openOptionsRow is not null)
+            _openOptionsRow.IsOptionsOpen = true;
     }
 }

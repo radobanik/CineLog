@@ -88,6 +88,8 @@ public static class ServiceCollectionExtensions
         services.AddTransient<SearchViewModel>();
         services.AddTransient<WatchListViewModel>();
         services.AddTransient<WatchListRowViewModel>();
+        services.AddTransient<WatchListMoviesViewModel>();
+        services.AddTransient<WatchListNameFormViewModel>();
 
         return services;
     }
