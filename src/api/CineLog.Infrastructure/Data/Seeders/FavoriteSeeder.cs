@@ -12,10 +12,26 @@ internal static class FavoriteSeeder
     [
         new("alice@cinelog.dev", "Fight Club"),
         new("alice@cinelog.dev", "Inception"),
+        new("alice@cinelog.dev", "Blade Runner"),
+        new("alice@cinelog.dev", "The Matrix"),
+
+
         new("bob@cinelog.dev", "The Dark Knight"),
+        new("bob@cinelog.dev", "Blade Runner"),
+        new("bob@cinelog.dev", "Star Wars"),
+
+
         new("carol@cinelog.dev", "Pulp Fiction"),
+        new("carol@cinelog.dev", "Fight Club"),
+        new("carol@cinelog.dev", "Get Out"),
+        new("carol@cinelog.dev", "Midsommar"),
+        new("carol@cinelog.dev", "The Shining"),
+
         new("dave@cinelog.dev", "Forrest Gump"),
-        new("carol@cinelog.dev", "Fight Club")
+        new("dave@cinelog.dev", "The Lord of the Rings: The Fellowship of the Ring"),
+        new("dave@cinelog.dev", "The Lord of the Rings: The Two Towers"),
+        new("dave@cinelog.dev", "The Lord of the Rings: The Return of the King"),
+        new("dave@cinelog.dev", "Spirited Away")
     ];
 
     internal static async Task SeedAsync(IAppDbContext context)

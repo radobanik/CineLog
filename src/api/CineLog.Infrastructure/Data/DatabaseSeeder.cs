@@ -19,5 +19,6 @@ public static class DatabaseSeeder
         await MovieSeeder.SeedAsync(dbContext);
         await ReviewSeeder.SeedAsync(dbContext);
         await FavoriteSeeder.SeedAsync(dbContext);
+        await WatchlistSeeder.SeedAsync(dbContext);
     }
 }
