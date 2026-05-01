@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using CineLog.Mobile.Core.Navigation;
 using CineLog.Mobile.Core.Services.Interfaces;
 using CineLog.Mobile.Core.ViewModels.Base;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -8,22 +9,15 @@ namespace CineLog.Mobile.Core.ViewModels.WatchList;
 
 public partial class WatchListViewModel(
     IWatchListService watchListService,
-    IAlertService alerts,
-    WatchListMoviesViewModel moviesViewModel) : BaseViewModel(alerts)
+    IWatchListNavigationContext watchListNavigation,
+    INavigationService navigation,
+    IAlertService alerts) : BaseViewModel(alerts)
 {
     private WatchListRowViewModel? _openOptionsRow;
 
-    [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(ShowWatchLists))]
-    [NotifyPropertyChangedFor(nameof(ShowMovies))]
-    private bool _isViewingMovies;
-
-    public bool ShowWatchLists => !IsViewingMovies;
-    public bool ShowMovies => IsViewingMovies;
     public bool HasWatchLists => Lists.Count > 0;
 
     public WatchListNameFormViewModel NameForm { get; } = new();
-    public WatchListMoviesViewModel MoviesViewModel { get; } = moviesViewModel;
     public ObservableCollection<WatchListRowViewModel> Lists { get; } = [];
 
     protected override async Task LoadAsync()
@@ -49,21 +43,9 @@ public partial class WatchListViewModel(
             return;
 
         SetOptionsRow(null);
+        watchListNavigation.SelectedRow = row;
 
-        await ExecuteAsync(async () =>
-        {
-            await MoviesViewModel.OpenAsync(row);
-            IsViewingMovies = true;
-            Title = row.Name;
-        });
-    }
-
-    [RelayCommand]
-    private void BackToLists()
-    {
-        IsViewingMovies = false;
-        Title = "WatchLists";
-        MoviesViewModel.Clear();
+        await navigation.NavigateToAsync(Routes.MovieWatchList);
     }
 
     [RelayCommand]
@@ -109,16 +91,12 @@ public partial class WatchListViewModel(
         {
             NameForm.TargetRow.RenameLocally(name);
             NameForm.Close();
-
             await alerts.ShowToastAsync("Renamed locally. Backend update is not implemented yet.");
         }
     }
 
     [RelayCommand]
-    private void CancelNameForm()
-    {
-        NameForm.Close();
-    }
+    private void CancelNameForm() => NameForm.Close();
 
     [RelayCommand]
     private async Task DeleteWatchList(WatchListRowViewModel? row)
@@ -132,7 +110,6 @@ public partial class WatchListViewModel(
         {
             await watchListService.DeleteWatchListAsync(row.Item);
             Lists.Remove(row);
-
             OnPropertyChanged(nameof(HasWatchLists));
             await alerts.ShowToastAsync("List deleted.");
         });

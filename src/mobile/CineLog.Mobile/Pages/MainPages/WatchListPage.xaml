@@ -11,336 +11,240 @@
 
     <Grid Padding="24">
 
-        <Grid IsVisible="{Binding ShowWatchLists}">
-
-            <RefreshView Command="{Binding LoadCommand}" IsRefreshing="{Binding IsBusy, Mode=OneWay}">
-                <CollectionView
-                    Margin="0,8,0,O"
-                    ItemsSource="{Binding Lists}"
-                    ItemsUpdatingScrollMode="KeepScrollOffset"
-                    SelectionMode="None">
-
-                    <CollectionView.ItemTemplate>
-                        <DataTemplate>
-                            <AbsoluteLayout Margin="0,0,0,12" HeightRequest="112">
-
-                                <Border
-                                    Padding="16"
-                                    AbsoluteLayout.LayoutBounds="0,0,1,96"
-                                    AbsoluteLayout.LayoutFlags="WidthProportional"
-                                    BackgroundColor="{StaticResource Surface}"
-                                    Stroke="{StaticResource Border}"
-                                    StrokeThickness="1">
-
-                                    <Border.StrokeShape>
-                                        <RoundRectangle CornerRadius="10" />
-                                    </Border.StrokeShape>
-
-                                    <Grid ColumnDefinitions="64,*,56" ColumnSpacing="12">
-
-                                        <Border
-                                            BackgroundColor="{StaticResource SurfaceVariant}"
-                                            HeightRequest="52"
-                                            StrokeThickness="0"
-                                            VerticalOptions="Center"
-                                            WidthRequest="52">
-
-                                            <Border.StrokeShape>
-                                                <RoundRectangle CornerRadius="26" />
-                                            </Border.StrokeShape>
-
-                                            <Label
-                                                FontAttributes="Bold"
-                                                FontSize="22"
-                                                HorizontalOptions="Center"
-                                                Text="{Binding IconText}"
-                                                TextColor="{StaticResource Primary}"
-                                                VerticalOptions="Center">
-                                                <Label.Triggers>
-                                                    <DataTrigger
-                                                        Binding="{Binding IsFavorites}"
-                                                        TargetType="Label"
-                                                        Value="True">
-                                                        <Setter Property="FontFamily" Value="FASolid" />
-                                                        <Setter Property="FontAttributes" Value="None" />
-                                                    </DataTrigger>
-                                                </Label.Triggers>
-                                            </Label>
-                                        </Border>
-
-                                        <VerticalStackLayout
-                                            Grid.Column="1"
-                                            Spacing="2"
-                                            VerticalOptions="Center">
-
-                                            <Label
-                                                FontAttributes="Bold"
-                                                FontSize="20"
-                                                LineBreakMode="TailTruncation"
-                                                MaxLines="1"
-                                                Text="{Binding Name}"
-                                                TextColor="{StaticResource OnSurface}" />
-
-                                            <Label
-                                                FontSize="15"
-                                                Text="{Binding CountText}"
-                                                TextColor="{StaticResource TextSecondary}" />
-                                        </VerticalStackLayout>
-
-                                        <Button
-                                            Grid.Column="2"
-                                            Padding="0"
-                                            BackgroundColor="Transparent"
-                                            Command="{Binding Source={x:Reference ThisPage}, Path=BindingContext.ToggleWatchListOptionsCommand}"
-                                            CommandParameter="{Binding .}"
-                                            FontSize="24"
-                                            HeightRequest="48"
-                                            HorizontalOptions="End"
-                                            Text="⋯"
-                                            TextColor="{StaticResource TextSecondary}"
-                                            VerticalOptions="Center"
-                                            WidthRequest="48" />
-
-                                        <Grid.GestureRecognizers>
-                                            <TapGestureRecognizer Command="{Binding Source={x:Reference ThisPage}, Path=BindingContext.OpenWatchListCommand}" CommandParameter="{Binding .}" />
-                                        </Grid.GestureRecognizers>
-                                    </Grid>
-                                </Border>
-
-                                <Border
-                                    Padding="12,8"
-                                    AbsoluteLayout.LayoutBounds="0.76,20,128,76"
-                                    AbsoluteLayout.LayoutFlags="XProportional"
-                                    BackgroundColor="{StaticResource Overlay}"
-                                    IsVisible="{Binding IsOptionsOpen}"
-                                    Stroke="{StaticResource Border}"
-                                    StrokeThickness="1"
-                                    ZIndex="20">
-
-                                    <Border.StrokeShape>
-                                        <RoundRectangle CornerRadius="6" />
-                                    </Border.StrokeShape>
-
-                                    <VerticalStackLayout Spacing="8">
-                                        <Label
-                                            FontAutoScalingEnabled="False"
-                                            FontSize="15"
-                                            IsEnabled="{Binding CanEdit}"
-                                            LineBreakMode="NoWrap"
-                                            Text="Edit"
-                                            TextColor="{StaticResource OnSurface}">
-                                            <Label.Triggers>
-                                                <DataTrigger
-                                                    Binding="{Binding CanEdit}"
-                                                    TargetType="Label"
-                                                    Value="False">
-                                                    <Setter Property="TextColor" Value="{StaticResource TextDisabled}" />
-                                                </DataTrigger>
-                                            </Label.Triggers>
-                                            <Label.GestureRecognizers>
-                                                <TapGestureRecognizer Command="{Binding Source={x:Reference ThisPage}, Path=BindingContext.StartEditWatchListCommand}" CommandParameter="{Binding .}" />
-                                            </Label.GestureRecognizers>
-                                        </Label>
-
-                                        <Label
-                                            FontAutoScalingEnabled="False"
-                                            FontSize="15"
-                                            IsEnabled="{Binding CanDelete}"
-                                            LineBreakMode="NoWrap"
-                                            Text="Delete"
-                                            TextColor="{StaticResource Error}">
-                                            <Label.Triggers>
-                                                <DataTrigger
-                                                    Binding="{Binding CanDelete}"
-                                                    TargetType="Label"
-                                                    Value="False">
-                                                    <Setter Property="TextColor" Value="{StaticResource TextDisabled}" />
-                                                </DataTrigger>
-                                            </Label.Triggers>
-                                            <Label.GestureRecognizers>
-                                                <TapGestureRecognizer Command="{Binding Source={x:Reference ThisPage}, Path=BindingContext.DeleteWatchListCommand}" CommandParameter="{Binding .}" />
-                                            </Label.GestureRecognizers>
-                                        </Label>
-                                    </VerticalStackLayout>
-                                </Border>
-                            </AbsoluteLayout>
-                        </DataTemplate>
-                    </CollectionView.ItemTemplate>
-                </CollectionView>
-            </RefreshView>
-
-            <Button
-                Margin="0,0,0,16"
-                Padding="0"
-                BackgroundColor="{StaticResource Primary}"
-                Command="{Binding ShowCreateWatchListCommand}"
-                CornerRadius="28"
-                FontAttributes="Bold"
-                FontSize="28"
-                HeightRequest="56"
-                HorizontalOptions="End"
-                Text="+"
-                TextColor="{StaticResource OnPrimary}"
-                VerticalOptions="End"
-                WidthRequest="56"
-                ZIndex="10" />
-
-            <Grid IsVisible="{Binding NameForm.IsOpen}" ZIndex="30">
-
-                <BoxView Color="#99000000">
-                    <BoxView.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding CancelNameFormCommand}" />
-                    </BoxView.GestureRecognizers>
-                </BoxView>
-
-                <Border
-                    Padding="20"
-                    BackgroundColor="{StaticResource Surface}"
-                    HorizontalOptions="Center"
-                    Stroke="{StaticResource Border}"
-                    StrokeThickness="1"
-                    VerticalOptions="Center"
-                    WidthRequest="320">
-
-                    <Border.StrokeShape>
-                        <RoundRectangle CornerRadius="12" />
-                    </Border.StrokeShape>
-
-                    <VerticalStackLayout Spacing="16">
-                        <Label
-                            FontAttributes="Bold"
-                            FontSize="18"
-                            HorizontalOptions="Center"
-                            Text="{Binding NameForm.Title}"
-                            TextColor="{StaticResource OnSurface}" />
-
-                        <Grid ColumnDefinitions="*,44" ColumnSpacing="8">
-                            <Entry
-                                BackgroundColor="Transparent"
-                                Placeholder="List name"
-                                PlaceholderColor="{StaticResource TextSecondary}"
-                                ReturnCommand="{Binding ConfirmNameFormCommand}"
-                                Text="{Binding NameForm.Name}"
-                                TextColor="{StaticResource OnSurface}" />
-
-                            <Button
-                                Grid.Column="1"
-                                Padding="0"
-                                BackgroundColor="Transparent"
-                                Command="{Binding ConfirmNameFormCommand}"
-                                FontSize="18"
-                                Text="✓"
-                                TextColor="{StaticResource Primary}" />
-                        </Grid>
-
-                        <Button
-                            BackgroundColor="Transparent"
-                            Command="{Binding CancelNameFormCommand}"
-                            Text="Cancel"
-                            TextColor="{StaticResource TextSecondary}" />
-                    </VerticalStackLayout>
-                </Border>
-            </Grid>
-        </Grid>
-
-        <Grid IsVisible="{Binding ShowMovies}" RowDefinitions="Auto,*">
-
-            <Grid Padding="0,4,0,16" ColumnDefinitions="44,*">
-                <Button
-                    Padding="0"
-                    BackgroundColor="Transparent"
-                    Command="{Binding BackToListsCommand}"
-                    FontSize="28"
-                    Text="‹"
-                    TextColor="{StaticResource OnBackground}" />
-
-                <Label
-                    Grid.Column="1"
-                    FontAttributes="Bold"
-                    FontSize="22"
-                    LineBreakMode="TailTruncation"
-                    Text="{Binding MoviesViewModel.SelectedRow.Name}"
-                    TextColor="{StaticResource OnBackground}"
-                    VerticalOptions="Center" />
-            </Grid>
+        <RefreshView Command="{Binding LoadCommand}" IsRefreshing="{Binding IsBusy, Mode=OneWay}">
 
             <CollectionView
-                Grid.Row="1"
-                ItemsSource="{Binding MoviesViewModel.Movies}"
-                RemainingItemsThreshold="3"
-                RemainingItemsThresholdReachedCommand="{Binding MoviesViewModel.LoadMoreCommand}"
+                x:Name="WatchListsCollection"
+                Margin="0,8,0,0"
+                ItemsSource="{Binding Lists}"
+                ItemsUpdatingScrollMode="KeepScrollOffset"
                 SelectionMode="None">
 
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <Border
-                            Margin="0,0,0,12"
-                            Padding="12"
-                            BackgroundColor="{StaticResource Surface}"
-                            Stroke="{StaticResource Border}"
-                            StrokeThickness="1">
+                        <AbsoluteLayout Margin="0,0,0,12" HeightRequest="112">
 
-                            <Border.StrokeShape>
-                                <RoundRectangle CornerRadius="10" />
-                            </Border.StrokeShape>
+                            <Border
+                                Padding="16"
+                                AbsoluteLayout.LayoutBounds="0,0,1,96"
+                                AbsoluteLayout.LayoutFlags="WidthProportional"
+                                BackgroundColor="{StaticResource Surface}"
+                                Stroke="{StaticResource Border}"
+                                StrokeThickness="1">
 
-                            <Grid ColumnDefinitions="64,*,44" ColumnSpacing="12">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="10" />
+                                </Border.StrokeShape>
 
-                                <Border
-                                    BackgroundColor="{StaticResource SurfaceVariant}"
-                                    HeightRequest="76"
-                                    StrokeThickness="0"
-                                    WidthRequest="56">
+                                <Grid ColumnDefinitions="64,*,56" ColumnSpacing="12">
 
-                                    <Border.StrokeShape>
-                                        <RoundRectangle CornerRadius="6" />
-                                    </Border.StrokeShape>
+                                    <Border
+                                        BackgroundColor="{StaticResource SurfaceVariant}"
+                                        HeightRequest="52"
+                                        StrokeThickness="0"
+                                        VerticalOptions="Center"
+                                        WidthRequest="52">
 
-                                    <Image Aspect="AspectFill" Source="{Binding PosterPath}" />
-                                </Border>
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="26" />
+                                        </Border.StrokeShape>
 
-                                <VerticalStackLayout
-                                    Grid.Column="1"
-                                    Spacing="4"
-                                    VerticalOptions="Center">
+                                        <Label
+                                            FontAttributes="Bold"
+                                            FontSize="22"
+                                            HorizontalOptions="Center"
+                                            Text="{Binding IconText}"
+                                            TextColor="{StaticResource Primary}"
+                                            VerticalOptions="Center">
+                                            <Label.Triggers>
+                                                <DataTrigger
+                                                    Binding="{Binding IsFavorites}"
+                                                    TargetType="Label"
+                                                    Value="True">
+                                                    <Setter Property="FontFamily" Value="FASolid" />
+                                                    <Setter Property="FontAttributes" Value="None" />
+                                                </DataTrigger>
+                                            </Label.Triggers>
+                                        </Label>
+                                    </Border>
 
+                                    <VerticalStackLayout
+                                        Grid.Column="1"
+                                        Spacing="2"
+                                        VerticalOptions="Center">
+
+                                        <Label
+                                            FontAttributes="Bold"
+                                            FontSize="20"
+                                            LineBreakMode="TailTruncation"
+                                            MaxLines="1"
+                                            Text="{Binding Name}"
+                                            TextColor="{StaticResource OnSurface}" />
+
+                                        <Label
+                                            FontSize="15"
+                                            Text="{Binding CountText}"
+                                            TextColor="{StaticResource TextSecondary}" />
+                                    </VerticalStackLayout>
+
+                                    <Button
+                                        Grid.Column="2"
+                                        Padding="0"
+                                        BackgroundColor="Transparent"
+                                        Command="{Binding Source={x:Reference ThisPage}, Path=BindingContext.ToggleWatchListOptionsCommand}"
+                                        CommandParameter="{Binding .}"
+                                        FontSize="24"
+                                        HeightRequest="48"
+                                        HorizontalOptions="End"
+                                        Text="⋯"
+                                        TextColor="{StaticResource TextSecondary}"
+                                        VerticalOptions="Center"
+                                        WidthRequest="48"
+                                        ZIndex="10" />
+
+                                    <Grid.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding Source={x:Reference ThisPage}, Path=BindingContext.OpenWatchListCommand}" CommandParameter="{Binding .}" />
+                                    </Grid.GestureRecognizers>
+                                </Grid>
+                            </Border>
+
+                            <Border
+                                Padding="12,8"
+                                AbsoluteLayout.LayoutBounds="0.76,20,128,76"
+                                AbsoluteLayout.LayoutFlags="XProportional"
+                                BackgroundColor="{StaticResource Overlay}"
+                                IsVisible="{Binding IsOptionsOpen}"
+                                Stroke="{StaticResource Border}"
+                                StrokeThickness="1"
+                                ZIndex="20">
+
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="6" />
+                                </Border.StrokeShape>
+
+                                <VerticalStackLayout Spacing="8">
                                     <Label
-                                        FontAttributes="Bold"
+                                        FontAutoScalingEnabled="False"
                                         FontSize="15"
-                                        LineBreakMode="TailTruncation"
-                                        MaxLines="1"
-                                        Text="{Binding Title}"
-                                        TextColor="{StaticResource OnSurface}" />
+                                        IsEnabled="{Binding CanEdit}"
+                                        LineBreakMode="NoWrap"
+                                        Text="Edit"
+                                        TextColor="{StaticResource OnSurface}">
+                                        <Label.Triggers>
+                                            <DataTrigger
+                                                Binding="{Binding CanEdit}"
+                                                TargetType="Label"
+                                                Value="False">
+                                                <Setter Property="TextColor" Value="{StaticResource TextDisabled}" />
+                                            </DataTrigger>
+                                        </Label.Triggers>
+                                        <Label.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding Source={x:Reference ThisPage}, Path=BindingContext.StartEditWatchListCommand}" CommandParameter="{Binding .}" />
+                                        </Label.GestureRecognizers>
+                                    </Label>
 
                                     <Label
-                                        FontSize="13"
-                                        Text="{Binding RatingText}"
-                                        TextColor="{StaticResource Primary}" />
+                                        FontAutoScalingEnabled="False"
+                                        FontSize="15"
+                                        IsEnabled="{Binding CanDelete}"
+                                        LineBreakMode="NoWrap"
+                                        Text="Delete"
+                                        TextColor="{StaticResource Error}">
+                                        <Label.Triggers>
+                                            <DataTrigger
+                                                Binding="{Binding CanDelete}"
+                                                TargetType="Label"
+                                                Value="False">
+                                                <Setter Property="TextColor" Value="{StaticResource TextDisabled}" />
+                                            </DataTrigger>
+                                        </Label.Triggers>
+                                        <Label.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding Source={x:Reference ThisPage}, Path=BindingContext.DeleteWatchListCommand}" CommandParameter="{Binding .}" />
+                                        </Label.GestureRecognizers>
+                                    </Label>
                                 </VerticalStackLayout>
-
-                                <Button
-                                    Grid.Column="2"
-                                    Padding="0"
-                                    BackgroundColor="Transparent"
-                                    Command="{Binding Source={x:Reference ThisPage}, Path=BindingContext.MoviesViewModel.RemoveMovieCommand}"
-                                    CommandParameter="{Binding .}"
-                                    HeightRequest="40"
-                                    Text="✕"
-                                    TextColor="{StaticResource Error}"
-                                    WidthRequest="40" />
-                            </Grid>
-                        </Border>
+                            </Border>
+                        </AbsoluteLayout>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
-
                 <CollectionView.Footer>
-                    <ActivityIndicator
-                        Margin="0,12"
-                        IsRunning="{Binding MoviesViewModel.IsLoadingMore}"
-                        IsVisible="{Binding MoviesViewModel.IsLoadingMore}"
-                        Color="{StaticResource Primary}" />
+                    <BoxView HeightRequest="112" Color="Transparent" />
                 </CollectionView.Footer>
+
             </CollectionView>
+        </RefreshView>
+
+        <Button
+            Margin="0,0,0,16"
+            Padding="0"
+            BackgroundColor="{StaticResource Primary}"
+            Command="{Binding ShowCreateWatchListCommand}"
+            CornerRadius="28"
+            FontAttributes="Bold"
+            FontSize="28"
+            HeightRequest="56"
+            HorizontalOptions="End"
+            Text="+"
+            TextColor="{StaticResource OnPrimary}"
+            VerticalOptions="End"
+            WidthRequest="56"
+            ZIndex="10" />
+
+        <Grid IsVisible="{Binding NameForm.IsOpen}" ZIndex="30">
+
+            <BoxView Color="#99000000">
+                <BoxView.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding CancelNameFormCommand}" />
+                </BoxView.GestureRecognizers>
+            </BoxView>
+
+            <Border
+                Padding="20"
+                BackgroundColor="{StaticResource Surface}"
+                HorizontalOptions="Center"
+                Stroke="{StaticResource Border}"
+                StrokeThickness="1"
+                VerticalOptions="Center"
+                WidthRequest="320">
+
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="12" />
+                </Border.StrokeShape>
+
+                <VerticalStackLayout Spacing="16">
+                    <Label
+                        FontAttributes="Bold"
+                        FontSize="18"
+                        HorizontalOptions="Center"
+                        Text="{Binding NameForm.Title}"
+                        TextColor="{StaticResource OnSurface}" />
+
+                    <Grid ColumnDefinitions="*,44" ColumnSpacing="8">
+                        <Entry
+                            BackgroundColor="Transparent"
+                            Placeholder="List name"
+                            PlaceholderColor="{StaticResource TextSecondary}"
+                            ReturnCommand="{Binding ConfirmNameFormCommand}"
+                            Text="{Binding NameForm.Name}"
+                            TextColor="{StaticResource OnSurface}" />
+
+                        <Button
+                            Grid.Column="1"
+                            Padding="0"
+                            BackgroundColor="Transparent"
+                            Command="{Binding ConfirmNameFormCommand}"
+                            FontSize="18"
+                            Text="✓"
+                            TextColor="{StaticResource Primary}" />
+                    </Grid>
+
+                    <Button
+                        BackgroundColor="Transparent"
+                        Command="{Binding CancelNameFormCommand}"
+                        Text="Cancel"
+                        TextColor="{StaticResource TextSecondary}" />
+                </VerticalStackLayout>
+            </Border>
         </Grid>
     </Grid>
 </pages:BasePage>

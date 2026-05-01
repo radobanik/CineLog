@@ -14,6 +14,8 @@ public static class Routes
     public const string Profile = nameof(Profile);
 
     public const string MoviesCategory = nameof(MoviesCategory);
+    public const string MovieWatchList = nameof(MovieWatchList);
 
     public const string AuthenticatedRoot = MainTabs + "/" + Home;
+
 }
