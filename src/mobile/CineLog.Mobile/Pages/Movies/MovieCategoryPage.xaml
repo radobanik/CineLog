@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <pages:BasePage
     x:Class="CineLog.Mobile.Pages.Movies.MoviesCategoryPage"
-    x:DataType="vm:MoviesCategoryViewModel"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:controls="clr-namespace:CineLog.Mobile.Controls"
-    xmlns:models="clr-namespace:CineLog.Mobile.Core.Models.Home;assembly=CineLog.Mobile.Core"
+    xmlns:models="clr-namespace:CineLog.Mobile.Core.Models;assembly=CineLog.Mobile.Core"
     xmlns:pages="clr-namespace:CineLog.Mobile.Pages"
     xmlns:vm="clr-namespace:CineLog.Mobile.Core.ViewModels.Common;assembly=CineLog.Mobile.Core"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+    x:DataType="vm:MoviesCategoryViewModel">
 
     <Grid>
         <controls:MovieGridSkeleton IsVisible="{Binding IsBusy}" />
 
         <CollectionView
+            IsVisible="{Binding IsNotBusy}"
             ItemsSource="{Binding Movies}"
             RemainingItemsThreshold="6"
             RemainingItemsThresholdReachedCommand="{Binding LoadMoreCommand}"
-            SelectionMode="None"
-            IsVisible="{Binding IsNotBusy}">
+            SelectionMode="None">
 
             <CollectionView.ItemsLayout>
                 <GridItemsLayout
