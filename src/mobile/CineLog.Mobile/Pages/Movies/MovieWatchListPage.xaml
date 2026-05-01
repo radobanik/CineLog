@@ -4,6 +4,7 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:pages="clr-namespace:CineLog.Mobile.Pages"
+    xmlns:watchListViews="clr-namespace:CineLog.Mobile.Views.WatchList"
     x:Name="ThisPage"
     Title="{Binding Title}"
     BackgroundColor="{StaticResource Background}"
@@ -40,63 +41,7 @@
 
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <Border
-                        Margin="0,0,0,12"
-                        Padding="12"
-                        BackgroundColor="{StaticResource Surface}"
-                        Stroke="{StaticResource Border}"
-                        StrokeThickness="1">
-
-                        <Border.StrokeShape>
-                            <RoundRectangle CornerRadius="10" />
-                        </Border.StrokeShape>
-
-                        <Grid ColumnDefinitions="64,*,44" ColumnSpacing="12">
-
-                            <Border
-                                BackgroundColor="{StaticResource SurfaceVariant}"
-                                HeightRequest="76"
-                                StrokeThickness="0"
-                                WidthRequest="56">
-
-                                <Border.StrokeShape>
-                                    <RoundRectangle CornerRadius="6" />
-                                </Border.StrokeShape>
-
-                                <Image Aspect="AspectFill" Source="{Binding PosterPath}" />
-                            </Border>
-
-                            <VerticalStackLayout
-                                Grid.Column="1"
-                                Spacing="4"
-                                VerticalOptions="Center">
-
-                                <Label
-                                    FontAttributes="Bold"
-                                    FontSize="15"
-                                    LineBreakMode="TailTruncation"
-                                    MaxLines="1"
-                                    Text="{Binding Title}"
-                                    TextColor="{StaticResource OnSurface}" />
-
-                                <Label
-                                    FontSize="13"
-                                    Text="{Binding RatingText}"
-                                    TextColor="{StaticResource Primary}" />
-                            </VerticalStackLayout>
-
-                            <Button
-                                Grid.Column="2"
-                                Padding="0"
-                                BackgroundColor="Transparent"
-                                Command="{Binding Source={x:Reference ThisPage}, Path=BindingContext.RemoveMovieCommand}"
-                                CommandParameter="{Binding .}"
-                                HeightRequest="40"
-                                Text="✕"
-                                TextColor="{StaticResource Error}"
-                                WidthRequest="40" />
-                        </Grid>
-                    </Border>
+                    <watchListViews:WatchListMovieRowView RemoveCommand="{Binding Source={x:Reference ThisPage}, Path=BindingContext.RemoveMovieCommand}" />
                 </DataTemplate>
             </CollectionView.ItemTemplate>
 

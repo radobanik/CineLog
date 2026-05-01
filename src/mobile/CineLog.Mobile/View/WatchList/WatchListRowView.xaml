@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView
+    x:Class="CineLog.Mobile.Views.WatchList.WatchListRowView"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:watchListViews="clr-namespace:CineLog.Mobile.Views.WatchList"
+    x:Name="Root">
+
+    <AbsoluteLayout Margin="0,0,0,12" HeightRequest="112">
+
+        <Border
+            Padding="16"
+            AbsoluteLayout.LayoutBounds="0,0,1,96"
+            AbsoluteLayout.LayoutFlags="WidthProportional"
+            BackgroundColor="{StaticResource Surface}"
+            Stroke="{StaticResource Border}"
+            StrokeThickness="1">
+
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="10" />
+            </Border.StrokeShape>
+
+            <Grid ColumnDefinitions="64,*,56" ColumnSpacing="12">
+
+                <Border
+                    BackgroundColor="{StaticResource SurfaceVariant}"
+                    HeightRequest="52"
+                    StrokeThickness="0"
+                    VerticalOptions="Center"
+                    WidthRequest="52">
+
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="26" />
+                    </Border.StrokeShape>
+
+                    <Label
+                        FontAttributes="Bold"
+                        FontSize="22"
+                        HorizontalOptions="Center"
+                        Text="{Binding IconText}"
+                        TextColor="{StaticResource Primary}"
+                        VerticalOptions="Center">
+                        <Label.Triggers>
+                            <DataTrigger
+                                Binding="{Binding IsFavorites}"
+                                TargetType="Label"
+                                Value="True">
+                                <Setter Property="FontFamily" Value="FASolid" />
+                                <Setter Property="FontAttributes" Value="None" />
+                            </DataTrigger>
+                        </Label.Triggers>
+                    </Label>
+                </Border>
+
+                <VerticalStackLayout
+                    Grid.Column="1"
+                    Spacing="2"
+                    VerticalOptions="Center">
+
+                    <Label
+                        FontAttributes="Bold"
+                        FontSize="20"
+                        LineBreakMode="TailTruncation"
+                        MaxLines="1"
+                        Text="{Binding Name}"
+                        TextColor="{StaticResource OnSurface}" />
+
+                    <Label
+                        FontSize="15"
+                        Text="{Binding CountText}"
+                        TextColor="{StaticResource TextSecondary}" />
+                </VerticalStackLayout>
+
+                <Button
+                    Grid.Column="2"
+                    Padding="0"
+                    BackgroundColor="Transparent"
+                    Command="{Binding Source={x:Reference Root}, Path=ToggleOptionsCommand}"
+                    CommandParameter="{Binding .}"
+                    FontSize="24"
+                    HeightRequest="48"
+                    HorizontalOptions="End"
+                    Text="⋯"
+                    TextColor="{StaticResource TextSecondary}"
+                    VerticalOptions="Center"
+                    WidthRequest="48" />
+
+                <Grid.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding Source={x:Reference Root}, Path=OpenCommand}" CommandParameter="{Binding .}" />
+                </Grid.GestureRecognizers>
+            </Grid>
+        </Border>
+
+        <watchListViews:WatchListRowOptionsView
+            AbsoluteLayout.LayoutBounds="0.76,20,128,76"
+            AbsoluteLayout.LayoutFlags="XProportional"
+            DeleteCommand="{Binding Source={x:Reference Root}, Path=DeleteCommand}"
+            EditCommand="{Binding Source={x:Reference Root}, Path=EditCommand}"
+            IsVisible="{Binding IsOptionsOpen}"
+            ZIndex="20" />
+
+    </AbsoluteLayout>
+</ContentView>

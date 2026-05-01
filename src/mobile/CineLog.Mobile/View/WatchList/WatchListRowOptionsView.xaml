@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView
+    x:Class="CineLog.Mobile.Views.WatchList.WatchListRowOptionsView"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Name="Root">
+
+    <Border
+        Padding="12,8"
+        BackgroundColor="{StaticResource Overlay}"
+        Stroke="{StaticResource Border}"
+        StrokeThickness="1">
+
+        <Border.StrokeShape>
+            <RoundRectangle CornerRadius="6" />
+        </Border.StrokeShape>
+
+        <VerticalStackLayout Spacing="8">
+            <Label
+                FontAutoScalingEnabled="False"
+                FontSize="15"
+                IsEnabled="{Binding CanEdit}"
+                LineBreakMode="NoWrap"
+                Text="Edit"
+                TextColor="{StaticResource OnSurface}">
+                <Label.Triggers>
+                    <DataTrigger
+                        Binding="{Binding CanEdit}"
+                        TargetType="Label"
+                        Value="False">
+                        <Setter Property="TextColor" Value="{StaticResource TextDisabled}" />
+                    </DataTrigger>
+                </Label.Triggers>
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding Source={x:Reference Root}, Path=EditCommand}" CommandParameter="{Binding .}" />
+                </Label.GestureRecognizers>
+            </Label>
+
+            <Label
+                FontAutoScalingEnabled="False"
+                FontSize="15"
+                IsEnabled="{Binding CanDelete}"
+                LineBreakMode="NoWrap"
+                Text="Delete"
+                TextColor="{StaticResource Error}">
+                <Label.Triggers>
+                    <DataTrigger
+                        Binding="{Binding CanDelete}"
+                        TargetType="Label"
+                        Value="False">
+                        <Setter Property="TextColor" Value="{StaticResource TextDisabled}" />
+                    </DataTrigger>
+                </Label.Triggers>
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding Source={x:Reference Root}, Path=DeleteCommand}" CommandParameter="{Binding .}" />
+                </Label.GestureRecognizers>
+            </Label>
+        </VerticalStackLayout>
+    </Border>
+</ContentView>
