@@ -6,7 +6,7 @@ using CineLog.Domain.Repositories;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace CineLog.Application.Features.Users.Watchlist.AddToWatchlist;
+namespace CineLog.Application.Features.Watchlist.AddToWatchlist;
 
 public class AddToWatchlistHandler : IRequestHandler<AddToWatchlistCommand>
 {

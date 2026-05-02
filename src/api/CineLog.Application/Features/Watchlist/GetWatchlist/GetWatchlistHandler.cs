@@ -5,7 +5,7 @@ using CineLog.Domain.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace CineLog.Application.Features.Users.Watchlist.GetWatchlist;
+namespace CineLog.Application.Features.Watchlist.GetWatchlist;
 
 public class GetWatchlistHandler : IRequestHandler<GetWatchlistQuery, WatchlistDetailResponse>
 {

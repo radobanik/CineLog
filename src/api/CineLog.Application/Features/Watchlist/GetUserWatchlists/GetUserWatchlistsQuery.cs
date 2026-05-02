@@ -1,6 +1,6 @@
 using MediatR;
 
-namespace CineLog.Application.Features.Users.Watchlist.GetUserWatchlists;
+namespace CineLog.Application.Features.Watchlist.GetUserWatchlists;
 
 public record GetUserWatchlistsQuery : IRequest<List<WatchlistSummaryResponse>>;
 

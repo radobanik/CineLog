@@ -1,7 +1,7 @@
 using CineLog.Application.Features.Movies;
 using MediatR;
 
-namespace CineLog.Application.Features.Users.Watchlist.GetWatchlist;
+namespace CineLog.Application.Features.Watchlist.GetWatchlist;
 
 public record GetWatchlistQuery(Guid WatchlistId) : IRequest<WatchlistDetailResponse>;
 

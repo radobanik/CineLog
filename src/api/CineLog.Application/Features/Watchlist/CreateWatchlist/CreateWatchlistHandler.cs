@@ -3,7 +3,7 @@ using CineLog.Domain.Interfaces;
 using MediatR;
 using WatchlistEntity = CineLog.Domain.Entities.Watchlist;
 
-namespace CineLog.Application.Features.Users.Watchlist.CreateWatchlist;
+namespace CineLog.Application.Features.Watchlist.CreateWatchlist;
 
 public class CreateWatchlistHandler : IRequestHandler<CreateWatchlistCommand, Guid>
 {

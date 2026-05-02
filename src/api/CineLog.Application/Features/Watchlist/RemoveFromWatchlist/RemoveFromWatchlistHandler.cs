@@ -4,7 +4,7 @@ using CineLog.Domain.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace CineLog.Application.Features.Users.Watchlist.RemoveFromWatchlist;
+namespace CineLog.Application.Features.Watchlist.RemoveFromWatchlist;
 
 public class RemoveFromWatchlistHandler : IRequestHandler<RemoveFromWatchlistCommand>
 {
