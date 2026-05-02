@@ -16,6 +16,8 @@ public partial class UserSearchRowViewModel(UserSearchItem item) : ObservableObj
     [NotifyPropertyChangedFor(nameof(FollowButtonText))]
     private bool _isFollowing = item.IsFollowing;
 
+    public string FollowButtonText => IsFollowing ? "Unfollow" : "Follow";
+
     public string Initial =>
         string.IsNullOrWhiteSpace(Username)
             ? "?"
@@ -23,6 +25,4 @@ public partial class UserSearchRowViewModel(UserSearchItem item) : ObservableObj
 
     public string ReviewsText =>
         ReviewCount == 1 ? "1 review" : $"{ReviewCount} reviews";
-
-    public string FollowButtonText => IsFollowing ? "Unfollow" : "Follow";
 }

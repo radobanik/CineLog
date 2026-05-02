@@ -149,6 +149,18 @@
         <Setter Property="FontSize" Value="14" />
     </Style>
 
+    <!--  unfollow button  -->
+    <Style x:Key="UnfollowButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource SurfaceVariant}" />
+        <Setter Property="TextColor" Value="{StaticResource Error}" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="CornerRadius" Value="18" />
+        <Setter Property="HeightRequest" Value="34" />
+        <Setter Property="Padding" Value="14,0" />
+    </Style>
+
+
     <!--  Entries  -->
 
     <Style x:Key="FormEntry" TargetType="Entry">

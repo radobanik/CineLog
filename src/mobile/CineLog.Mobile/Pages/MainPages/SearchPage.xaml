@@ -9,6 +9,7 @@
     xmlns:pages="clr-namespace:CineLog.Mobile.Pages"
     xmlns:searchVm="clr-namespace:CineLog.Mobile.Core.ViewModels.Search;assembly=CineLog.Mobile.Core"
     xmlns:vm="clr-namespace:CineLog.Mobile.Core.ViewModels.Search;assembly=CineLog.Mobile.Core"
+    x:Name="SearchRoot"
     Title="Search"
     x:DataType="vm:SearchViewModel"
     ShowMenuButton="True">
@@ -156,6 +157,7 @@
                 ItemsSource="{Binding FollowingUsers}"
                 RemainingItemsThreshold="4"
                 RemainingItemsThresholdReachedCommand="{Binding LoadMoreCommand}">
+
                 <CollectionView.Header>
                     <VerticalStackLayout Padding="0,0,0,12" Spacing="10">
                         <Label Style="{StaticResource SectionHeaderLabel}" Text="Popular reviewers" />
@@ -187,11 +189,23 @@
 
                                         <Button
                                             Grid.Column="2"
-                                            Command="{Binding Source={RelativeSource AncestorType={x:Type pages:BasePage}}, Path=BindingContext.ToggleFollowCommand}"
+                                            Command="{Binding Source={x:Reference SearchRoot}, Path=BindingContext.ToggleFollowCommand}"
                                             CommandParameter="{Binding .}"
                                             HeightRequest="34"
                                             Style="{StaticResource PrimaryButton}"
-                                            Text="{Binding FollowButtonText}" />
+                                            Text="{Binding FollowButtonText}">
+                                            <Button.Triggers>
+                                                <DataTrigger
+                                                    Binding="{Binding IsFollowing}"
+                                                    TargetType="Button"
+                                                    Value="True">
+                                                    <Setter Property="BackgroundColor" Value="{StaticResource SurfaceVariant}" />
+                                                    <Setter Property="TextColor" Value="{StaticResource Error}" />
+                                                    <Setter Property="BorderColor" Value="{StaticResource SurfaceVariant}" />
+                                                    <Setter Property="BorderWidth" Value="0" />
+                                                </DataTrigger>
+                                            </Button.Triggers>
+                                        </Button>
                                     </Grid>
                                 </DataTemplate>
                             </BindableLayout.ItemTemplate>
@@ -228,11 +242,23 @@
 
                             <Button
                                 Grid.Column="2"
-                                Command="{Binding Source={RelativeSource AncestorType={x:Type pages:BasePage}}, Path=BindingContext.ToggleFollowCommand}"
+                                Command="{Binding Source={x:Reference SearchRoot}, Path=BindingContext.ToggleFollowCommand}"
                                 CommandParameter="{Binding .}"
                                 HeightRequest="34"
-                                Style="{StaticResource SecondaryButton}"
-                                Text="{Binding FollowButtonText}" />
+                                Style="{StaticResource PrimaryButton}"
+                                Text="{Binding FollowButtonText}">
+                                <Button.Triggers>
+                                    <DataTrigger
+                                        Binding="{Binding IsFollowing}"
+                                        TargetType="Button"
+                                        Value="True">
+                                        <Setter Property="BackgroundColor" Value="{StaticResource SurfaceVariant}" />
+                                        <Setter Property="TextColor" Value="{StaticResource Error}" />
+                                        <Setter Property="BorderColor" Value="{StaticResource SurfaceVariant}" />
+                                        <Setter Property="BorderWidth" Value="0" />
+                                    </DataTrigger>
+                                </Button.Triggers>
+                            </Button>
                         </Grid>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
@@ -250,6 +276,7 @@
                 ItemsSource="{Binding Users}"
                 RemainingItemsThreshold="4"
                 RemainingItemsThresholdReachedCommand="{Binding LoadMoreCommand}">
+
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="searchVm:UserSearchRowViewModel">
                         <Grid Padding="0,8" ColumnDefinitions="44,*,Auto">
@@ -276,11 +303,23 @@
 
                             <Button
                                 Grid.Column="2"
-                                Command="{Binding Source={RelativeSource AncestorType={x:Type pages:BasePage}}, Path=BindingContext.ToggleFollowCommand}"
+                                Command="{Binding Source={x:Reference SearchRoot}, Path=BindingContext.ToggleFollowCommand}"
                                 CommandParameter="{Binding .}"
                                 HeightRequest="34"
                                 Style="{StaticResource PrimaryButton}"
-                                Text="{Binding FollowButtonText}" />
+                                Text="{Binding FollowButtonText}">
+                                <Button.Triggers>
+                                    <DataTrigger
+                                        Binding="{Binding IsFollowing}"
+                                        TargetType="Button"
+                                        Value="True">
+                                        <Setter Property="BackgroundColor" Value="{StaticResource SurfaceVariant}" />
+                                        <Setter Property="TextColor" Value="{StaticResource Error}" />
+                                        <Setter Property="BorderColor" Value="{StaticResource SurfaceVariant}" />
+                                        <Setter Property="BorderWidth" Value="0" />
+                                    </DataTrigger>
+                                </Button.Triggers>
+                            </Button>
                         </Grid>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>

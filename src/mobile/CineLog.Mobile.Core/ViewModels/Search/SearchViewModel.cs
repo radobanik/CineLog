@@ -152,6 +152,13 @@ public partial class SearchViewModel : BaseViewModel
         }
     }
 
+    private void AddToFollowingIfMissing(UserSearchRowViewModel user)
+    {
+        if (FollowingUsers.Any(x => x.Id == user.Id))
+            return;
+
+        FollowingUsers.Insert(0, CloneRow(user, isFollowing: true));
+    }
 
     private async Task SearchDebouncedAsync(string query)
     {
@@ -274,8 +281,13 @@ public partial class SearchViewModel : BaseViewModel
 
     private void SetFollowingState(Guid userId, bool isFollowing)
     {
-        foreach (var user in Users.Concat(RecommendedUsers).Concat(FollowingUsers).Where(x => x.Id == userId))
+        foreach (var user in Users
+            .Concat(RecommendedUsers)
+            .Concat(FollowingUsers)
+            .Where(x => x.Id == userId))
+        {
             user.IsFollowing = isFollowing;
+        }
     }
 
     private static void AddUsers(
@@ -288,9 +300,7 @@ public partial class SearchViewModel : BaseViewModel
             target.Add(new UserSearchRowViewModel(user));
     }
 
-    private static void RemoveUser(
-        ObservableCollection<UserSearchRowViewModel> target,
-        Guid userId)
+    private static void RemoveUser(ObservableCollection<UserSearchRowViewModel> target,Guid userId)
     {
         var row = target.FirstOrDefault(x => x.Id == userId);
         if (row is not null)
@@ -298,8 +308,8 @@ public partial class SearchViewModel : BaseViewModel
     }
 
     private static UserSearchRowViewModel CloneRow(
-        UserSearchRowViewModel row,
-        bool isFollowing)
+    UserSearchRowViewModel row,
+    bool isFollowing)
     {
         return new UserSearchRowViewModel(new UserSearchItem
         {
