@@ -55,6 +55,8 @@ public sealed class MovieDetailService(IMoviesClient moviesClient) : IMovieDetai
                 Rating = r.Rating,
                 ReviewText = r.ReviewText,
                 LikesCount = r.LikesCount ?? 0,
+                IsLiked = r.IsLiked ?? false,
+                CreatedAt = r.CreatedAt,
             })
             .ToList();
 
@@ -87,6 +89,6 @@ public sealed class MovieDetailService(IMoviesClient moviesClient) : IMovieDetai
             ? $"{count.Value / 1000.0:0.#}k"
             : count.Value.ToString();
 
-        return $"based on {formatted} ratings";
+        return $"based on {formatted} ratings on IMDb";
     }
 }

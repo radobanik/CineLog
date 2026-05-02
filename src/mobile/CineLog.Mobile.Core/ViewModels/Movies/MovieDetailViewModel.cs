@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using CineLog.Mobile.ApiClient.Clients;
 using CineLog.Mobile.Core.Models.Movies;
 using CineLog.Mobile.Core.Navigation;
 using CineLog.Mobile.Core.Services.Interfaces;
@@ -15,6 +16,7 @@ public partial class MovieDetailViewModel : BaseViewModel
     private readonly IMovieDetailService _movieDetailService;
     private readonly IMovieDetailNavigationContext _movieDetailNav;
     private readonly INavigationService _navigation;
+    private readonly IReviewsClient _reviewsClient;
 
     [ObservableProperty] private MovieDetailInfo? _movie;
     [ObservableProperty] private string _reviewsCountText = string.Empty;
@@ -27,12 +29,14 @@ public partial class MovieDetailViewModel : BaseViewModel
         IMovieDetailService movieDetailService,
         IMovieDetailNavigationContext movieDetailNav,
         INavigationService navigation,
+        IReviewsClient reviewsClient,
         IAlertService alerts)
         : base(alerts)
     {
         _movieDetailService = movieDetailService;
         _movieDetailNav = movieDetailNav;
         _navigation = navigation;
+        _reviewsClient = reviewsClient;
     }
 
     public override Task OnAppearingAsync() => Load();
@@ -61,6 +65,24 @@ public partial class MovieDetailViewModel : BaseViewModel
             ReviewsCountText = BuildReviewsCountText(totalCount);
             HasNoReviews = Reviews.Count == 0;
         });
+    }
+
+    [RelayCommand]
+    private async Task ToggleLike(ReviewPreviewItem review)
+    {
+        var wasLiked = review.IsLiked;
+        review.IsLiked = !wasLiked;
+        review.LikesCount += wasLiked ? -1 : 1;
+
+        try
+        {
+            await _reviewsClient.ToggleLikeAsync(review.Id);
+        }
+        catch
+        {
+            review.IsLiked = wasLiked;
+            review.LikesCount += wasLiked ? 1 : -1;
+        }
     }
 
     [RelayCommand]

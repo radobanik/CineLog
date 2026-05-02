@@ -64,6 +64,8 @@ public static class ServiceCollectionExtensions
         services.AddTransient<IWatchlistsClient>(sp =>
             new WatchlistsClient(sp.GetRequiredService<IHttpClientFactory>().CreateClient("CineLogApi")));
 
+        services.AddTransient<IReviewsClient>(sp =>
+            new ReviewsClient(sp.GetRequiredService<IHttpClientFactory>().CreateClient("CineLogApi")));
 
         return services;
     }

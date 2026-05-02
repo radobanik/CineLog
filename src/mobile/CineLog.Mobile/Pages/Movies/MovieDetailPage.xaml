@@ -270,47 +270,70 @@
                         <DataTemplate x:DataType="models:ReviewPreviewItem">
                             <VerticalStackLayout>
                                 <Grid
-                                    ColumnDefinitions="44, *"
+                                    ColumnDefinitions="44, *, Auto"
                                     ColumnSpacing="12"
                                     Margin="0,12,0,0">
-                                    <Border
-                                        Grid.Column="0"
-                                        WidthRequest="40"
-                                        HeightRequest="40"
-                                        BackgroundColor="{StaticResource Surface}"
-                                        StrokeThickness="0"
-                                        VerticalOptions="Start">
-                                        <Border.StrokeShape>
-                                            <RoundRectangle CornerRadius="20" />
-                                        </Border.StrokeShape>
-                                        <Label
-                                            Text="{Binding Initial}"
-                                            Style="{StaticResource SectionHeaderLabel}"
-                                            HorizontalOptions="Center"
-                                            VerticalOptions="Center" />
-                                    </Border>
-
-                                    <VerticalStackLayout Grid.Column="1" Spacing="3">
-                                        <Label
-                                            Style="{StaticResource BodyMediumLabel}"
-                                            FontAttributes="Bold"
-                                            Text="{Binding Username}" />
-                                        <Label
-                                            Style="{StaticResource CaptionLabel}"
-                                            Text="{Binding ReviewText}"
-                                            MaxLines="3"
-                                            LineBreakMode="TailTruncation" />
-                                        <HorizontalStackLayout Spacing="4" Margin="0,4,0,0">
+                                        <Border Grid.Column="0"
+                                                WidthRequest="40"
+                                                HeightRequest="40"
+                                                BackgroundColor="{StaticResource Surface}"
+                                                StrokeThickness="0"
+                                                VerticalOptions="Start">
+                                            <Border.StrokeShape>
+                                                <RoundRectangle CornerRadius="20" />
+                                            </Border.StrokeShape>
+                                            <Label Text="{Binding Initial}"
+                                                   Style="{StaticResource SectionHeaderLabel}"
+                                                   HorizontalOptions="Center"
+                                                   VerticalOptions="Center" />
+                                        </Border>
+                                        <VerticalStackLayout Grid.Column="1"
+                                                             Spacing="3">
                                             <Label
-                                                Style="{StaticResource CaptionLabel}"
-                                                Text="{Binding LikesCount}" />
+                                                Style="{StaticResource BodyMediumLabel}"
+                                                FontAttributes="Bold"
+                                                Text="{Binding Username}" />
+                                            <Label Style="{StaticResource RatingLabel}"
+                                                   Text="{Binding Rating, Converter={StaticResource RatingToStarsConverter}}"
+                                                   VerticalOptions="Center" />
+                                            <Label Style="{StaticResource CaptionLabel}"
+                                                   Text="{Binding ReviewText}"
+                                                   MaxLines="3"
+                                                   LineBreakMode="TailTruncation" />
+                                            <Label Style="{StaticResource CaptionLabel}"
+                                                   Text="{Binding DateText}"
+                                                   Margin="0,2,0,0" />
+                                        </VerticalStackLayout>
+                                        <VerticalStackLayout Grid.Column="2"
+                                                             HorizontalOptions="End"
+                                                             VerticalOptions="Start"
+                                                             Spacing="4"
+                                                             Padding="8,0,0,0">
                                             <Label
                                                 FontFamily="FASolid"
-                                                FontSize="11"
-                                                TextColor="{StaticResource TextSecondary}"
-                                                Text="{x:Static helpers:FontAwesomeIcons.Heart}" />
-                                        </HorizontalStackLayout>
-                                    </VerticalStackLayout>
+                                                FontSize="20"
+                                                HorizontalOptions="Center">
+                                                <Label.Triggers>
+                                                    <DataTrigger TargetType="Label" Binding="{Binding IsLiked}" Value="True">
+                                                        <Setter Property="TextColor" Value="#E53935" />
+                                                    </DataTrigger>
+                                                    <DataTrigger TargetType="Label" Binding="{Binding IsLiked}" Value="False">
+                                                        <Setter Property="TextColor" Value="{StaticResource TextSecondary}" />
+                                                    </DataTrigger>
+                                                </Label.Triggers>
+                                                <Label.Text>
+                                                    <x:Static Member="helpers:FontAwesomeIcons.Heart" />
+                                                </Label.Text>
+                                                <Label.GestureRecognizers>
+                                                    <TapGestureRecognizer
+                                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MovieDetailViewModel}}, Path=ToggleLikeCommand}"
+                                                        CommandParameter="{Binding .}" />
+                                                </Label.GestureRecognizers>
+                                            </Label>
+                                            <Label Style="{StaticResource CaptionLabel}"
+                                                   Text="{Binding LikesCount}"
+                                                   HorizontalOptions="Center" />
+                                        </VerticalStackLayout>
                                 </Grid>
                                 <BoxView Style="{StaticResource ListDivider}" Margin="0,12,0,0" />
                             </VerticalStackLayout>
