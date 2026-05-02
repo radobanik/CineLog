@@ -172,7 +172,7 @@
                                             Text="{Binding LikesCount}" />
                                         <Label
                                             Style="{StaticResource SecondaryIconLabel}"
-                                            Text="{x:Static helpers:FontAwesomeIcons.ThumbsUp}" />
+                                            Text="{x:Static helpers:FontAwesomeIcons.Heart}" />
                                     </HorizontalStackLayout>
                                 </Grid>
                                 <BoxView Style="{StaticResource ListDivider}" Margin="0,15,0,0" />
