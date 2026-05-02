@@ -1,6 +1,6 @@
-using CineLog.Application.Features.Users.Watchlist.AddToWatchlist;
-using CineLog.Application.Features.Users.Watchlist.DeleteWatchlist;
-using CineLog.Application.Features.Users.Watchlist.RemoveFromWatchlist;
+using CineLog.Application.Features.Watchlist.AddToWatchlist;
+using CineLog.Application.Features.Watchlist.DeleteWatchlist;
+using CineLog.Application.Features.Watchlist.RemoveFromWatchlist;
 using CineLog.Application.Features.Watchlist.CreateWatchlist;
 using CineLog.Application.Features.Watchlist.GetUserWatchlists;
 using CineLog.Application.Features.Watchlist.GetWatchlist;

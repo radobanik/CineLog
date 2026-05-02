@@ -8,8 +8,9 @@ namespace CineLog.Mobile.Core.Models
     {
         TopRated,
         NewReleases,
-        //Popular,
-        //NowPlaying,
-        //Upcoming
+        Action,
+        Scifi,
+        Drama,
+        Horror
     }
 }
