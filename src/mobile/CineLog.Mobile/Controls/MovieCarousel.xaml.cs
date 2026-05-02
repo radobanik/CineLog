@@ -28,6 +28,9 @@ public partial class MovieCarousel : ContentView
     public static readonly BindableProperty IsLoadingProperty =
         BindableProperty.Create(nameof(IsLoading), typeof(bool), typeof(MovieCarousel), false);
 
+    public static readonly BindableProperty ItemTappedCommandProperty =
+        BindableProperty.Create(nameof(ItemTappedCommand), typeof(ICommand), typeof(MovieCarousel));
+
     public MovieCarousel()
     {
         InitializeComponent();
@@ -73,6 +76,12 @@ public partial class MovieCarousel : ContentView
     {
         get => (bool)GetValue(IsLoadingProperty);
         set => SetValue(IsLoadingProperty, value);
+    }
+
+    public ICommand? ItemTappedCommand
+    {
+        get => (ICommand?)GetValue(ItemTappedCommandProperty);
+        set => SetValue(ItemTappedCommandProperty, value);
     }
 
     private void OnRailScrolled(object? sender, ScrolledEventArgs e)

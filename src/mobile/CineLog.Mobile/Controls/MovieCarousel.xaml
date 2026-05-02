@@ -51,7 +51,13 @@
                             <controls:MoviePosterCard
                                 Title="{Binding Title}"
                                 PosterPath="{Binding PosterPath}"
-                                RatingText="{Binding RatingText}" />
+                                RatingText="{Binding RatingText}">
+                                <controls:MoviePosterCard.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        Command="{Binding Source={x:Reference This}, Path=ItemTappedCommand}"
+                                        CommandParameter="{Binding .}" />
+                                </controls:MoviePosterCard.GestureRecognizers>
+                            </controls:MoviePosterCard>
                         </DataTemplate>
                     </BindableLayout.ItemTemplate>
 

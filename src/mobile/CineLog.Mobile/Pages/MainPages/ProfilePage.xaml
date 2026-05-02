@@ -102,10 +102,17 @@
                     </CollectionView.ItemsLayout>
                     <CollectionView.ItemTemplate>
                         <DataTemplate x:DataType="home:MovieItem">
-                            <controls:MoviePosterCard
-                                Title="{Binding Title}"
-                                PosterPath="{Binding PosterPath}"
-                                RatingText="{Binding RatingText}" />
+                            <Grid>
+                                <controls:MoviePosterCard
+                                    Title="{Binding Title}"
+                                    PosterPath="{Binding PosterPath}"
+                                    RatingText="{Binding RatingText}" />
+                                <Grid.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ProfileViewModel}}, Path=GoToMovieCommand}"
+                                        CommandParameter="{Binding .}" />
+                                </Grid.GestureRecognizers>
+                            </Grid>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
                 </CollectionView>

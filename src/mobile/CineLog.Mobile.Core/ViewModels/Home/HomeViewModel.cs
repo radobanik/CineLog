@@ -17,6 +17,7 @@ public partial class HomeViewModel : BaseViewModel
     private readonly IHomeService _homeService;
     private readonly INavigationService _navigation;
     private readonly IMovieNavigationContext _movieNav;
+    private readonly IMovieDetailNavigationContext _movieDetailNav;
 
     private int _topRatedCount = RailPageSize;
     private int _newReleaseCount = RailPageSize;
@@ -47,13 +48,14 @@ public partial class HomeViewModel : BaseViewModel
     public ObservableCollection<MovieItem> TopRatedMovies { get; } = [];
     public ObservableCollection<MovieItem> NewReleaseMovies { get; } = [];
 
-    public HomeViewModel(IAuthService authService, IHomeService homeService, INavigationService navigation, IMovieNavigationContext movieNav, IAlertService alerts)
+    public HomeViewModel(IAuthService authService, IHomeService homeService, INavigationService navigation, IMovieNavigationContext movieNav, IMovieDetailNavigationContext movieDetailNav, IAlertService alerts)
         : base(alerts)
     {
         _authService = authService;
         _homeService = homeService;
         _navigation = navigation;
         _movieNav = movieNav;
+        _movieDetailNav = movieDetailNav;
         Title = "Home";
     }
 
@@ -186,6 +188,13 @@ public partial class HomeViewModel : BaseViewModel
         {
             IsLoadingMoreNewReleases = false;
         }
+    }
+
+    [RelayCommand]
+    public Task GoToMovie(MovieItem movie)
+    {
+        _movieDetailNav.MovieId = movie.Id;
+        return _navigation.NavigateToAsync(Routes.MovieDetail);
     }
 
     [RelayCommand]
