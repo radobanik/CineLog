@@ -5,6 +5,7 @@ using CineLog.Application.Features.Users;
 using CineLog.Application.Features.Users.Favorites.GetFavorites;
 using CineLog.Application.Features.Users.FollowUser;
 using CineLog.Application.Features.Users.GetProfile;
+using CineLog.Application.Features.Users.GetRecommendedUsers;
 using CineLog.Application.Features.Users.GetUserFollowers;
 using CineLog.Application.Features.Users.GetUserFollowing;
 using CineLog.Application.Features.Users.GetUserReviews;
@@ -91,6 +92,14 @@ public class UsersController : ControllerBase
     [ProducesResponseType(typeof(List<MovieListItemResponse>), StatusCodes.Status200OK)]
     public async Task<ActionResult<List<MovieListItemResponse>>> GetFavorites(CancellationToken ct)
         => Ok(await _sender.Send(new GetFavoritesQuery(), ct));
+
+    // Add inside UsersController:
+    [HttpGet("recommended")]
+    [ProducesResponseType(typeof(List<DiscoverUserResponse>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<List<DiscoverUserResponse>>> GetRecommended(
+        [FromQuery] int limit = 10,
+        CancellationToken ct = default)
+        => Ok(await _sender.Send(new GetRecommendedUsersQuery(limit), ct));
 
     /// <summary>Upload or replace the current user's avatar.</summary>
     [HttpPut("me/avatar")]
