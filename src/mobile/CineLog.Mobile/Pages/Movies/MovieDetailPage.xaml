@@ -31,21 +31,6 @@
                     </BoxView.Background>
                 </BoxView>
 
-                <Label
-                    FontFamily="FASolid"
-                    FontSize="18"
-                    TextColor="{StaticResource OnBackground}"
-                    Text="{x:Static helpers:FontAwesomeIcons.ChevronLeft}"
-                    WidthRequest="52"
-                    HeightRequest="52"
-                    HorizontalOptions="Start"
-                    VerticalOptions="Start"
-                    HorizontalTextAlignment="Center"
-                    VerticalTextAlignment="Center">
-                    <Label.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding GoBackCommand}" />
-                    </Label.GestureRecognizers>
-                </Label>
             </Grid>
 
             <Grid
@@ -350,6 +335,21 @@
             IsVisible="{Binding IsBusy}"
             HorizontalOptions="Center"
             VerticalOptions="Center" />
+
+        <Label
+            FontSize="18"
+            TextColor="{StaticResource OnBackground}"
+            Text="{x:Static helpers:FontAwesomeIcons.ChevronLeft}"
+            WidthRequest="52"
+            HeightRequest="52"
+            HorizontalOptions="Start"
+            VerticalOptions="Start"
+            HorizontalTextAlignment="Center"
+            VerticalTextAlignment="Center">
+            <Label.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding GoBackCommand}" />
+            </Label.GestureRecognizers>
+        </Label>
     </Grid>
 
 </pages:BasePage>
