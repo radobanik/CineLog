@@ -1,21 +1,21 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" ?>
 <pages:BasePage
     x:Class="CineLog.Mobile.Pages.MainPages.ProfilePage"
-    x:DataType="vm:ProfileViewModel"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:controls="clr-namespace:CineLog.Mobile.Controls"
     xmlns:helpers="clr-namespace:CineLog.Mobile.Helpers"
-    xmlns:home="clr-namespace:CineLog.Mobile.Core.Models;assembly=CineLog.Mobile.Core"
-    xmlns:review="clr-namespace:CineLog.Mobile.Core.Models.Review;assembly=CineLog.Mobile.Core"
+    xmlns:models="clr-namespace:CineLog.Mobile.Core.Models;assembly=CineLog.Mobile.Core"
     xmlns:pages="clr-namespace:CineLog.Mobile.Pages"
+    xmlns:review="clr-namespace:CineLog.Mobile.Core.Models.Review;assembly=CineLog.Mobile.Core"
     xmlns:vm="clr-namespace:CineLog.Mobile.Core.ViewModels.Profile;assembly=CineLog.Mobile.Core"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    ShowMenuButton="True"
     Title="Profile"
+    x:DataType="vm:ProfileViewModel"
+    NavBarRightCommand="{Binding LogoutCommand}"
     NavBarRightIcon="{x:Static helpers:FontAwesomeIcons.SignOut}"
-    NavBarRightCommand="{Binding LogoutCommand}">
+    ShowMenuButton="True">
 
-        <ScrollView>
+    <ScrollView>
         <VerticalStackLayout Padding="20" Spacing="25">
 
             <controls:ProfileHeaderSkeleton IsVisible="{Binding IsBusy}" />
@@ -25,61 +25,67 @@
                 ColumnSpacing="15"
                 IsVisible="{Binding IsNotBusy}">
                 <Border
-                    WidthRequest="80"
                     HeightRequest="80"
-                    StrokeThickness="0">
+                    StrokeThickness="0"
+                    WidthRequest="80">
                     <Border.StrokeShape>
                         <RoundRectangle CornerRadius="40" />
                     </Border.StrokeShape>
                     <Image Source="{Binding AvatarUrl}" />
                 </Border>
+
                 <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
+                    <Label Style="{StaticResource HeadlineMediumLabel}" Text="{Binding Username}" />
+
                     <Label
-                        Style="{StaticResource HeadlineMediumLabel}"
-                        Text="{Binding Username}" />
-                    <Label
-                        Style="{StaticResource BodyMediumLabel}"
-                        Text="{Binding Bio}"
-                        MaxLines="2"
+                        Margin="0,5,0,0"
                         LineBreakMode="TailTruncation"
-                        Margin="0,5,0,0">
+                        MaxLines="2"
+                        Style="{StaticResource BodyMediumLabel}"
+                        Text="{Binding Bio}">
                         <Label.Triggers>
-                            <DataTrigger TargetType="Label" Binding="{Binding IsBioExpanded}" Value="True">
+                            <DataTrigger
+                                Binding="{Binding IsBioExpanded}"
+                                TargetType="Label"
+                                Value="True">
                                 <Setter Property="MaxLines" Value="4" />
                                 <Setter Property="LineBreakMode" Value="WordWrap" />
                             </DataTrigger>
                         </Label.Triggers>
                     </Label>
+
                     <Label
-                        Style="{StaticResource CaptionLabel}"
-                        Text="Show full"
+                        Margin="0,2,0,0"
                         IsVisible="{Binding ShowExpandButton}"
-                        Margin="0,2,0,0">
+                        Style="{StaticResource CaptionLabel}"
+                        Text="Show full">
                         <Label.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding ToggleBioCommand}" />
                         </Label.GestureRecognizers>
                     </Label>
+
                     <Label
-                        Style="{StaticResource CaptionLabel}"
-                        Text="Show less"
+                        Margin="0,2,0,0"
                         IsVisible="{Binding ShowCollapseButton}"
-                        Margin="0,2,0,0">
+                        Style="{StaticResource CaptionLabel}"
+                        Text="Show less">
                         <Label.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding ToggleBioCommand}" />
                         </Label.GestureRecognizers>
                     </Label>
                 </VerticalStackLayout>
+
                 <Label
                     Grid.Column="2"
                     FontFamily="FASolid"
                     FontSize="18"
-                    TextColor="{StaticResource TextSecondary}"
-                    Text="{x:Static helpers:FontAwesomeIcons.Edit}"
-                    WidthRequest="44"
                     HeightRequest="44"
                     HorizontalTextAlignment="Center"
+                    Text="{x:Static helpers:FontAwesomeIcons.Edit}"
+                    TextColor="{StaticResource TextSecondary}"
+                    VerticalOptions="Start"
                     VerticalTextAlignment="Center"
-                    VerticalOptions="Start">
+                    WidthRequest="44">
                     <Label.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding OpenEditProfileCommand}" />
                     </Label.GestureRecognizers>
@@ -91,38 +97,38 @@
             <Border
                 Padding="15"
                 BackgroundColor="{StaticResource Surface}"
-                StrokeThickness="0"
-                IsVisible="{Binding IsNotBusy}">
+                IsVisible="{Binding IsNotBusy}"
+                StrokeThickness="0">
                 <Border.StrokeShape>
                     <RoundRectangle CornerRadius="10" />
                 </Border.StrokeShape>
                 <Grid ColumnDefinitions="*, *, *, *">
                     <VerticalStackLayout Grid.Column="0" HorizontalOptions="Center">
                         <Label
+                            HorizontalOptions="Center"
                             Style="{StaticResource HeadlineMediumLabel}"
-                            Text="{Binding FilmsCount}"
-                            HorizontalOptions="Center" />
+                            Text="{Binding FilmsCount}" />
                         <Label Style="{StaticResource OverlineLabel}" Text="FILMS" />
                     </VerticalStackLayout>
                     <VerticalStackLayout Grid.Column="1" HorizontalOptions="Center">
                         <Label
+                            HorizontalOptions="Center"
                             Style="{StaticResource HeadlineMediumLabel}"
-                            Text="67"
-                            HorizontalOptions="Center" />
+                            Text="67" />
                         <Label Style="{StaticResource OverlineLabel}" Text="THIS YEAR" />
                     </VerticalStackLayout>
                     <VerticalStackLayout Grid.Column="2" HorizontalOptions="Center">
                         <Label
+                            HorizontalOptions="Center"
                             Style="{StaticResource HeadlineMediumLabel}"
-                            Text="{Binding FollowersCount}"
-                            HorizontalOptions="Center" />
+                            Text="{Binding FollowersCount}" />
                         <Label Style="{StaticResource OverlineLabel}" Text="FOLLOWERS" />
                     </VerticalStackLayout>
                     <VerticalStackLayout Grid.Column="3" HorizontalOptions="Center">
                         <Label
+                            HorizontalOptions="Center"
                             Style="{StaticResource HeadlineMediumLabel}"
-                            Text="{Binding FollowingCount}"
-                            HorizontalOptions="Center" />
+                            Text="{Binding FollowingCount}" />
                         <Label Style="{StaticResource OverlineLabel}" Text="FOLLOWING" />
                     </VerticalStackLayout>
                 </Grid>
@@ -133,28 +139,26 @@
 
                 <controls:FavouriteFilmsSkeleton IsVisible="{Binding IsBusy}" />
 
-                <CollectionView ItemsSource="{Binding FavouriteMovies}" IsVisible="{Binding IsNotBusy}">
+                <CollectionView IsVisible="{Binding IsNotBusy}" ItemsSource="{Binding FavouriteMovies}">
                     <CollectionView.EmptyView>
                         <Label
+                            HorizontalOptions="Center"
                             Style="{StaticResource CaptionLabel}"
                             Text="No favorite films yet."
-                            HorizontalOptions="Center"
                             VerticalOptions="Center" />
                     </CollectionView.EmptyView>
                     <CollectionView.ItemsLayout>
-                        <LinearItemsLayout Orientation="Horizontal" ItemSpacing="10" />
+                        <LinearItemsLayout ItemSpacing="10" Orientation="Horizontal" />
                     </CollectionView.ItemsLayout>
                     <CollectionView.ItemTemplate>
-                        <DataTemplate x:DataType="home:MovieItem">
+                        <DataTemplate x:DataType="models:MovieItem">
                             <Grid>
                                 <controls:MoviePosterCard
                                     Title="{Binding Title}"
                                     PosterPath="{Binding PosterPath}"
                                     RatingText="{Binding RatingText}" />
                                 <Grid.GestureRecognizers>
-                                    <TapGestureRecognizer
-                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ProfileViewModel}}, Path=GoToMovieCommand}"
-                                        CommandParameter="{Binding .}" />
+                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ProfileViewModel}}, Path=GoToMovieCommand}" CommandParameter="{Binding .}" />
                                 </Grid.GestureRecognizers>
                             </Grid>
                         </DataTemplate>
@@ -177,12 +181,12 @@
 
                 <controls:DiaryListSkeleton IsVisible="{Binding IsBusy}" />
 
-                <CollectionView ItemsSource="{Binding Reviews}" IsVisible="{Binding IsNotBusy}">
+                <CollectionView IsVisible="{Binding IsNotBusy}" ItemsSource="{Binding Reviews}">
                     <CollectionView.EmptyView>
                         <Label
+                            HorizontalOptions="Center"
                             Style="{StaticResource CaptionLabel}"
                             Text="No recent diary entries."
-                            HorizontalOptions="Center"
                             VerticalOptions="Center" />
                     </CollectionView.EmptyView>
                     <CollectionView.ItemTemplate>

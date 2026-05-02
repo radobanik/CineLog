@@ -1,39 +1,44 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <pages:BasePage
     x:Class="CineLog.Mobile.Pages.MainPages.SearchPage"
-    x:DataType="vm:SearchViewModel"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:controls="clr-namespace:CineLog.Mobile.Controls"
     xmlns:helpers="clr-namespace:CineLog.Mobile.Helpers"
-    xmlns:home="clr-namespace:CineLog.Mobile.Core.Models;assembly=CineLog.Mobile.Core"
+    xmlns:models="clr-namespace:CineLog.Mobile.Core.Models;assembly=CineLog.Mobile.Core"
     xmlns:pages="clr-namespace:CineLog.Mobile.Pages"
     xmlns:vm="clr-namespace:CineLog.Mobile.Core.ViewModels.Search;assembly=CineLog.Mobile.Core"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    ShowMenuButton="True"
-    Title="Search">
+    Title="Search"
+    x:DataType="vm:SearchViewModel"
+    ShowMenuButton="True">
 
     <Grid RowDefinitions="Auto, *">
 
-        <Border Grid.Row="0" Style="{StaticResource InputFieldBorder}" Margin="16,12">
-            <Grid ColumnDefinitions="Auto, *, Auto" Padding="16,0">
+        <Border
+            Grid.Row="0"
+            Margin="16,12"
+            Style="{StaticResource InputFieldBorder}">
+            <Grid Padding="16,0" ColumnDefinitions="Auto, *, Auto">
                 <Label
                     Grid.Column="0"
                     Style="{StaticResource SecondaryIconLabel}"
                     Text="{x:Static helpers:FontAwesomeIcons.Search}"
                     VerticalOptions="Center" />
+
                 <Entry
                     x:Name="SearchEntry"
                     Grid.Column="1"
-                    Style="{StaticResource CleanEntry}"
+                    Margin="10,0"
                     Placeholder="Search films..."
-                    Text="{Binding SearchQuery}"
-                    Margin="10,0" />
+                    Style="{StaticResource CleanEntry}"
+                    Text="{Binding SearchQuery}" />
+
                 <Label
                     Grid.Column="2"
+                    IsVisible="{Binding HasQuery}"
                     Style="{StaticResource SecondaryIconLabel}"
                     Text="{x:Static helpers:FontAwesomeIcons.Times}"
-                    VerticalOptions="Center"
-                    IsVisible="{Binding HasQuery}">
+                    VerticalOptions="Center">
                     <Label.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding ClearCommand}" />
                     </Label.GestureRecognizers>
@@ -44,26 +49,28 @@
         <Grid Grid.Row="1" Padding="16,0">
 
             <VerticalStackLayout
-                VerticalOptions="Center"
                 HorizontalOptions="Center"
+                IsVisible="{Binding ShowEmptyState}"
                 Spacing="12"
-                IsVisible="{Binding ShowEmptyState}">
+                VerticalOptions="Center">
                 <Label
-                    Style="{StaticResource PrimaryIconLabel}"
                     FontSize="40"
                     HorizontalOptions="Center"
+                    Style="{StaticResource PrimaryIconLabel}"
                     Text="{x:Static helpers:FontAwesomeIcons.Search}" />
                 <Label
-                    Style="{StaticResource BodyMediumLabel}"
                     HorizontalOptions="Center"
+                    Style="{StaticResource BodyMediumLabel}"
                     Text="Search for films" />
             </VerticalStackLayout>
 
-            <CollectionView
-                x:Name="SkeletonGrid"
-                IsVisible="{Binding ShowSkeleton}">
+            <CollectionView x:Name="SkeletonGrid" IsVisible="{Binding ShowSkeleton}">
                 <CollectionView.ItemsLayout>
-                    <GridItemsLayout Orientation="Vertical" Span="3" HorizontalItemSpacing="10" VerticalItemSpacing="10" />
+                    <GridItemsLayout
+                        HorizontalItemSpacing="10"
+                        Orientation="Vertical"
+                        Span="3"
+                        VerticalItemSpacing="10" />
                 </CollectionView.ItemsLayout>
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
@@ -73,49 +80,52 @@
             </CollectionView>
 
             <CollectionView
-                ItemsSource="{Binding Movies}"
                 IsVisible="{Binding HasResults}"
+                ItemsSource="{Binding Movies}"
                 RemainingItemsThreshold="4"
                 RemainingItemsThresholdReachedCommand="{Binding LoadMoreCommand}">
                 <CollectionView.ItemsLayout>
-                    <GridItemsLayout Orientation="Vertical" Span="3" HorizontalItemSpacing="10" VerticalItemSpacing="10" />
+                    <GridItemsLayout
+                        HorizontalItemSpacing="10"
+                        Orientation="Vertical"
+                        Span="3"
+                        VerticalItemSpacing="10" />
                 </CollectionView.ItemsLayout>
                 <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="home:MovieItem">
+                    <DataTemplate x:DataType="models:MovieItem">
                         <Grid>
                             <controls:MoviePosterCard
                                 Title="{Binding Title}"
                                 PosterPath="{Binding PosterPath}"
                                 RatingText="{Binding RatingText}" />
                             <Grid.GestureRecognizers>
-                                <TapGestureRecognizer
-                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:SearchViewModel}}, Path=GoToMovieCommand}"
-                                    CommandParameter="{Binding .}" />
+                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:SearchViewModel}}, Path=GoToMovieCommand}" CommandParameter="{Binding .}" />
                             </Grid.GestureRecognizers>
                         </Grid>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
+
                 <CollectionView.Footer>
                     <ActivityIndicator
+                        Margin="0,8"
                         IsRunning="{Binding IsLoadingMore}"
-                        IsVisible="{Binding IsLoadingMore}"
-                        Margin="0,8" />
+                        IsVisible="{Binding IsLoadingMore}" />
                 </CollectionView.Footer>
             </CollectionView>
 
             <VerticalStackLayout
-                VerticalOptions="Center"
                 HorizontalOptions="Center"
+                IsVisible="{Binding ShowNoResults}"
                 Spacing="12"
-                IsVisible="{Binding ShowNoResults}">
+                VerticalOptions="Center">
                 <Label
-                    Style="{StaticResource PrimaryIconLabel}"
                     FontSize="40"
                     HorizontalOptions="Center"
+                    Style="{StaticResource PrimaryIconLabel}"
                     Text="{x:Static helpers:FontAwesomeIcons.SearchMinus}" />
                 <Label
-                    Style="{StaticResource BodyMediumLabel}"
                     HorizontalOptions="Center"
+                    Style="{StaticResource BodyMediumLabel}"
                     Text="No results found" />
             </VerticalStackLayout>
 
