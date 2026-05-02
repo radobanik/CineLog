@@ -18,6 +18,7 @@ public partial class MovieDetailViewModel : BaseViewModel
 
     [ObservableProperty] private MovieDetailInfo? _movie;
     [ObservableProperty] private string _reviewsCountText = string.Empty;
+    [ObservableProperty] private bool _hasNoReviews;
 
     public ObservableCollection<CastMemberItem> Cast { get; } = [];
     public ObservableCollection<ReviewPreviewItem> Reviews { get; } = [];
@@ -58,6 +59,7 @@ public partial class MovieDetailViewModel : BaseViewModel
                 Reviews.Add(review);
 
             ReviewsCountText = BuildReviewsCountText(totalCount);
+            HasNoReviews = Reviews.Count == 0;
         });
     }
 

@@ -14,7 +14,6 @@
         <ScrollView IsVisible="{Binding IsNotBusy}">
         <VerticalStackLayout Spacing="0">
 
-            <!-- BACKDROP -->
             <Grid HeightRequest="220">
                 <Image
                     Source="{Binding Movie.BackdropPath}"
@@ -22,10 +21,16 @@
 
                 <BoxView
                     VerticalOptions="End"
-                    HeightRequest="120"
-                    BackgroundColor="#CC000000" />
+                    HeightRequest="220">
+                    <BoxView.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                            <GradientStop Color="Transparent" Offset="0.0" />
+                            <GradientStop Color="#99000000" Offset="0.55" />
+                            <GradientStop Color="#DD000000" Offset="1.0" />
+                        </LinearGradientBrush>
+                    </BoxView.Background>
+                </BoxView>
 
-                <!-- Back button -->
                 <Label
                     FontFamily="FASolid"
                     FontSize="18"
@@ -41,22 +46,8 @@
                         <TapGestureRecognizer Command="{Binding GoBackCommand}" />
                     </Label.GestureRecognizers>
                 </Label>
-
-                <!-- Three-dot menu -->
-                <Label
-                    FontFamily="FASolid"
-                    FontSize="18"
-                    TextColor="{StaticResource OnBackground}"
-                    Text="{x:Static helpers:FontAwesomeIcons.EllipsisV}"
-                    WidthRequest="52"
-                    HeightRequest="52"
-                    HorizontalOptions="End"
-                    VerticalOptions="Start"
-                    HorizontalTextAlignment="Center"
-                    VerticalTextAlignment="Center" />
             </Grid>
 
-            <!-- POSTER + TITLE -->
             <Grid
                 ColumnDefinitions="Auto, *"
                 Padding="16,0,16,12">
@@ -94,12 +85,7 @@
                 </VerticalStackLayout>
             </Grid>
 
-            <!-- RATING -->
             <HorizontalStackLayout Padding="16,0,16,12" Spacing="8">
-                <Label
-                    Style="{StaticResource RatingLabel}"
-                    Text="{Binding Movie.AverageRating, Converter={StaticResource RatingToStarsConverter}}"
-                    VerticalOptions="Center" />
                 <Label
                     Style="{StaticResource HeadlineMediumLabel}"
                     FontSize="16"
@@ -111,7 +97,6 @@
                     VerticalOptions="Center" />
             </HorizontalStackLayout>
 
-            <!-- ACTION BUTTONS -->
             <Grid
                 ColumnDefinitions="*, *, *, *"
                 Padding="8,0,8,12">
@@ -204,7 +189,6 @@
 
             <BoxView Style="{StaticResource ListDivider}" Margin="16,4,16,16" />
 
-            <!-- SYNOPSIS -->
             <VerticalStackLayout Padding="16,0" Spacing="10">
                 <Label Style="{StaticResource SectionHeaderLabel}" Text="SYNOPSIS" />
                 <Label
@@ -215,7 +199,6 @@
 
             <BoxView Style="{StaticResource ListDivider}" Margin="16,16" />
 
-            <!-- CAST -->
             <VerticalStackLayout Padding="16,0" Spacing="10">
                 <Label Style="{StaticResource SectionHeaderLabel}" Text="CAST" />
 
@@ -228,7 +211,7 @@
                         BindableLayout.ItemsSource="{Binding Cast}">
                         <BindableLayout.ItemTemplate>
                             <DataTemplate x:DataType="models:CastMemberItem">
-                                <VerticalStackLayout WidthRequest="56" Spacing="6">
+                                <VerticalStackLayout WidthRequest="70" Spacing="6">
                                     <Border
                                         WidthRequest="42"
                                         HeightRequest="42"
@@ -247,11 +230,12 @@
                                             VerticalOptions="Center" />
                                     </Border>
                                     <Label
-                                        Text="{Binding FirstName}"
+                                        Text="{Binding Name}"
                                         Style="{StaticResource CaptionLabel}"
-                                        MaxLines="1"
-                                        LineBreakMode="TailTruncation"
-                                        HorizontalTextAlignment="Center" />
+                                        MaxLines="2"
+                                        LineBreakMode="WordWrap"
+                                        HorizontalTextAlignment="Center"
+                                        HeightRequest="32" />
                                 </VerticalStackLayout>
                             </DataTemplate>
                         </BindableLayout.ItemTemplate>
@@ -261,7 +245,6 @@
 
             <BoxView Style="{StaticResource ListDivider}" Margin="16,16" />
 
-            <!-- REVIEWS -->
             <VerticalStackLayout Padding="16,0,16,24" Spacing="0">
                 <Grid ColumnDefinitions="*, Auto" Margin="0,0,0,4">
                     <Label
@@ -275,6 +258,12 @@
                         VerticalTextAlignment="Center"
                         IsVisible="{Binding ReviewsCountText, Converter={StaticResource IsNotNullOrEmptyConverter}}" />
                 </Grid>
+
+                <Label
+                    Style="{StaticResource CaptionLabel}"
+                    Text="No reviews yet."
+                    IsVisible="{Binding HasNoReviews}"
+                    Margin="0,8,0,0" />
 
                 <VerticalStackLayout BindableLayout.ItemsSource="{Binding Reviews}">
                     <BindableLayout.ItemTemplate>
@@ -302,17 +291,10 @@
                                     </Border>
 
                                     <VerticalStackLayout Grid.Column="1" Spacing="3">
-                                        <HorizontalStackLayout Spacing="8">
-                                            <Label
-                                                Style="{StaticResource BodyMediumLabel}"
-                                                FontAttributes="Bold"
-                                                Text="{Binding Username}" />
-                                            <Label
-                                                Style="{StaticResource RatingLabel}"
-                                                FontSize="12"
-                                                Text="{Binding Rating, Converter={StaticResource RatingToStarsConverter}}"
-                                                VerticalOptions="Center" />
-                                        </HorizontalStackLayout>
+                                        <Label
+                                            Style="{StaticResource BodyMediumLabel}"
+                                            FontAttributes="Bold"
+                                            Text="{Binding Username}" />
                                         <Label
                                             Style="{StaticResource CaptionLabel}"
                                             Text="{Binding ReviewText}"
