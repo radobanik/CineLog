@@ -1,0 +1,350 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<pages:BasePage
+    x:Class="CineLog.Mobile.Pages.Movies.MovieDetailPage"
+    x:DataType="vm:MovieDetailViewModel"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:helpers="clr-namespace:CineLog.Mobile.Helpers"
+    xmlns:models="clr-namespace:CineLog.Mobile.Core.Models.Movies;assembly=CineLog.Mobile.Core"
+    xmlns:pages="clr-namespace:CineLog.Mobile.Pages"
+    xmlns:vm="clr-namespace:CineLog.Mobile.Core.ViewModels.Movies;assembly=CineLog.Mobile.Core"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    ShowNavBar="False">
+
+    <Grid>
+        <ScrollView IsVisible="{Binding IsNotBusy}">
+        <VerticalStackLayout Spacing="0">
+
+            <!-- BACKDROP -->
+            <Grid HeightRequest="220">
+                <Image
+                    Source="{Binding Movie.BackdropPath}"
+                    Aspect="AspectFill" />
+
+                <BoxView
+                    VerticalOptions="End"
+                    HeightRequest="120"
+                    BackgroundColor="#CC000000" />
+
+                <!-- Back button -->
+                <Label
+                    FontFamily="FASolid"
+                    FontSize="18"
+                    TextColor="{StaticResource OnBackground}"
+                    Text="{x:Static helpers:FontAwesomeIcons.ChevronLeft}"
+                    WidthRequest="52"
+                    HeightRequest="52"
+                    HorizontalOptions="Start"
+                    VerticalOptions="Start"
+                    HorizontalTextAlignment="Center"
+                    VerticalTextAlignment="Center">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding GoBackCommand}" />
+                    </Label.GestureRecognizers>
+                </Label>
+
+                <!-- Three-dot menu -->
+                <Label
+                    FontFamily="FASolid"
+                    FontSize="18"
+                    TextColor="{StaticResource OnBackground}"
+                    Text="{x:Static helpers:FontAwesomeIcons.EllipsisV}"
+                    WidthRequest="52"
+                    HeightRequest="52"
+                    HorizontalOptions="End"
+                    VerticalOptions="Start"
+                    HorizontalTextAlignment="Center"
+                    VerticalTextAlignment="Center" />
+            </Grid>
+
+            <!-- POSTER + TITLE -->
+            <Grid
+                ColumnDefinitions="Auto, *"
+                Padding="16,0,16,12">
+
+                <Border
+                    Grid.Column="0"
+                    WidthRequest="90"
+                    HeightRequest="130"
+                    BackgroundColor="{StaticResource Surface}"
+                    Stroke="{StaticResource Border}"
+                    StrokeThickness="1"
+                    Margin="0,-50,14,0">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="10" />
+                    </Border.StrokeShape>
+                    <Image
+                        Source="{Binding Movie.PosterPath}"
+                        Aspect="AspectFill" />
+                </Border>
+
+                <VerticalStackLayout
+                    Grid.Column="1"
+                    Padding="0,10,0,0"
+                    Spacing="4">
+                    <Label
+                        Style="{StaticResource HeadlineMediumLabel}"
+                        Text="{Binding Movie.Title}" />
+                    <Label
+                        Style="{StaticResource CaptionLabel}"
+                        Text="{Binding Movie.Subtitle}" />
+                    <Label
+                        Style="{StaticResource BodyMediumLabel}"
+                        Text="{Binding Movie.Director}"
+                        IsVisible="{Binding Movie.Director, Converter={StaticResource IsNotNullOrEmptyConverter}}" />
+                </VerticalStackLayout>
+            </Grid>
+
+            <!-- RATING -->
+            <HorizontalStackLayout Padding="16,0,16,12" Spacing="8">
+                <Label
+                    Style="{StaticResource RatingLabel}"
+                    Text="{Binding Movie.AverageRating, Converter={StaticResource RatingToStarsConverter}}"
+                    VerticalOptions="Center" />
+                <Label
+                    Style="{StaticResource HeadlineMediumLabel}"
+                    FontSize="16"
+                    Text="{Binding Movie.RatingText}"
+                    VerticalOptions="Center" />
+                <Label
+                    Style="{StaticResource CaptionLabel}"
+                    Text="{Binding Movie.RatingsCountText}"
+                    VerticalOptions="Center" />
+            </HorizontalStackLayout>
+
+            <!-- ACTION BUTTONS -->
+            <Grid
+                ColumnDefinitions="*, *, *, *"
+                Padding="8,0,8,12">
+
+                <VerticalStackLayout Grid.Column="0" HorizontalOptions="Center" Spacing="6">
+                    <Border
+                        WidthRequest="44"
+                        HeightRequest="44"
+                        BackgroundColor="{StaticResource Surface}"
+                        StrokeThickness="0"
+                        HorizontalOptions="Center">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="22" />
+                        </Border.StrokeShape>
+                        <Label
+                            FontFamily="FASolid"
+                            FontSize="16"
+                            TextColor="{StaticResource OnSurface}"
+                            Text="{x:Static helpers:FontAwesomeIcons.Eye}"
+                            HorizontalOptions="Center"
+                            VerticalOptions="Center" />
+                    </Border>
+                    <Label Style="{StaticResource CaptionLabel}" Text="Watched" HorizontalOptions="Center" />
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Grid.Column="1" HorizontalOptions="Center" Spacing="6">
+                    <Border
+                        WidthRequest="44"
+                        HeightRequest="44"
+                        BackgroundColor="{StaticResource Surface}"
+                        StrokeThickness="0"
+                        HorizontalOptions="Center">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="22" />
+                        </Border.StrokeShape>
+                        <Label
+                            FontFamily="FASolid"
+                            FontSize="16"
+                            TextColor="{StaticResource OnSurface}"
+                            Text="{x:Static helpers:FontAwesomeIcons.Heart}"
+                            HorizontalOptions="Center"
+                            VerticalOptions="Center" />
+                    </Border>
+                    <Label Style="{StaticResource CaptionLabel}" Text="Like" HorizontalOptions="Center" />
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Grid.Column="2" HorizontalOptions="Center" Spacing="6">
+                    <Border
+                        WidthRequest="44"
+                        HeightRequest="44"
+                        BackgroundColor="{StaticResource Surface}"
+                        StrokeThickness="0"
+                        HorizontalOptions="Center">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="22" />
+                        </Border.StrokeShape>
+                        <Label
+                            FontFamily="FASolid"
+                            FontSize="16"
+                            TextColor="{StaticResource OnSurface}"
+                            Text="{x:Static helpers:FontAwesomeIcons.Bookmark}"
+                            HorizontalOptions="Center"
+                            VerticalOptions="Center" />
+                    </Border>
+                    <Label Style="{StaticResource CaptionLabel}" Text="Watchlist" HorizontalOptions="Center" />
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Grid.Column="3" HorizontalOptions="Center" Spacing="6">
+                    <Border
+                        WidthRequest="44"
+                        HeightRequest="44"
+                        BackgroundColor="{StaticResource Surface}"
+                        StrokeThickness="0"
+                        HorizontalOptions="Center">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="22" />
+                        </Border.StrokeShape>
+                        <Label
+                            FontFamily="FASolid"
+                            FontSize="16"
+                            TextColor="{StaticResource OnSurface}"
+                            Text="{x:Static helpers:FontAwesomeIcons.Share}"
+                            HorizontalOptions="Center"
+                            VerticalOptions="Center" />
+                    </Border>
+                    <Label Style="{StaticResource CaptionLabel}" Text="Share" HorizontalOptions="Center" />
+                </VerticalStackLayout>
+
+            </Grid>
+
+            <BoxView Style="{StaticResource ListDivider}" Margin="16,4,16,16" />
+
+            <!-- SYNOPSIS -->
+            <VerticalStackLayout Padding="16,0" Spacing="10">
+                <Label Style="{StaticResource SectionHeaderLabel}" Text="SYNOPSIS" />
+                <Label
+                    Style="{StaticResource BodyMediumLabel}"
+                    Text="{Binding Movie.Overview}"
+                    Margin="0,0,0,4" />
+            </VerticalStackLayout>
+
+            <BoxView Style="{StaticResource ListDivider}" Margin="16,16" />
+
+            <!-- CAST -->
+            <VerticalStackLayout Padding="16,0" Spacing="10">
+                <Label Style="{StaticResource SectionHeaderLabel}" Text="CAST" />
+
+                <ScrollView
+                    Orientation="Horizontal"
+                    HorizontalScrollBarVisibility="Never"
+                    Margin="0,0,0,4">
+                    <HorizontalStackLayout
+                        Spacing="14"
+                        BindableLayout.ItemsSource="{Binding Cast}">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="models:CastMemberItem">
+                                <VerticalStackLayout WidthRequest="56" Spacing="6">
+                                    <Border
+                                        WidthRequest="42"
+                                        HeightRequest="42"
+                                        BackgroundColor="{StaticResource Surface}"
+                                        Stroke="{StaticResource Border}"
+                                        StrokeThickness="1"
+                                        HorizontalOptions="Center">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="21" />
+                                        </Border.StrokeShape>
+                                        <Label
+                                            Text="{Binding Initial}"
+                                            Style="{StaticResource HeadlineMediumLabel}"
+                                            FontSize="16"
+                                            HorizontalOptions="Center"
+                                            VerticalOptions="Center" />
+                                    </Border>
+                                    <Label
+                                        Text="{Binding FirstName}"
+                                        Style="{StaticResource CaptionLabel}"
+                                        MaxLines="1"
+                                        LineBreakMode="TailTruncation"
+                                        HorizontalTextAlignment="Center" />
+                                </VerticalStackLayout>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </HorizontalStackLayout>
+                </ScrollView>
+            </VerticalStackLayout>
+
+            <BoxView Style="{StaticResource ListDivider}" Margin="16,16" />
+
+            <!-- REVIEWS -->
+            <VerticalStackLayout Padding="16,0,16,24" Spacing="0">
+                <Grid ColumnDefinitions="*, Auto" Margin="0,0,0,4">
+                    <Label
+                        Grid.Column="0"
+                        Style="{StaticResource SectionHeaderLabel}"
+                        Text="REVIEWS" />
+                    <Label
+                        Grid.Column="1"
+                        Style="{StaticResource AccentLabel}"
+                        Text="{Binding ReviewsCountText}"
+                        VerticalTextAlignment="Center"
+                        IsVisible="{Binding ReviewsCountText, Converter={StaticResource IsNotNullOrEmptyConverter}}" />
+                </Grid>
+
+                <VerticalStackLayout BindableLayout.ItemsSource="{Binding Reviews}">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="models:ReviewPreviewItem">
+                            <VerticalStackLayout>
+                                <Grid
+                                    ColumnDefinitions="44, *"
+                                    ColumnSpacing="12"
+                                    Margin="0,12,0,0">
+                                    <Border
+                                        Grid.Column="0"
+                                        WidthRequest="40"
+                                        HeightRequest="40"
+                                        BackgroundColor="{StaticResource Surface}"
+                                        StrokeThickness="0"
+                                        VerticalOptions="Start">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="20" />
+                                        </Border.StrokeShape>
+                                        <Label
+                                            Text="{Binding Initial}"
+                                            Style="{StaticResource SectionHeaderLabel}"
+                                            HorizontalOptions="Center"
+                                            VerticalOptions="Center" />
+                                    </Border>
+
+                                    <VerticalStackLayout Grid.Column="1" Spacing="3">
+                                        <HorizontalStackLayout Spacing="8">
+                                            <Label
+                                                Style="{StaticResource BodyMediumLabel}"
+                                                FontAttributes="Bold"
+                                                Text="{Binding Username}" />
+                                            <Label
+                                                Style="{StaticResource RatingLabel}"
+                                                FontSize="12"
+                                                Text="{Binding Rating, Converter={StaticResource RatingToStarsConverter}}"
+                                                VerticalOptions="Center" />
+                                        </HorizontalStackLayout>
+                                        <Label
+                                            Style="{StaticResource CaptionLabel}"
+                                            Text="{Binding ReviewText}"
+                                            MaxLines="3"
+                                            LineBreakMode="TailTruncation" />
+                                        <HorizontalStackLayout Spacing="4" Margin="0,4,0,0">
+                                            <Label
+                                                Style="{StaticResource CaptionLabel}"
+                                                Text="{Binding LikesCount}" />
+                                            <Label
+                                                FontFamily="FASolid"
+                                                FontSize="11"
+                                                TextColor="{StaticResource TextSecondary}"
+                                                Text="{x:Static helpers:FontAwesomeIcons.Heart}" />
+                                        </HorizontalStackLayout>
+                                    </VerticalStackLayout>
+                                </Grid>
+                                <BoxView Style="{StaticResource ListDivider}" Margin="0,12,0,0" />
+                            </VerticalStackLayout>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+
+        </VerticalStackLayout>
+        </ScrollView>
+
+        <ActivityIndicator
+            IsRunning="{Binding IsBusy}"
+            IsVisible="{Binding IsBusy}"
+            HorizontalOptions="Center"
+            VerticalOptions="Center" />
+    </Grid>
+
+</pages:BasePage>
