@@ -11,7 +11,9 @@
     xmlns:vm="clr-namespace:CineLog.Mobile.Core.ViewModels.Profile;assembly=CineLog.Mobile.Core"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     ShowMenuButton="True"
-    Title="Profile">
+    Title="Profile"
+    NavBarRightIcon="{x:Static helpers:FontAwesomeIcons.SignOut}"
+    NavBarRightCommand="{Binding LogoutCommand}">
 
         <ScrollView>
         <VerticalStackLayout Padding="20" Spacing="25">

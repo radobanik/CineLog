@@ -1,3 +1,4 @@
+using System.Windows.Input;
 using CineLog.Mobile.Controls;
 using CineLog.Mobile.Core.ViewModels.Base;
 using CineLog.Mobile.Helpers;
@@ -15,6 +16,12 @@ public abstract class BasePage : ContentPage
     public static readonly BindableProperty ShowNavBarProperty =
         BindableProperty.Create(nameof(ShowNavBar), typeof(bool), typeof(BasePage), true);
 
+    public static readonly BindableProperty NavBarRightIconProperty =
+        BindableProperty.Create(nameof(NavBarRightIcon), typeof(string), typeof(BasePage), string.Empty);
+
+    public static readonly BindableProperty NavBarRightCommandProperty =
+        BindableProperty.Create(nameof(NavBarRightCommand), typeof(ICommand), typeof(BasePage), null);
+
     public bool ShowMenuButton
     {
         get => (bool)GetValue(ShowMenuButtonProperty);
@@ -25,6 +32,18 @@ public abstract class BasePage : ContentPage
     {
         get => (bool)GetValue(ShowNavBarProperty);
         set => SetValue(ShowNavBarProperty, value);
+    }
+
+    public string NavBarRightIcon
+    {
+        get => (string)GetValue(NavBarRightIconProperty);
+        set => SetValue(NavBarRightIconProperty, value);
+    }
+
+    public ICommand? NavBarRightCommand
+    {
+        get => (ICommand?)GetValue(NavBarRightCommandProperty);
+        set => SetValue(NavBarRightCommandProperty, value);
     }
 
     public BasePage()
@@ -44,6 +63,8 @@ public abstract class BasePage : ContentPage
             var navBar = new NavBar();
             navBar.SetBinding(NavBar.TitleProperty, new Binding(nameof(Title), source: this));
             navBar.SetBinding(NavBar.ShowMenuButtonProperty, new Binding(nameof(ShowMenuButton), source: this));
+            navBar.SetBinding(NavBar.RightIconProperty, new Binding(nameof(NavBarRightIcon), source: this));
+            navBar.SetBinding(NavBar.RightCommandProperty, new Binding(nameof(NavBarRightCommand), source: this));
 
             var grid = new Grid
             {

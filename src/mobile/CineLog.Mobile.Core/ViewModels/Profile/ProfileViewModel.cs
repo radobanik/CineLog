@@ -9,7 +9,7 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace CineLog.Mobile.Core.ViewModels.Profile;
 
-public partial class ProfileViewModel(IProfileService profileService, IMovieDetailNavigationContext movieDetailNav, INavigationService navigation, IAlertService alerts)
+public partial class ProfileViewModel(IProfileService profileService, IAuthService authService, IMovieDetailNavigationContext movieDetailNav, INavigationService navigation, IAlertService alerts)
     : BaseViewModel(alerts)
 {
     [ObservableProperty] private string _username = string.Empty;
@@ -27,6 +27,13 @@ public partial class ProfileViewModel(IProfileService profileService, IMovieDeta
     {
         movieDetailNav.MovieId = movie.Id;
         return navigation.NavigateToAsync(Routes.MovieDetail);
+    }
+
+    [RelayCommand]
+    private async Task Logout()
+    {
+        await authService.LogoutAsync();
+        await navigation.NavigateToRootAsync(Routes.Login);
     }
 
     protected override async Task LoadAsync()

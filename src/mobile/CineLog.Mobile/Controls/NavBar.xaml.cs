@@ -1,3 +1,4 @@
+using System.Windows.Input;
 using CineLog.Mobile.Helpers;
 
 namespace CineLog.Mobile.Controls;
@@ -15,6 +16,16 @@ public partial class NavBar : ContentView
 
     public static readonly BindableProperty LeftIconProperty =
         BindableProperty.Create(nameof(LeftIcon), typeof(string), typeof(NavBar), FontAwesomeIcons.ChevronLeft);
+
+    public static readonly BindableProperty RightIconProperty =
+        BindableProperty.Create(nameof(RightIcon), typeof(string), typeof(NavBar), string.Empty,
+            propertyChanged: (b, _, n) => ((NavBar)b).HasRightIcon = !string.IsNullOrEmpty((string)n));
+
+    public static readonly BindableProperty HasRightIconProperty =
+        BindableProperty.Create(nameof(HasRightIcon), typeof(bool), typeof(NavBar), false);
+
+    public static readonly BindableProperty RightCommandProperty =
+        BindableProperty.Create(nameof(RightCommand), typeof(ICommand), typeof(NavBar), null);
 
     public string Title
     {
@@ -34,6 +45,24 @@ public partial class NavBar : ContentView
         set => SetValue(LeftIconProperty, value);
     }
 
+    public string RightIcon
+    {
+        get => (string)GetValue(RightIconProperty);
+        set => SetValue(RightIconProperty, value);
+    }
+
+    public bool HasRightIcon
+    {
+        get => (bool)GetValue(HasRightIconProperty);
+        set => SetValue(HasRightIconProperty, value);
+    }
+
+    public ICommand? RightCommand
+    {
+        get => (ICommand?)GetValue(RightCommandProperty);
+        set => SetValue(RightCommandProperty, value);
+    }
+
     public NavBar()
     {
         InitializeComponent();
@@ -43,5 +72,10 @@ public partial class NavBar : ContentView
     {
         if (!ShowMenuButton)
             await Shell.Current.GoToAsync("..");
+    }
+
+    private void OnRightTapped(object sender, TappedEventArgs e)
+    {
+        RightCommand?.Execute(null);
     }
 }
