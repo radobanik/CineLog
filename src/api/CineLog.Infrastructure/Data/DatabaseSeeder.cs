@@ -18,6 +18,7 @@ public static class DatabaseSeeder
         var dbContext = serviceProvider.GetRequiredService<CineLog.Domain.Interfaces.IAppDbContext>();
         await MovieSeeder.SeedAsync(dbContext);
         await ReviewSeeder.SeedAsync(dbContext);
+        await UserFollowSeeder.SeedAsync(dbContext);
         await FavoriteSeeder.SeedAsync(dbContext);
         await WatchlistSeeder.SeedAsync(dbContext);
     }
