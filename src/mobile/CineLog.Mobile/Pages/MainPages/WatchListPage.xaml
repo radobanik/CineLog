@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<pages:BasePage
+    x:Class="CineLog.Mobile.Pages.MainPages.WatchListsPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:pages="clr-namespace:CineLog.Mobile.Pages"
+    xmlns:watchListViews="clr-namespace:CineLog.Mobile.Views.WatchList"
+    x:Name="ThisPage"
+    Title="WatchLists"
+    BackgroundColor="{StaticResource Background}"
+    ShowMenuButton="True">
+
+    <Grid Padding="24">
+
+        <RefreshView Command="{Binding LoadCommand}" IsRefreshing="{Binding IsBusy, Mode=OneWay}">
+
+            <CollectionView
+                x:Name="WatchListsCollection"
+                Margin="0,8,0,0"
+                ItemsSource="{Binding Lists}"
+                ItemsUpdatingScrollMode="KeepScrollOffset"
+                SelectionMode="None">
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <watchListViews:WatchListRowView
+                            DeleteCommand="{Binding Source={x:Reference ThisPage}, Path=BindingContext.DeleteWatchListCommand}"
+                            EditCommand="{Binding Source={x:Reference ThisPage}, Path=BindingContext.StartEditWatchListCommand}"
+                            OpenCommand="{Binding Source={x:Reference ThisPage}, Path=BindingContext.OpenWatchListCommand}"
+                            ToggleOptionsCommand="{Binding Source={x:Reference ThisPage}, Path=BindingContext.ToggleWatchListOptionsCommand}" />
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+
+                <CollectionView.Footer>
+                    <BoxView HeightRequest="112" Color="Transparent" />
+                </CollectionView.Footer>
+            </CollectionView>
+        </RefreshView>
+
+        <Button
+            Margin="0,0,0,16"
+            Padding="0"
+            BackgroundColor="{StaticResource Primary}"
+            Command="{Binding ShowCreateWatchListCommand}"
+            CornerRadius="28"
+            FontAttributes="Bold"
+            FontSize="28"
+            HeightRequest="56"
+            HorizontalOptions="End"
+            Text="+"
+            TextColor="{StaticResource OnPrimary}"
+            VerticalOptions="End"
+            WidthRequest="56"
+            ZIndex="10" />
+
+        <watchListViews:WatchListNameFormView
+            Name="{Binding NameForm.Name, Mode=TwoWay}"
+            Title="{Binding NameForm.Title}"
+            CancelCommand="{Binding CancelNameFormCommand}"
+            ConfirmCommand="{Binding ConfirmNameFormCommand}"
+            IsOpen="{Binding NameForm.IsOpen}"
+            ZIndex="30" />
+    </Grid>
+</pages:BasePage>

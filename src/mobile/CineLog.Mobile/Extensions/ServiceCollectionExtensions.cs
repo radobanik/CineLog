@@ -20,6 +20,8 @@ public static class ServiceCollectionExtensions
     private static IServiceCollection AddMauiServices(this IServiceCollection services)
     {
         services.AddSingleton<IMovieNavigationContext, MovieNavigationContext>();
+        services.AddSingleton<IWatchListNavigationContext, WatchListNavigationContext>();
+
         services.AddSingleton<ISecureStorageService, MauiSecureStorageService>();
         services.AddSingleton<INavigationService, ShellNavigationService>();
         services.AddSingleton<IAlertService, MauiAlertService>();
@@ -35,7 +37,8 @@ public static class ServiceCollectionExtensions
         services.AddTransient<MoviesCategoryPage>();
         services.AddTransient<SearchPage>();
         services.AddTransient<LogPage>();
-        services.AddTransient<ListsPage>();
+        services.AddTransient<WatchListsPage>();
+        services.AddTransient<MovieWatchListPage>();
         services.AddTransient<ProfilePage>();
         return services;
     }

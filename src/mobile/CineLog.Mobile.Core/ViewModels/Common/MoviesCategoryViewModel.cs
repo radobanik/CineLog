@@ -1,6 +1,5 @@
 using System.Collections.ObjectModel;
 using CineLog.Mobile.Core.Models;
-using CineLog.Mobile.Core.Models.Home;
 using CineLog.Mobile.Core.Services.Interfaces;
 using CineLog.Mobile.Core.ViewModels.Base;
 using CommunityToolkit.Mvvm.ComponentModel;

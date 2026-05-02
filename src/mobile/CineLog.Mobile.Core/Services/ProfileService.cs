@@ -1,5 +1,5 @@
 using CineLog.Mobile.ApiClient.Clients;
-using CineLog.Mobile.Core.Models.Home;
+using CineLog.Mobile.Core.Models;
 using CineLog.Mobile.Core.Models.Profile;
 using CineLog.Mobile.Core.Models.Review;
 using CineLog.Mobile.Core.Services.Interfaces;
@@ -11,6 +11,7 @@ public sealed class ProfileService(IUsersClient usersClient) : IProfileService
     public async Task<UserProfile> GetProfileAsync(CancellationToken ct = default)
     {
         var user = await usersClient.GetMeAsync(ct);
+
         return new UserProfile
         {
             Id = user.Id ?? Guid.Empty,

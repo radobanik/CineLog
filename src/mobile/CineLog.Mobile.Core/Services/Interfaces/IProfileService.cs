@@ -1,4 +1,4 @@
-using CineLog.Mobile.Core.Models.Home;
+using CineLog.Mobile.Core.Models;
 using CineLog.Mobile.Core.Models.Profile;
 using CineLog.Mobile.Core.Models.Review;
 

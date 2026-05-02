@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<pages:BasePage
+    x:Class="CineLog.Mobile.Pages.Movies.MovieWatchListPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:pages="clr-namespace:CineLog.Mobile.Pages"
+    xmlns:watchListViews="clr-namespace:CineLog.Mobile.Views.WatchList"
+    x:Name="ThisPage"
+    Title="{Binding Title}"
+    BackgroundColor="{StaticResource Background}"
+    ShowMenuButton="false">
+
+    <Grid Padding="24" RowDefinitions="Auto,*">
+
+        <Grid Padding="0,4,0,16" ColumnDefinitions="44,*">
+
+            <Button
+                Padding="0"
+                BackgroundColor="Transparent"
+                Command="{Binding BackCommand}"
+                FontSize="28"
+                Text="‹"
+                TextColor="{StaticResource OnBackground}" />
+
+            <Label
+                Grid.Column="1"
+                FontAttributes="Bold"
+                FontSize="22"
+                LineBreakMode="TailTruncation"
+                Text="{Binding SelectedRow.Name}"
+                TextColor="{StaticResource OnBackground}"
+                VerticalOptions="Center" />
+        </Grid>
+
+        <CollectionView
+            Grid.Row="1"
+            ItemsSource="{Binding Movies}"
+            RemainingItemsThreshold="3"
+            RemainingItemsThresholdReachedCommand="{Binding LoadMoreCommand}"
+            SelectionMode="None">
+
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <watchListViews:WatchListMovieRowView RemoveCommand="{Binding Source={x:Reference ThisPage}, Path=BindingContext.RemoveMovieCommand}" />
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+
+            <CollectionView.Footer>
+                <ActivityIndicator
+                    Margin="0,12"
+                    IsRunning="{Binding IsLoadingMore}"
+                    IsVisible="{Binding IsLoadingMore}"
+                    Color="{StaticResource Primary}" />
+            </CollectionView.Footer>
+        </CollectionView>
+    </Grid>
+</pages:BasePage>

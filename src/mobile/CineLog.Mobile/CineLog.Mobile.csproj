@@ -48,4 +48,22 @@
     </MauiXaml>
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Update="Pages\MainPages\WatchListPage.xaml.cs">
+      <DependentUpon>WatchListPage.xaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Pages\Movies\MovieWatchListPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
+    <None Update="View\WatchList\WatchListNameFormView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
+    <None Update="View\WatchList\WatchListRowView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
+  </ItemGroup>
+
 </Project>
