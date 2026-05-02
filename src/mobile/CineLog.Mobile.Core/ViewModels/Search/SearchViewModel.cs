@@ -130,20 +130,28 @@ public partial class SearchViewModel : BaseViewModel
         if (user.Id == Guid.Empty)
             return;
 
-        if (user.IsFollowing)
+        try
         {
-            await followService.UnfollowAsync(user.Id);
-            SetFollowingState(user.Id, false);
-            RemoveUser(FollowingUsers, user.Id);
-            return;
+            if (user.IsFollowing)
+            {
+                await followService.UnfollowAsync(user.Id);
+                SetFollowingState(user.Id, false);
+                RemoveUser(FollowingUsers, user.Id);
+                return;
+            }
+
+            await followService.FollowAsync(user.Id);
+            SetFollowingState(user.Id, true);
+
+            if (FollowingUsers.All(x => x.Id != user.Id))
+                FollowingUsers.Insert(0, CloneRow(user, isFollowing: true));
         }
-
-        await followService.FollowAsync(user.Id);
-        SetFollowingState(user.Id, true);
-
-        if (FollowingUsers.All(x => x.Id != user.Id))
-            FollowingUsers.Insert(0, CloneRow(user, isFollowing: true));
+        catch (Exception ex)
+        {
+            await HandleErrorAsync(ex);
+        }
     }
+
 
     private async Task SearchDebouncedAsync(string query)
     {
