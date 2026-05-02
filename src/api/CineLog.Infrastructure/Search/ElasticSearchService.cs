@@ -44,9 +44,15 @@ public class ElasticSearchService : IElasticSearchService
         => await _client.DeleteAsync<MovieSearchDocument>(movieId.ToString(), d => d.Index(MoviesIndex), ct);
 
     public async Task<PagedResponse<MovieSearchDocument>> SearchMoviesAsync(
-        string query, int page, int pageSize, IEnumerable<string>? genres = null, CancellationToken ct = default)
+     string query,
+     int page,
+     int pageSize,
+     IEnumerable<string>? genres = null,
+     CancellationToken ct = default)
     {
-        var genreList = genres?.ToList();
+        var genreList = genres?
+            .Where(g => !string.IsNullOrWhiteSpace(g))
+            .ToList();
 
         var response = await _client.SearchAsync<MovieSearchDocument>(s => s
             .Index(MoviesIndex)
@@ -55,32 +61,39 @@ public class ElasticSearchService : IElasticSearchService
             .Query(q => q
                 .Bool(b =>
                 {
-                    b.Should(
-                        s => s.Match(m => m
-                            .Field("title")
-                            .Query(query)
-                            .Fuzziness(new Fuzziness("AUTO"))
-                        ),
-                        s => s.MatchPhrasePrefix(m => m
-                            .Field("title")
-                            .Query(query)
-                        )
-                    );
-                    b.MinimumShouldMatch(1);
+                    if (string.IsNullOrWhiteSpace(query))
+                    {
+                        b.Must(m => m.MatchAll(new MatchAllQuery()));
+                    }
+                    else
+                    {
+                        b.Should(
+                            s => s.Match(m => m
+                                .Field("title")
+                                .Query(query)
+                                .Fuzziness(new Fuzziness("AUTO"))),
+                            s => s.MatchPhrasePrefix(m => m
+                                .Field("title")
+                                .Query(query)));
+
+                        b.MinimumShouldMatch(1);
+                    }
 
                     if (genreList is { Count: > 0 })
+                    {
                         b.Filter(f => f.Terms(t => t
                             .Field("genres")
                             .Terms(new TermsQueryField(
                                 genreList.Select(g => FieldValue.String(g)).ToArray()))));
-                })
-            ), ct);
+                    }
+                })), ct);
 
         var items = response.Documents.ToList();
         var totalCount = (int)response.Total;
 
         return PagedResponse<MovieSearchDocument>.Create(items, page, pageSize, totalCount);
     }
+
 
     public async Task IndexPersonAsync(PersonSearchDocument doc, CancellationToken ct = default)
         => await _client.IndexAsync(doc, i => i.Index(PeopleIndex).Id(doc.Id), ct);
