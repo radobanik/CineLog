@@ -11,6 +11,9 @@ public partial class UserSearchRowViewModel(UserSearchItem item) : ObservableObj
     public string Username => Item.Username;
     public string? AvatarUrl => Item.AvatarUrl;
     public int ReviewCount => Item.ReviewCount;
+    public bool HasAvatar => !string.IsNullOrWhiteSpace(AvatarUrl);
+    public bool HasNoAvatar => !HasAvatar;
+
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(FollowButtonText))]
