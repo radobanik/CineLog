@@ -14,29 +14,37 @@ public sealed class SearchUsersHandler(
         SearchUsersQuery request,
         CancellationToken ct)
     {
+        var currentUserId = currentUser.UserId;
         var normalized = request.Query.Trim().ToLowerInvariant();
 
-        var query = db.Users
+        var baseQuery = db.Users
             .Where(u =>
-                u.Id != currentUser.UserId &&
+                u.Id != currentUserId &&
                 u.UserName != null &&
-                u.UserName.ToLower().Contains(normalized))
-            .Select(u => new DiscoverUserResponse(
-                u.Id,
-                u.UserName ?? string.Empty,
-                u.AvatarUrl,
-                db.Reviews.Count(r => r.UserId == u.Id),
-                db.UserFollows.Any(f =>
-                    f.FollowerId == currentUser.UserId &&
-                    f.FollowedId == u.Id)
-                ))
-            .OrderBy(u => u.Username);
+                u.UserName.ToLower().Contains(normalized));
 
-        var totalCount = await query.CountAsync(ct);
+        var totalCount = await baseQuery.CountAsync(ct);
 
-        var items = await query
+        var items = await baseQuery
+            .OrderBy(u => u.UserName)
             .Skip((request.Page - 1) * request.PageSize)
             .Take(request.PageSize)
+            .Select(u => new
+            {
+                u.Id,
+                Username = u.UserName ?? string.Empty,
+                u.AvatarUrl,
+                ReviewCount = db.Reviews.Count(r => r.UserId == u.Id),
+                IsFollowing = db.UserFollows.Any(f =>
+                    f.FollowerId == currentUserId &&
+                    f.FollowedId == u.Id)
+            })
+            .Select(u => new DiscoverUserResponse(
+                u.Id,
+                u.Username,
+                u.AvatarUrl,
+                u.ReviewCount,
+                u.IsFollowing))
             .ToListAsync(ct);
 
         return PagedResponse<DiscoverUserResponse>.Create(

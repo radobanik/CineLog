@@ -14,20 +14,29 @@ public sealed class GetRecommendedUsersHandler(
         GetRecommendedUsersQuery request,
         CancellationToken ct)
     {
+        var currentUserId = currentUser.UserId;
+
         return db.Users
-            .Where(u => u.Id != currentUser.UserId)
-            .Select(u => new DiscoverUserResponse(
+            .Where(u => u.Id != currentUserId)
+            .Select(u => new
+            {
                 u.Id,
-                u.UserName ?? string.Empty,
+                Username = u.UserName ?? string.Empty,
                 u.AvatarUrl,
-                db.Reviews.Count(r => r.UserId == u.Id),
-                db.UserFollows.Any(f =>
-                    f.FollowerId == currentUser.UserId &&
+                ReviewCount = db.Reviews.Count(r => r.UserId == u.Id),
+                IsFollowing = db.UserFollows.Any(f =>
+                    f.FollowerId == currentUserId &&
                     f.FollowedId == u.Id)
-                ))
+            })
             .OrderByDescending(u => u.ReviewCount)
             .ThenBy(u => u.Username)
             .Take(request.Limit)
+            .Select(u => new DiscoverUserResponse(
+                u.Id,
+                u.Username,
+                u.AvatarUrl,
+                u.ReviewCount,
+                u.IsFollowing))
             .ToListAsync(ct);
     }
 }

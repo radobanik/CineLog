@@ -7,18 +7,19 @@
     xmlns:helpers="clr-namespace:CineLog.Mobile.Helpers"
     xmlns:models="clr-namespace:CineLog.Mobile.Core.Models;assembly=CineLog.Mobile.Core"
     xmlns:pages="clr-namespace:CineLog.Mobile.Pages"
+    xmlns:searchVm="clr-namespace:CineLog.Mobile.Core.ViewModels.Search;assembly=CineLog.Mobile.Core"
     xmlns:vm="clr-namespace:CineLog.Mobile.Core.ViewModels.Search;assembly=CineLog.Mobile.Core"
     Title="Search"
     x:DataType="vm:SearchViewModel"
     ShowMenuButton="True">
 
-    <Grid RowDefinitions="Auto, *">
+    <Grid RowDefinitions="Auto,Auto,*">
 
         <Border
             Grid.Row="0"
-            Margin="16,12"
+            Margin="16,12,16,8"
             Style="{StaticResource InputFieldBorder}">
-            <Grid Padding="16,0" ColumnDefinitions="Auto, *, Auto">
+            <Grid Padding="16,0" ColumnDefinitions="Auto,*,Auto">
                 <Label
                     Grid.Column="0"
                     Style="{StaticResource SecondaryIconLabel}"
@@ -29,7 +30,7 @@
                     x:Name="SearchEntry"
                     Grid.Column="1"
                     Margin="10,0"
-                    Placeholder="Search films..."
+                    Placeholder="Search films, people..."
                     Style="{StaticResource CleanEntry}"
                     Text="{Binding SearchQuery}" />
 
@@ -46,11 +47,48 @@
             </Grid>
         </Border>
 
-        <Grid Grid.Row="1" Padding="16,0">
+        <HorizontalStackLayout
+            Grid.Row="1"
+            Margin="16,0,16,8"
+            Spacing="8">
+            <Button
+                Command="{Binding SelectMoviesCommand}"
+                Style="{StaticResource SecondaryButton}"
+                Text="Movies">
+                <Button.Triggers>
+                    <DataTrigger
+                        Binding="{Binding IsMoviesSelected}"
+                        TargetType="Button"
+                        Value="True">
+                        <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
+                        <Setter Property="TextColor" Value="{StaticResource OnPrimary}" />
+                        <Setter Property="BorderWidth" Value="0" />
+                    </DataTrigger>
+                </Button.Triggers>
+            </Button>
+
+            <Button
+                Command="{Binding SelectPeopleCommand}"
+                Style="{StaticResource SecondaryButton}"
+                Text="People">
+                <Button.Triggers>
+                    <DataTrigger
+                        Binding="{Binding IsPeopleSelected}"
+                        TargetType="Button"
+                        Value="True">
+                        <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
+                        <Setter Property="TextColor" Value="{StaticResource OnPrimary}" />
+                        <Setter Property="BorderWidth" Value="0" />
+                    </DataTrigger>
+                </Button.Triggers>
+            </Button>
+        </HorizontalStackLayout>
+
+        <Grid Grid.Row="2" Padding="16,0">
 
             <VerticalStackLayout
                 HorizontalOptions="Center"
-                IsVisible="{Binding ShowEmptyState}"
+                IsVisible="{Binding ShowMovieEmptyState}"
                 Spacing="12"
                 VerticalOptions="Center">
                 <Label
@@ -80,7 +118,7 @@
             </CollectionView>
 
             <CollectionView
-                IsVisible="{Binding HasResults}"
+                IsVisible="{Binding ShowMovieResults}"
                 ItemsSource="{Binding Movies}"
                 RemainingItemsThreshold="4"
                 RemainingItemsThresholdReachedCommand="{Binding LoadMoreCommand}">
@@ -101,6 +139,148 @@
                             <Grid.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:SearchViewModel}}, Path=GoToMovieCommand}" CommandParameter="{Binding .}" />
                             </Grid.GestureRecognizers>
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+
+                <CollectionView.Footer>
+                    <ActivityIndicator
+                        Margin="0,8"
+                        IsRunning="{Binding IsLoadingMore}"
+                        IsVisible="{Binding IsLoadingMore}" />
+                </CollectionView.Footer>
+            </CollectionView>
+
+            <CollectionView
+                IsVisible="{Binding ShowPeopleHome}"
+                ItemsSource="{Binding FollowingUsers}"
+                RemainingItemsThreshold="4"
+                RemainingItemsThresholdReachedCommand="{Binding LoadMoreCommand}">
+                <CollectionView.Header>
+                    <VerticalStackLayout Padding="0,0,0,12" Spacing="10">
+                        <Label Style="{StaticResource SectionHeaderLabel}" Text="Popular reviewers" />
+
+                        <VerticalStackLayout BindableLayout.ItemsSource="{Binding RecommendedUsers}">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate x:DataType="searchVm:UserSearchRowViewModel">
+                                    <Grid Padding="0,8" ColumnDefinitions="44,*,Auto">
+                                        <Border
+                                            BackgroundColor="{StaticResource SurfaceVariant}"
+                                            HeightRequest="34"
+                                            WidthRequest="34">
+                                            <Border.StrokeShape>
+                                                <RoundRectangle CornerRadius="17" />
+                                            </Border.StrokeShape>
+                                            <Label
+                                                HorizontalOptions="Center"
+                                                Text="{Binding Initial}"
+                                                VerticalOptions="Center" />
+                                        </Border>
+
+                                        <VerticalStackLayout Grid.Column="1" Spacing="2">
+                                            <Label
+                                                FontAttributes="Bold"
+                                                Style="{StaticResource BodyMediumLabel}"
+                                                Text="{Binding Username}" />
+                                            <Label Style="{StaticResource CaptionLabel}" Text="{Binding ReviewsText}" />
+                                        </VerticalStackLayout>
+
+                                        <Button
+                                            Grid.Column="2"
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type pages:BasePage}}, Path=BindingContext.ToggleFollowCommand}"
+                                            CommandParameter="{Binding .}"
+                                            HeightRequest="34"
+                                            Style="{StaticResource PrimaryButton}"
+                                            Text="{Binding FollowButtonText}" />
+                                    </Grid>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </VerticalStackLayout>
+
+                        <BoxView Style="{StaticResource ListDivider}" />
+                        <Label Style="{StaticResource SectionHeaderLabel}" Text="Following" />
+                    </VerticalStackLayout>
+                </CollectionView.Header>
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="searchVm:UserSearchRowViewModel">
+                        <Grid Padding="0,8" ColumnDefinitions="44,*,Auto">
+                            <Border
+                                BackgroundColor="{StaticResource SurfaceVariant}"
+                                HeightRequest="34"
+                                WidthRequest="34">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="17" />
+                                </Border.StrokeShape>
+                                <Label
+                                    HorizontalOptions="Center"
+                                    Text="{Binding Initial}"
+                                    VerticalOptions="Center" />
+                            </Border>
+
+                            <VerticalStackLayout Grid.Column="1" Spacing="2">
+                                <Label
+                                    FontAttributes="Bold"
+                                    Style="{StaticResource BodyMediumLabel}"
+                                    Text="{Binding Username}" />
+                                <Label Style="{StaticResource CaptionLabel}" Text="{Binding ReviewsText}" />
+                            </VerticalStackLayout>
+
+                            <Button
+                                Grid.Column="2"
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type pages:BasePage}}, Path=BindingContext.ToggleFollowCommand}"
+                                CommandParameter="{Binding .}"
+                                HeightRequest="34"
+                                Style="{StaticResource SecondaryButton}"
+                                Text="{Binding FollowButtonText}" />
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+
+                <CollectionView.Footer>
+                    <ActivityIndicator
+                        Margin="0,8"
+                        IsRunning="{Binding IsLoadingMore}"
+                        IsVisible="{Binding IsLoadingMore}" />
+                </CollectionView.Footer>
+            </CollectionView>
+
+            <CollectionView
+                IsVisible="{Binding ShowPeopleResults}"
+                ItemsSource="{Binding Users}"
+                RemainingItemsThreshold="4"
+                RemainingItemsThresholdReachedCommand="{Binding LoadMoreCommand}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="searchVm:UserSearchRowViewModel">
+                        <Grid Padding="0,8" ColumnDefinitions="44,*,Auto">
+                            <Border
+                                BackgroundColor="{StaticResource SurfaceVariant}"
+                                HeightRequest="34"
+                                WidthRequest="34">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="17" />
+                                </Border.StrokeShape>
+                                <Label
+                                    HorizontalOptions="Center"
+                                    Text="{Binding Initial}"
+                                    VerticalOptions="Center" />
+                            </Border>
+
+                            <VerticalStackLayout Grid.Column="1" Spacing="2">
+                                <Label
+                                    FontAttributes="Bold"
+                                    Style="{StaticResource BodyMediumLabel}"
+                                    Text="{Binding Username}" />
+                                <Label Style="{StaticResource CaptionLabel}" Text="{Binding ReviewsText}" />
+                            </VerticalStackLayout>
+
+                            <Button
+                                Grid.Column="2"
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type pages:BasePage}}, Path=BindingContext.ToggleFollowCommand}"
+                                CommandParameter="{Binding .}"
+                                HeightRequest="34"
+                                Style="{StaticResource PrimaryButton}"
+                                Text="{Binding FollowButtonText}" />
                         </Grid>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
