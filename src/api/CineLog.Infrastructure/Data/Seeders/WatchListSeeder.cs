@@ -36,7 +36,7 @@ internal static class WatchlistSeeder
 
             if (watchlist is null)
             {
-                watchlist = Watchlist.Create(user.Id, seed.Name);
+                watchlist = Watchlist.CreateCustom(user.Id, seed.Name);
                 context.Watchlists.Add(watchlist);
                 await context.SaveChangesAsync();
             }
