@@ -1,3 +1,4 @@
+using CineLog.Application.Common;
 using CineLog.Domain.Entities;
 using CineLog.Domain.Enums;
 using CineLog.Domain.Exceptions;
@@ -10,11 +11,13 @@ public class RegisterHandler : IRequestHandler<RegisterCommand, AuthResponse>
 {
     private readonly UserManager<User> _userManager;
     private readonly IJwtService _jwtService;
+    private readonly IUserDefaultsService _userDefaults;
 
-    public RegisterHandler(UserManager<User> userManager, IJwtService jwtService)
+    public RegisterHandler(UserManager<User> userManager,IJwtService jwtService,IUserDefaultsService userDefaults)
     {
         _userManager = userManager;
         _jwtService = jwtService;
+        _userDefaults = userDefaults;
     }
 
     public async Task<AuthResponse> Handle(RegisterCommand request, CancellationToken cancellationToken)
@@ -35,6 +38,7 @@ public class RegisterHandler : IRequestHandler<RegisterCommand, AuthResponse>
         }
 
         await _userManager.AddToRoleAsync(user, UserRoles.User);
+        await _userDefaults.EnsureDefaultsAsync(user.Id, cancellationToken);
 
         var token = _jwtService.GenerateToken(user.Id, user.UserName!, user.Email!, UserRoles.User);
         return new AuthResponse(token, user.Id, user.UserName!);
