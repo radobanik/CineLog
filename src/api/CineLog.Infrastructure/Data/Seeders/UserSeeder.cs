@@ -45,8 +45,12 @@ internal static class UserSeeder
 
         foreach (var seed in Users)
         {
-            if (await userManager.FindByEmailAsync(seed.Email) is not null)
+            var existingUser = await userManager.FindByEmailAsync(seed.Email);
+            if (existingUser is not null)
+            {
+                await userDefaults.EnsureDefaultsAsync(existingUser.Id);
                 continue;
+            }
 
             var user = new User
             {
