@@ -193,6 +193,12 @@
                 <Label
                     Style="{StaticResource BodyMediumLabel}"
                     Text="{Binding Movie.Overview}"
+                    IsVisible="{Binding HasNoOverview, Converter={StaticResource InvertedBoolConverter}}"
+                    Margin="0,0,0,4" />
+                <Label
+                    Style="{StaticResource CaptionLabel}"
+                    Text="Synopsis unavailable."
+                    IsVisible="{Binding HasNoOverview}"
                     Margin="0,0,0,4" />
             </VerticalStackLayout>
 
@@ -201,9 +207,16 @@
             <VerticalStackLayout Padding="16,0" Spacing="10">
                 <Label Style="{StaticResource SectionHeaderLabel}" Text="CAST" />
 
+                <Label
+                    Style="{StaticResource CaptionLabel}"
+                    Text="Cast unavailable."
+                    IsVisible="{Binding HasNoCast}"
+                    Margin="0,0,0,4" />
+
                 <ScrollView
                     Orientation="Horizontal"
                     HorizontalScrollBarVisibility="Never"
+                    IsVisible="{Binding HasNoCast, Converter={StaticResource InvertedBoolConverter}}"
                     Margin="0,0,0,4">
                     <HorizontalStackLayout
                         Spacing="14"
@@ -363,22 +376,20 @@
         </VerticalStackLayout>
         </ScrollView>
 
-        <ActivityIndicator
-            IsRunning="{Binding IsBusy}"
-            IsVisible="{Binding IsBusy}"
-            HorizontalOptions="Center"
-            VerticalOptions="Center" />
-
-        <Label
-            FontSize="18"
-            TextColor="{StaticResource OnBackground}"
-            Text="{x:Static helpers:FontAwesomeIcons.ChevronLeft}"
-            WidthRequest="52"
-            HeightRequest="52"
-            HorizontalOptions="Start"
-            VerticalOptions="Start"
-            HorizontalTextAlignment="Center"
-            VerticalTextAlignment="Center">
+        <ActivityIndicator IsRunning="{Binding IsBusy}"
+                           IsVisible="{Binding IsBusy}"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center" />
+        <Label FontSize="18"
+               Style="{StaticResource IconLabel}"
+               TextColor="{StaticResource OnBackground}"
+               Text="{x:Static helpers:FontAwesomeIcons.ChevronLeft}"
+               WidthRequest="52"
+               HeightRequest="52"
+               HorizontalOptions="Start"
+               VerticalOptions="Start"
+               HorizontalTextAlignment="Center"
+               VerticalTextAlignment="Center">
             <Label.GestureRecognizers>
                 <TapGestureRecognizer Command="{Binding GoBackCommand}" />
             </Label.GestureRecognizers>

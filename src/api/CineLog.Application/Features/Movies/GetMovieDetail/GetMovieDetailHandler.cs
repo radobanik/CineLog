@@ -24,6 +24,7 @@ public class GetMovieDetailHandler : IRequestHandler<GetMovieDetailQuery, MovieD
             .Include(m => m.Crew).ThenInclude(c => c.Person)
             .Include(m => m.ProductionCompanies).ThenInclude(p => p.Company)
             .AsNoTracking()
+            .AsSplitQuery()
             .FirstOrDefaultAsync(m => m.Id == request.MovieId, cancellationToken);
 
         var isFavoriteTask = _db.UserFavorites

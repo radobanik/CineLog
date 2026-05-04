@@ -23,6 +23,8 @@ public partial class MovieDetailViewModel : BaseViewModel
     [ObservableProperty] private MovieDetailInfo? _movie;
     [ObservableProperty] private string _reviewsCountText = string.Empty;
     [ObservableProperty] private bool _hasNoReviews;
+    [ObservableProperty] private bool _hasNoOverview;
+    [ObservableProperty] private bool _hasNoCast;
     [ObservableProperty] private bool _isLiked;
 
     public ObservableCollection<CastMemberItem> Cast { get; } = [];
@@ -64,10 +66,12 @@ public partial class MovieDetailViewModel : BaseViewModel
             Movie = detail;
             Title = detail.Title;
             IsLiked = detail.IsFavorite;
+            HasNoOverview = string.IsNullOrWhiteSpace(detail.Overview);
 
             Cast.Clear();
             foreach (var member in detail.Cast)
                 Cast.Add(member);
+            HasNoCast = Cast.Count == 0;
 
             var (reviews, totalCount) = reviewsTask.Result;
             Reviews.Clear();
