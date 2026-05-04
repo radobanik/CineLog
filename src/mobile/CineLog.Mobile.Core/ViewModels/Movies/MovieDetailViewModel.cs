@@ -15,12 +15,16 @@ public partial class MovieDetailViewModel : BaseViewModel
 
     private readonly IMovieDetailService _movieDetailService;
     private readonly IMovieDetailNavigationContext _movieDetailNav;
+    private readonly IReviewsNavigationContext _reviewsNav;
     private readonly INavigationService _navigation;
     private readonly IReviewsClient _reviewsClient;
+    private readonly IMoviesClient _moviesClient;
+    private readonly IUsersClient _usersClient;
 
     [ObservableProperty] private MovieDetailInfo? _movie;
     [ObservableProperty] private string _reviewsCountText = string.Empty;
     [ObservableProperty] private bool _hasNoReviews;
+    [ObservableProperty] private bool _isLiked;
 
     public ObservableCollection<CastMemberItem> Cast { get; } = [];
     public ObservableCollection<ReviewPreviewItem> Reviews { get; } = [];
@@ -28,15 +32,21 @@ public partial class MovieDetailViewModel : BaseViewModel
     public MovieDetailViewModel(
         IMovieDetailService movieDetailService,
         IMovieDetailNavigationContext movieDetailNav,
+        IReviewsNavigationContext reviewsNav,
         INavigationService navigation,
         IReviewsClient reviewsClient,
+        IMoviesClient moviesClient,
+        IUsersClient usersClient,
         IAlertService alerts)
         : base(alerts)
     {
         _movieDetailService = movieDetailService;
         _movieDetailNav = movieDetailNav;
+        _reviewsNav = reviewsNav;
         _navigation = navigation;
         _reviewsClient = reviewsClient;
+        _moviesClient = moviesClient;
+        _usersClient = usersClient;
     }
 
     public override Task OnAppearingAsync() => Load();
@@ -48,7 +58,13 @@ public partial class MovieDetailViewModel : BaseViewModel
         {
             var movieId = _movieDetailNav.MovieId;
 
-            var detail = await _movieDetailService.GetMovieDetailAsync(movieId);
+            var detailTask = _movieDetailService.GetMovieDetailAsync(movieId);
+            var reviewsTask = _movieDetailService.GetReviewsAsync(movieId, ReviewPageSize);
+            var favoritesTask = _usersClient.GetFavoritesAsync();
+
+            await Task.WhenAll(detailTask, reviewsTask, favoritesTask);
+
+            var detail = detailTask.Result;
             Movie = detail;
             Title = detail.Title;
 
@@ -56,15 +72,46 @@ public partial class MovieDetailViewModel : BaseViewModel
             foreach (var member in detail.Cast)
                 Cast.Add(member);
 
-            var (reviews, totalCount) = await _movieDetailService.GetReviewsAsync(movieId, ReviewPageSize);
-
+            var (reviews, totalCount) = reviewsTask.Result;
             Reviews.Clear();
             foreach (var review in reviews)
                 Reviews.Add(review);
 
             ReviewsCountText = BuildReviewsCountText(totalCount);
             HasNoReviews = Reviews.Count == 0;
+
+            IsLiked = favoritesTask.Result.Any(f => f.Id == movieId);
         });
+    }
+
+    [RelayCommand]
+    private async Task ToggleLikeMovie()
+    {
+        var wasLiked = IsLiked;
+        IsLiked = !wasLiked;
+
+        try
+        {
+            if (wasLiked)
+                await _moviesClient.RemoveFromFavoritesAsync(_movieDetailNav.MovieId);
+            else
+                await _moviesClient.AddToFavoritesAsync(_movieDetailNav.MovieId);
+        }
+        catch
+        {
+            IsLiked = wasLiked;
+        }
+    }
+
+    [RelayCommand]
+    private Task OpenAddToWatchlist() => _navigation.NavigateToAsync(Routes.AddToWatchlist);
+
+    [RelayCommand]
+    private Task OpenReviews()
+    {
+        _reviewsNav.Mode = ReviewsMode.Movie;
+        _reviewsNav.EntityId = _movieDetailNav.MovieId;
+        return _navigation.NavigateToAsync(Routes.MovieReviews);
     }
 
     [RelayCommand]

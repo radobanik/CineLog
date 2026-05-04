@@ -26,10 +26,13 @@ public class GetReviewHandler : IRequestHandler<GetReviewQuery, ReviewResponse>
         var review = await _reviewRepository.GetByIdAsync(request.ReviewId, cancellationToken)
             ?? throw new NotFoundException($"Review {request.ReviewId} not found.");
 
-        var username = await _context.Users
+        var userInfo = await _context.Users
             .Where(u => u.Id == review.UserId)
-            .Select(u => u.UserName)
-            .FirstOrDefaultAsync(cancellationToken) ?? string.Empty;
+            .Select(u => new { u.UserName, u.AvatarUrl })
+            .FirstOrDefaultAsync(cancellationToken);
+
+        var username = userInfo?.UserName ?? string.Empty;
+        var avatarUrl = userInfo?.AvatarUrl;
 
         var movieTitle = await _context.Movies
             .Where(m => m.Id == review.MovieId)
@@ -46,6 +49,7 @@ public class GetReviewHandler : IRequestHandler<GetReviewQuery, ReviewResponse>
             review.Id,
             review.UserId,
             username,
+            avatarUrl,
             movieTitle,
             review.Rating.Value,
             review.ReviewText,

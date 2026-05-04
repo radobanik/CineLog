@@ -21,5 +21,7 @@ public partial class AppShell : Shell
         Routing.RegisterRoute(Routes.MoviesCategory, typeof(MoviesCategoryPage));
         Routing.RegisterRoute(Routes.MovieWatchList, typeof(MovieWatchListPage));
         Routing.RegisterRoute(Routes.MovieDetail, typeof(MovieDetailPage));
+        Routing.RegisterRoute(Routes.AddToWatchlist, typeof(AddToWatchlistPage));
+        Routing.RegisterRoute(Routes.MovieReviews, typeof(MovieReviewsPage));
     }
 }

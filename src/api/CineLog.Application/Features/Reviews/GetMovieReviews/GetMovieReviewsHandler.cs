@@ -33,7 +33,7 @@ public class GetMovieReviewsHandler : IRequestHandler<GetMovieReviewsQuery, Page
         var userIds = reviews.Select(r => r.UserId).Distinct().ToList();
         var users = await _context.Users
             .Where(u => userIds.Contains(u.Id))
-            .Select(u => new { u.Id, u.UserName })
+            .Select(u => new { u.Id, u.UserName, u.AvatarUrl })
             .ToListAsync(cancellationToken);
 
         var movieTitle = await _context.Movies
@@ -50,11 +50,13 @@ public class GetMovieReviewsHandler : IRequestHandler<GetMovieReviewsQuery, Page
             .ToHashSetAsync(cancellationToken);
 
         var usernameMap = users.ToDictionary(u => u.Id, u => u.UserName ?? string.Empty);
+        var avatarMap = users.ToDictionary(u => u.Id, u => u.AvatarUrl);
 
         var items = reviews.Select(r => new ReviewResponse(
             r.Id,
             r.UserId,
             usernameMap.GetValueOrDefault(r.UserId, string.Empty),
+            avatarMap.GetValueOrDefault(r.UserId),
             movieTitle,
             r.Rating.Value,
             r.ReviewText,

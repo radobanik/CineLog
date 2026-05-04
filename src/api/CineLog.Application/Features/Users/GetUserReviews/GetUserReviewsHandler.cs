@@ -37,10 +37,13 @@ public class GetUserReviewsHandler : IRequestHandler<GetUserReviewsQuery, PagedR
             .Select(m => new { m.Id, m.Title })
             .ToListAsync(cancellationToken);
 
-        var username = await _context.Users
+        var userInfo = await _context.Users
             .Where(u => u.Id == request.UserId)
-            .Select(u => u.UserName)
-            .FirstOrDefaultAsync(cancellationToken) ?? string.Empty;
+            .Select(u => new { u.UserName, u.AvatarUrl })
+            .FirstOrDefaultAsync(cancellationToken);
+
+        var username = userInfo?.UserName ?? string.Empty;
+        var avatarUrl = userInfo?.AvatarUrl;
 
         var reviewIds = reviews.Select(r => r.Id).ToList();
         var likedIds = await _context.ReviewReactions
@@ -56,6 +59,7 @@ public class GetUserReviewsHandler : IRequestHandler<GetUserReviewsQuery, PagedR
             r.Id,
             r.UserId,
             username,
+            avatarUrl,
             movieTitleMap.GetValueOrDefault(r.MovieId, string.Empty),
             r.Rating.Value,
             r.ReviewText,

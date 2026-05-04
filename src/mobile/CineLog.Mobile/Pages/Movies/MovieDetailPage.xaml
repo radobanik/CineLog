@@ -108,6 +108,9 @@
                 </VerticalStackLayout>
 
                 <VerticalStackLayout Grid.Column="1" HorizontalOptions="Center" Spacing="6">
+                    <VerticalStackLayout.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding ToggleLikeMovieCommand}" />
+                    </VerticalStackLayout.GestureRecognizers>
                     <Border
                         WidthRequest="44"
                         HeightRequest="44"
@@ -120,15 +123,26 @@
                         <Label
                             FontFamily="FASolid"
                             FontSize="16"
-                            TextColor="{StaticResource OnSurface}"
                             Text="{x:Static helpers:FontAwesomeIcons.Heart}"
                             HorizontalOptions="Center"
-                            VerticalOptions="Center" />
+                            VerticalOptions="Center">
+                            <Label.Triggers>
+                                <DataTrigger TargetType="Label" Binding="{Binding IsLiked}" Value="True">
+                                    <Setter Property="TextColor" Value="#E53935" />
+                                </DataTrigger>
+                                <DataTrigger TargetType="Label" Binding="{Binding IsLiked}" Value="False">
+                                    <Setter Property="TextColor" Value="{StaticResource OnSurface}" />
+                                </DataTrigger>
+                            </Label.Triggers>
+                        </Label>
                     </Border>
                     <Label Style="{StaticResource CaptionLabel}" Text="Like" HorizontalOptions="Center" />
                 </VerticalStackLayout>
 
                 <VerticalStackLayout Grid.Column="2" HorizontalOptions="Center" Spacing="6">
+                    <VerticalStackLayout.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding OpenAddToWatchlistCommand}" />
+                    </VerticalStackLayout.GestureRecognizers>
                     <Border
                         WidthRequest="44"
                         HeightRequest="44"
@@ -241,7 +255,11 @@
                         Style="{StaticResource AccentLabel}"
                         Text="{Binding ReviewsCountText}"
                         VerticalTextAlignment="Center"
-                        IsVisible="{Binding ReviewsCountText, Converter={StaticResource IsNotNullOrEmptyConverter}}" />
+                        IsVisible="{Binding ReviewsCountText, Converter={StaticResource IsNotNullOrEmptyConverter}}">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding OpenReviewsCommand}" />
+                        </Label.GestureRecognizers>
+                    </Label>
                 </Grid>
 
                 <Label
@@ -267,10 +285,25 @@
                                             <Border.StrokeShape>
                                                 <RoundRectangle CornerRadius="20" />
                                             </Border.StrokeShape>
-                                            <Label Text="{Binding Initial}"
-                                                   Style="{StaticResource SectionHeaderLabel}"
-                                                   HorizontalOptions="Center"
-                                                   VerticalOptions="Center" />
+                                            <Grid>
+                                                <Image
+                                                    Source="{Binding AvatarUrl}"
+                                                    Aspect="AspectFill"
+                                                    IsVisible="{Binding AvatarUrl, Converter={StaticResource IsNotNullOrEmptyConverter}}" />
+                                                <Label
+                                                    Text="{Binding Initial}"
+                                                    Style="{StaticResource SectionHeaderLabel}"
+                                                    HorizontalOptions="Center"
+                                                    VerticalOptions="Center">
+                                                    <Label.Triggers>
+                                                        <DataTrigger TargetType="Label"
+                                                                     Binding="{Binding AvatarUrl, Converter={StaticResource IsNotNullOrEmptyConverter}}"
+                                                                     Value="True">
+                                                            <Setter Property="IsVisible" Value="False" />
+                                                        </DataTrigger>
+                                                    </Label.Triggers>
+                                                </Label>
+                                            </Grid>
                                         </Border>
                                         <VerticalStackLayout Grid.Column="1"
                                                              Spacing="3">
