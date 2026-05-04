@@ -15,6 +15,7 @@ public static class Routes
 
     public const string MoviesCategory = nameof(MoviesCategory);
     public const string MovieWatchList = nameof(MovieWatchList);
+    public const string MovieDetail = nameof(MovieDetail);
 
     public const string AuthenticatedRoot = MainTabs + "/" + Home;
 

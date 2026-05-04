@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<pages:BasePage
+    x:Class="CineLog.Mobile.Pages.Movies.MovieDetailPage"
+    x:DataType="vm:MovieDetailViewModel"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:helpers="clr-namespace:CineLog.Mobile.Helpers"
+    xmlns:models="clr-namespace:CineLog.Mobile.Core.Models.Movies;assembly=CineLog.Mobile.Core"
+    xmlns:pages="clr-namespace:CineLog.Mobile.Pages"
+    xmlns:vm="clr-namespace:CineLog.Mobile.Core.ViewModels.Movies;assembly=CineLog.Mobile.Core"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    ShowNavBar="False">
+
+    <Grid>
+        <ScrollView IsVisible="{Binding IsNotBusy}">
+        <VerticalStackLayout Spacing="0">
+
+            <Grid HeightRequest="220">
+                <Image
+                    Source="{Binding Movie.BackdropPath}"
+                    Aspect="AspectFill" />
+
+                <BoxView
+                    VerticalOptions="End"
+                    HeightRequest="220">
+                    <BoxView.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                            <GradientStop Color="Transparent" Offset="0.0" />
+                            <GradientStop Color="#99000000" Offset="0.55" />
+                            <GradientStop Color="#DD000000" Offset="1.0" />
+                        </LinearGradientBrush>
+                    </BoxView.Background>
+                </BoxView>
+
+            </Grid>
+
+            <Grid
+                ColumnDefinitions="Auto, *"
+                Padding="16,0,16,12">
+
+                <Border
+                    Grid.Column="0"
+                    WidthRequest="90"
+                    HeightRequest="130"
+                    BackgroundColor="{StaticResource Surface}"
+                    Stroke="{StaticResource Border}"
+                    StrokeThickness="1"
+                    Margin="0,-50,14,0">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="10" />
+                    </Border.StrokeShape>
+                    <Image
+                        Source="{Binding Movie.PosterPath}"
+                        Aspect="AspectFill" />
+                </Border>
+
+                <VerticalStackLayout
+                    Grid.Column="1"
+                    Padding="0,10,0,0"
+                    Spacing="4">
+                    <Label
+                        Style="{StaticResource HeadlineMediumLabel}"
+                        Text="{Binding Movie.Title}" />
+                    <Label
+                        Style="{StaticResource CaptionLabel}"
+                        Text="{Binding Movie.Subtitle}" />
+                    <Label
+                        Style="{StaticResource BodyMediumLabel}"
+                        Text="{Binding Movie.Director}"
+                        IsVisible="{Binding Movie.Director, Converter={StaticResource IsNotNullOrEmptyConverter}}" />
+                </VerticalStackLayout>
+            </Grid>
+
+            <HorizontalStackLayout Padding="16,0,16,12" Spacing="8">
+                <Label
+                    Style="{StaticResource HeadlineMediumLabel}"
+                    FontSize="16"
+                    Text="{Binding Movie.RatingText}"
+                    VerticalOptions="Center" />
+                <Label
+                    Style="{StaticResource CaptionLabel}"
+                    Text="{Binding Movie.RatingsCountText}"
+                    VerticalOptions="Center" />
+            </HorizontalStackLayout>
+
+            <Grid
+                ColumnDefinitions="*, *, *, *"
+                Padding="8,0,8,12">
+
+                <VerticalStackLayout Grid.Column="0" HorizontalOptions="Center" Spacing="6">
+                    <Border
+                        WidthRequest="44"
+                        HeightRequest="44"
+                        BackgroundColor="{StaticResource Surface}"
+                        StrokeThickness="0"
+                        HorizontalOptions="Center">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="22" />
+                        </Border.StrokeShape>
+                        <Label
+                            FontFamily="FASolid"
+                            FontSize="16"
+                            TextColor="{StaticResource OnSurface}"
+                            Text="{x:Static helpers:FontAwesomeIcons.Eye}"
+                            HorizontalOptions="Center"
+                            VerticalOptions="Center" />
+                    </Border>
+                    <Label Style="{StaticResource CaptionLabel}" Text="Watched" HorizontalOptions="Center" />
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Grid.Column="1" HorizontalOptions="Center" Spacing="6">
+                    <Border
+                        WidthRequest="44"
+                        HeightRequest="44"
+                        BackgroundColor="{StaticResource Surface}"
+                        StrokeThickness="0"
+                        HorizontalOptions="Center">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="22" />
+                        </Border.StrokeShape>
+                        <Label
+                            FontFamily="FASolid"
+                            FontSize="16"
+                            TextColor="{StaticResource OnSurface}"
+                            Text="{x:Static helpers:FontAwesomeIcons.Heart}"
+                            HorizontalOptions="Center"
+                            VerticalOptions="Center" />
+                    </Border>
+                    <Label Style="{StaticResource CaptionLabel}" Text="Like" HorizontalOptions="Center" />
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Grid.Column="2" HorizontalOptions="Center" Spacing="6">
+                    <Border
+                        WidthRequest="44"
+                        HeightRequest="44"
+                        BackgroundColor="{StaticResource Surface}"
+                        StrokeThickness="0"
+                        HorizontalOptions="Center">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="22" />
+                        </Border.StrokeShape>
+                        <Label
+                            FontFamily="FASolid"
+                            FontSize="16"
+                            TextColor="{StaticResource OnSurface}"
+                            Text="{x:Static helpers:FontAwesomeIcons.Bookmark}"
+                            HorizontalOptions="Center"
+                            VerticalOptions="Center" />
+                    </Border>
+                    <Label Style="{StaticResource CaptionLabel}" Text="Watchlist" HorizontalOptions="Center" />
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Grid.Column="3" HorizontalOptions="Center" Spacing="6">
+                    <Border
+                        WidthRequest="44"
+                        HeightRequest="44"
+                        BackgroundColor="{StaticResource Surface}"
+                        StrokeThickness="0"
+                        HorizontalOptions="Center">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="22" />
+                        </Border.StrokeShape>
+                        <Label
+                            FontFamily="FASolid"
+                            FontSize="16"
+                            TextColor="{StaticResource OnSurface}"
+                            Text="{x:Static helpers:FontAwesomeIcons.Share}"
+                            HorizontalOptions="Center"
+                            VerticalOptions="Center" />
+                    </Border>
+                    <Label Style="{StaticResource CaptionLabel}" Text="Share" HorizontalOptions="Center" />
+                </VerticalStackLayout>
+
+            </Grid>
+
+            <BoxView Style="{StaticResource ListDivider}" Margin="16,4,16,16" />
+
+            <VerticalStackLayout Padding="16,0" Spacing="10">
+                <Label Style="{StaticResource SectionHeaderLabel}" Text="SYNOPSIS" />
+                <Label
+                    Style="{StaticResource BodyMediumLabel}"
+                    Text="{Binding Movie.Overview}"
+                    Margin="0,0,0,4" />
+            </VerticalStackLayout>
+
+            <BoxView Style="{StaticResource ListDivider}" Margin="16,16" />
+
+            <VerticalStackLayout Padding="16,0" Spacing="10">
+                <Label Style="{StaticResource SectionHeaderLabel}" Text="CAST" />
+
+                <ScrollView
+                    Orientation="Horizontal"
+                    HorizontalScrollBarVisibility="Never"
+                    Margin="0,0,0,4">
+                    <HorizontalStackLayout
+                        Spacing="14"
+                        BindableLayout.ItemsSource="{Binding Cast}">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="models:CastMemberItem">
+                                <VerticalStackLayout WidthRequest="70" Spacing="6">
+                                    <Border
+                                        WidthRequest="42"
+                                        HeightRequest="42"
+                                        BackgroundColor="{StaticResource Surface}"
+                                        Stroke="{StaticResource Border}"
+                                        StrokeThickness="1"
+                                        HorizontalOptions="Center">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="21" />
+                                        </Border.StrokeShape>
+                                        <Label
+                                            Text="{Binding Initial}"
+                                            Style="{StaticResource HeadlineMediumLabel}"
+                                            FontSize="16"
+                                            HorizontalOptions="Center"
+                                            VerticalOptions="Center" />
+                                    </Border>
+                                    <Label
+                                        Text="{Binding Name}"
+                                        Style="{StaticResource CaptionLabel}"
+                                        MaxLines="2"
+                                        LineBreakMode="WordWrap"
+                                        HorizontalTextAlignment="Center"
+                                        HeightRequest="32" />
+                                </VerticalStackLayout>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </HorizontalStackLayout>
+                </ScrollView>
+            </VerticalStackLayout>
+
+            <BoxView Style="{StaticResource ListDivider}" Margin="16,16" />
+
+            <VerticalStackLayout Padding="16,0,16,24" Spacing="0">
+                <Grid ColumnDefinitions="*, Auto" Margin="0,0,0,4">
+                    <Label
+                        Grid.Column="0"
+                        Style="{StaticResource SectionHeaderLabel}"
+                        Text="REVIEWS" />
+                    <Label
+                        Grid.Column="1"
+                        Style="{StaticResource AccentLabel}"
+                        Text="{Binding ReviewsCountText}"
+                        VerticalTextAlignment="Center"
+                        IsVisible="{Binding ReviewsCountText, Converter={StaticResource IsNotNullOrEmptyConverter}}" />
+                </Grid>
+
+                <Label
+                    Style="{StaticResource CaptionLabel}"
+                    Text="No reviews yet."
+                    IsVisible="{Binding HasNoReviews}"
+                    Margin="0,8,0,0" />
+
+                <VerticalStackLayout BindableLayout.ItemsSource="{Binding Reviews}">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="models:ReviewPreviewItem">
+                            <VerticalStackLayout>
+                                <Grid
+                                    ColumnDefinitions="44, *, Auto"
+                                    ColumnSpacing="12"
+                                    Margin="0,12,0,0">
+                                        <Border Grid.Column="0"
+                                                WidthRequest="40"
+                                                HeightRequest="40"
+                                                BackgroundColor="{StaticResource Surface}"
+                                                StrokeThickness="0"
+                                                VerticalOptions="Start">
+                                            <Border.StrokeShape>
+                                                <RoundRectangle CornerRadius="20" />
+                                            </Border.StrokeShape>
+                                            <Label Text="{Binding Initial}"
+                                                   Style="{StaticResource SectionHeaderLabel}"
+                                                   HorizontalOptions="Center"
+                                                   VerticalOptions="Center" />
+                                        </Border>
+                                        <VerticalStackLayout Grid.Column="1"
+                                                             Spacing="3">
+                                            <Label
+                                                Style="{StaticResource BodyMediumLabel}"
+                                                FontAttributes="Bold"
+                                                Text="{Binding Username}" />
+                                            <Label Style="{StaticResource RatingLabel}"
+                                                   Text="{Binding Rating, Converter={StaticResource RatingToStarsConverter}}"
+                                                   VerticalOptions="Center" />
+                                            <Label Style="{StaticResource CaptionLabel}"
+                                                   Text="{Binding ReviewText}"
+                                                   MaxLines="3"
+                                                   LineBreakMode="TailTruncation" />
+                                            <Label Style="{StaticResource CaptionLabel}"
+                                                   Text="{Binding DateText}"
+                                                   Margin="0,2,0,0" />
+                                        </VerticalStackLayout>
+                                        <VerticalStackLayout Grid.Column="2"
+                                                             HorizontalOptions="End"
+                                                             VerticalOptions="Start"
+                                                             Spacing="4"
+                                                             Padding="8,0,0,0">
+                                            <Label
+                                                FontFamily="FASolid"
+                                                FontSize="20"
+                                                HorizontalOptions="Center">
+                                                <Label.Triggers>
+                                                    <DataTrigger TargetType="Label" Binding="{Binding IsLiked}" Value="True">
+                                                        <Setter Property="TextColor" Value="#E53935" />
+                                                    </DataTrigger>
+                                                    <DataTrigger TargetType="Label" Binding="{Binding IsLiked}" Value="False">
+                                                        <Setter Property="TextColor" Value="{StaticResource TextSecondary}" />
+                                                    </DataTrigger>
+                                                </Label.Triggers>
+                                                <Label.Text>
+                                                    <x:Static Member="helpers:FontAwesomeIcons.Heart" />
+                                                </Label.Text>
+                                                <Label.GestureRecognizers>
+                                                    <TapGestureRecognizer
+                                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MovieDetailViewModel}}, Path=ToggleLikeCommand}"
+                                                        CommandParameter="{Binding .}" />
+                                                </Label.GestureRecognizers>
+                                            </Label>
+                                            <Label Style="{StaticResource CaptionLabel}"
+                                                   Text="{Binding LikesCount}"
+                                                   HorizontalOptions="Center" />
+                                        </VerticalStackLayout>
+                                </Grid>
+                                <BoxView Style="{StaticResource ListDivider}" Margin="0,12,0,0" />
+                            </VerticalStackLayout>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+
+        </VerticalStackLayout>
+        </ScrollView>
+
+        <ActivityIndicator
+            IsRunning="{Binding IsBusy}"
+            IsVisible="{Binding IsBusy}"
+            HorizontalOptions="Center"
+            VerticalOptions="Center" />
+
+        <Label
+            FontSize="18"
+            TextColor="{StaticResource OnBackground}"
+            Text="{x:Static helpers:FontAwesomeIcons.ChevronLeft}"
+            WidthRequest="52"
+            HeightRequest="52"
+            HorizontalOptions="Start"
+            VerticalOptions="Start"
+            HorizontalTextAlignment="Center"
+            VerticalTextAlignment="Center">
+            <Label.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding GoBackCommand}" />
+            </Label.GestureRecognizers>
+        </Label>
+    </Grid>
+
+</pages:BasePage>

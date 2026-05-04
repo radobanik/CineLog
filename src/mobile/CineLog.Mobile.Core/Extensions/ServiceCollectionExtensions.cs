@@ -5,6 +5,7 @@ using CineLog.Mobile.Core.Services.Interfaces;
 using CineLog.Mobile.Core.ViewModels.Auth;
 using CineLog.Mobile.Core.ViewModels.Common;
 using CineLog.Mobile.Core.ViewModels.Home;
+using CineLog.Mobile.Core.ViewModels.Movies;
 using CineLog.Mobile.Core.ViewModels.Profile;
 using CineLog.Mobile.Core.ViewModels.Search;
 using Microsoft.Extensions.DependencyInjection;
@@ -63,6 +64,8 @@ public static class ServiceCollectionExtensions
         services.AddTransient<IWatchlistsClient>(sp =>
             new WatchlistsClient(sp.GetRequiredService<IHttpClientFactory>().CreateClient("CineLogApi")));
 
+        services.AddTransient<IReviewsClient>(sp =>
+            new ReviewsClient(sp.GetRequiredService<IHttpClientFactory>().CreateClient("CineLogApi")));
 
         return services;
     }
@@ -74,7 +77,7 @@ public static class ServiceCollectionExtensions
         services.AddTransient<IProfileService, ProfileService>();
         services.AddTransient<ISearchService, SearchService>();
         services.AddTransient<IWatchListService, WatchListService>();
-
+        services.AddTransient<IMovieDetailService, MovieDetailService>();
         return services;
     }
 
@@ -90,7 +93,7 @@ public static class ServiceCollectionExtensions
         services.AddTransient<WatchListRowViewModel>();
         services.AddTransient<WatchListMoviesViewModel>();
         services.AddTransient<WatchListNameFormViewModel>();
-
+        services.AddTransient<MovieDetailViewModel>();
         return services;
     }
 }

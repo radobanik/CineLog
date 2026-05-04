@@ -24,6 +24,7 @@
                 ItemsSource="{Binding TopRatedMovies}"
                 LoadMoreCommand="{Binding LoadMoreTopRatedCommand}"
                 SeeAllCommand="{Binding GoToTopRatedCommand}"
+                ItemTappedCommand="{Binding GoToMovieCommand}"
                 IsLoadingMore="{Binding IsLoadingMoreTopRated}"
                 IsLoading="{Binding IsBusy}" />
 
@@ -34,6 +35,7 @@
                 ItemsSource="{Binding NewReleaseMovies}"
                 LoadMoreCommand="{Binding LoadMoreNewReleasesCommand}"
                 SeeAllCommand="{Binding GoToNewReleasesCommand}"
+                ItemTappedCommand="{Binding GoToMovieCommand}"
                 IsLoadingMore="{Binding IsLoadingMoreNewReleases}"
                 IsLoading="{Binding IsBusy}" />
 

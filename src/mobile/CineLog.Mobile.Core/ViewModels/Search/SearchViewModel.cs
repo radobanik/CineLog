@@ -1,5 +1,6 @@
 using System.Collections.ObjectModel;
 using CineLog.Mobile.Core.Models;
+using CineLog.Mobile.Core.Navigation;
 using CineLog.Mobile.Core.Services.Interfaces;
 using CineLog.Mobile.Core.ViewModels.Base;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -10,6 +11,8 @@ namespace CineLog.Mobile.Core.ViewModels.Search;
 public partial class SearchViewModel : BaseViewModel
 {
     private readonly ISearchService _searchService;
+    private readonly IMovieDetailNavigationContext _movieDetailNav;
+    private readonly INavigationService _navigation;
     private CancellationTokenSource? _searchCts;
     private int _currentPage;
 
@@ -24,10 +27,19 @@ public partial class SearchViewModel : BaseViewModel
 
     public ObservableCollection<MovieItem> Movies { get; } = [];
 
-    public SearchViewModel(ISearchService searchService, IAlertService alerts) : base(alerts)
+    public SearchViewModel(ISearchService searchService, IMovieDetailNavigationContext movieDetailNav, INavigationService navigation, IAlertService alerts) : base(alerts)
     {
         _searchService = searchService;
+        _movieDetailNav = movieDetailNav;
+        _navigation = navigation;
         Title = "Search";
+    }
+
+    [RelayCommand]
+    public Task GoToMovie(MovieItem movie)
+    {
+        _movieDetailNav.MovieId = movie.Id;
+        return _navigation.NavigateToAsync(Routes.MovieDetail);
     }
 
     partial void OnSearchQueryChanged(string value)

@@ -1,13 +1,15 @@
 using System.Collections.ObjectModel;
 using CineLog.Mobile.Core.Models;
 using CineLog.Mobile.Core.Models.Review;
+using CineLog.Mobile.Core.Navigation;
 using CineLog.Mobile.Core.Services.Interfaces;
 using CineLog.Mobile.Core.ViewModels.Base;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 
 namespace CineLog.Mobile.Core.ViewModels.Profile;
 
-public partial class ProfileViewModel(IProfileService profileService, IAlertService alerts)
+public partial class ProfileViewModel(IProfileService profileService, IAuthService authService, IMovieDetailNavigationContext movieDetailNav, INavigationService navigation, IAlertService alerts)
     : BaseViewModel(alerts)
 {
     [ObservableProperty] private string _username = string.Empty;
@@ -19,6 +21,20 @@ public partial class ProfileViewModel(IProfileService profileService, IAlertServ
 
     public ObservableCollection<MovieItem> FavouriteMovies { get; } = [];
     public ObservableCollection<ReviewItem> Reviews { get; } = [];
+
+    [RelayCommand]
+    public Task GoToMovie(MovieItem movie)
+    {
+        movieDetailNav.MovieId = movie.Id;
+        return navigation.NavigateToAsync(Routes.MovieDetail);
+    }
+
+    [RelayCommand]
+    private async Task Logout()
+    {
+        await authService.LogoutAsync();
+        await navigation.NavigateToRootAsync(Routes.Login);
+    }
 
     protected override async Task LoadAsync()
     {

@@ -30,6 +30,19 @@
             Text="{Binding Source={x:Reference This}, Path=Title}"
             TextColor="{StaticResource OnBackground}" />
 
+        <Label
+            Grid.Column="2"
+            FontSize="18"
+            HorizontalOptions="Center"
+            VerticalOptions="Center"
+            Text="{Binding Source={x:Reference This}, Path=RightIcon}"
+            TextColor="{StaticResource OnSurface}"
+            IsVisible="{Binding Source={x:Reference This}, Path=HasRightIcon}">
+            <Label.GestureRecognizers>
+                <TapGestureRecognizer Tapped="OnRightTapped" />
+            </Label.GestureRecognizers>
+        </Label>
+
     </Grid>
 
 </ContentView>

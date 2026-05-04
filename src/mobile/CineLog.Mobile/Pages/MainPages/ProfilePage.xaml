@@ -11,7 +11,9 @@
     xmlns:vm="clr-namespace:CineLog.Mobile.Core.ViewModels.Profile;assembly=CineLog.Mobile.Core"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     ShowMenuButton="True"
-    Title="Profile">
+    Title="Profile"
+    NavBarRightIcon="{x:Static helpers:FontAwesomeIcons.SignOut}"
+    NavBarRightCommand="{Binding LogoutCommand}">
 
         <ScrollView>
         <VerticalStackLayout Padding="20" Spacing="25">
@@ -102,10 +104,17 @@
                     </CollectionView.ItemsLayout>
                     <CollectionView.ItemTemplate>
                         <DataTemplate x:DataType="home:MovieItem">
-                            <controls:MoviePosterCard
-                                Title="{Binding Title}"
-                                PosterPath="{Binding PosterPath}"
-                                RatingText="{Binding RatingText}" />
+                            <Grid>
+                                <controls:MoviePosterCard
+                                    Title="{Binding Title}"
+                                    PosterPath="{Binding PosterPath}"
+                                    RatingText="{Binding RatingText}" />
+                                <Grid.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ProfileViewModel}}, Path=GoToMovieCommand}"
+                                        CommandParameter="{Binding .}" />
+                                </Grid.GestureRecognizers>
+                            </Grid>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
                 </CollectionView>
@@ -165,7 +174,7 @@
                                             Text="{Binding LikesCount}" />
                                         <Label
                                             Style="{StaticResource SecondaryIconLabel}"
-                                            Text="{x:Static helpers:FontAwesomeIcons.ThumbsUp}" />
+                                            Text="{x:Static helpers:FontAwesomeIcons.Heart}" />
                                     </HorizontalStackLayout>
                                 </Grid>
                                 <BoxView Style="{StaticResource ListDivider}" Margin="0,15,0,0" />

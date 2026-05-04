@@ -1,5 +1,6 @@
 using System.Collections.ObjectModel;
 using CineLog.Mobile.Core.Models;
+using CineLog.Mobile.Core.Navigation;
 using CineLog.Mobile.Core.Services.Interfaces;
 using CineLog.Mobile.Core.ViewModels.Base;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -31,12 +32,23 @@ namespace CineLog.Mobile.Core.ViewModels.Common
         public ObservableCollection<MovieItem> Movies { get; } = [];
 
         private readonly IMovieNavigationContext _movieNav;
+        private readonly IMovieDetailNavigationContext _movieDetailNav;
+        private readonly INavigationService _navigation;
 
-        public MoviesCategoryViewModel(IHomeService homeService, IMovieNavigationContext movieNav, IAlertService alerts)
+        public MoviesCategoryViewModel(IHomeService homeService, IMovieNavigationContext movieNav, IMovieDetailNavigationContext movieDetailNav, INavigationService navigation, IAlertService alerts)
             : base(alerts)
         {
             _homeService = homeService;
             _movieNav = movieNav;
+            _movieDetailNav = movieDetailNav;
+            _navigation = navigation;
+        }
+
+        [RelayCommand]
+        public Task GoToMovie(MovieItem movie)
+        {
+            _movieDetailNav.MovieId = movie.Id;
+            return _navigation.NavigateToAsync(Routes.MovieDetail);
         }
 
         public override Task OnAppearingAsync()
