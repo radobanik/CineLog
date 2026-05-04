@@ -6,6 +6,7 @@ public sealed partial class ReviewListItem : ObservableObject
 {
     public Guid Id { get; init; }
     public string? Username { get; init; }
+    public string? AvatarUrl { get; init; }
     public string MovieTitle { get; init; } = string.Empty;
     public double? Rating { get; init; }
     public string? ReviewText { get; init; }

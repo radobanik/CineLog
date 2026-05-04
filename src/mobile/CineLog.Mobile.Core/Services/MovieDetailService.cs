@@ -64,6 +64,7 @@ public sealed class MovieDetailService(IMoviesClient moviesClient) : IMovieDetai
     {
         Id = r.Id ?? Guid.Empty,
         Username = r.Username ?? string.Empty,
+        AvatarUrl = r.AvatarUrl,
         Rating = r.Rating,
         ReviewText = r.ReviewText,
         LikesCount = r.LikesCount ?? 0,
@@ -75,6 +76,7 @@ public sealed class MovieDetailService(IMoviesClient moviesClient) : IMovieDetai
     {
         Id = r.Id ?? Guid.Empty,
         Username = r.Username ?? string.Empty,
+        AvatarUrl = r.AvatarUrl,
         Rating = r.Rating,
         ReviewText = r.ReviewText,
         LikesCount = r.LikesCount ?? 0,

@@ -6,6 +6,7 @@ public sealed partial class ReviewPreviewItem : ObservableObject
 {
     public Guid Id { get; init; }
     public string Username { get; init; } = string.Empty;
+    public string? AvatarUrl { get; init; }
     public double? Rating { get; init; }
     public string? ReviewText { get; init; }
     public DateTimeOffset? CreatedAt { get; init; }
