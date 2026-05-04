@@ -21,8 +21,23 @@ public partial class ProfileViewModel(
     private Guid _userId;
 
     [ObservableProperty] private string _username = string.Empty;
-    [ObservableProperty] private string _bio = string.Empty;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(ShowExpandButton))]
+    [NotifyPropertyChangedFor(nameof(ShowCollapseButton))]
+    private string _bio = string.Empty;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(ShowExpandButton))]
+    [NotifyPropertyChangedFor(nameof(ShowCollapseButton))]
+    private bool _isBioExpanded;
+
     [ObservableProperty] private string _avatarUrl = string.Empty;
+
+    public bool ShowExpandButton => !IsBioExpanded && BioIsLong;
+    public bool ShowCollapseButton => IsBioExpanded && BioIsLong;
+
+    private bool BioIsLong => Bio.Contains('\n') || Bio.Length > 60;
     [ObservableProperty] private int _filmsCount;
     [ObservableProperty] private int _followersCount;
     [ObservableProperty] private int _followingCount;
@@ -36,6 +51,9 @@ public partial class ProfileViewModel(
         movieDetailNav.MovieId = movie.Id;
         return navigation.NavigateToAsync(Routes.MovieDetail);
     }
+
+    [RelayCommand]
+    private void ToggleBio() => IsBioExpanded = !IsBioExpanded;
 
     [RelayCommand]
     private Task OpenEditProfile() => navigation.NavigateToAsync(Routes.EditProfile);

@@ -55,16 +55,15 @@
                 Style="{StaticResource OverlineLabel}"
                 Text="BIO" />
             <Border Style="{StaticResource InputFieldBorder}">
-                <Editor
-                    Text="{Binding Bio}"
-                    Placeholder="Tell something about yourself..."
-                    TextColor="{StaticResource OnBackground}"
-                    PlaceholderColor="{StaticResource TextSecondary}"
-                    BackgroundColor="Transparent"
-                    FontSize="14"
-                    MaxLength="200"
-                    HeightRequest="88"
-                    Margin="16,8" />
+                <Editor Text="{Binding Bio}"
+                        Placeholder="Tell something about yourself..."
+                        TextColor="{StaticResource OnBackground}"
+                        PlaceholderColor="{StaticResource TextSecondary}"
+                        BackgroundColor="Transparent"
+                        FontSize="14"
+                        MaxLength="200"
+                        HeightRequest="88"
+                        Margin="16,8" />
             </Border>
             <Label
                 Style="{StaticResource CaptionLabel}"

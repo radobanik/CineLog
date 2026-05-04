@@ -40,7 +40,34 @@
                     <Label
                         Style="{StaticResource BodyMediumLabel}"
                         Text="{Binding Bio}"
-                        Margin="0,5,0,0" />
+                        MaxLines="2"
+                        LineBreakMode="TailTruncation"
+                        Margin="0,5,0,0">
+                        <Label.Triggers>
+                            <DataTrigger TargetType="Label" Binding="{Binding IsBioExpanded}" Value="True">
+                                <Setter Property="MaxLines" Value="-1" />
+                                <Setter Property="LineBreakMode" Value="WordWrap" />
+                            </DataTrigger>
+                        </Label.Triggers>
+                    </Label>
+                    <Label
+                        Style="{StaticResource AccentLabel}"
+                        Text="Show full"
+                        IsVisible="{Binding ShowExpandButton}"
+                        Margin="0,2,0,0">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ToggleBioCommand}" />
+                        </Label.GestureRecognizers>
+                    </Label>
+                    <Label
+                        Style="{StaticResource AccentLabel}"
+                        Text="Show less"
+                        IsVisible="{Binding ShowCollapseButton}"
+                        Margin="0,2,0,0">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ToggleBioCommand}" />
+                        </Label.GestureRecognizers>
+                    </Label>
                 </VerticalStackLayout>
                 <Label
                     Grid.Column="2"
