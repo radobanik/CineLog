@@ -14,6 +14,23 @@
     x:DataType="vm:SearchViewModel"
     ShowMenuButton="True">
 
+    <pages:BasePage.Resources>
+        <Style
+            x:Key="FollowToggleButton"
+            BasedOn="{StaticResource PrimaryButton}"
+            TargetType="Button">
+            <Setter Property="HeightRequest" Value="34" />
+            <Setter Property="WidthRequest" Value="92" />
+            <Setter Property="MinimumWidthRequest" Value="92" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
+            <Setter Property="TextColor" Value="{StaticResource OnPrimary}" />
+            <Setter Property="BorderColor" Value="{StaticResource Primary}" />
+            <Setter Property="BorderWidth" Value="0" />
+        </Style>
+    </pages:BasePage.Resources>
+
     <Grid RowDefinitions="Auto,Auto,*">
 
         <Border
@@ -195,7 +212,6 @@
                                         </Grid>
                                     </Border>
 
-
                                     <VerticalStackLayout Grid.Column="1" Spacing="2">
                                         <Label
                                             FontAttributes="Bold"
@@ -208,8 +224,7 @@
                                         Grid.Column="2"
                                         Command="{Binding Source={x:Reference SearchRoot}, Path=BindingContext.ToggleFollowCommand}"
                                         CommandParameter="{Binding .}"
-                                        HeightRequest="34"
-                                        Style="{StaticResource PrimaryButton}"
+                                        Style="{StaticResource FollowToggleButton}"
                                         Text="{Binding FollowButtonText}">
                                         <Button.Triggers>
                                             <DataTrigger
@@ -273,7 +288,6 @@
                                         </Grid>
                                     </Border>
 
-
                                     <VerticalStackLayout Grid.Column="1" Spacing="2">
                                         <Label
                                             FontAttributes="Bold"
@@ -286,8 +300,7 @@
                                         Grid.Column="2"
                                         Command="{Binding Source={x:Reference SearchRoot}, Path=BindingContext.ToggleFollowCommand}"
                                         CommandParameter="{Binding .}"
-                                        HeightRequest="34"
-                                        Style="{StaticResource PrimaryButton}"
+                                        Style="{StaticResource FollowToggleButton}"
                                         Text="{Binding FollowButtonText}">
                                         <Button.Triggers>
                                             <DataTrigger
@@ -347,7 +360,6 @@
                                 </Grid>
                             </Border>
 
-
                             <VerticalStackLayout Grid.Column="1" Spacing="2">
                                 <Label
                                     FontAttributes="Bold"
@@ -360,8 +372,7 @@
                                 Grid.Column="2"
                                 Command="{Binding Source={x:Reference SearchRoot}, Path=BindingContext.ToggleFollowCommand}"
                                 CommandParameter="{Binding .}"
-                                HeightRequest="34"
-                                Style="{StaticResource PrimaryButton}"
+                                Style="{StaticResource FollowToggleButton}"
                                 Text="{Binding FollowButtonText}">
                                 <Button.Triggers>
                                     <DataTrigger
