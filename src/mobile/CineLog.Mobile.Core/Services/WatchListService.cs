@@ -37,7 +37,7 @@ namespace CineLog.Mobile.Core.Services
                         Id = Guid.Empty,
                         Name = "Favorites",
                         ItemCount = favorites.Count,
-                        IsFavorites = true
+                        Type = WatchListType.Favorites
                     }
                 };
 
@@ -46,6 +46,7 @@ namespace CineLog.Mobile.Core.Services
                     Id = w.Id ?? Guid.Empty,
                     Name = w.Name ?? "Untitled list",
                     ItemCount = w.ItemCount ?? 0,
+                    Type = (WatchListType)(w.Type ?? 0)
                 }));
 
                 return result;
