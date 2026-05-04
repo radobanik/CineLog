@@ -27,7 +27,8 @@ public record MovieDetailResponse(
     int? NumberOfEpisodes,
     List<CastMemberResponse> Cast,
     List<CrewMemberResponse> Crew,
-    List<ProductionCompanyResponse> ProductionCompanies);
+    List<ProductionCompanyResponse> ProductionCompanies,
+    bool IsFavorite);
 
 public record GenreResponse(Guid Id, string Name);
 

@@ -19,7 +19,6 @@ public partial class MovieDetailViewModel : BaseViewModel
     private readonly INavigationService _navigation;
     private readonly IReviewsClient _reviewsClient;
     private readonly IMoviesClient _moviesClient;
-    private readonly IUsersClient _usersClient;
 
     [ObservableProperty] private MovieDetailInfo? _movie;
     [ObservableProperty] private string _reviewsCountText = string.Empty;
@@ -36,7 +35,6 @@ public partial class MovieDetailViewModel : BaseViewModel
         INavigationService navigation,
         IReviewsClient reviewsClient,
         IMoviesClient moviesClient,
-        IUsersClient usersClient,
         IAlertService alerts)
         : base(alerts)
     {
@@ -46,7 +44,6 @@ public partial class MovieDetailViewModel : BaseViewModel
         _navigation = navigation;
         _reviewsClient = reviewsClient;
         _moviesClient = moviesClient;
-        _usersClient = usersClient;
     }
 
     public override Task OnAppearingAsync() => Load();
@@ -60,13 +57,13 @@ public partial class MovieDetailViewModel : BaseViewModel
 
             var detailTask = _movieDetailService.GetMovieDetailAsync(movieId);
             var reviewsTask = _movieDetailService.GetReviewsAsync(movieId, ReviewPageSize);
-            var favoritesTask = _usersClient.GetFavoritesAsync();
 
-            await Task.WhenAll(detailTask, reviewsTask, favoritesTask);
+            await Task.WhenAll(detailTask, reviewsTask);
 
             var detail = detailTask.Result;
             Movie = detail;
             Title = detail.Title;
+            IsLiked = detail.IsFavorite;
 
             Cast.Clear();
             foreach (var member in detail.Cast)
@@ -79,8 +76,6 @@ public partial class MovieDetailViewModel : BaseViewModel
 
             ReviewsCountText = BuildReviewsCountText(totalCount);
             HasNoReviews = Reviews.Count == 0;
-
-            IsLiked = favoritesTask.Result.Any(f => f.Id == movieId);
         });
     }
 
