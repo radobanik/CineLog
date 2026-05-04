@@ -69,6 +69,9 @@ public partial class ProfileViewModel(
     [RelayCommand]
     private async Task Logout()
     {
+        if (!await alerts.ShowConfirmAsync("Sign out", "Are you sure you want to sign out?"))
+            return;
+
         await authService.LogoutAsync();
         await navigation.NavigateToRootAsync(Routes.Login);
     }
