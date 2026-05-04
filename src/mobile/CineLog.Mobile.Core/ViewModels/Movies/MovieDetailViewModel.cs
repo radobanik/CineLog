@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using CineLog.Mobile.ApiClient.Clients;
 using CineLog.Mobile.Core.Models.Movies;
+using CineLog.Mobile.Core.Models.Review;
 using CineLog.Mobile.Core.Navigation;
 using CineLog.Mobile.Core.Services.Interfaces;
 using CineLog.Mobile.Core.ViewModels.Base;
@@ -28,7 +29,7 @@ public partial class MovieDetailViewModel : BaseViewModel
     [ObservableProperty] private bool _isLiked;
 
     public ObservableCollection<CastMemberItem> Cast { get; } = [];
-    public ObservableCollection<ReviewPreviewItem> Reviews { get; } = [];
+    public ObservableCollection<ReviewListItem> Reviews { get; } = [];
 
     public MovieDetailViewModel(
         IMovieDetailService movieDetailService,
@@ -114,7 +115,7 @@ public partial class MovieDetailViewModel : BaseViewModel
     }
 
     [RelayCommand]
-    private async Task ToggleLike(ReviewPreviewItem review)
+    private async Task ToggleLike(ReviewListItem review)
     {
         var wasLiked = review.IsLiked;
         review.IsLiked = !wasLiked;

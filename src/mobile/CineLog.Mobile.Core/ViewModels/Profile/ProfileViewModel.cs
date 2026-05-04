@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using CineLog.Mobile.Core.Models;
 using CineLog.Mobile.Core.Models.Review;
+
 using CineLog.Mobile.Core.Navigation;
 using CineLog.Mobile.Core.Services.Interfaces;
 using CineLog.Mobile.Core.ViewModels.Base;
@@ -43,7 +44,7 @@ public partial class ProfileViewModel(
     [ObservableProperty] private int _followingCount;
 
     public ObservableCollection<MovieItem> FavouriteMovies { get; } = [];
-    public ObservableCollection<ReviewItem> Reviews { get; } = [];
+    public ObservableCollection<ReviewListItem> Reviews { get; } = [];
 
     [RelayCommand]
     public Task GoToMovie(MovieItem movie)

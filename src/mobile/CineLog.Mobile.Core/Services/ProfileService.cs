@@ -36,10 +36,10 @@ public sealed class ProfileService(IUsersClient usersClient) : IProfileService
         })];
     }
 
-    public async Task<IReadOnlyList<ReviewItem>> GetReviewsAsync(Guid userId, CancellationToken ct = default)
+    public async Task<IReadOnlyList<ReviewListItem>> GetReviewsAsync(Guid userId, CancellationToken ct = default)
     {
         var response = await usersClient.GetReviewsAsync(userId, null, null, ct);
-        return [.. (response?.Items ?? []).Select(r => new ReviewItem
+        return [.. (response?.Items ?? []).Select(r => new ReviewListItem
         {
             Id = r.Id ?? Guid.Empty,
             MovieTitle = r.MovieTitle ?? string.Empty,

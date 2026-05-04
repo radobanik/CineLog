@@ -3,8 +3,10 @@
     x:Class="CineLog.Mobile.Pages.Movies.MovieDetailPage"
     x:DataType="vm:MovieDetailViewModel"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:controls="clr-namespace:CineLog.Mobile.Controls"
     xmlns:helpers="clr-namespace:CineLog.Mobile.Helpers"
     xmlns:models="clr-namespace:CineLog.Mobile.Core.Models.Movies;assembly=CineLog.Mobile.Core"
+    xmlns:review="clr-namespace:CineLog.Mobile.Core.Models.Review;assembly=CineLog.Mobile.Core"
     xmlns:pages="clr-namespace:CineLog.Mobile.Pages"
     xmlns:vm="clr-namespace:CineLog.Mobile.Core.ViewModels.Movies;assembly=CineLog.Mobile.Core"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
@@ -283,91 +285,10 @@
 
                 <VerticalStackLayout BindableLayout.ItemsSource="{Binding Reviews}">
                     <BindableLayout.ItemTemplate>
-                        <DataTemplate x:DataType="models:ReviewPreviewItem">
-                            <VerticalStackLayout>
-                                <Grid
-                                    ColumnDefinitions="44, *, Auto"
-                                    ColumnSpacing="12"
-                                    Margin="0,12,0,0">
-                                        <Border Grid.Column="0"
-                                                WidthRequest="40"
-                                                HeightRequest="40"
-                                                BackgroundColor="{StaticResource Surface}"
-                                                StrokeThickness="0"
-                                                VerticalOptions="Start">
-                                            <Border.StrokeShape>
-                                                <RoundRectangle CornerRadius="20" />
-                                            </Border.StrokeShape>
-                                            <Grid>
-                                                <Image
-                                                    Source="{Binding AvatarUrl}"
-                                                    Aspect="AspectFill"
-                                                    IsVisible="{Binding AvatarUrl, Converter={StaticResource IsNotNullOrEmptyConverter}}" />
-                                                <Label
-                                                    Text="{Binding Initial}"
-                                                    Style="{StaticResource SectionHeaderLabel}"
-                                                    HorizontalOptions="Center"
-                                                    VerticalOptions="Center">
-                                                    <Label.Triggers>
-                                                        <DataTrigger TargetType="Label"
-                                                                     Binding="{Binding AvatarUrl, Converter={StaticResource IsNotNullOrEmptyConverter}}"
-                                                                     Value="True">
-                                                            <Setter Property="IsVisible" Value="False" />
-                                                        </DataTrigger>
-                                                    </Label.Triggers>
-                                                </Label>
-                                            </Grid>
-                                        </Border>
-                                        <VerticalStackLayout Grid.Column="1"
-                                                             Spacing="3">
-                                            <Label
-                                                Style="{StaticResource BodyMediumLabel}"
-                                                FontAttributes="Bold"
-                                                Text="{Binding Username}" />
-                                            <Label Style="{StaticResource RatingLabel}"
-                                                   Text="{Binding Rating, Converter={StaticResource RatingToStarsConverter}}"
-                                                   VerticalOptions="Center" />
-                                            <Label Style="{StaticResource CaptionLabel}"
-                                                   Text="{Binding ReviewText}"
-                                                   MaxLines="3"
-                                                   LineBreakMode="TailTruncation" />
-                                            <Label Style="{StaticResource CaptionLabel}"
-                                                   Text="{Binding DateText}"
-                                                   Margin="0,2,0,0" />
-                                        </VerticalStackLayout>
-                                        <VerticalStackLayout Grid.Column="2"
-                                                             HorizontalOptions="End"
-                                                             VerticalOptions="Start"
-                                                             Spacing="4"
-                                                             Padding="8,0,0,0">
-                                            <Label
-                                                FontFamily="FASolid"
-                                                FontSize="20"
-                                                HorizontalOptions="Center">
-                                                <Label.Triggers>
-                                                    <DataTrigger TargetType="Label" Binding="{Binding IsLiked}" Value="True">
-                                                        <Setter Property="TextColor" Value="#E53935" />
-                                                    </DataTrigger>
-                                                    <DataTrigger TargetType="Label" Binding="{Binding IsLiked}" Value="False">
-                                                        <Setter Property="TextColor" Value="{StaticResource TextSecondary}" />
-                                                    </DataTrigger>
-                                                </Label.Triggers>
-                                                <Label.Text>
-                                                    <x:Static Member="helpers:FontAwesomeIcons.Heart" />
-                                                </Label.Text>
-                                                <Label.GestureRecognizers>
-                                                    <TapGestureRecognizer
-                                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MovieDetailViewModel}}, Path=ToggleLikeCommand}"
-                                                        CommandParameter="{Binding .}" />
-                                                </Label.GestureRecognizers>
-                                            </Label>
-                                            <Label Style="{StaticResource CaptionLabel}"
-                                                   Text="{Binding LikesCount}"
-                                                   HorizontalOptions="Center" />
-                                        </VerticalStackLayout>
-                                </Grid>
-                                <BoxView Style="{StaticResource ListDivider}" Margin="0,12,0,0" />
-                            </VerticalStackLayout>
+                        <DataTemplate x:DataType="review:ReviewListItem">
+                            <controls:ReviewListCard
+                                IsMovieMode="True"
+                                LikeCommand="{Binding Source={RelativeSource AncestorType={x:Type vm:MovieDetailViewModel}}, Path=ToggleLikeCommand}" />
                         </DataTemplate>
                     </BindableLayout.ItemTemplate>
                 </VerticalStackLayout>
