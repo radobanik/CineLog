@@ -62,6 +62,7 @@
                         BackgroundColor="Transparent"
                         FontSize="14"
                         MaxLength="100"
+                        AutoSize="Disabled"
                         HeightRequest="88"
                         Margin="16,8" />
             </Border>

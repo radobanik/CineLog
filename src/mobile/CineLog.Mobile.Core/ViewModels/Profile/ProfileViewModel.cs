@@ -37,7 +37,7 @@ public partial class ProfileViewModel(
     public bool ShowExpandButton => !IsBioExpanded && BioIsLong;
     public bool ShowCollapseButton => IsBioExpanded && BioIsLong;
 
-    private bool BioIsLong => (Bio.Count('\n') >= 2 && Bio.Length < 50) || Bio.Length > 50;
+    private bool BioIsLong => Bio.Count('\n') >= 1 || Bio.Length > 50;
     [ObservableProperty] private int _filmsCount;
     [ObservableProperty] private int _followersCount;
     [ObservableProperty] private int _followingCount;
