@@ -51,7 +51,7 @@
                         </Label.Triggers>
                     </Label>
                     <Label
-                        Style="{StaticResource AccentLabel}"
+                        Style="{StaticResource CaptionLabel}"
                         Text="Show full"
                         IsVisible="{Binding ShowExpandButton}"
                         Margin="0,2,0,0">
@@ -60,7 +60,7 @@
                         </Label.GestureRecognizers>
                     </Label>
                     <Label
-                        Style="{StaticResource AccentLabel}"
+                        Style="{StaticResource CaptionLabel}"
                         Text="Show less"
                         IsVisible="{Binding ShowCollapseButton}"
                         Margin="0,2,0,0">
