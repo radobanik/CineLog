@@ -1,5 +1,6 @@
 using CineLog.Application.Common;
 using CineLog.Domain.Entities;
+using CineLog.Domain.Enums;
 using CineLog.Domain.Exceptions;
 using CineLog.Domain.Interfaces;
 using CineLog.Domain.Repositories;
@@ -26,11 +27,9 @@ public class AddToWatchlistHandler : IRequestHandler<AddToWatchlistCommand>
 
     public async Task Handle(AddToWatchlistCommand request, CancellationToken cancellationToken)
     {
-        var watchlistExists = await _context.Watchlists
-            .AnyAsync(w => w.Id == request.WatchlistId && w.UserId == _currentUser.UserId, cancellationToken);
-
-        if (!watchlistExists)
-            throw new NotFoundException($"Watchlist {request.WatchlistId} not found.");
+        var watchlist = await _context.Watchlists
+            .FirstOrDefaultAsync(w => w.Id == request.WatchlistId && w.UserId == _currentUser.UserId, cancellationToken)
+            ?? throw new NotFoundException($"Watchlist {request.WatchlistId} not found.");
 
         var movieExists = await _movieRepository.GetByIdAsync(request.MovieId, cancellationToken)
             ?? throw new NotFoundException($"Movie {request.MovieId} not found.");
@@ -43,6 +42,28 @@ public class AddToWatchlistHandler : IRequestHandler<AddToWatchlistCommand>
 
         await _context.WatchlistItems.AddAsync(
             WatchlistItem.Create(request.WatchlistId, request.MovieId), cancellationToken);
+
+        if (watchlist.Type == WatchlistType.Watched)
+        {
+            var watchLaterId = await _context.Watchlists
+                .Where(w => w.UserId == _currentUser.UserId && w.Type == WatchlistType.WatchLater)
+                .Select(w => (Guid?)w.Id)
+                .FirstOrDefaultAsync(cancellationToken);
+
+            if (watchLaterId.HasValue)
+            {
+                var watchLaterItem = await _context.WatchlistItems
+                    .FirstOrDefaultAsync(i =>
+                        i.WatchlistId == watchLaterId.Value &&
+                        i.MovieId == request.MovieId,
+                        cancellationToken);
+
+                if (watchLaterItem is not null)
+                    _context.WatchlistItems.Remove(watchLaterItem);
+            }
+        }
+
+
         await _context.SaveChangesAsync(cancellationToken);
     }
 }

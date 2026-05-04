@@ -24,11 +24,12 @@ public class GetUserWatchlistsHandler : IRequestHandler<GetUserWatchlistsQuery, 
             .AsNoTracking()
             .Where(w => w.UserId == _currentUser.UserId)
             .OrderByDescending(w => w.CreatedAt)
-            .Select(w => new WatchlistSummaryResponse(
+           .Select(w => new WatchlistSummaryResponse(
                 w.Id,
                 w.Name,
                 w.Items.Count,
-                w.CreatedAt))
+                w.CreatedAt,
+                w.Type))
             .ToListAsync(cancellationToken);
     }
 }

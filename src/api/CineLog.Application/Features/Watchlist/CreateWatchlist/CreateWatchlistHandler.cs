@@ -18,7 +18,7 @@ public class CreateWatchlistHandler : IRequestHandler<CreateWatchlistCommand, Gu
 
     public async Task<Guid> Handle(CreateWatchlistCommand request, CancellationToken cancellationToken)
     {
-        var watchlist = WatchlistEntity.Create(_currentUser.UserId, request.Name);
+        var watchlist = WatchlistEntity.CreateCustom(_currentUser.UserId, request.Name);
         await _context.Watchlists.AddAsync(watchlist, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);
         return watchlist.Id;
