@@ -34,7 +34,8 @@ internal static class UserSeeder
     internal static async Task SeedAsync(
         UserManager<User> userManager,
         RoleManager<IdentityRole<Guid>> roleManager,
-        IBlobStorageService blobStorage)
+        IBlobStorageService blobStorage,
+        IUserDefaultsService userDefaults)
     {
         foreach (var roleName in new[] { UserRoles.Admin, UserRoles.User })
         {
@@ -58,6 +59,7 @@ internal static class UserSeeder
 
             await userManager.CreateAsync(user, seed.Password);
             await userManager.AddToRoleAsync(user, seed.Role);
+            await userDefaults.EnsureDefaultsAsync(user.Id);
 
             var avatarUrl = await UploadAvatarAsync(blobStorage, user.Id, seed.AvatarFile);
             if (avatarUrl is not null)
