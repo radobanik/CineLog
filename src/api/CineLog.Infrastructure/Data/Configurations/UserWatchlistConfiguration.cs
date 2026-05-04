@@ -13,6 +13,11 @@ public class WatchlistConfiguration : IEntityTypeConfiguration<Watchlist>
         builder.Property(w => w.UserId).IsRequired();
         builder.Property(w => w.Name).HasMaxLength(100).IsRequired();
         builder.Property(w => w.CreatedAt).IsRequired();
+        builder.Property(w => w.Type).HasConversion<int>().IsRequired();
+
+        builder.HasIndex(w => new { w.UserId, w.Type })
+            .IsUnique()
+            .HasFilter("\"Type\" <> 0");
 
         builder.HasMany(w => w.Items)
             .WithOne()
