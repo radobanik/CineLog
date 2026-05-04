@@ -45,6 +45,7 @@ public partial class AddToWatchlistViewModel(
         {
             await watchlistsClient.AddMovieAsync(row.Id, movieDetailNav.MovieId);
             await alerts.ShowToastAsync($"Added to {row.Name}.");
+            await navigation.NavigateBackAsync();
         });
     }
 
