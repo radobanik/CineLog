@@ -42,12 +42,13 @@
                         VerticalOptions="Center">
                         <Label.Triggers>
                             <DataTrigger
-                                Binding="{Binding IsFavorites}"
+                                Binding="{Binding UsesIconFont}"
                                 TargetType="Label"
                                 Value="True">
                                 <Setter Property="FontFamily" Value="FASolid" />
                                 <Setter Property="FontAttributes" Value="None" />
                             </DataTrigger>
+
                         </Label.Triggers>
                     </Label>
                 </Border>
