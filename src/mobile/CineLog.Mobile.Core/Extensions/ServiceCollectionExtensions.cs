@@ -96,6 +96,7 @@ public static class ServiceCollectionExtensions
         services.AddTransient<MovieDetailViewModel>();
         services.AddTransient<AddToWatchlistViewModel>();
         services.AddTransient<MovieReviewsViewModel>();
+        services.AddTransient<EditProfileViewModel>();
         return services;
     }
 }

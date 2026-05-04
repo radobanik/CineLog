@@ -10,7 +10,7 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
     {
         builder.ToTable("users");
 
-        builder.Property(u => u.Bio);
+        builder.Property(u => u.Bio).HasMaxLength(200);
         builder.Property(u => u.AvatarUrl);
         builder.Property(u => u.CreatedAt).IsRequired();
 

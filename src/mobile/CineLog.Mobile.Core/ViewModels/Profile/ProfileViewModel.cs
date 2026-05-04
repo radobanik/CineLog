@@ -38,6 +38,9 @@ public partial class ProfileViewModel(
     }
 
     [RelayCommand]
+    private Task OpenEditProfile() => navigation.NavigateToAsync(Routes.EditProfile);
+
+    [RelayCommand]
     private Task OpenAllReviews()
     {
         reviewsNav.Mode = ReviewsMode.User;

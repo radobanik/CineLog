@@ -21,7 +21,7 @@
             <controls:ProfileHeaderSkeleton IsVisible="{Binding IsBusy}" />
 
             <Grid
-                ColumnDefinitions="Auto, *"
+                ColumnDefinitions="Auto, *, Auto"
                 ColumnSpacing="15"
                 IsVisible="{Binding IsNotBusy}">
                 <Border
@@ -42,6 +42,21 @@
                         Text="{Binding Bio}"
                         Margin="0,5,0,0" />
                 </VerticalStackLayout>
+                <Label
+                    Grid.Column="2"
+                    FontFamily="FASolid"
+                    FontSize="18"
+                    TextColor="{StaticResource TextSecondary}"
+                    Text="{x:Static helpers:FontAwesomeIcons.Edit}"
+                    WidthRequest="44"
+                    HeightRequest="44"
+                    HorizontalTextAlignment="Center"
+                    VerticalTextAlignment="Center"
+                    VerticalOptions="Start">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding OpenEditProfileCommand}" />
+                    </Label.GestureRecognizers>
+                </Label>
             </Grid>
 
             <controls:ProfileStatsSkeleton IsVisible="{Binding IsBusy}" />
