@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentView
     x:Class="CineLog.Mobile.Controls.MovieCarousel"
-    x:Name="This"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:controls="clr-namespace:CineLog.Mobile.Controls"
     xmlns:models="clr-namespace:CineLog.Mobile.Core.Models;assembly=CineLog.Mobile.Core"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+    x:Name="This">
 
     <VerticalStackLayout Spacing="10">
         <Grid ColumnDefinitions="*, Auto">
@@ -16,19 +16,17 @@
 
             <Label
                 Grid.Column="1"
+                IsVisible="{Binding Source={x:Reference This}, Path=ShowSeeAll}"
                 Style="{StaticResource AccentLabel}"
                 Text="See all"
-                VerticalTextAlignment="Center"
-                IsVisible="{Binding Source={x:Reference This}, Path=ShowSeeAll}">
+                VerticalTextAlignment="Center">
                 <Label.GestureRecognizers>
                     <TapGestureRecognizer Command="{Binding Source={x:Reference This}, Path=SeeAllCommand}" />
                 </Label.GestureRecognizers>
             </Label>
         </Grid>
 
-        <controls:MovieCarouselSkeleton
-            Margin="0,0,0,10"
-            IsVisible="{Binding Source={x:Reference This}, Path=IsLoading}" />
+        <controls:MovieCarouselSkeleton Margin="0,0,0,10" IsVisible="{Binding Source={x:Reference This}, Path=IsLoading}" />
 
         <Grid
             ColumnDefinitions="*, Auto"
@@ -37,14 +35,12 @@
             <ScrollView
                 x:Name="RailScrollView"
                 Grid.Column="0"
-                Orientation="Horizontal"
+                Margin="0,0,0,10"
                 HorizontalScrollBarVisibility="Never"
-                Scrolled="OnRailScrolled"
-                Margin="0,0,0,10">
+                Orientation="Horizontal"
+                Scrolled="OnRailScrolled">
 
-                <HorizontalStackLayout
-                    Spacing="12"
-                    BindableLayout.ItemsSource="{Binding Source={x:Reference This}, Path=ItemsSource}">
+                <HorizontalStackLayout BindableLayout.ItemsSource="{Binding Source={x:Reference This}, Path=ItemsSource}" Spacing="12">
 
                     <BindableLayout.ItemTemplate>
                         <DataTemplate x:DataType="models:MovieItem">
@@ -53,9 +49,7 @@
                                 PosterPath="{Binding PosterPath}"
                                 RatingText="{Binding RatingText}">
                                 <controls:MoviePosterCard.GestureRecognizers>
-                                    <TapGestureRecognizer
-                                        Command="{Binding Source={x:Reference This}, Path=ItemTappedCommand}"
-                                        CommandParameter="{Binding .}" />
+                                    <TapGestureRecognizer Command="{Binding Source={x:Reference This}, Path=ItemTappedCommand}" CommandParameter="{Binding .}" />
                                 </controls:MoviePosterCard.GestureRecognizers>
                             </controls:MoviePosterCard>
                         </DataTemplate>
@@ -66,10 +60,10 @@
 
             <ActivityIndicator
                 Grid.Column="1"
-                WidthRequest="36"
-                VerticalOptions="Center"
+                IsRunning="{Binding Source={x:Reference This}, Path=IsLoadingMore}"
                 IsVisible="{Binding Source={x:Reference This}, Path=IsLoadingMore}"
-                IsRunning="{Binding Source={x:Reference This}, Path=IsLoadingMore}" />
+                VerticalOptions="Center"
+                WidthRequest="36" />
         </Grid>
     </VerticalStackLayout>
 </ContentView>
