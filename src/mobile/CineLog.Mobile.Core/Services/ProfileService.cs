@@ -49,4 +49,20 @@ public sealed class ProfileService(IUsersClient usersClient) : IProfileService
             CreatedAt = r.CreatedAt
         })];
     }
+
+    public async Task<(IReadOnlyList<ReviewListItem> Items, int TotalCount, int TotalPages)> GetReviewsPageAsync(
+        Guid userId, int page, int pageSize, CancellationToken ct = default)
+    {
+        var response = await usersClient.GetReviewsAsync(userId, page, pageSize, ct);
+        var items = (response?.Items ?? []).Select(r => new ReviewListItem
+        {
+            Id = r.Id ?? Guid.Empty,
+            MovieTitle = r.MovieTitle ?? string.Empty,
+            Rating = r.Rating,
+            ReviewText = r.ReviewText,
+            LikesCount = r.LikesCount ?? 0,
+            CreatedAt = r.CreatedAt,
+        }).ToList();
+        return (items, response?.TotalCount ?? 0, response?.TotalPages ?? 0);
+    }
 }

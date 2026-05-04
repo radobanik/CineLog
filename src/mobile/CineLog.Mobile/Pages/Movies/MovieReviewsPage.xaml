@@ -4,7 +4,7 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:helpers="clr-namespace:CineLog.Mobile.Helpers"
-    xmlns:models="clr-namespace:CineLog.Mobile.Core.Models.Movies;assembly=CineLog.Mobile.Core"
+    xmlns:models="clr-namespace:CineLog.Mobile.Core.Models.Review;assembly=CineLog.Mobile.Core"
     xmlns:pages="clr-namespace:CineLog.Mobile.Pages"
     xmlns:vm="clr-namespace:CineLog.Mobile.Core.ViewModels.Movies;assembly=CineLog.Mobile.Core"
     x:DataType="vm:MovieReviewsViewModel"
@@ -12,25 +12,29 @@
     BackgroundColor="{StaticResource Background}"
     ShowMenuButton="false">
 
-    <Grid Padding="12,24,12,24">
+    <Grid Padding="6,24,6,24">
         <CollectionView
             ItemsSource="{Binding Reviews}"
             SelectionMode="None">
 
             <CollectionView.ItemTemplate>
-                <DataTemplate x:DataType="models:ReviewPreviewItem">
+                <DataTemplate x:DataType="models:ReviewListItem">
                     <VerticalStackLayout>
                         <Grid
-                            ColumnDefinitions="44, *, Auto"
+                            ColumnDefinitions="50, *, Auto"
                             ColumnSpacing="12"
                             Margin="0,12,0,0">
+
+                            <!-- Movie mode: avatar circle -->
                             <Border
                                 Grid.Column="0"
                                 WidthRequest="40"
                                 HeightRequest="40"
                                 BackgroundColor="{StaticResource Surface}"
                                 StrokeThickness="0"
-                                VerticalOptions="Start">
+                                VerticalOptions="Start"
+                                HorizontalOptions="Center"
+                                IsVisible="{Binding Source={RelativeSource AncestorType={x:Type vm:MovieReviewsViewModel}}, Path=IsMovieMode}">
                                 <Border.StrokeShape>
                                     <RoundRectangle CornerRadius="20" />
                                 </Border.StrokeShape>
@@ -40,7 +44,28 @@
                                     HorizontalOptions="Center"
                                     VerticalOptions="Center" />
                             </Border>
-                            <VerticalStackLayout Grid.Column="1" Spacing="3">
+
+                            <!-- User mode: day + month -->
+                            <VerticalStackLayout
+                                Grid.Column="0"
+                                VerticalOptions="Center"
+                                HorizontalOptions="Center"
+                                IsVisible="{Binding Source={RelativeSource AncestorType={x:Type vm:MovieReviewsViewModel}}, Path=IsUserMode}">
+                                <Label
+                                    Style="{StaticResource HeadlineMediumLabel}"
+                                    Text="{Binding DayText}"
+                                    HorizontalOptions="Center" />
+                                <Label
+                                    Style="{StaticResource CaptionLabel}"
+                                    Text="{Binding MonthText}"
+                                    HorizontalOptions="Center" />
+                            </VerticalStackLayout>
+
+                            <!-- Movie mode: username, rating, text, date -->
+                            <VerticalStackLayout
+                                Grid.Column="1"
+                                Spacing="3"
+                                IsVisible="{Binding Source={RelativeSource AncestorType={x:Type vm:MovieReviewsViewModel}}, Path=IsMovieMode}">
                                 <Label
                                     Style="{StaticResource BodyMediumLabel}"
                                     FontAttributes="Bold"
@@ -59,12 +84,35 @@
                                     Text="{Binding DateText}"
                                     Margin="0,2,0,0" />
                             </VerticalStackLayout>
+
+                            <!-- User mode: movie title + rating inline, text -->
+                            <VerticalStackLayout
+                                Grid.Column="1"
+                                VerticalOptions="Center"
+                                IsVisible="{Binding Source={RelativeSource AncestorType={x:Type vm:MovieReviewsViewModel}}, Path=IsUserMode}">
+                                <HorizontalStackLayout Spacing="6">
+                                    <Label
+                                        Style="{StaticResource BodyLargeLabel}"
+                                        Text="{Binding MovieTitle}"
+                                        FontAttributes="Bold" />
+                                    <Label
+                                        Style="{StaticResource RatingLabel}"
+                                        Text="{Binding Rating, Converter={StaticResource RatingToStarsConverter}}"
+                                        VerticalOptions="Center" />
+                                </HorizontalStackLayout>
+                                <Label
+                                    Style="{StaticResource CaptionLabel}"
+                                    Text="{Binding ReviewText}" />
+                            </VerticalStackLayout>
+
+                            <!-- Movie mode: interactive like -->
                             <VerticalStackLayout
                                 Grid.Column="2"
                                 HorizontalOptions="End"
                                 VerticalOptions="Start"
                                 Spacing="4"
-                                Padding="8,0,0,0">
+                                Padding="8,0,0,0"
+                                IsVisible="{Binding Source={RelativeSource AncestorType={x:Type vm:MovieReviewsViewModel}}, Path=IsMovieMode}">
                                 <Label
                                     FontFamily="FASolid"
                                     FontSize="20"
@@ -91,6 +139,21 @@
                                     Text="{Binding LikesCount}"
                                     HorizontalOptions="Center" />
                             </VerticalStackLayout>
+
+                            <!-- User mode: static like count -->
+                            <HorizontalStackLayout
+                                Grid.Column="2"
+                                VerticalOptions="Center"
+                                Spacing="4"
+                                IsVisible="{Binding Source={RelativeSource AncestorType={x:Type vm:MovieReviewsViewModel}}, Path=IsUserMode}">
+                                <Label
+                                    Style="{StaticResource CaptionLabel}"
+                                    Text="{Binding LikesCount}" />
+                                <Label
+                                    Style="{StaticResource SecondaryIconLabel}"
+                                    Text="{x:Static helpers:FontAwesomeIcons.Heart}" />
+                            </HorizontalStackLayout>
+
                         </Grid>
                         <BoxView Style="{StaticResource ListDivider}" Margin="0,12,0,0" />
                     </VerticalStackLayout>

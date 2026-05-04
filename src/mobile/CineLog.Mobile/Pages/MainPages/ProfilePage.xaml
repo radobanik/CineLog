@@ -126,7 +126,11 @@
                     <Label
                         Grid.Column="1"
                         Style="{StaticResource AccentLabel}"
-                        Text="View all" />
+                        Text="View all">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding OpenAllReviewsCommand}" />
+                        </Label.GestureRecognizers>
+                    </Label>
                 </Grid>
 
                 <controls:DiaryListSkeleton IsVisible="{Binding IsBusy}" />

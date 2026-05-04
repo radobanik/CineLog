@@ -1,6 +1,7 @@
 using CineLog.Mobile.ApiClient.Clients;
 using CineLog.Mobile.ApiClient.Models;
 using CineLog.Mobile.Core.Models.Movies;
+using CineLog.Mobile.Core.Models.Review;
 using CineLog.Mobile.Core.Services.Interfaces;
 
 namespace CineLog.Mobile.Core.Services;
@@ -51,13 +52,24 @@ public sealed class MovieDetailService(IMoviesClient moviesClient) : IMovieDetai
         return (items, response.TotalCount ?? 0);
     }
 
-    public async Task<(IReadOnlyList<ReviewPreviewItem> Items, int TotalCount, int TotalPages)> GetReviewsPageAsync(
+    public async Task<(IReadOnlyList<ReviewListItem> Items, int TotalCount, int TotalPages)> GetReviewsPageAsync(
         Guid movieId, int page, int pageSize, CancellationToken ct = default)
     {
         var response = await moviesClient.GetReviewsAsync(movieId, page, pageSize, ct);
-        var items = (response.Items ?? []).Select(MapReview).ToList();
+        var items = (response.Items ?? []).Select(MapReviewListItem).ToList();
         return (items, response.TotalCount ?? 0, response.TotalPages ?? 0);
     }
+
+    private static ReviewListItem MapReviewListItem(ReviewResponse r) => new()
+    {
+        Id = r.Id ?? Guid.Empty,
+        Username = r.Username ?? string.Empty,
+        Rating = r.Rating,
+        ReviewText = r.ReviewText,
+        LikesCount = r.LikesCount ?? 0,
+        IsLiked = r.IsLiked ?? false,
+        CreatedAt = r.CreatedAt,
+    };
 
     private static ReviewPreviewItem MapReview(ReviewResponse r) => new()
     {

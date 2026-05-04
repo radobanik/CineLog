@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using CineLog.Mobile.ApiClient.Clients;
-using CineLog.Mobile.Core.Models.Movies;
+using CineLog.Mobile.Core.Models.Review;
+using CineLog.Mobile.Core.Navigation;
 using CineLog.Mobile.Core.Services.Interfaces;
 using CineLog.Mobile.Core.ViewModels.Base;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -10,8 +11,9 @@ namespace CineLog.Mobile.Core.ViewModels.Movies;
 
 public partial class MovieReviewsViewModel(
     IMovieDetailService movieDetailService,
+    IProfileService profileService,
     IReviewsClient reviewsClient,
-    IMovieDetailNavigationContext movieDetailNav,
+    IReviewsNavigationContext reviewsNav,
     INavigationService navigation,
     IAlertService alerts) : BaseViewModel(alerts)
 {
@@ -22,7 +24,10 @@ public partial class MovieReviewsViewModel(
     [ObservableProperty] private bool _canLoadMore;
     [ObservableProperty] private bool _isLoadingMore;
 
-    public ObservableCollection<ReviewPreviewItem> Reviews { get; } = [];
+    public bool IsMovieMode => reviewsNav.Mode == ReviewsMode.Movie;
+    public bool IsUserMode => reviewsNav.Mode == ReviewsMode.User;
+
+    public ObservableCollection<ReviewListItem> Reviews { get; } = [];
 
     protected override async Task LoadAsync()
     {
@@ -56,8 +61,21 @@ public partial class MovieReviewsViewModel(
 
     private async Task FetchNextPageAsync()
     {
-        var (items, _, totalPages) = await movieDetailService.GetReviewsPageAsync(
-            movieDetailNav.MovieId, _currentPage + 1, PageSize);
+        IReadOnlyList<ReviewListItem> items;
+        int totalPages;
+
+        if (reviewsNav.Mode == ReviewsMode.Movie)
+        {
+            var (i, _, tp) = await movieDetailService.GetReviewsPageAsync(reviewsNav.EntityId, _currentPage + 1, PageSize);
+            items = i;
+            totalPages = tp;
+        }
+        else
+        {
+            var (i, _, tp) = await profileService.GetReviewsPageAsync(reviewsNav.EntityId, _currentPage + 1, PageSize);
+            items = i;
+            totalPages = tp;
+        }
 
         foreach (var item in items)
             Reviews.Add(item);
@@ -68,8 +86,10 @@ public partial class MovieReviewsViewModel(
     }
 
     [RelayCommand]
-    private async Task ToggleLike(ReviewPreviewItem review)
+    private async Task ToggleLike(ReviewListItem review)
     {
+        if (!IsMovieMode) return;
+
         var wasLiked = review.IsLiked;
         review.IsLiked = !wasLiked;
         review.LikesCount += wasLiked ? -1 : 1;

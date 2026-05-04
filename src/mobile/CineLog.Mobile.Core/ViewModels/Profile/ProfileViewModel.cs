@@ -9,9 +9,17 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace CineLog.Mobile.Core.ViewModels.Profile;
 
-public partial class ProfileViewModel(IProfileService profileService, IAuthService authService, IMovieDetailNavigationContext movieDetailNav, INavigationService navigation, IAlertService alerts)
+public partial class ProfileViewModel(
+    IProfileService profileService,
+    IAuthService authService,
+    IMovieDetailNavigationContext movieDetailNav,
+    IReviewsNavigationContext reviewsNav,
+    INavigationService navigation,
+    IAlertService alerts)
     : BaseViewModel(alerts)
 {
+    private Guid _userId;
+
     [ObservableProperty] private string _username = string.Empty;
     [ObservableProperty] private string _bio = string.Empty;
     [ObservableProperty] private string _avatarUrl = string.Empty;
@@ -30,6 +38,14 @@ public partial class ProfileViewModel(IProfileService profileService, IAuthServi
     }
 
     [RelayCommand]
+    private Task OpenAllReviews()
+    {
+        reviewsNav.Mode = ReviewsMode.User;
+        reviewsNav.EntityId = _userId;
+        return navigation.NavigateToAsync(Routes.MovieReviews);
+    }
+
+    [RelayCommand]
     private async Task Logout()
     {
         await authService.LogoutAsync();
@@ -42,6 +58,7 @@ public partial class ProfileViewModel(IProfileService profileService, IAuthServi
 
         var profile = await profileService.GetProfileAsync();
 
+        _userId = profile.Id;
         Username = profile.Username;
         Bio = profile.Bio;
         AvatarUrl = profile.AvatarUrl;

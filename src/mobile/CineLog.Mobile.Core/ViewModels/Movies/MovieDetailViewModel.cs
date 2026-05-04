@@ -15,6 +15,7 @@ public partial class MovieDetailViewModel : BaseViewModel
 
     private readonly IMovieDetailService _movieDetailService;
     private readonly IMovieDetailNavigationContext _movieDetailNav;
+    private readonly IReviewsNavigationContext _reviewsNav;
     private readonly INavigationService _navigation;
     private readonly IReviewsClient _reviewsClient;
     private readonly IMoviesClient _moviesClient;
@@ -31,6 +32,7 @@ public partial class MovieDetailViewModel : BaseViewModel
     public MovieDetailViewModel(
         IMovieDetailService movieDetailService,
         IMovieDetailNavigationContext movieDetailNav,
+        IReviewsNavigationContext reviewsNav,
         INavigationService navigation,
         IReviewsClient reviewsClient,
         IMoviesClient moviesClient,
@@ -40,6 +42,7 @@ public partial class MovieDetailViewModel : BaseViewModel
     {
         _movieDetailService = movieDetailService;
         _movieDetailNav = movieDetailNav;
+        _reviewsNav = reviewsNav;
         _navigation = navigation;
         _reviewsClient = reviewsClient;
         _moviesClient = moviesClient;
@@ -104,7 +107,12 @@ public partial class MovieDetailViewModel : BaseViewModel
     private Task OpenAddToWatchlist() => _navigation.NavigateToAsync(Routes.AddToWatchlist);
 
     [RelayCommand]
-    private Task OpenReviews() => _navigation.NavigateToAsync(Routes.MovieReviews);
+    private Task OpenReviews()
+    {
+        _reviewsNav.Mode = ReviewsMode.Movie;
+        _reviewsNav.EntityId = _movieDetailNav.MovieId;
+        return _navigation.NavigateToAsync(Routes.MovieReviews);
+    }
 
     [RelayCommand]
     private async Task ToggleLike(ReviewPreviewItem review)

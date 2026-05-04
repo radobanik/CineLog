@@ -6,7 +6,6 @@ using CineLog.Mobile.Pages.Movies;
 using CineLog.Mobile.Services;
 using Microsoft.Extensions.DependencyInjection;
 
-
 namespace CineLog.Mobile.Extensions;
 
 public static class ServiceCollectionExtensions
@@ -23,6 +22,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IMovieNavigationContext, MovieNavigationContext>();
         services.AddSingleton<IWatchListNavigationContext, WatchListNavigationContext>();
         services.AddSingleton<IMovieDetailNavigationContext, MovieDetailNavigationContext>();
+        services.AddSingleton<IReviewsNavigationContext, ReviewsNavigationContext>();
         services.AddSingleton<ISecureStorageService, MauiSecureStorageService>();
         services.AddSingleton<INavigationService, ShellNavigationService>();
         services.AddSingleton<IAlertService, MauiAlertService>();
