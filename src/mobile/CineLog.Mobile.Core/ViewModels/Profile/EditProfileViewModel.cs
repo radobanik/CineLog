@@ -19,11 +19,21 @@ public partial class EditProfileViewModel(
     private string _username = string.Empty;
 
     [ObservableProperty] private string _avatarUrl = string.Empty;
-    [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(BioLengthText))]
-    private string _bio = string.Empty;
 
-    public string BioLengthText => $"{Bio.Length}/200";
+    private string _bio = string.Empty;
+    public string Bio
+    {
+        get => _bio;
+        set
+        {
+            var lines = value.Split('\n');
+            var clamped = lines.Length > 4 ? string.Join('\n', lines.Take(4)) : value;
+            SetProperty(ref _bio, clamped);
+            OnPropertyChanged(nameof(BioLengthText));
+        }
+    }
+
+    public string BioLengthText => $"{Bio.Length}/100";
 
     public string Initial => Username.Length > 0 ? Username[0].ToString().ToUpper() : "?";
 

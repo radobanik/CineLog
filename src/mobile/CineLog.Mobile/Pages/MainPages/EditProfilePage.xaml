@@ -61,7 +61,7 @@
                         PlaceholderColor="{StaticResource TextSecondary}"
                         BackgroundColor="Transparent"
                         FontSize="14"
-                        MaxLength="200"
+                        MaxLength="100"
                         HeightRequest="88"
                         Margin="16,8" />
             </Border>
