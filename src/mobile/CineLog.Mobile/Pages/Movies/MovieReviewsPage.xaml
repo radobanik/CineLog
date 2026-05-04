@@ -12,27 +12,8 @@
     BackgroundColor="{StaticResource Background}"
     ShowMenuButton="false">
 
-    <Grid Padding="24" RowDefinitions="Auto,*">
-
-        <Grid Padding="0,4,0,16" ColumnDefinitions="44,*">
-            <Button
-                Padding="0"
-                BackgroundColor="Transparent"
-                Command="{Binding GoBackCommand}"
-                FontSize="28"
-                Text="‹"
-                TextColor="{StaticResource OnBackground}" />
-            <Label
-                Grid.Column="1"
-                FontAttributes="Bold"
-                FontSize="22"
-                Text="Reviews"
-                TextColor="{StaticResource OnBackground}"
-                VerticalOptions="Center" />
-        </Grid>
-
+    <Grid Padding="12,24,12,24">
         <CollectionView
-            Grid.Row="1"
             ItemsSource="{Binding Reviews}"
             SelectionMode="None">
 
