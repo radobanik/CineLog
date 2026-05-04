@@ -24,6 +24,9 @@ public class DeleteWatchlistHandler : IRequestHandler<DeleteWatchlistCommand>
                 cancellationToken)
             ?? throw new NotFoundException($"Watchlist {request.WatchlistId} not found.");
 
+        if (watchlist.IsDefault)
+            throw new ConflictException("Default watchlists cannot be deleted.");
+
         _context.Watchlists.Remove(watchlist);
         await _context.SaveChangesAsync(cancellationToken);
     }
