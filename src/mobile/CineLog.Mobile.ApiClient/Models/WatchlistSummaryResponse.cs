@@ -15,4 +15,7 @@ public partial class WatchlistSummaryResponse
 
     [Newtonsoft.Json.JsonProperty("createdAt", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
     public System.DateTimeOffset? CreatedAt { get; set; } = default !;
+
+    [Newtonsoft.Json.JsonProperty("type", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+    public WatchlistType? Type { get; set; } = default !;
 }
