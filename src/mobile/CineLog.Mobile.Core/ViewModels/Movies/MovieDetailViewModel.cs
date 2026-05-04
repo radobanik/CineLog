@@ -104,6 +104,9 @@ public partial class MovieDetailViewModel : BaseViewModel
     private Task OpenAddToWatchlist() => _navigation.NavigateToAsync(Routes.AddToWatchlist);
 
     [RelayCommand]
+    private Task OpenReviews() => _navigation.NavigateToAsync(Routes.MovieReviews);
+
+    [RelayCommand]
     private async Task ToggleLike(ReviewPreviewItem review)
     {
         var wasLiked = review.IsLiked;

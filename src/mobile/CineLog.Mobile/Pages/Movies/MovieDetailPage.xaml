@@ -255,7 +255,11 @@
                         Style="{StaticResource AccentLabel}"
                         Text="{Binding ReviewsCountText}"
                         VerticalTextAlignment="Center"
-                        IsVisible="{Binding ReviewsCountText, Converter={StaticResource IsNotNullOrEmptyConverter}}" />
+                        IsVisible="{Binding ReviewsCountText, Converter={StaticResource IsNotNullOrEmptyConverter}}">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding OpenReviewsCommand}" />
+                        </Label.GestureRecognizers>
+                    </Label>
                 </Grid>
 
                 <Label

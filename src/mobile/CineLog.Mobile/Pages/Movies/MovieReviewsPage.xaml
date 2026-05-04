@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<pages:BasePage
+    x:Class="CineLog.Mobile.Pages.Movies.MovieReviewsPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:helpers="clr-namespace:CineLog.Mobile.Helpers"
+    xmlns:models="clr-namespace:CineLog.Mobile.Core.Models.Movies;assembly=CineLog.Mobile.Core"
+    xmlns:pages="clr-namespace:CineLog.Mobile.Pages"
+    xmlns:vm="clr-namespace:CineLog.Mobile.Core.ViewModels.Movies;assembly=CineLog.Mobile.Core"
+    x:DataType="vm:MovieReviewsViewModel"
+    Title="{Binding Title}"
+    BackgroundColor="{StaticResource Background}"
+    ShowMenuButton="false">
+
+    <Grid Padding="24" RowDefinitions="Auto,*">
+
+        <Grid Padding="0,4,0,16" ColumnDefinitions="44,*">
+            <Button
+                Padding="0"
+                BackgroundColor="Transparent"
+                Command="{Binding GoBackCommand}"
+                FontSize="28"
+                Text="‹"
+                TextColor="{StaticResource OnBackground}" />
+            <Label
+                Grid.Column="1"
+                FontAttributes="Bold"
+                FontSize="22"
+                Text="Reviews"
+                TextColor="{StaticResource OnBackground}"
+                VerticalOptions="Center" />
+        </Grid>
+
+        <CollectionView
+            Grid.Row="1"
+            ItemsSource="{Binding Reviews}"
+            SelectionMode="None">
+
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:ReviewPreviewItem">
+                    <VerticalStackLayout>
+                        <Grid
+                            ColumnDefinitions="44, *, Auto"
+                            ColumnSpacing="12"
+                            Margin="0,12,0,0">
+                            <Border
+                                Grid.Column="0"
+                                WidthRequest="40"
+                                HeightRequest="40"
+                                BackgroundColor="{StaticResource Surface}"
+                                StrokeThickness="0"
+                                VerticalOptions="Start">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="20" />
+                                </Border.StrokeShape>
+                                <Label
+                                    Text="{Binding Initial}"
+                                    Style="{StaticResource SectionHeaderLabel}"
+                                    HorizontalOptions="Center"
+                                    VerticalOptions="Center" />
+                            </Border>
+                            <VerticalStackLayout Grid.Column="1" Spacing="3">
+                                <Label
+                                    Style="{StaticResource BodyMediumLabel}"
+                                    FontAttributes="Bold"
+                                    Text="{Binding Username}" />
+                                <Label
+                                    Style="{StaticResource RatingLabel}"
+                                    Text="{Binding Rating, Converter={StaticResource RatingToStarsConverter}}"
+                                    VerticalOptions="Center" />
+                                <Label
+                                    Style="{StaticResource CaptionLabel}"
+                                    Text="{Binding ReviewText}"
+                                    MaxLines="3"
+                                    LineBreakMode="TailTruncation" />
+                                <Label
+                                    Style="{StaticResource CaptionLabel}"
+                                    Text="{Binding DateText}"
+                                    Margin="0,2,0,0" />
+                            </VerticalStackLayout>
+                            <VerticalStackLayout
+                                Grid.Column="2"
+                                HorizontalOptions="End"
+                                VerticalOptions="Start"
+                                Spacing="4"
+                                Padding="8,0,0,0">
+                                <Label
+                                    FontFamily="FASolid"
+                                    FontSize="20"
+                                    HorizontalOptions="Center">
+                                    <Label.Triggers>
+                                        <DataTrigger TargetType="Label" Binding="{Binding IsLiked}" Value="True">
+                                            <Setter Property="TextColor" Value="#E53935" />
+                                        </DataTrigger>
+                                        <DataTrigger TargetType="Label" Binding="{Binding IsLiked}" Value="False">
+                                            <Setter Property="TextColor" Value="{StaticResource TextSecondary}" />
+                                        </DataTrigger>
+                                    </Label.Triggers>
+                                    <Label.Text>
+                                        <x:Static Member="helpers:FontAwesomeIcons.Heart" />
+                                    </Label.Text>
+                                    <Label.GestureRecognizers>
+                                        <TapGestureRecognizer
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MovieReviewsViewModel}}, Path=ToggleLikeCommand}"
+                                            CommandParameter="{Binding .}" />
+                                    </Label.GestureRecognizers>
+                                </Label>
+                                <Label
+                                    Style="{StaticResource CaptionLabel}"
+                                    Text="{Binding LikesCount}"
+                                    HorizontalOptions="Center" />
+                            </VerticalStackLayout>
+                        </Grid>
+                        <BoxView Style="{StaticResource ListDivider}" Margin="0,12,0,0" />
+                    </VerticalStackLayout>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+
+            <CollectionView.Footer>
+                <VerticalStackLayout Padding="0,8,0,24">
+                    <Button
+                        Text="Load more"
+                        Command="{Binding LoadMoreCommand}"
+                        IsVisible="{Binding CanLoadMore}"
+                        BackgroundColor="{StaticResource Surface}"
+                        TextColor="{StaticResource Primary}"
+                        FontAttributes="Bold"
+                        CornerRadius="8"
+                        HeightRequest="48" />
+                    <ActivityIndicator
+                        Margin="0,12"
+                        IsRunning="{Binding IsLoadingMore}"
+                        IsVisible="{Binding IsLoadingMore}"
+                        Color="{StaticResource Primary}" />
+                </VerticalStackLayout>
+            </CollectionView.Footer>
+        </CollectionView>
+    </Grid>
+</pages:BasePage>

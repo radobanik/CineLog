@@ -1,4 +1,5 @@
 using CineLog.Mobile.ApiClient.Clients;
+using CineLog.Mobile.ApiClient.Models;
 using CineLog.Mobile.Core.Models.Movies;
 using CineLog.Mobile.Core.Services.Interfaces;
 
@@ -46,22 +47,28 @@ public sealed class MovieDetailService(IMoviesClient moviesClient) : IMovieDetai
         Guid movieId, int count, CancellationToken ct = default)
     {
         var response = await moviesClient.GetReviewsAsync(movieId, 1, count, ct);
-
-        var items = (response.Items ?? [])
-            .Select(r => new ReviewPreviewItem
-            {
-                Id = r.Id ?? Guid.Empty,
-                Username = r.Username ?? string.Empty,
-                Rating = r.Rating,
-                ReviewText = r.ReviewText,
-                LikesCount = r.LikesCount ?? 0,
-                IsLiked = r.IsLiked ?? false,
-                CreatedAt = r.CreatedAt,
-            })
-            .ToList();
-
+        var items = (response.Items ?? []).Select(MapReview).ToList();
         return (items, response.TotalCount ?? 0);
     }
+
+    public async Task<(IReadOnlyList<ReviewPreviewItem> Items, int TotalCount, int TotalPages)> GetReviewsPageAsync(
+        Guid movieId, int page, int pageSize, CancellationToken ct = default)
+    {
+        var response = await moviesClient.GetReviewsAsync(movieId, page, pageSize, ct);
+        var items = (response.Items ?? []).Select(MapReview).ToList();
+        return (items, response.TotalCount ?? 0, response.TotalPages ?? 0);
+    }
+
+    private static ReviewPreviewItem MapReview(ReviewResponse r) => new()
+    {
+        Id = r.Id ?? Guid.Empty,
+        Username = r.Username ?? string.Empty,
+        Rating = r.Rating,
+        ReviewText = r.ReviewText,
+        LikesCount = r.LikesCount ?? 0,
+        IsLiked = r.IsLiked ?? false,
+        CreatedAt = r.CreatedAt,
+    };
 
     private static string BuildSubtitle(DateTimeOffset? releaseDate, int? runtimeMinutes)
     {
