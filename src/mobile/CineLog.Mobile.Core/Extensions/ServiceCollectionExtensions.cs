@@ -79,6 +79,7 @@ public static class ServiceCollectionExtensions
         services.AddTransient<IMovieDetailService, MovieDetailService>();
         services.AddTransient<IUserService, UserService>();
         services.AddTransient<IFollowService, FollowService>();
+        services.AddTransient<IWatchListService, WatchListService>();
 
         return services;
     }
