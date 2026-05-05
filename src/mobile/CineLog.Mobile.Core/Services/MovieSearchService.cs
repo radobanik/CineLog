@@ -7,25 +7,61 @@ namespace CineLog.Mobile.Core.Services;
 
 public sealed class MovieSearchService(ISearchClient searchClient) : IMovieSearchService
 {
-    private const int PageSize = 12;
+    private const int SearchPageSize = 12;
 
-    public async Task<PagedResult<MovieItem>> SearchMoviesAsync(
+    public Task<PagedResult<MovieItem>> SearchMoviesAsync(
         string query,
         int page,
-        CancellationToken ct = default)
+        CancellationToken ct = default) =>
+        SearchAsync(query, genres: null, page, SearchPageSize, ct);
+
+    public Task<PagedResult<MovieItem>> SearchMoviesByCategoryAsync(
+    MovieCategory category,
+    int page,
+    int pageSize,
+    CancellationToken ct = default)
     {
-        var result = await searchClient.SearchMoviesAsync(query, genres: null, page, PageSize, ct);
+        var genre = ToGenreName(category);
+
+        return genre is null
+            ? SearchAsync(" ", genres: null, page, pageSize, ct)
+            : SearchAsync(" ", [genre], page, pageSize, ct);
+    }
+    private async Task<PagedResult<MovieItem>> SearchAsync(
+        string query,
+        IEnumerable<string>? genres,
+        int page,
+        int pageSize,
+        CancellationToken ct)
+    {
+        var result = await searchClient.SearchMoviesAsync(
+            query,
+            genres,
+            page,
+            pageSize,
+            ct);
 
         var movies = result.Items is null
             ? (IReadOnlyList<MovieItem>)[]
-            : [.. result.Items.Select(m => new MovieItem
+            : [.. result.Items.Select(movie => new MovieItem
             {
-                Id = m.Id ?? Guid.Empty,
-                Title = m.Title ?? string.Empty,
-                PosterPath = m.PosterPath,
-                AverageRating = (double?)m.AverageRating
+                Id = movie.Id ?? Guid.Empty,
+                Title = movie.Title ?? string.Empty,
+                PosterPath = movie.PosterPath,
+                AverageRating = movie.AverageRating
             })];
 
-        return new PagedResult<MovieItem>(movies, page < (result.TotalPages ?? 1));
+        return new PagedResult<MovieItem>(
+            movies,
+            page < (result.TotalPages ?? 1));
     }
+
+    private static string? ToGenreName(MovieCategory category) => category switch
+    {
+        MovieCategory.Action => "Action",
+        MovieCategory.Drama => "Drama",
+        MovieCategory.Scifi => "Science Fiction",
+        MovieCategory.Horror => "Horror",
+        _ => null
+    };
 }
