@@ -1,4 +1,5 @@
 using CineLog.Domain.Entities;
+using CineLog.Domain.Enums;
 using FluentAssertions;
 
 namespace CineLog.UnitTests.Domain;
@@ -6,11 +7,11 @@ namespace CineLog.UnitTests.Domain;
 public class WatchlistTests
 {
     [Fact]
-    public void Create_SetsPropertiesAndGeneratesId()
+    public void CreateCustom_SetsPropertiesAndGeneratesId()
     {
         var userId = Guid.NewGuid();
 
-        var watchlist = Watchlist.Create(userId, "My Favourites");
+        var watchlist = Watchlist.CreateCustom(userId, "My Favourites");
 
         watchlist.Id.Should().NotBeEmpty();
         watchlist.UserId.Should().Be(userId);
@@ -19,23 +20,23 @@ public class WatchlistTests
     }
 
     [Fact]
-    public void Create_SetsCreatedAt_ToUtcNow()
+    public void CreateCustom_SetsCreatedAt_ToUtcNow()
     {
         var before = DateTimeOffset.UtcNow;
 
-        var watchlist = Watchlist.Create(Guid.NewGuid(), "Watch Later");
+        var watchlist = Watchlist.CreateCustom(Guid.NewGuid(), "Watch Later");
 
         watchlist.CreatedAt.Should().BeOnOrAfter(before);
         watchlist.CreatedAt.Should().BeOnOrBefore(DateTimeOffset.UtcNow);
     }
 
     [Fact]
-    public void Create_TwoWatchlists_HaveDistinctIds()
+    public void CreateCustom_TwoWatchlists_HaveDistinctIds()
     {
         var userId = Guid.NewGuid();
 
-        var a = Watchlist.Create(userId, "List A");
-        var b = Watchlist.Create(userId, "List B");
+        var a = Watchlist.CreateCustom(userId, "List A");
+        var b = Watchlist.CreateCustom(userId, "List B");
 
         a.Id.Should().NotBe(b.Id);
     }
@@ -64,5 +65,16 @@ public class WatchlistItemTests
 
         item.AddedAt.Should().BeOnOrAfter(before);
         item.AddedAt.Should().BeOnOrBefore(DateTimeOffset.UtcNow);
+    }
+    [Fact]
+    public void CreateDefault_SetsType()
+    {
+        var watchlist = Watchlist.CreateDefault(
+            Guid.NewGuid(),
+            "Watched",
+            WatchlistType.Watched);
+
+        watchlist.Type.Should().Be(WatchlistType.Watched);
+        watchlist.IsDefault.Should().BeTrue();
     }
 }
