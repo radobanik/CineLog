@@ -12,4 +12,7 @@ public partial class UserSummaryResponse
 
     [Newtonsoft.Json.JsonProperty("avatarUrl", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
     public string? AvatarUrl { get; set; } = default !;
+
+    [Newtonsoft.Json.JsonProperty("reviewCount", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+    public int? ReviewCount { get; set; } = default !;
 }

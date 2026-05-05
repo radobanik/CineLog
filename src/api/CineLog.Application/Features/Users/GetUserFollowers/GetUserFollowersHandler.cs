@@ -17,10 +17,16 @@ public class GetUserFollowersHandler : IRequestHandler<GetUserFollowersQuery, Pa
     {
         var query = _context.UserFollows
             .Where(f => f.FollowedId == request.UserId)
-            .Join(_context.Users,
+            .Join(
+                _context.Users,
                 f => f.FollowerId,
                 u => u.Id,
-                (f, u) => new UserSummaryResponse(u.Id, u.UserName!, u.AvatarUrl));
+                (f, u) => new { f, u })
+            .Select(x => new UserSummaryResponse(
+                x.u.Id,
+                x.u.UserName ?? string.Empty,
+                x.u.AvatarUrl,
+                _context.Reviews.Count(r => r.UserId == x.u.Id)));
 
         var totalCount = await query.CountAsync(cancellationToken);
 
