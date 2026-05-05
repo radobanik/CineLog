@@ -75,7 +75,7 @@ public static class ServiceCollectionExtensions
         services.AddTransient<IAuthService, AuthService>();
         services.AddTransient<IHomeService, HomeService>();
         services.AddTransient<IProfileService, ProfileService>();
-        services.AddTransient<ISearchService, SearchService>();
+        services.AddTransient<IMovieSearchService, MovieSearchService>();
         services.AddTransient<IMovieDetailService, MovieDetailService>();
         services.AddTransient<IUserService, UserService>();
         services.AddTransient<IFollowService, FollowService>();
@@ -91,7 +91,11 @@ public static class ServiceCollectionExtensions
         services.AddTransient<HomeViewModel>();
         services.AddTransient<MoviesCategoryViewModel>();
         services.AddTransient<ProfileViewModel>();
+
         services.AddTransient<SearchViewModel>();
+        services.AddTransient<MovieSearchTabViewModel>();
+        services.AddTransient<UserSearchTabViewModel>();
+
         services.AddTransient<WatchListViewModel>();
         services.AddTransient<WatchListRowViewModel>();
         services.AddTransient<WatchListMoviesViewModel>();
