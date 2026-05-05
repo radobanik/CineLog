@@ -35,7 +35,7 @@ public class SearchController : ControllerBase
     [HttpGet("movies")]
     [ProducesResponseType(typeof(PagedResponse<MovieSummaryResponse>), StatusCodes.Status200OK)]
     public async Task<ActionResult<PagedResponse<MovieSummaryResponse>>> SearchMovies(
-        [FromQuery] string query,
+        [FromQuery] string? query = null,
         [FromQuery] List<string>? genres = null,
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 20,
