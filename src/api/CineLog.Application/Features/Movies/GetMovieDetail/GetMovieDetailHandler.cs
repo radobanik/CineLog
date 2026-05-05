@@ -1,3 +1,4 @@
+using CineLog.Application.Common;
 using CineLog.Domain.Exceptions;
 using CineLog.Domain.Interfaces;
 using MediatR;
@@ -19,13 +20,12 @@ public class GetMovieDetailHandler : IRequestHandler<GetMovieDetailQuery, MovieD
     public async Task<MovieDetailResponse> Handle(GetMovieDetailQuery request, CancellationToken cancellationToken)
     {
         var movieTask = _db.Movies
-            .Include(m => m.Genres).ThenInclude(mg => mg.Genre)
-            .Include(m => m.Cast).ThenInclude(c => c.Person)
-            .Include(m => m.Crew).ThenInclude(c => c.Person)
-            .Include(m => m.ProductionCompanies).ThenInclude(p => p.Company)
-            .AsNoTracking()
-            .AsSplitQuery()
-            .FirstOrDefaultAsync(m => m.Id == request.MovieId, cancellationToken);
+        .Include(m => m.Genres).ThenInclude(mg => mg.Genre)
+        .Include(m => m.Cast).ThenInclude(c => c.Person)
+        .Include(m => m.Crew).ThenInclude(c => c.Person)
+        .Include(m => m.ProductionCompanies).ThenInclude(p => p.Company)
+        .AsNoTracking()
+        .FirstOrDefaultAsync(m => m.Id == request.MovieId, cancellationToken);
 
         var isFavoriteTask = _db.UserFavorites
             .AsNoTracking()
@@ -33,7 +33,8 @@ public class GetMovieDetailHandler : IRequestHandler<GetMovieDetailQuery, MovieD
 
         await Task.WhenAll(movieTask, isFavoriteTask);
 
-        var movie = movieTask.Result ?? throw new NotFoundException($"Movie {request.MovieId} not found.");
+        var movie = movieTask.Result
+            ?? throw new NotFoundException($"Movie {request.MovieId} not found.");
 
         return new MovieDetailResponse(
             movie.Id,
