@@ -81,5 +81,5 @@ public partial class MovieDetailResponse
     public System.Collections.Generic.ICollection<ProductionCompanyResponse>? ProductionCompanies { get; set; } = default !;
 
     [Newtonsoft.Json.JsonProperty("isFavorite", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-    public bool IsFavorite { get; set; }
+    public bool? IsFavorite { get; set; } = default !;
 }
