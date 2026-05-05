@@ -42,12 +42,13 @@ public class UpdateProfileHandler : IRequestHandler<UpdateProfileCommand, UserPr
             .CountAsync(f => f.FollowerId == user.Id, cancellationToken);
 
         return new UserProfileResponse(
-            user.Id,
-            user.UserName!,
-            user.Bio,
-            user.AvatarUrl,
-            filmsCount,
-            followersCount,
-            followingCount);
+             user.Id,
+             user.UserName!,
+             user.Bio,
+             user.AvatarUrl,
+             filmsCount,
+             followersCount,
+             followingCount,
+             false);
     }
 }
