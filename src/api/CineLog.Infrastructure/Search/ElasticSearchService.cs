@@ -44,14 +44,15 @@ public class ElasticSearchService : IElasticSearchService
         => await _client.DeleteAsync<MovieSearchDocument>(movieId.ToString(), d => d.Index(MoviesIndex), ct);
 
     public async Task<PagedResponse<MovieSearchDocument>> SearchMoviesAsync(
-     string query,
-     int page,
-     int pageSize,
-     IEnumerable<string>? genres = null,
-     CancellationToken ct = default)
+        string query,
+        int page,
+        int pageSize,
+        IEnumerable<string>? genres = null,
+        CancellationToken ct = default)
     {
         var genreList = genres?
             .Where(g => !string.IsNullOrWhiteSpace(g))
+            .Select(g => g.Trim())
             .ToList();
 
         var response = await _client.SearchAsync<MovieSearchDocument>(s => s
@@ -82,9 +83,9 @@ public class ElasticSearchService : IElasticSearchService
                     if (genreList is { Count: > 0 })
                     {
                         b.Filter(f => f.Terms(t => t
-                            .Field("genres")
+                            .Field("genres.keyword")
                             .Terms(new TermsQueryField(
-                                genreList.Select(g => FieldValue.String(g)).ToArray()))));
+                                genreList.Select(FieldValue.String).ToArray()))));
                     }
                 })), ct);
 
@@ -94,7 +95,6 @@ public class ElasticSearchService : IElasticSearchService
         return PagedResponse<MovieSearchDocument>.Create(items, page, pageSize, totalCount);
     }
 
-
     public async Task IndexPersonAsync(PersonSearchDocument doc, CancellationToken ct = default)
         => await _client.IndexAsync(doc, i => i.Index(PeopleIndex).Id(doc.Id), ct);
 
@@ -102,7 +102,10 @@ public class ElasticSearchService : IElasticSearchService
         => await _client.DeleteAsync<PersonSearchDocument>(personId.ToString(), d => d.Index(PeopleIndex), ct);
 
     public async Task<PagedResponse<PersonSearchDocument>> SearchPeopleAsync(
-        string query, int page, int pageSize, CancellationToken ct = default)
+        string query,
+        int page,
+        int pageSize,
+        CancellationToken ct = default)
     {
         var response = await _client.SearchAsync<PersonSearchDocument>(s => s
             .Index(PeopleIndex)
@@ -114,16 +117,11 @@ public class ElasticSearchService : IElasticSearchService
                         s => s.Match(m => m
                             .Field(f => f.Name)
                             .Query(query)
-                            .Fuzziness(new Fuzziness("AUTO"))
-                        ),
+                            .Fuzziness(new Fuzziness("AUTO"))),
                         s => s.MatchPhrasePrefix(m => m
                             .Field("name")
-                            .Query(query)
-                        )
-                    )
-                    .MinimumShouldMatch(1)
-                )
-            ), ct);
+                            .Query(query)))
+                    .MinimumShouldMatch(1))), ct);
 
         var items = response.Documents.ToList();
         var totalCount = (int)response.Total;
@@ -134,7 +132,8 @@ public class ElasticSearchService : IElasticSearchService
     public async Task BulkIndexMoviesAsync(IEnumerable<MovieSearchDocument> docs, CancellationToken ct = default)
     {
         var docList = docs.ToList();
-        if (docList.Count == 0) return;
+        if (docList.Count == 0)
+            return;
 
         var operations = docList
             .Select(doc => (IBulkOperation)new BulkIndexOperation<MovieSearchDocument>(doc) { Id = doc.Id })
@@ -150,7 +149,8 @@ public class ElasticSearchService : IElasticSearchService
     public async Task BulkIndexPeopleAsync(IEnumerable<PersonSearchDocument> docs, CancellationToken ct = default)
     {
         var docList = docs.ToList();
-        if (docList.Count == 0) return;
+        if (docList.Count == 0)
+            return;
 
         var operations = docList
             .Select(doc => (IBulkOperation)new BulkIndexOperation<PersonSearchDocument>(doc) { Id = doc.Id })
