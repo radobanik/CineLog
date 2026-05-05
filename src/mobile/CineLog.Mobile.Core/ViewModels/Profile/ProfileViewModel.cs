@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using CineLog.Mobile.Core.Models;
 using CineLog.Mobile.Core.Models.Review;
+
 using CineLog.Mobile.Core.Navigation;
 using CineLog.Mobile.Core.Services.Interfaces;
 using CineLog.Mobile.Core.ViewModels.Base;
@@ -21,14 +22,29 @@ public partial class ProfileViewModel(
     private Guid _userId;
 
     [ObservableProperty] private string _username = string.Empty;
-    [ObservableProperty] private string _bio = string.Empty;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(ShowExpandButton))]
+    [NotifyPropertyChangedFor(nameof(ShowCollapseButton))]
+    private string _bio = string.Empty;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(ShowExpandButton))]
+    [NotifyPropertyChangedFor(nameof(ShowCollapseButton))]
+    private bool _isBioExpanded;
+
     [ObservableProperty] private string _avatarUrl = string.Empty;
+
+    public bool ShowExpandButton => !IsBioExpanded && BioIsLong;
+    public bool ShowCollapseButton => IsBioExpanded && BioIsLong;
+
+    private bool BioIsLong => (Bio.Count('\n') >= 2 && Bio.Length < 50) || Bio.Length > 50;
     [ObservableProperty] private int _filmsCount;
     [ObservableProperty] private int _followersCount;
     [ObservableProperty] private int _followingCount;
 
     public ObservableCollection<MovieItem> FavouriteMovies { get; } = [];
-    public ObservableCollection<ReviewItem> Reviews { get; } = [];
+    public ObservableCollection<ReviewListItem> Reviews { get; } = [];
 
     [RelayCommand]
     public Task GoToMovie(MovieItem movie)
@@ -36,6 +52,12 @@ public partial class ProfileViewModel(
         movieDetailNav.MovieId = movie.Id;
         return navigation.NavigateToAsync(Routes.MovieDetail);
     }
+
+    [RelayCommand]
+    private void ToggleBio() => IsBioExpanded = !IsBioExpanded;
+
+    [RelayCommand]
+    private Task OpenEditProfile() => navigation.NavigateToAsync(Routes.EditProfile);
 
     [RelayCommand]
     private Task OpenAllReviews()
@@ -48,6 +70,9 @@ public partial class ProfileViewModel(
     [RelayCommand]
     private async Task Logout()
     {
+        if (!await alerts.ShowConfirmAsync("Sign out", "Are you sure you want to sign out?"))
+            return;
+
         await authService.LogoutAsync();
         await navigation.NavigateToRootAsync(Routes.Login);
     }

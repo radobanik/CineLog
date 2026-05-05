@@ -1,4 +1,5 @@
 using CineLog.Mobile.Core.Navigation;
+using CineLog.Mobile.Pages.MainPages;
 using CineLog.Mobile.Pages.Movies;
 
 
@@ -23,5 +24,6 @@ public partial class AppShell : Shell
         Routing.RegisterRoute(Routes.MovieDetail, typeof(MovieDetailPage));
         Routing.RegisterRoute(Routes.AddToWatchlist, typeof(AddToWatchlistPage));
         Routing.RegisterRoute(Routes.MovieReviews, typeof(MovieReviewsPage));
+        Routing.RegisterRoute(Routes.EditProfile, typeof(EditProfilePage));
     }
 }

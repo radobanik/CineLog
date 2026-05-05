@@ -79,4 +79,7 @@ public partial class MovieDetailResponse
 
     [Newtonsoft.Json.JsonProperty("productionCompanies", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
     public System.Collections.Generic.ICollection<ProductionCompanyResponse>? ProductionCompanies { get; set; } = default !;
+
+    [Newtonsoft.Json.JsonProperty("isFavorite", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+    public bool IsFavorite { get; set; }
 }

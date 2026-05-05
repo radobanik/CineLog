@@ -8,19 +8,32 @@ namespace CineLog.Application.Features.Movies.GetMovieDetail;
 public class GetMovieDetailHandler : IRequestHandler<GetMovieDetailQuery, MovieDetailResponse>
 {
     private readonly IAppDbContext _db;
+    private readonly ICurrentUserService _currentUser;
 
-    public GetMovieDetailHandler(IAppDbContext db) => _db = db;
+    public GetMovieDetailHandler(IAppDbContext db, ICurrentUserService currentUser)
+    {
+        _db = db;
+        _currentUser = currentUser;
+    }
 
     public async Task<MovieDetailResponse> Handle(GetMovieDetailQuery request, CancellationToken cancellationToken)
     {
-        var movie = await _db.Movies
+        var movieTask = _db.Movies
             .Include(m => m.Genres).ThenInclude(mg => mg.Genre)
             .Include(m => m.Cast).ThenInclude(c => c.Person)
             .Include(m => m.Crew).ThenInclude(c => c.Person)
             .Include(m => m.ProductionCompanies).ThenInclude(p => p.Company)
             .AsNoTracking()
-            .FirstOrDefaultAsync(m => m.Id == request.MovieId, cancellationToken)
-            ?? throw new NotFoundException($"Movie {request.MovieId} not found.");
+            .AsSplitQuery()
+            .FirstOrDefaultAsync(m => m.Id == request.MovieId, cancellationToken);
+
+        var isFavoriteTask = _db.UserFavorites
+            .AsNoTracking()
+            .AnyAsync(f => f.UserId == _currentUser.UserId && f.MovieId == request.MovieId, cancellationToken);
+
+        await Task.WhenAll(movieTask, isFavoriteTask);
+
+        var movie = movieTask.Result ?? throw new NotFoundException($"Movie {request.MovieId} not found.");
 
         return new MovieDetailResponse(
             movie.Id,
@@ -54,6 +67,7 @@ public class GetMovieDetailHandler : IRequestHandler<GetMovieDetailQuery, MovieD
                 .ToList(),
             movie.ProductionCompanies
                 .Select(p => new ProductionCompanyResponse(p.Company.Id, p.Company.Name, p.Company.LogoPath, p.Company.OriginCountry))
-                .ToList());
+                .ToList(),
+            isFavoriteTask.Result);
     }
 }

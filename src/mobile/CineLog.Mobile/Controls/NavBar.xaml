@@ -32,6 +32,7 @@
 
         <Label
             Grid.Column="2"
+            Style="{StaticResource IconLabel}"
             FontSize="18"
             HorizontalOptions="Center"
             VerticalOptions="Center"

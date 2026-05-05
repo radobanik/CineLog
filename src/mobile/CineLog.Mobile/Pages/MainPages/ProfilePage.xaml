@@ -5,7 +5,7 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:controls="clr-namespace:CineLog.Mobile.Controls"
     xmlns:helpers="clr-namespace:CineLog.Mobile.Helpers"
-    xmlns:home="clr-namespace:CineLog.Mobile.Core.Models.Home;assembly=CineLog.Mobile.Core"
+    xmlns:home="clr-namespace:CineLog.Mobile.Core.Models;assembly=CineLog.Mobile.Core"
     xmlns:review="clr-namespace:CineLog.Mobile.Core.Models.Review;assembly=CineLog.Mobile.Core"
     xmlns:pages="clr-namespace:CineLog.Mobile.Pages"
     xmlns:vm="clr-namespace:CineLog.Mobile.Core.ViewModels.Profile;assembly=CineLog.Mobile.Core"
@@ -21,7 +21,7 @@
             <controls:ProfileHeaderSkeleton IsVisible="{Binding IsBusy}" />
 
             <Grid
-                ColumnDefinitions="Auto, *"
+                ColumnDefinitions="Auto, *, Auto"
                 ColumnSpacing="15"
                 IsVisible="{Binding IsNotBusy}">
                 <Border
@@ -40,8 +40,50 @@
                     <Label
                         Style="{StaticResource BodyMediumLabel}"
                         Text="{Binding Bio}"
-                        Margin="0,5,0,0" />
+                        MaxLines="2"
+                        LineBreakMode="TailTruncation"
+                        Margin="0,5,0,0">
+                        <Label.Triggers>
+                            <DataTrigger TargetType="Label" Binding="{Binding IsBioExpanded}" Value="True">
+                                <Setter Property="MaxLines" Value="4" />
+                                <Setter Property="LineBreakMode" Value="WordWrap" />
+                            </DataTrigger>
+                        </Label.Triggers>
+                    </Label>
+                    <Label
+                        Style="{StaticResource CaptionLabel}"
+                        Text="Show full"
+                        IsVisible="{Binding ShowExpandButton}"
+                        Margin="0,2,0,0">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ToggleBioCommand}" />
+                        </Label.GestureRecognizers>
+                    </Label>
+                    <Label
+                        Style="{StaticResource CaptionLabel}"
+                        Text="Show less"
+                        IsVisible="{Binding ShowCollapseButton}"
+                        Margin="0,2,0,0">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ToggleBioCommand}" />
+                        </Label.GestureRecognizers>
+                    </Label>
                 </VerticalStackLayout>
+                <Label
+                    Grid.Column="2"
+                    FontFamily="FASolid"
+                    FontSize="18"
+                    TextColor="{StaticResource TextSecondary}"
+                    Text="{x:Static helpers:FontAwesomeIcons.Edit}"
+                    WidthRequest="44"
+                    HeightRequest="44"
+                    HorizontalTextAlignment="Center"
+                    VerticalTextAlignment="Center"
+                    VerticalOptions="Start">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding OpenEditProfileCommand}" />
+                    </Label.GestureRecognizers>
+                </Label>
             </Grid>
 
             <controls:ProfileStatsSkeleton IsVisible="{Binding IsBusy}" />
@@ -144,45 +186,8 @@
                             VerticalOptions="Center" />
                     </CollectionView.EmptyView>
                     <CollectionView.ItemTemplate>
-                        <DataTemplate x:DataType="review:ReviewItem">
-                            <VerticalStackLayout Margin="0,0,0,15">
-                                <Grid ColumnDefinitions="50, *, Auto" ColumnSpacing="15">
-                                    <VerticalStackLayout Grid.Column="0" VerticalOptions="Center">
-                                        <Label
-                                            Style="{StaticResource HeadlineMediumLabel}"
-                                            Text="{Binding CreatedAt, StringFormat='{0:%d}'}"
-                                            HorizontalOptions="Center" />
-                                        <Label
-                                            Style="{StaticResource CaptionLabel}"
-                                            Text="{Binding CreatedAt, StringFormat='{0:MMM}'}"
-                                            HorizontalOptions="Center" />
-                                    </VerticalStackLayout>
-                                    <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
-                                        <HorizontalStackLayout Spacing="6">
-                                            <Label
-                                                Style="{StaticResource BodyLargeLabel}"
-                                                Text="{Binding MovieTitle}"
-                                                FontAttributes="Bold" />
-                                            <Label
-                                                Style="{StaticResource RatingLabel}"
-                                                Text="{Binding Rating, Converter={StaticResource RatingToStarsConverter}}"
-                                                VerticalOptions="Center" />
-                                        </HorizontalStackLayout>
-                                        <Label
-                                            Style="{StaticResource CaptionLabel}"
-                                            Text="{Binding ReviewText}" />
-                                    </VerticalStackLayout>
-                                    <HorizontalStackLayout Grid.Column="2" VerticalOptions="Center" Spacing="4">
-                                        <Label
-                                            Style="{StaticResource CaptionLabel}"
-                                            Text="{Binding LikesCount}" />
-                                        <Label
-                                            Style="{StaticResource SecondaryIconLabel}"
-                                            Text="{x:Static helpers:FontAwesomeIcons.Heart}" />
-                                    </HorizontalStackLayout>
-                                </Grid>
-                                <BoxView Style="{StaticResource ListDivider}" Margin="0,15,0,0" />
-                            </VerticalStackLayout>
+                        <DataTemplate x:DataType="review:ReviewListItem">
+                            <controls:ReviewListCard IsMovieMode="False" />
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
                 </CollectionView>

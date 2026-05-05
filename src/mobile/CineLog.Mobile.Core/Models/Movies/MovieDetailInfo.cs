@@ -13,4 +13,5 @@ public sealed class MovieDetailInfo
     public string RatingText => AverageRating.HasValue ? AverageRating.Value.ToString("0.0") : "-";
     public string RatingsCountText { get; init; } = string.Empty;
     public IReadOnlyList<CastMemberItem> Cast { get; init; } = [];
+    public bool IsFavorite { get; init; }
 }

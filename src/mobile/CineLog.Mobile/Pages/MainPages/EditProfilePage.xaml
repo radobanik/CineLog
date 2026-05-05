@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<pages:BasePage
+    x:Class="CineLog.Mobile.Pages.MainPages.EditProfilePage"
+    x:DataType="vm:EditProfileViewModel"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:helpers="clr-namespace:CineLog.Mobile.Helpers"
+    xmlns:pages="clr-namespace:CineLog.Mobile.Pages"
+    xmlns:vm="clr-namespace:CineLog.Mobile.Core.ViewModels.Profile;assembly=CineLog.Mobile.Core"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="{Binding Title}"
+    BackgroundColor="{StaticResource Background}"
+    ShowMenuButton="false">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20,24,20,48" Spacing="0">
+
+            <Border
+                WidthRequest="90"
+                HeightRequest="90"
+                StrokeThickness="0"
+                HorizontalOptions="Center"
+                Margin="0,0,0,12">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="45" />
+                </Border.StrokeShape>
+                <Grid BackgroundColor="{StaticResource Surface}">
+                    <Image
+                        Source="{Binding AvatarUrl}"
+                        Aspect="AspectFill"
+                        IsVisible="{Binding AvatarUrl, Converter={StaticResource IsNotNullOrEmptyConverter}}" />
+                    <Label
+                        Text="{Binding Initial}"
+                        Style="{StaticResource HeadlineMediumLabel}"
+                        HorizontalOptions="Center"
+                        VerticalOptions="Center">
+                        <Label.Triggers>
+                            <DataTrigger TargetType="Label"
+                                         Binding="{Binding AvatarUrl, Converter={StaticResource IsNotNullOrEmptyConverter}}"
+                                         Value="True">
+                                <Setter Property="IsVisible" Value="False" />
+                            </DataTrigger>
+                        </Label.Triggers>
+                    </Label>
+                </Grid>
+            </Border>
+
+            <Label
+                Style="{StaticResource HeadlineMediumLabel}"
+                Text="{Binding Username}"
+                HorizontalOptions="Center"
+                Margin="0,0,0,32" />
+
+            <Label
+                Margin="4,0,0,8"
+                Style="{StaticResource OverlineLabel}"
+                Text="BIO" />
+            <Border Style="{StaticResource InputFieldBorder}">
+                <Editor Text="{Binding Bio}"
+                        Placeholder="Tell something about yourself..."
+                        TextColor="{StaticResource OnBackground}"
+                        PlaceholderColor="{StaticResource TextSecondary}"
+                        BackgroundColor="Transparent"
+                        FontSize="14"
+                        MaxLength="100"
+                        AutoSize="Disabled"
+                        HeightRequest="88"
+                        Margin="16,8" />
+            </Border>
+            <Label
+                Style="{StaticResource CaptionLabel}"
+                Text="{Binding BioLengthText}"
+                HorizontalOptions="End"
+                Margin="0,4,4,0" />
+
+            <Button
+                Command="{Binding SaveCommand}"
+                HorizontalOptions="Fill"
+                Margin="0,32,0,0"
+                Style="{StaticResource PrimaryButton}"
+                Text="Save Changes" />
+
+            <ActivityIndicator
+                HorizontalOptions="Center"
+                IsRunning="{Binding IsBusy}"
+                IsVisible="{Binding IsBusy}"
+                Margin="0,16,0,0" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</pages:BasePage>
