@@ -24,6 +24,26 @@ public sealed class ProfileService(IUsersClient usersClient) : IProfileService
         };
     }
 
+    public async Task<UserProfile> GetProfileAsync(Guid? userId = null, CancellationToken ct = default)
+    {
+        var user = userId is { } id && id != Guid.Empty
+            ? await usersClient.GetByIdAsync(id, ct)
+            : await usersClient.GetMeAsync(ct);
+
+        return new UserProfile
+        {
+            Id = user.Id ?? Guid.Empty,
+            Username = user.Username ?? string.Empty,
+            Bio = user.Bio ?? string.Empty,
+            AvatarUrl = user.AvatarUrl ?? string.Empty,
+            FilmsCount = user.FilmsCount ?? 0,
+            FollowersCount = user.FollowersCount ?? 0,
+            FollowingCount = user.FollowingCount ?? 0,
+            IsFollowing = user.IsFollowing ?? false
+        };
+    }
+
+
     public async Task<IReadOnlyList<MovieItem>> GetFavouriteMoviesAsync(CancellationToken ct = default)
     {
         var movies = await usersClient.GetFavoritesAsync(ct);

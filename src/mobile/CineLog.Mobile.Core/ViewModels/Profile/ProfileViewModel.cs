@@ -1,7 +1,6 @@
 using System.Collections.ObjectModel;
 using CineLog.Mobile.Core.Models;
 using CineLog.Mobile.Core.Models.Review;
-
 using CineLog.Mobile.Core.Navigation;
 using CineLog.Mobile.Core.Services.Interfaces;
 using CineLog.Mobile.Core.ViewModels.Base;
@@ -13,13 +12,18 @@ namespace CineLog.Mobile.Core.ViewModels.Profile;
 public partial class ProfileViewModel(
     IProfileService profileService,
     IAuthService authService,
+    ISessionService session,
+    IFollowService followService,
     IMovieDetailNavigationContext movieDetailNav,
     IReviewsNavigationContext reviewsNav,
     INavigationService navigation,
     IAlertService alerts)
     : BaseViewModel(alerts)
 {
+    private const string SignOutIcon = "\uf2f5";
+
     private Guid _userId;
+    private Guid? _requestedUserId;
 
     [ObservableProperty] private string _username = string.Empty;
 
@@ -35,16 +39,36 @@ public partial class ProfileViewModel(
 
     [ObservableProperty] private string _avatarUrl = string.Empty;
 
-    public bool ShowExpandButton => !IsBioExpanded && BioIsLong;
-    public bool ShowCollapseButton => IsBioExpanded && BioIsLong;
-
-    private bool BioIsLong => (Bio.Count('\n') >= 2 && Bio.Length < 50) || Bio.Length > 50;
     [ObservableProperty] private int _filmsCount;
     [ObservableProperty] private int _followersCount;
     [ObservableProperty] private int _followingCount;
 
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(ShowSelfActions))]
+    [NotifyPropertyChangedFor(nameof(ShowFollowButton))]
+    [NotifyPropertyChangedFor(nameof(ProfileNavRightIcon))]
+    private bool _isOwnProfile = true;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(FollowButtonText))]
+    private bool _isFollowing;
+
+    public bool ShowExpandButton => !IsBioExpanded && BioIsLong;
+    public bool ShowCollapseButton => IsBioExpanded && BioIsLong;
+    public bool ShowSelfActions => IsOwnProfile;
+    public bool ShowFollowButton => !IsOwnProfile;
+    public string FollowButtonText => IsFollowing ? "Unfollow" : "Follow";
+    public string ProfileNavRightIcon => IsOwnProfile ? SignOutIcon : string.Empty;
+
+    private bool BioIsLong => (Bio.Count('\n') >= 2 && Bio.Length < 50) || Bio.Length > 50;
+
     public ObservableCollection<MovieItem> FavouriteMovies { get; } = [];
     public ObservableCollection<ReviewListItem> Reviews { get; } = [];
+
+    public void ShowCurrentUser() => _requestedUserId = null;
+
+    public void ShowUser(Guid userId) =>
+        _requestedUserId = userId == Guid.Empty ? null : userId;
 
     [RelayCommand]
     public Task GoToMovie(MovieItem movie)
@@ -68,6 +92,31 @@ public partial class ProfileViewModel(
     }
 
     [RelayCommand]
+    private async Task ToggleFollow()
+    {
+        if (IsOwnProfile || _userId == Guid.Empty)
+            return;
+
+        var wasFollowing = IsFollowing;
+        IsFollowing = !wasFollowing;
+        ApplyFollowerDelta(IsFollowing);
+
+        try
+        {
+            if (wasFollowing)
+                await followService.UnfollowAsync(_userId);
+            else
+                await followService.FollowAsync(_userId);
+        }
+        catch (Exception ex)
+        {
+            IsFollowing = wasFollowing;
+            ApplyFollowerDelta(wasFollowing);
+            await HandleErrorAsync(ex);
+        }
+    }
+
+    [RelayCommand]
     private async Task Logout()
     {
         if (!await alerts.ShowConfirmAsync("Sign out", "Are you sure you want to sign out?"))
@@ -79,25 +128,41 @@ public partial class ProfileViewModel(
 
     protected override async Task LoadAsync()
     {
-        Title = "Profile";
+        var requestedUserId = _requestedUserId;
+        var loadCurrentUser = requestedUserId is null || requestedUserId == session.UserId;
 
-        var profile = await profileService.GetProfileAsync();
+        var profile = await profileService.GetProfileAsync(loadCurrentUser ? null : requestedUserId);
 
         _userId = profile.Id;
+        IsOwnProfile = profile.Id == session.UserId;
+        IsFollowing = !IsOwnProfile && profile.IsFollowing;
+        Title = IsOwnProfile ? "Profile" : profile.Username;
+
         Username = profile.Username;
         Bio = profile.Bio;
+        IsBioExpanded = false;
         AvatarUrl = profile.AvatarUrl;
         FilmsCount = profile.FilmsCount;
         FollowersCount = profile.FollowersCount;
         FollowingCount = profile.FollowingCount;
 
-        var favourites = await profileService.GetFavouriteMoviesAsync();
+        FavouriteMovies.Clear();
+        if (IsOwnProfile)
+        {
+            var favourites = await profileService.GetFavouriteMoviesAsync();
+            foreach (var movie in favourites)
+                FavouriteMovies.Add(movie);
+        }
+
         var reviews = await profileService.GetReviewsAsync(profile.Id);
 
-        FavouriteMovies.Clear();
-        foreach (var movie in favourites) FavouriteMovies.Add(movie);
-
         Reviews.Clear();
-        foreach (var review in reviews) Reviews.Add(review);
+        foreach (var review in reviews)
+            Reviews.Add(review);
+    }
+
+    private void ApplyFollowerDelta(bool isNowFollowing)
+    {
+        FollowersCount = Math.Max(0, FollowersCount + (isNowFollowing ? 1 : -1));
     }
 }
