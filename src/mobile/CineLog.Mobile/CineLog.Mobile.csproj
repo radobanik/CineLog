@@ -58,6 +58,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Controls\FollowToggleButton.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
     <None Update="Pages\Movies\MovieWatchListPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </None>
