@@ -6,7 +6,7 @@ namespace CineLog.Mobile.Core.Services.Interfaces;
 
 public interface IUserService
 {
-    Task<(IReadOnlyList<UserSearchItem> Users, bool HasMore)> SearchUsersAsync(
+    Task<PagedResult<UserSearchItem>> SearchUsersAsync(
         string query,
         int page,
         CancellationToken ct = default);

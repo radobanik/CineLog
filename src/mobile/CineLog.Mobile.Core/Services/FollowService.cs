@@ -9,14 +9,14 @@ public sealed class FollowService(IUsersClient usersClient) : IFollowService
 {
     private const int PageSize = 12;
 
-    public async Task<(IReadOnlyList<UserSearchItem> Users, bool HasMore)> GetFollowingAsync(
+    public async Task<PagedResult<UserSearchItem>> GetFollowingAsync(
         int page,
         CancellationToken ct = default)
     {
         var me = await usersClient.GetMeAsync(ct);
         var result = await usersClient.GetFollowingAsync(me.Id ?? Guid.Empty, page, PageSize, ct);
 
-        return (
+        return new PagedResult<UserSearchItem>(
             MapFollowingUsers(result.Items),
             page < (result.TotalPages ?? 1));
     }
@@ -35,7 +35,8 @@ public sealed class FollowService(IUsersClient usersClient) : IFollowService
             Id = u.Id ?? Guid.Empty,
             Username = u.Username ?? string.Empty,
             AvatarUrl = u.AvatarUrl,
-            IsFollowing = true
+            IsFollowing = true,
+            ReviewCount = u.ReviewCount ?? 0
         }).ToList() ?? [];
     }
 }

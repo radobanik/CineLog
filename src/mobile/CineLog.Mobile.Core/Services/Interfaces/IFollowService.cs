@@ -7,7 +7,7 @@ namespace CineLog.Mobile.Core.Services.Interfaces
 {
     public interface IFollowService
     {
-        Task<(IReadOnlyList<UserSearchItem> Users, bool HasMore)> GetFollowingAsync(
+        Task<PagedResult<UserSearchItem>> GetFollowingAsync(
             int page,
             CancellationToken ct = default);
 
