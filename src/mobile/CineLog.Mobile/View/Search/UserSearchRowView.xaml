@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView
+    x:Class="CineLog.Mobile.Views.Search.UserSearchRowView"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Name="Root">
+
+    <Grid Padding="0,8" ColumnDefinitions="44,*,Auto">
+        <Border
+            BackgroundColor="{StaticResource SurfaceVariant}"
+            HeightRequest="34"
+            StrokeThickness="0"
+            WidthRequest="34">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="17" />
+            </Border.StrokeShape>
+
+            <Grid>
+                <Image
+                    Aspect="AspectFill"
+                    IsVisible="{Binding HasAvatar}"
+                    Source="{Binding AvatarUrl}" />
+
+                <Label
+                    HorizontalOptions="Center"
+                    IsVisible="{Binding HasNoAvatar}"
+                    Text="{Binding Initial}"
+                    VerticalOptions="Center" />
+            </Grid>
+        </Border>
+
+        <VerticalStackLayout Grid.Column="1" Spacing="2">
+            <Label
+                FontAttributes="Bold"
+                Style="{StaticResource BodyMediumLabel}"
+                Text="{Binding Username}" />
+
+            <Label Style="{StaticResource CaptionLabel}" Text="{Binding ReviewsText}" />
+        </VerticalStackLayout>
+
+        <Button
+            Grid.Column="2"
+            Command="{Binding Source={x:Reference Root}, Path=ToggleFollowCommand}"
+            CommandParameter="{Binding .}"
+            Style="{StaticResource FollowToggleButton}"
+            Text="{Binding FollowButtonText}">
+            <Button.Triggers>
+                <DataTrigger
+                    Binding="{Binding IsFollowing}"
+                    TargetType="Button"
+                    Value="True">
+                    <Setter Property="BackgroundColor" Value="{StaticResource SurfaceVariant}" />
+                    <Setter Property="TextColor" Value="{StaticResource Error}" />
+                    <Setter Property="BorderColor" Value="{StaticResource SurfaceVariant}" />
+                    <Setter Property="BorderWidth" Value="0" />
+                </DataTrigger>
+            </Button.Triggers>
+        </Button>
+    </Grid>
+</ContentView>

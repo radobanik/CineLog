@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView
+    x:Class="CineLog.Mobile.Views.Search.MovieSearchTabView"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:CineLog.Mobile.Controls"
+    xmlns:helpers="clr-namespace:CineLog.Mobile.Helpers"
+    xmlns:models="clr-namespace:CineLog.Mobile.Core.Models;assembly=CineLog.Mobile.Core"
+    x:Name="Root">
+
+    <Grid Padding="16,0">
+        <VerticalStackLayout
+            HorizontalOptions="Center"
+            IsVisible="{Binding ShowEmptyState}"
+            Spacing="12"
+            VerticalOptions="Center">
+            <Label
+                FontSize="40"
+                HorizontalOptions="Center"
+                Style="{StaticResource PrimaryIconLabel}"
+                Text="{x:Static helpers:FontAwesomeIcons.Search}" />
+            <Label
+                HorizontalOptions="Center"
+                Style="{StaticResource BodyMediumLabel}"
+                Text="Search for films" />
+        </VerticalStackLayout>
+
+        <CollectionView x:Name="SkeletonGrid" IsVisible="{Binding ShowSkeleton}">
+            <CollectionView.ItemsLayout>
+                <GridItemsLayout
+                    HorizontalItemSpacing="10"
+                    Orientation="Vertical"
+                    Span="3"
+                    VerticalItemSpacing="10" />
+            </CollectionView.ItemsLayout>
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <controls:SkeletonMoviePosterCard />
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <CollectionView
+            IsVisible="{Binding ShowResults}"
+            ItemsSource="{Binding Movies}"
+            RemainingItemsThreshold="4"
+            RemainingItemsThresholdReachedCommand="{Binding LoadMoreCommand}"
+            SelectionMode="None">
+            <CollectionView.ItemsLayout>
+                <GridItemsLayout
+                    HorizontalItemSpacing="10"
+                    Orientation="Vertical"
+                    Span="3"
+                    VerticalItemSpacing="10" />
+            </CollectionView.ItemsLayout>
+
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:MovieItem">
+                    <Grid>
+                        <controls:MoviePosterCard
+                            Title="{Binding Title}"
+                            PosterPath="{Binding PosterPath}"
+                            RatingText="{Binding RatingText}" />
+
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding Source={x:Reference Root}, Path=BindingContext.GoToMovieCommand}" CommandParameter="{Binding .}" />
+                        </Grid.GestureRecognizers>
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+
+            <CollectionView.Footer>
+                <ActivityIndicator
+                    Margin="0,8"
+                    IsRunning="{Binding IsLoadingMore}"
+                    IsVisible="{Binding IsLoadingMore}" />
+            </CollectionView.Footer>
+        </CollectionView>
+
+        <VerticalStackLayout
+            HorizontalOptions="Center"
+            IsVisible="{Binding ShowNoResults}"
+            Spacing="12"
+            VerticalOptions="Center">
+            <Label
+                FontSize="40"
+                HorizontalOptions="Center"
+                Style="{StaticResource PrimaryIconLabel}"
+                Text="{x:Static helpers:FontAwesomeIcons.SearchMinus}" />
+            <Label
+                HorizontalOptions="Center"
+                Style="{StaticResource BodyMediumLabel}"
+                Text="No results found" />
+        </VerticalStackLayout>
+    </Grid>
+</ContentView>
