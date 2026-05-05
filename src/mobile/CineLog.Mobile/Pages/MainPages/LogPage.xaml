@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <pages:BasePage
+    x:Class="CineLog.Mobile.Pages.MainPages.LogPage"
+    x:DataType="vm:LogViewModel"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:helpers="clr-namespace:CineLog.Mobile.Helpers"
     xmlns:pages="clr-namespace:CineLog.Mobile.Pages"
-    x:Class="CineLog.Mobile.Pages.MainPages.LogPage"
+    xmlns:vm="clr-namespace:CineLog.Mobile.Core.ViewModels.Log;assembly=CineLog.Mobile.Core"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     ShowMenuButton="True"
     Title="Log">
 
@@ -19,7 +21,13 @@
                 HorizontalOptions="Center"
                 HorizontalTextAlignment="Center"
                 Style="{StaticResource CaptionLabel}"
-                Text="Placeholder" />
+                Text="Log films you've watched" />
+            <Button
+                Command="{Binding AddReviewCommand}"
+                HorizontalOptions="Center"
+                Margin="0,8,0,0"
+                Style="{StaticResource PrimaryButton}"
+                Text="Log a Film" />
         </VerticalStackLayout>
     </Grid>
 

@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<pages:BasePage
+    x:Class="CineLog.Mobile.Pages.Movies.AddReviewPage"
+    x:DataType="vm:AddReviewViewModel"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:helpers="clr-namespace:CineLog.Mobile.Helpers"
+    xmlns:models="clr-namespace:CineLog.Mobile.Core.Models;assembly=CineLog.Mobile.Core"
+    xmlns:pages="clr-namespace:CineLog.Mobile.Pages"
+    xmlns:vm="clr-namespace:CineLog.Mobile.Core.ViewModels.Movies;assembly=CineLog.Mobile.Core"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="{Binding Title}"
+    BackgroundColor="{StaticResource Background}"
+    ShowMenuButton="false">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20,24,20,48" Spacing="0">
+
+            <!-- Movie selection -->
+            <Label
+                Margin="4,0,0,8"
+                Style="{StaticResource OverlineLabel}"
+                Text="MOVIE" />
+
+            <!-- Selected movie card (visible when a movie is chosen) -->
+            <Border
+                IsVisible="{Binding HasSelectedMovie}"
+                BackgroundColor="{StaticResource Surface}"
+                Stroke="{StaticResource Border}"
+                StrokeThickness="1"
+                Margin="0,0,0,4">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="12" />
+                </Border.StrokeShape>
+                <Grid ColumnDefinitions="56,*,44" Padding="12" ColumnSpacing="12">
+                    <Border
+                        WidthRequest="44"
+                        HeightRequest="60"
+                        StrokeThickness="0"
+                        VerticalOptions="Center">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="6" />
+                        </Border.StrokeShape>
+                        <Image
+                            Source="{Binding SelectedMovie.PosterPath}"
+                            BackgroundColor="{StaticResource SurfaceVariant}"
+                            Aspect="AspectFill" />
+                    </Border>
+                    <Label
+                        Grid.Column="1"
+                        Text="{Binding SelectedMovie.Title}"
+                        Style="{StaticResource BodyMediumLabel}"
+                        FontAttributes="Bold"
+                        VerticalOptions="Center"
+                        LineBreakMode="TailTruncation"
+                        MaxLines="2" />
+                    <Label
+                        Grid.Column="2"
+                        Style="{StaticResource SecondaryIconLabel}"
+                        Text="{x:Static helpers:FontAwesomeIcons.Times}"
+                        VerticalOptions="Center"
+                        HorizontalOptions="End"
+                        Margin="0,0,4,0">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ClearMovieCommand}" />
+                        </Label.GestureRecognizers>
+                    </Label>
+                </Grid>
+            </Border>
+
+            <!-- Search input (visible when no movie selected) -->
+            <Border
+                IsVisible="{Binding HasNoSelectedMovie}"
+                Style="{StaticResource InputFieldBorder}">
+                <Grid ColumnDefinitions="Auto,*" Padding="16,0">
+                    <Label
+                        Grid.Column="0"
+                        Style="{StaticResource SecondaryIconLabel}"
+                        Text="{x:Static helpers:FontAwesomeIcons.Search}"
+                        VerticalOptions="Center" />
+                    <Entry
+                        Grid.Column="1"
+                        Style="{StaticResource CleanEntry}"
+                        Placeholder="Search for a film..."
+                        Text="{Binding MovieSearchQuery}"
+                        Margin="10,0" />
+                </Grid>
+            </Border>
+
+            <!-- Search results dropdown -->
+            <Border
+                IsVisible="{Binding ShowMovieResults}"
+                BackgroundColor="{StaticResource Surface}"
+                Stroke="{StaticResource Border}"
+                StrokeThickness="1"
+                Margin="0,4,0,0">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="12" />
+                </Border.StrokeShape>
+                <VerticalStackLayout BindableLayout.ItemsSource="{Binding MovieSearchResults}">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="models:MovieItem">
+                            <Grid
+                                Padding="12,10"
+                                ColumnDefinitions="48,*"
+                                ColumnSpacing="12">
+                                <Grid.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:AddReviewViewModel}}, Path=SelectMovieCommand}"
+                                        CommandParameter="{Binding .}" />
+                                </Grid.GestureRecognizers>
+                                <Border
+                                    WidthRequest="36"
+                                    HeightRequest="48"
+                                    StrokeThickness="0"
+                                    VerticalOptions="Center">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="4" />
+                                    </Border.StrokeShape>
+                                    <Image
+                                        Source="{Binding PosterPath}"
+                                        BackgroundColor="{StaticResource SurfaceVariant}"
+                                        Aspect="AspectFill" />
+                                </Border>
+                                <Label
+                                    Grid.Column="1"
+                                    Text="{Binding Title}"
+                                    Style="{StaticResource BodyMediumLabel}"
+                                    VerticalOptions="Center"
+                                    LineBreakMode="TailTruncation"
+                                    MaxLines="1" />
+                            </Grid>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Rating section -->
+            <Label
+                Margin="4,28,0,12"
+                Style="{StaticResource OverlineLabel}"
+                Text="RATING" />
+
+            <!-- Stars: tap or drag to set rating; 5 dim stars as background, filled stars overlaid -->
+            <Grid
+                x:Name="StarsContainer"
+                HorizontalOptions="Center"
+                Margin="0,0,0,6">
+                <Label
+                    Text="&#xF005;&#xF005;&#xF005;&#xF005;&#xF005;"
+                    FontFamily="FASolid"
+                    FontSize="36"
+                    TextColor="{StaticResource TextDisabled}"
+                    CharacterSpacing="4"
+                    HorizontalOptions="Start" />
+                <Label
+                    Text="{Binding StarDisplay}"
+                    FontFamily="FASolid"
+                    FontSize="36"
+                    TextColor="{StaticResource Primary}"
+                    CharacterSpacing="4"
+                    HorizontalOptions="Start" />
+                <Grid.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnStarsTapped" />
+                    <PanGestureRecognizer PanUpdated="OnStarsPanUpdated" />
+                </Grid.GestureRecognizers>
+            </Grid>
+
+            <!-- Optional review text -->
+            <Label
+                Margin="4,24,0,8"
+                Style="{StaticResource OverlineLabel}"
+                Text="REVIEW (OPTIONAL)" />
+            <Border Style="{StaticResource InputFieldBorder}">
+                <Editor
+                    Text="{Binding ReviewText}"
+                    Placeholder="Write your thoughts..."
+                    TextColor="{StaticResource OnBackground}"
+                    PlaceholderColor="{StaticResource TextSecondary}"
+                    BackgroundColor="Transparent"
+                    FontSize="14"
+                    AutoSize="Disabled"
+                    HeightRequest="120"
+                    Margin="16,8" />
+            </Border>
+
+            <!-- Cancel / Log Film buttons -->
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="12" Margin="0,32,0,0">
+                <Button
+                    Command="{Binding CancelCommand}"
+                    Style="{StaticResource SecondaryButton}"
+                    Text="Cancel" />
+                <Button
+                    Grid.Column="1"
+                    Command="{Binding SubmitCommand}"
+                    Style="{StaticResource PrimaryButton}"
+                    Text="Log Film" />
+            </Grid>
+
+            <ActivityIndicator
+                HorizontalOptions="Center"
+                IsRunning="{Binding IsBusy}"
+                IsVisible="{Binding IsBusy}"
+                Margin="0,16,0,0" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</pages:BasePage>

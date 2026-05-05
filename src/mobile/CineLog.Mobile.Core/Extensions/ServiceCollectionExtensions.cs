@@ -9,6 +9,7 @@ using CineLog.Mobile.Core.ViewModels.Movies;
 using CineLog.Mobile.Core.ViewModels.Profile;
 using CineLog.Mobile.Core.ViewModels.Search;
 using Microsoft.Extensions.DependencyInjection;
+using CineLog.Mobile.Core.ViewModels.Log;
 using CineLog.Mobile.Core.ViewModels.WatchList;
 
 namespace CineLog.Mobile.Core.Extensions;
@@ -97,6 +98,8 @@ public static class ServiceCollectionExtensions
         services.AddTransient<AddToWatchlistViewModel>();
         services.AddTransient<MovieReviewsViewModel>();
         services.AddTransient<EditProfileViewModel>();
+        services.AddTransient<LogViewModel>();
+        services.AddTransient<AddReviewViewModel>();
         return services;
     }
 }

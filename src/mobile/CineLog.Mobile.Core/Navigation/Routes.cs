@@ -19,6 +19,7 @@ public static class Routes
     public const string AddToWatchlist = nameof(AddToWatchlist);
     public const string MovieReviews = nameof(MovieReviews);
     public const string EditProfile = nameof(EditProfile);
+    public const string AddReview = nameof(AddReview);
 
     public const string AuthenticatedRoot = MainTabs + "/" + Home;
 
