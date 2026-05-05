@@ -4,12 +4,14 @@ using CineLog.Mobile.Core.Services.Interfaces;
 using CineLog.Mobile.Core.ViewModels.Base;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CineLog.Mobile.Core.Navigation;
 
 namespace CineLog.Mobile.Core.ViewModels.Search;
 
 public partial class UserSearchTabViewModel(
     IUserService userService,
     IFollowService followService,
+    INavigationService navigation,
     IAlertService alerts) : BaseViewModel(alerts)
 {
     private string currentQuery = string.Empty;
@@ -67,21 +69,15 @@ public partial class UserSearchTabViewModel(
 
     public async Task LoadHomeAsync(CancellationToken ct = default)
     {
-        if (HasQuery)
-            return;
+        RecommendedUsers.Clear();
+        AddUsers(RecommendedUsers, await userService.GetRecommendedUsersAsync(10, ct));
 
-        if (RecommendedUsers.Count == 0)
-            AddUsers(RecommendedUsers, await userService.GetRecommendedUsersAsync(10, ct));
+        FollowingUsers.Clear();
+        followingPage = 1;
+        var result = await followService.GetFollowingAsync(followingPage, ct);
+        AddUsers(FollowingUsers, result.Items);
+        followingHasMore = result.HasMore;
 
-        if (FollowingUsers.Count == 0)
-        {
-            followingPage = 1;
-            var result = await followService.GetFollowingAsync(followingPage, ct);
-            AddUsers(FollowingUsers, result.Items);
-            followingHasMore = result.HasMore;
-        }
-
-        RefreshVisibility();
     }
 
     [RelayCommand]
@@ -134,6 +130,18 @@ public partial class UserSearchTabViewModel(
         {
             await HandleErrorAsync(ex);
         }
+    }
+
+
+    [RelayCommand]
+    private Task OpenProfile(UserSearchRowViewModel? user)
+    {
+        if (user is null || user.Id == Guid.Empty)
+            return Task.CompletedTask;
+
+        return navigation.NavigateToAsync(
+            Routes.UserProfile,
+            new Dictionary<string, object> { ["userId"] = user.Id });
     }
 
     private async Task LoadMoreSearchResultsAsync()
