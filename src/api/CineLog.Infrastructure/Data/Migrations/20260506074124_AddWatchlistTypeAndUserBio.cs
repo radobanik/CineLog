@@ -1,11 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace CineLog.Infrastructure.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class AddWatchlistType : Migration
+    public partial class AddWatchlistTypeAndUserBio : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -23,6 +23,16 @@ namespace CineLog.Infrastructure.Data.Migrations
                 columns: new[] { "UserId", "Type" },
                 unique: true,
                 filter: "\"Type\" <> 0");
+
+            migrationBuilder.AlterColumn<string>(
+                name: "Bio",
+                table: "users",
+                type: "character varying(200)",
+                maxLength: 200,
+                nullable: true,
+                oldClrType: typeof(string),
+                oldType: "text",
+                oldNullable: true);
         }
 
         /// <inheritdoc />
@@ -35,6 +45,16 @@ namespace CineLog.Infrastructure.Data.Migrations
             migrationBuilder.DropColumn(
                 name: "Type",
                 table: "watchlists");
+
+            migrationBuilder.AlterColumn<string>(
+                name: "Bio",
+                table: "users",
+                type: "text",
+                nullable: true,
+                oldClrType: typeof(string),
+                oldType: "character varying(200)",
+                oldMaxLength: 200,
+                oldNullable: true);
         }
     }
 }

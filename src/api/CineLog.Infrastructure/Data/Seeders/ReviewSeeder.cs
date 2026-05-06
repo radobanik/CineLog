@@ -70,8 +70,10 @@ internal static class ReviewSeeder
         if (users.Count == 0 || movies.Count == 0)
             return;
 
-        await SeedFixedReviewsAsync(context, users, movies);
-        await SeedGeneratedReviewsAsync(context, users, movies);
+        var added = new HashSet<(Guid userId, Guid movieId)>();
+
+        await SeedFixedReviewsAsync(context, users, movies, added);
+        await SeedGeneratedReviewsAsync(context, users, movies, added);
 
         await context.SaveChangesAsync();
     }
@@ -79,7 +81,8 @@ internal static class ReviewSeeder
     private static async Task SeedFixedReviewsAsync(
         IAppDbContext context,
         IReadOnlyList<User> users,
-        IReadOnlyList<Movie> movies)
+        IReadOnlyList<Movie> movies,
+        HashSet<(Guid, Guid)> added)
     {
         foreach (var seed in FixedReviews)
         {
@@ -95,14 +98,16 @@ internal static class ReviewSeeder
                 movie.Id,
                 seed.Rating,
                 seed.ReviewText,
-                seed.ContainsSpoilers);
+                seed.ContainsSpoilers,
+                added);
         }
     }
 
     private static async Task SeedGeneratedReviewsAsync(
         IAppDbContext context,
         IReadOnlyList<User> users,
-        IReadOnlyList<Movie> movies)
+        IReadOnlyList<Movie> movies,
+        HashSet<(Guid, Guid)> added)
     {
         foreach (var (email, count) in ExtraReviewCounts)
         {
@@ -123,7 +128,8 @@ internal static class ReviewSeeder
                     movie.Id,
                     RatingFor(i),
                     ReviewTexts[i % ReviewTexts.Length],
-                    containsSpoilers: false);
+                    containsSpoilers: false,
+                    added);
             }
         }
     }
@@ -134,8 +140,12 @@ internal static class ReviewSeeder
         Guid movieId,
         decimal rating,
         string reviewText,
-        bool containsSpoilers)
+        bool containsSpoilers,
+        HashSet<(Guid, Guid)> added)
     {
+        if (!added.Add((userId, movieId)))
+            return;
+
         var exists = await context.Reviews.AnyAsync(r =>
             r.UserId == userId &&
             r.MovieId == movieId);

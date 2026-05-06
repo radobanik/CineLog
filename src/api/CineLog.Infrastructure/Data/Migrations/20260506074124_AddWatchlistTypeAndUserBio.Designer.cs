@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CineLog.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260504211937_AddWatchlistType")]
-    partial class AddWatchlistType
+    [Migration("20260506074124_AddWatchlistTypeAndUserBio")]
+    partial class AddWatchlistTypeAndUserBio
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -384,7 +384,8 @@ namespace CineLog.Infrastructure.Data.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("Bio")
-                        .HasColumnType("text");
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
