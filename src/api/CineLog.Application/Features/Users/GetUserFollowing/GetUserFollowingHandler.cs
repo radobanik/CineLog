@@ -12,15 +12,21 @@ public class GetUserFollowingHandler : IRequestHandler<GetUserFollowingQuery, Pa
     public GetUserFollowingHandler(IAppDbContext context) => _context = context;
 
     public async Task<PagedResponse<UserSummaryResponse>> Handle(
-        GetUserFollowingQuery request,
-        CancellationToken cancellationToken)
+    GetUserFollowingQuery request,
+    CancellationToken cancellationToken)
     {
         var query = _context.UserFollows
             .Where(f => f.FollowerId == request.UserId)
-            .Join(_context.Users,
+            .Join(
+                _context.Users,
                 f => f.FollowedId,
                 u => u.Id,
-                (f, u) => new UserSummaryResponse(u.Id, u.UserName!, u.AvatarUrl));
+                (f, u) => new { f, u })
+            .Select(x => new UserSummaryResponse(
+                x.u.Id,
+                x.u.UserName ?? string.Empty,
+                x.u.AvatarUrl,
+                _context.Reviews.Count(r => r.UserId == x.u.Id)));
 
         var totalCount = await query.CountAsync(cancellationToken);
 
@@ -29,6 +35,11 @@ public class GetUserFollowingHandler : IRequestHandler<GetUserFollowingQuery, Pa
             .Take(request.PageSize)
             .ToListAsync(cancellationToken);
 
-        return PagedResponse<UserSummaryResponse>.Create(items, request.Page, request.PageSize, totalCount);
+        return PagedResponse<UserSummaryResponse>.Create(
+            items,
+            request.Page,
+            request.PageSize,
+            totalCount);
     }
+
 }

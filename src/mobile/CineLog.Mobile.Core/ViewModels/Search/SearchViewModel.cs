@@ -1,6 +1,4 @@
-using System.Collections.ObjectModel;
-using CineLog.Mobile.Core.Models;
-using CineLog.Mobile.Core.Navigation;
+using CineLog.Mobile.Core.Models.Search;
 using CineLog.Mobile.Core.Services.Interfaces;
 using CineLog.Mobile.Core.ViewModels.Base;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -10,122 +8,67 @@ namespace CineLog.Mobile.Core.ViewModels.Search;
 
 public partial class SearchViewModel : BaseViewModel
 {
-    private readonly ISearchService _searchService;
-    private readonly IMovieDetailNavigationContext _movieDetailNav;
-    private readonly INavigationService _navigation;
-    private CancellationTokenSource? _searchCts;
-    private int _currentPage;
+    private CancellationTokenSource? searchCts;
 
-    [ObservableProperty] private string _searchQuery = string.Empty;
-    [ObservableProperty] private bool _showEmptyState = true;
-    [ObservableProperty] private bool _showSkeleton;
-    [ObservableProperty] private bool _hasResults;
-    [ObservableProperty] private bool _showNoResults;
-    [ObservableProperty] private bool _hasQuery;
-    [ObservableProperty] private bool _isLoadingMore;
-    [ObservableProperty] private bool _canLoadMore;
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(HasQuery))]
+    private string searchQuery = string.Empty;
 
-    public ObservableCollection<MovieItem> Movies { get; } = [];
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsMoviesSelected))]
+    [NotifyPropertyChangedFor(nameof(IsPeopleSelected))]
+    private SearchSection selectedSection = SearchSection.Movies;
 
-    public SearchViewModel(ISearchService searchService, IMovieDetailNavigationContext movieDetailNav, INavigationService navigation, IAlertService alerts) : base(alerts)
+    public MovieSearchTabViewModel Movies { get; }
+    public UserSearchTabViewModel People { get; }
+
+    public bool HasQuery => !string.IsNullOrWhiteSpace(SearchQuery);
+    public bool IsMoviesSelected => SelectedSection == SearchSection.Movies;
+    public bool IsPeopleSelected => SelectedSection == SearchSection.People;
+
+    public SearchViewModel(
+        MovieSearchTabViewModel movies,
+        UserSearchTabViewModel people,
+        IAlertService alerts) : base(alerts)
     {
-        _searchService = searchService;
-        _movieDetailNav = movieDetailNav;
-        _navigation = navigation;
+        Movies = movies;
+        People = people;
         Title = "Search";
     }
 
-    [RelayCommand]
-    public Task GoToMovie(MovieItem movie)
-    {
-        _movieDetailNav.MovieId = movie.Id;
-        return _navigation.NavigateToAsync(Routes.MovieDetail);
-    }
+    public override Task OnAppearingAsync() =>
+        IsPeopleSelected ? People.LoadHomeAsync() : Task.CompletedTask;
 
-    partial void OnSearchQueryChanged(string value)
-    {
-        HasQuery = !string.IsNullOrWhiteSpace(value);
-        _ = PerformSearchAsync(value);
-    }
+    partial void OnSearchQueryChanged(string value) => _ = SearchDebouncedAsync(value);
+    partial void OnSelectedSectionChanged(SearchSection value) => _ = SearchDebouncedAsync(SearchQuery);
 
-    [RelayCommand]
-    private void Clear()
-    {
-        SearchQuery = string.Empty;
-    }
+    [RelayCommand] private void SelectMovies() => SelectedSection = SearchSection.Movies;
+    [RelayCommand] private void SelectPeople() => SelectedSection = SearchSection.People;
+    [RelayCommand] private void Clear() => SearchQuery = string.Empty;
 
-    [RelayCommand]
-    private async Task LoadMore()
+    private async Task SearchDebouncedAsync(string query)
     {
-        if (IsLoadingMore || !CanLoadMore || IsBusy) return;
+        searchCts?.Cancel();
+        searchCts?.Dispose();
+        searchCts = new CancellationTokenSource();
+
+        var ct = searchCts.Token;
 
         try
         {
-            IsLoadingMore = true;
-            _currentPage++;
-            var (movies, hasMore) = await _searchService.SearchMoviesAsync(SearchQuery, _currentPage);
+            await Task.Delay(350, ct);
 
-            foreach (var movie in movies)
-                Movies.Add(movie);
-
-            CanLoadMore = hasMore;
+            if (IsMoviesSelected)
+                await Movies.SearchAsync(query, ct);
+            else
+                await People.SearchAsync(query, ct);
+        }
+        catch (OperationCanceledException)
+        {
         }
         catch (Exception ex)
         {
-            _currentPage--;
             await HandleErrorAsync(ex);
-        }
-        finally
-        {
-            IsLoadingMore = false;
-        }
-    }
-
-    private async Task PerformSearchAsync(string query)
-    {
-        _searchCts?.Cancel();
-        _searchCts = new CancellationTokenSource();
-        var cts = _searchCts;
-
-        try
-        {
-            await Task.Delay(400, cts.Token);
-
-            if (string.IsNullOrWhiteSpace(query))
-            {
-                Movies.Clear();
-                CanLoadMore = false;
-                _currentPage = 0;
-                ShowEmptyState = true;
-                ShowNoResults = false;
-                HasResults = false;
-                return;
-            }
-
-            ShowEmptyState = false;
-            ShowNoResults = false;
-            ShowSkeleton = true;
-            HasResults = false;
-            _currentPage = 1;
-            var (movies, hasMore) = await _searchService.SearchMoviesAsync(query, _currentPage, cts.Token);
-
-            Movies.Clear();
-            foreach (var movie in movies)
-                Movies.Add(movie);
-
-            HasResults = Movies.Count > 0;
-            ShowNoResults = !HasResults;
-            CanLoadMore = hasMore;
-        }
-        catch (OperationCanceledException) { }
-        catch (Exception ex)
-        {
-            await HandleErrorAsync(ex);
-        }
-        finally
-        {
-            if (!cts.IsCancellationRequested)
-                ShowSkeleton = false;
         }
     }
 }

@@ -52,10 +52,19 @@
     <Compile Update="Pages\MainPages\WatchListPage.xaml.cs">
       <DependentUpon>WatchListPage.xaml</DependentUpon>
     </Compile>
+    <Compile Update="View\Search\UserSearchRowView.xaml.cs">
+      <DependentUpon>UserSearchRowView.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>
     <None Update="Pages\Movies\MovieWatchListPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
+    <None Update="View\Search\MovieSearchTabView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
+    <None Update="View\Search\PeopleSearchTabView.xaml">
       <Generator>MSBuild:Compile</Generator>
     </None>
     <None Update="View\WatchList\WatchListNameFormView.xaml">

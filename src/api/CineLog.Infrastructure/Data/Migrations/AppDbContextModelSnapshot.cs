@@ -381,7 +381,8 @@ namespace CineLog.Infrastructure.Data.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("Bio")
-                        .HasColumnType("text");
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -490,10 +491,17 @@ namespace CineLog.Infrastructure.Data.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
+                    b.Property<int>("Type")
+                        .HasColumnType("integer");
+
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId", "Type")
+                        .IsUnique()
+                        .HasFilter("\"Type\" <> 0");
 
                     b.ToTable("watchlists", (string)null);
                 });

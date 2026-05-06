@@ -8,6 +8,5 @@ public partial class SearchPage : BasePage
     {
         InitializeComponent();
         BindingContext = vm;
-        SkeletonGrid.ItemsSource = Enumerable.Range(0, 12).ToList();
     }
 }

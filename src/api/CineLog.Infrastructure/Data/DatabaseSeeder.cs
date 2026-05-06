@@ -13,11 +13,15 @@ public static class DatabaseSeeder
         var userManager = serviceProvider.GetRequiredService<UserManager<User>>();
         var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
         var blobStorage = serviceProvider.GetRequiredService<IBlobStorageService>();
-        await UserSeeder.SeedAsync(userManager, roleManager, blobStorage);
+        var userDefaults = serviceProvider.GetRequiredService<IUserDefaultsService>();
+        await UserSeeder.SeedAsync(userManager, roleManager, blobStorage, userDefaults);
 
         var dbContext = serviceProvider.GetRequiredService<CineLog.Domain.Interfaces.IAppDbContext>();
+        await UserDefaultsSeeder.SeedAsync(dbContext, userDefaults);
+
         await MovieSeeder.SeedAsync(dbContext);
         await ReviewSeeder.SeedAsync(dbContext);
+        await UserFollowSeeder.SeedAsync(dbContext);
         await FavoriteSeeder.SeedAsync(dbContext);
         await WatchlistSeeder.SeedAsync(dbContext);
     }

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView
+    x:Class="CineLog.Mobile.Views.Search.PeopleSearchTabView"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:helpers="clr-namespace:CineLog.Mobile.Helpers"
+    xmlns:searchViews="clr-namespace:CineLog.Mobile.Views.Search"
+    xmlns:searchVm="clr-namespace:CineLog.Mobile.Core.ViewModels.Search;assembly=CineLog.Mobile.Core"
+    x:Name="Root">
+
+    <Grid Padding="16,0">
+        <Grid
+            IsVisible="{Binding ShowHome}"
+            RowDefinitions="*,*"
+            RowSpacing="12">
+
+            <Grid Grid.Row="0" RowDefinitions="Auto,*">
+                <Label
+                    Grid.Row="0"
+                    Margin="0,0,0,8"
+                    Style="{StaticResource SectionHeaderLabel}"
+                    Text="Popular reviewers" />
+
+                <CollectionView
+                    Grid.Row="1"
+                    ItemsSource="{Binding RecommendedUsers}"
+                    SelectionMode="None">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="searchVm:UserSearchRowViewModel">
+                            <searchViews:UserSearchRowView ToggleFollowCommand="{Binding Source={x:Reference Root}, Path=BindingContext.ToggleFollowCommand}" />
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </Grid>
+
+            <BoxView
+                Grid.Row="0"
+                Style="{StaticResource ListDivider}"
+                VerticalOptions="End" />
+
+            <Grid Grid.Row="1" RowDefinitions="Auto,*">
+                <Label
+                    Grid.Row="0"
+                    Margin="0,0,0,8"
+                    Style="{StaticResource SectionHeaderLabel}"
+                    Text="Following" />
+
+                <CollectionView
+                    Grid.Row="1"
+                    ItemsSource="{Binding FollowingUsers}"
+                    RemainingItemsThreshold="4"
+                    RemainingItemsThresholdReachedCommand="{Binding LoadMoreCommand}"
+                    SelectionMode="None">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="searchVm:UserSearchRowViewModel">
+                            <searchViews:UserSearchRowView ToggleFollowCommand="{Binding Source={x:Reference Root}, Path=BindingContext.ToggleFollowCommand}" />
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+
+                    <CollectionView.Footer>
+                        <ActivityIndicator
+                            Margin="0,8"
+                            IsRunning="{Binding IsLoadingMore}"
+                            IsVisible="{Binding IsLoadingMore}" />
+                    </CollectionView.Footer>
+                </CollectionView>
+            </Grid>
+        </Grid>
+
+        <CollectionView
+            IsVisible="{Binding ShowResults}"
+            ItemsSource="{Binding SearchResults}"
+            RemainingItemsThreshold="4"
+            RemainingItemsThresholdReachedCommand="{Binding LoadMoreCommand}"
+            SelectionMode="None">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="searchVm:UserSearchRowViewModel">
+                    <searchViews:UserSearchRowView ToggleFollowCommand="{Binding Source={x:Reference Root}, Path=BindingContext.ToggleFollowCommand}" />
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+
+            <CollectionView.Footer>
+                <ActivityIndicator
+                    Margin="0,8"
+                    IsRunning="{Binding IsLoadingMore}"
+                    IsVisible="{Binding IsLoadingMore}" />
+            </CollectionView.Footer>
+        </CollectionView>
+
+        <VerticalStackLayout
+            HorizontalOptions="Center"
+            IsVisible="{Binding ShowNoResults}"
+            Spacing="12"
+            VerticalOptions="Center">
+            <Label
+                FontSize="40"
+                HorizontalOptions="Center"
+                Style="{StaticResource PrimaryIconLabel}"
+                Text="{x:Static helpers:FontAwesomeIcons.SearchMinus}" />
+            <Label
+                HorizontalOptions="Center"
+                Style="{StaticResource BodyMediumLabel}"
+                Text="No results found" />
+        </VerticalStackLayout>
+    </Grid>
+</ContentView>

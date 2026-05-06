@@ -1,39 +1,58 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <pages:BasePage
     x:Class="CineLog.Mobile.Pages.MainPages.SearchPage"
-    x:DataType="vm:SearchViewModel"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:controls="clr-namespace:CineLog.Mobile.Controls"
-    xmlns:helpers="clr-namespace:CineLog.Mobile.Helpers"
-    xmlns:home="clr-namespace:CineLog.Mobile.Core.Models;assembly=CineLog.Mobile.Core"
-    xmlns:pages="clr-namespace:CineLog.Mobile.Pages"
-    xmlns:vm="clr-namespace:CineLog.Mobile.Core.ViewModels.Search;assembly=CineLog.Mobile.Core"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    ShowMenuButton="True"
-    Title="Search">
+    xmlns:helpers="clr-namespace:CineLog.Mobile.Helpers"
+    xmlns:pages="clr-namespace:CineLog.Mobile.Pages"
+    xmlns:searchViews="clr-namespace:CineLog.Mobile.Views.Search"
+    xmlns:vm="clr-namespace:CineLog.Mobile.Core.ViewModels.Search;assembly=CineLog.Mobile.Core"
+    Title="Search"
+    x:DataType="vm:SearchViewModel"
+    ShowMenuButton="True">
 
-    <Grid RowDefinitions="Auto, *">
+    <pages:BasePage.Resources>
+        <Style
+            x:Key="FollowToggleButton"
+            BasedOn="{StaticResource PrimaryButton}"
+            TargetType="Button">
+            <Setter Property="HeightRequest" Value="34" />
+            <Setter Property="WidthRequest" Value="92" />
+            <Setter Property="MinimumWidthRequest" Value="92" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
+            <Setter Property="TextColor" Value="{StaticResource OnPrimary}" />
+            <Setter Property="BorderColor" Value="{StaticResource Primary}" />
+            <Setter Property="BorderWidth" Value="0" />
+        </Style>
+    </pages:BasePage.Resources>
 
-        <Border Grid.Row="0" Style="{StaticResource InputFieldBorder}" Margin="16,12">
-            <Grid ColumnDefinitions="Auto, *, Auto" Padding="16,0">
+    <Grid RowDefinitions="Auto,Auto,*">
+        <Border
+            Grid.Row="0"
+            Margin="16,12,16,8"
+            Style="{StaticResource InputFieldBorder}">
+            <Grid Padding="16,0" ColumnDefinitions="Auto,*,Auto">
                 <Label
                     Grid.Column="0"
                     Style="{StaticResource SecondaryIconLabel}"
                     Text="{x:Static helpers:FontAwesomeIcons.Search}"
                     VerticalOptions="Center" />
+
                 <Entry
-                    x:Name="SearchEntry"
                     Grid.Column="1"
+                    Margin="10,0"
+                    Placeholder="Search films, people..."
                     Style="{StaticResource CleanEntry}"
-                    Placeholder="Search films..."
-                    Text="{Binding SearchQuery}"
-                    Margin="10,0" />
+                    Text="{Binding SearchQuery}" />
+
                 <Label
                     Grid.Column="2"
+                    IsVisible="{Binding HasQuery}"
                     Style="{StaticResource SecondaryIconLabel}"
                     Text="{x:Static helpers:FontAwesomeIcons.Times}"
-                    VerticalOptions="Center"
-                    IsVisible="{Binding HasQuery}">
+                    VerticalOptions="Center">
                     <Label.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding ClearCommand}" />
                     </Label.GestureRecognizers>
@@ -41,85 +60,49 @@
             </Grid>
         </Border>
 
-        <Grid Grid.Row="1" Padding="16,0">
+        <HorizontalStackLayout
+            Grid.Row="1"
+            Margin="16,0,16,8"
+            Spacing="8">
+            <Button
+                Command="{Binding SelectMoviesCommand}"
+                Style="{StaticResource SecondaryButton}"
+                Text="Movies">
+                <Button.Triggers>
+                    <DataTrigger
+                        Binding="{Binding IsMoviesSelected}"
+                        TargetType="Button"
+                        Value="True">
+                        <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
+                        <Setter Property="TextColor" Value="{StaticResource OnPrimary}" />
+                        <Setter Property="BorderWidth" Value="0" />
+                    </DataTrigger>
+                </Button.Triggers>
+            </Button>
 
-            <VerticalStackLayout
-                VerticalOptions="Center"
-                HorizontalOptions="Center"
-                Spacing="12"
-                IsVisible="{Binding ShowEmptyState}">
-                <Label
-                    Style="{StaticResource PrimaryIconLabel}"
-                    FontSize="40"
-                    HorizontalOptions="Center"
-                    Text="{x:Static helpers:FontAwesomeIcons.Search}" />
-                <Label
-                    Style="{StaticResource BodyMediumLabel}"
-                    HorizontalOptions="Center"
-                    Text="Search for films" />
-            </VerticalStackLayout>
+            <Button
+                Command="{Binding SelectPeopleCommand}"
+                Style="{StaticResource SecondaryButton}"
+                Text="People">
+                <Button.Triggers>
+                    <DataTrigger
+                        Binding="{Binding IsPeopleSelected}"
+                        TargetType="Button"
+                        Value="True">
+                        <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
+                        <Setter Property="TextColor" Value="{StaticResource OnPrimary}" />
+                        <Setter Property="BorderWidth" Value="0" />
+                    </DataTrigger>
+                </Button.Triggers>
+            </Button>
+        </HorizontalStackLayout>
 
-            <CollectionView
-                x:Name="SkeletonGrid"
-                IsVisible="{Binding ShowSkeleton}">
-                <CollectionView.ItemsLayout>
-                    <GridItemsLayout Orientation="Vertical" Span="3" HorizontalItemSpacing="10" VerticalItemSpacing="10" />
-                </CollectionView.ItemsLayout>
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                        <controls:SkeletonMoviePosterCard />
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
+        <Grid Grid.Row="2" IsVisible="{Binding IsMoviesSelected}">
+            <searchViews:MovieSearchTabView BindingContext="{Binding Movies}" />
+        </Grid>
 
-            <CollectionView
-                ItemsSource="{Binding Movies}"
-                IsVisible="{Binding HasResults}"
-                RemainingItemsThreshold="4"
-                RemainingItemsThresholdReachedCommand="{Binding LoadMoreCommand}">
-                <CollectionView.ItemsLayout>
-                    <GridItemsLayout Orientation="Vertical" Span="3" HorizontalItemSpacing="10" VerticalItemSpacing="10" />
-                </CollectionView.ItemsLayout>
-                <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="home:MovieItem">
-                        <Grid>
-                            <controls:MoviePosterCard
-                                Title="{Binding Title}"
-                                PosterPath="{Binding PosterPath}"
-                                RatingText="{Binding RatingText}" />
-                            <Grid.GestureRecognizers>
-                                <TapGestureRecognizer
-                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:SearchViewModel}}, Path=GoToMovieCommand}"
-                                    CommandParameter="{Binding .}" />
-                            </Grid.GestureRecognizers>
-                        </Grid>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-                <CollectionView.Footer>
-                    <ActivityIndicator
-                        IsRunning="{Binding IsLoadingMore}"
-                        IsVisible="{Binding IsLoadingMore}"
-                        Margin="0,8" />
-                </CollectionView.Footer>
-            </CollectionView>
-
-            <VerticalStackLayout
-                VerticalOptions="Center"
-                HorizontalOptions="Center"
-                Spacing="12"
-                IsVisible="{Binding ShowNoResults}">
-                <Label
-                    Style="{StaticResource PrimaryIconLabel}"
-                    FontSize="40"
-                    HorizontalOptions="Center"
-                    Text="{x:Static helpers:FontAwesomeIcons.SearchMinus}" />
-                <Label
-                    Style="{StaticResource BodyMediumLabel}"
-                    HorizontalOptions="Center"
-                    Text="No results found" />
-            </VerticalStackLayout>
-
+        <Grid Grid.Row="2" IsVisible="{Binding IsPeopleSelected}">
+            <searchViews:PeopleSearchTabView BindingContext="{Binding People}" />
         </Grid>
     </Grid>
-
 </pages:BasePage>

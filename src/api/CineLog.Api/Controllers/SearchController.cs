@@ -4,6 +4,8 @@ using CineLog.Application.Features.Movies.SearchMovies;
 using CineLog.Application.Features.People;
 using CineLog.Application.Features.People.SearchPeople;
 using CineLog.Application.Features.Search;
+using CineLog.Application.Features.Users;
+using CineLog.Application.Features.Users.SearchUsers;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -49,4 +51,16 @@ public class SearchController : ControllerBase
         [FromQuery] int pageSize = 20,
         CancellationToken ct = default)
         => Ok(await _sender.Send(new SearchPeopleQuery(query, page, pageSize), ct));
+
+
+    /// <summary>Search users.</summary>
+    [HttpGet("users")]
+    [ProducesResponseType(typeof(PagedResponse<DiscoverUserResponse>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<PagedResponse<DiscoverUserResponse>>> SearchUsers(
+        [FromQuery] string query,
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 20,
+        CancellationToken ct = default)
+        => Ok(await _sender.Send(new SearchUsersQuery(query, page, pageSize), ct));
+
 }

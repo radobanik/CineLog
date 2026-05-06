@@ -9,9 +9,11 @@ namespace CineLog.Mobile.Core.Models.WatchList
         public Guid Id { get; init; }
         public string Name { get; init; } = string.Empty;
         public int ItemCount { get; set; }
-        public bool IsFavorites { get; init; }
+        public WatchListType Type { get; init; } = WatchListType.Custom;
 
-        public bool CanEdit => !IsFavorites;
-        public bool CanDelete => !IsFavorites;
+        public bool IsFavorites => Type == WatchListType.Favorites;
+        public bool IsDefault => Type is WatchListType.Watched or WatchListType.WatchLater;
+        public bool CanEdit => Type == WatchListType.Custom;
+        public bool CanDelete => Type == WatchListType.Custom;
     }
 }

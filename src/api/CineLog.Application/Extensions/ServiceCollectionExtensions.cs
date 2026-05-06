@@ -1,4 +1,5 @@
 using CineLog.Application.Behaviors;
+using CineLog.Application.Common;
 using FluentValidation;
 using Mapster;
 using MapsterMapper;
@@ -27,6 +28,8 @@ public static class ServiceCollectionExtensions
         config.Scan(assembly);
         services.AddSingleton(config);
         services.AddScoped<IMapper, ServiceMapper>();
+        services.AddScoped<IUserDefaultsService, UserDefaultsService>();
+
 
         return services;
     }

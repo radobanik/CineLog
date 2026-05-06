@@ -45,4 +45,17 @@ public partial interface ISearchClient
     /// <returns>OK</returns>
     /// <exception cref = "ApiException">A server side error occurred.</exception>
     System.Threading.Tasks.Task<PersonSummaryResponsePagedResponse> SearchPeopleAsync(string? query, int? page, int? pageSize, System.Threading.CancellationToken cancellationToken);
+    /// <summary>
+    /// Search users.
+    /// </summary>
+    /// <returns>OK</returns>
+    /// <exception cref = "ApiException">A server side error occurred.</exception>
+    System.Threading.Tasks.Task<DiscoverUserResponsePagedResponse> SearchUsersAsync(string? query, int? page, int? pageSize);
+    /// <param name = "cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <summary>
+    /// Search users.
+    /// </summary>
+    /// <returns>OK</returns>
+    /// <exception cref = "ApiException">A server side error occurred.</exception>
+    System.Threading.Tasks.Task<DiscoverUserResponsePagedResponse> SearchUsersAsync(string? query, int? page, int? pageSize, System.Threading.CancellationToken cancellationToken);
 }
