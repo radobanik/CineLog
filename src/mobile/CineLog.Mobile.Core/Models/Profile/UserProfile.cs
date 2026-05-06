@@ -9,4 +9,5 @@ public sealed class UserProfile
     public int FilmsCount { get; init; }
     public int FollowersCount { get; init; }
     public int FollowingCount { get; init; }
+    public bool IsFollowing { get; init; }
 }

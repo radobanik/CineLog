@@ -42,7 +42,7 @@ public sealed class MovieDetailService(IMoviesClient moviesClient) : IMovieDetai
             AverageRating = response.AverageRating,
             RatingsCountText = ratingsCountText,
             Cast = cast,
-            IsFavorite = response.IsFavorite,
+            IsFavorite = (bool)response.IsFavorite,
         };
     }
 

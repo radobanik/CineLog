@@ -27,7 +27,7 @@
                     SelectionMode="None">
                     <CollectionView.ItemTemplate>
                         <DataTemplate x:DataType="searchVm:UserSearchRowViewModel">
-                            <searchViews:UserSearchRowView ToggleFollowCommand="{Binding Source={x:Reference Root}, Path=BindingContext.ToggleFollowCommand}" />
+                            <searchViews:UserSearchRowView OpenProfileCommand="{Binding Source={x:Reference Root}, Path=BindingContext.OpenProfileCommand}" ToggleFollowCommand="{Binding Source={x:Reference Root}, Path=BindingContext.ToggleFollowCommand}" />
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
                 </CollectionView>
@@ -38,32 +38,35 @@
                 Style="{StaticResource ListDivider}"
                 VerticalOptions="End" />
 
-            <Grid Grid.Row="1" RowDefinitions="Auto,*">
+            <Grid Grid.Row="1" RowDefinitions="Auto,*,Auto">
                 <Label
                     Grid.Row="0"
                     Margin="0,0,0,8"
                     Style="{StaticResource SectionHeaderLabel}"
                     Text="Following" />
 
-                <CollectionView
-                    Grid.Row="1"
-                    ItemsSource="{Binding FollowingUsers}"
-                    RemainingItemsThreshold="4"
-                    RemainingItemsThresholdReachedCommand="{Binding LoadMoreCommand}"
-                    SelectionMode="None">
-                    <CollectionView.ItemTemplate>
-                        <DataTemplate x:DataType="searchVm:UserSearchRowViewModel">
-                            <searchViews:UserSearchRowView ToggleFollowCommand="{Binding Source={x:Reference Root}, Path=BindingContext.ToggleFollowCommand}" />
-                        </DataTemplate>
-                    </CollectionView.ItemTemplate>
+                <ScrollView Grid.Row="1">
+                    <VerticalStackLayout BindableLayout.ItemsSource="{Binding FollowingUsers}" Spacing="0">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="searchVm:UserSearchRowViewModel">
+                                <searchViews:UserSearchRowView OpenProfileCommand="{Binding Source={x:Reference Root}, Path=BindingContext.OpenProfileCommand}" ToggleFollowCommand="{Binding Source={x:Reference Root}, Path=BindingContext.ToggleFollowCommand}" />
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </VerticalStackLayout>
+                </ScrollView>
 
-                    <CollectionView.Footer>
-                        <ActivityIndicator
-                            Margin="0,8"
-                            IsRunning="{Binding IsLoadingMore}"
-                            IsVisible="{Binding IsLoadingMore}" />
-                    </CollectionView.Footer>
-                </CollectionView>
+                <VerticalStackLayout Grid.Row="2" Spacing="4">
+                    <ActivityIndicator
+                        Margin="0,8"
+                        IsRunning="{Binding IsLoadingMore}"
+                        IsVisible="{Binding IsLoadingMore}" />
+
+                    <Button
+                        Command="{Binding LoadMoreCommand}"
+                        IsVisible="{Binding CanLoadMore}"
+                        Style="{StaticResource TextButton}"
+                        Text="Load more" />
+                </VerticalStackLayout>
             </Grid>
         </Grid>
 
@@ -75,7 +78,7 @@
             SelectionMode="None">
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="searchVm:UserSearchRowViewModel">
-                    <searchViews:UserSearchRowView ToggleFollowCommand="{Binding Source={x:Reference Root}, Path=BindingContext.ToggleFollowCommand}" />
+                    <searchViews:UserSearchRowView OpenProfileCommand="{Binding Source={x:Reference Root}, Path=BindingContext.OpenProfileCommand}" ToggleFollowCommand="{Binding Source={x:Reference Root}, Path=BindingContext.ToggleFollowCommand}" />
                 </DataTemplate>
             </CollectionView.ItemTemplate>
 

@@ -12,8 +12,8 @@
     Title="Profile"
     x:DataType="vm:ProfileViewModel"
     NavBarRightCommand="{Binding LogoutCommand}"
-    NavBarRightIcon="{x:Static helpers:FontAwesomeIcons.SignOut}"
-    ShowMenuButton="True">
+    NavBarRightIcon="{Binding ProfileNavRightIcon}"
+    ShowMenuButton="{Binding IsOwnProfile}">
 
     <ScrollView>
         <VerticalStackLayout Padding="20" Spacing="25">
@@ -31,7 +31,7 @@
                     <Border.StrokeShape>
                         <RoundRectangle CornerRadius="40" />
                     </Border.StrokeShape>
-                    <Image Source="{Binding AvatarUrl}" />
+                    <Image Aspect="AspectFill" Source="{Binding AvatarUrl}" />
                 </Border>
 
                 <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
@@ -75,21 +75,28 @@
                     </Label>
                 </VerticalStackLayout>
 
-                <Label
-                    Grid.Column="2"
-                    FontFamily="FASolid"
-                    FontSize="18"
-                    HeightRequest="44"
-                    HorizontalTextAlignment="Center"
-                    Text="{x:Static helpers:FontAwesomeIcons.Edit}"
-                    TextColor="{StaticResource TextSecondary}"
-                    VerticalOptions="Start"
-                    VerticalTextAlignment="Center"
-                    WidthRequest="44">
-                    <Label.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding OpenEditProfileCommand}" />
-                    </Label.GestureRecognizers>
-                </Label>
+                <Grid Grid.Column="2" VerticalOptions="Start">
+                    <Label
+                        FontFamily="FASolid"
+                        FontSize="18"
+                        HeightRequest="44"
+                        HorizontalTextAlignment="Center"
+                        IsVisible="{Binding ShowSelfActions}"
+                        Text="{x:Static helpers:FontAwesomeIcons.Edit}"
+                        TextColor="{StaticResource TextSecondary}"
+                        VerticalTextAlignment="Center"
+                        WidthRequest="44">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding OpenEditProfileCommand}" />
+                        </Label.GestureRecognizers>
+                    </Label>
+
+                    <controls:FollowToggleButtonView
+                        Command="{Binding ToggleFollowCommand}"
+                        IsFollowing="{Binding IsFollowing}"
+                        IsVisible="{Binding ShowFollowButton}"
+                        Text="{Binding FollowButtonText}" />
+                </Grid>
             </Grid>
 
             <controls:ProfileStatsSkeleton IsVisible="{Binding IsBusy}" />
@@ -102,6 +109,7 @@
                 <Border.StrokeShape>
                     <RoundRectangle CornerRadius="10" />
                 </Border.StrokeShape>
+
                 <Grid ColumnDefinitions="*, *, *, *">
                     <VerticalStackLayout Grid.Column="0" HorizontalOptions="Center">
                         <Label
@@ -110,6 +118,7 @@
                             Text="{Binding FilmsCount}" />
                         <Label Style="{StaticResource OverlineLabel}" Text="FILMS" />
                     </VerticalStackLayout>
+
                     <VerticalStackLayout Grid.Column="1" HorizontalOptions="Center">
                         <Label
                             HorizontalOptions="Center"
@@ -117,6 +126,7 @@
                             Text="67" />
                         <Label Style="{StaticResource OverlineLabel}" Text="THIS YEAR" />
                     </VerticalStackLayout>
+
                     <VerticalStackLayout Grid.Column="2" HorizontalOptions="Center">
                         <Label
                             HorizontalOptions="Center"
@@ -124,6 +134,7 @@
                             Text="{Binding FollowersCount}" />
                         <Label Style="{StaticResource OverlineLabel}" Text="FOLLOWERS" />
                     </VerticalStackLayout>
+
                     <VerticalStackLayout Grid.Column="3" HorizontalOptions="Center">
                         <Label
                             HorizontalOptions="Center"
@@ -134,7 +145,7 @@
                 </Grid>
             </Border>
 
-            <VerticalStackLayout Spacing="10">
+            <VerticalStackLayout IsVisible="{Binding IsOwnProfile}" Spacing="10">
                 <Label Style="{StaticResource SectionHeaderLabel}" Text="FAVORITE FILMS" />
 
                 <controls:FavouriteFilmsSkeleton IsVisible="{Binding IsBusy}" />
@@ -147,9 +158,11 @@
                             Text="No favorite films yet."
                             VerticalOptions="Center" />
                     </CollectionView.EmptyView>
+
                     <CollectionView.ItemsLayout>
                         <LinearItemsLayout ItemSpacing="10" Orientation="Horizontal" />
                     </CollectionView.ItemsLayout>
+
                     <CollectionView.ItemTemplate>
                         <DataTemplate x:DataType="models:MovieItem">
                             <Grid>
@@ -169,6 +182,7 @@
             <VerticalStackLayout Spacing="15">
                 <Grid ColumnDefinitions="*, Auto">
                     <Label Style="{StaticResource SectionHeaderLabel}" Text="RECENT DIARY" />
+
                     <Label
                         Grid.Column="1"
                         Style="{StaticResource AccentLabel}"
@@ -189,6 +203,7 @@
                             Text="No recent diary entries."
                             VerticalOptions="Center" />
                     </CollectionView.EmptyView>
+
                     <CollectionView.ItemTemplate>
                         <DataTemplate x:DataType="review:ReviewListItem">
                             <controls:ReviewListCard IsMovieMode="False" />

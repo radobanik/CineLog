@@ -1,3 +1,4 @@
+using CineLog.Application.Common;
 using CineLog.Domain.Exceptions;
 using CineLog.Domain.Interfaces;
 using CineLog.Domain.Repositories;
@@ -10,11 +11,13 @@ public class GetProfileHandler : IRequestHandler<GetProfileQuery, UserProfileRes
 {
     private readonly IUserRepository _userRepository;
     private readonly IAppDbContext _context;
+    private readonly ICurrentUserService _currentUser;
 
-    public GetProfileHandler(IUserRepository userRepository, IAppDbContext context)
+    public GetProfileHandler(IUserRepository userRepository, IAppDbContext context, ICurrentUserService currentUser)
     {
         _userRepository = userRepository;
         _context = context;
+        _currentUser = currentUser;
     }
 
     public async Task<UserProfileResponse> Handle(GetProfileQuery request, CancellationToken cancellationToken)
@@ -22,14 +25,14 @@ public class GetProfileHandler : IRequestHandler<GetProfileQuery, UserProfileRes
         var user = await _userRepository.GetByIdAsync(request.UserId, cancellationToken)
             ?? throw new NotFoundException($"User {request.UserId} not found.");
 
-        var filmsCount = await _context.Reviews
-            .CountAsync(r => r.UserId == request.UserId, cancellationToken);
+        var filmsCount = await _context.Reviews.CountAsync(r => r.UserId == request.UserId, cancellationToken);
+        var followersCount = await _context.UserFollows.CountAsync(f => f.FollowedId == request.UserId, cancellationToken);
+        var followingCount = await _context.UserFollows.CountAsync(f => f.FollowerId == request.UserId, cancellationToken);
 
-        var followersCount = await _context.UserFollows
-            .CountAsync(f => f.FollowedId == request.UserId, cancellationToken);
-
-        var followingCount = await _context.UserFollows
-            .CountAsync(f => f.FollowerId == request.UserId, cancellationToken);
+        var isFollowing = request.UserId != _currentUser.UserId && await _context.UserFollows.AsNoTracking()
+            .AnyAsync(
+                f => f.FollowerId == _currentUser.UserId && f.FollowedId == request.UserId,
+                cancellationToken);
 
         return new UserProfileResponse(
             user.Id,
@@ -38,6 +41,7 @@ public class GetProfileHandler : IRequestHandler<GetProfileQuery, UserProfileRes
             user.AvatarUrl,
             filmsCount,
             followersCount,
-            followingCount);
+            followingCount,
+            isFollowing);
     }
 }

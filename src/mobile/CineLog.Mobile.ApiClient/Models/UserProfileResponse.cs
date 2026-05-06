@@ -24,4 +24,7 @@ public partial class UserProfileResponse
 
     [Newtonsoft.Json.JsonProperty("followingCount", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
     public int? FollowingCount { get; set; } = default !;
+
+    [Newtonsoft.Json.JsonProperty("isFollowing", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+    public bool? IsFollowing { get; set; } = default !;
 }
