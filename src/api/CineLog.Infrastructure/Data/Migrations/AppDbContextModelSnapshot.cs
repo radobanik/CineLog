@@ -381,7 +381,8 @@ namespace CineLog.Infrastructure.Data.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("Bio")
-                        .HasColumnType("text");
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
