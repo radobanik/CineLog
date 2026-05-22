@@ -5,6 +5,9 @@ using CineLog.Mobile.Pages.MainPages;
 using CineLog.Mobile.Pages.Movies;
 using CineLog.Mobile.Services;
 using Microsoft.Extensions.DependencyInjection;
+#if ANDROID
+using CineLog.Mobile.Platforms.Android.Services;
+#endif
 
 namespace CineLog.Mobile.Extensions;
 
@@ -19,6 +22,9 @@ public static class ServiceCollectionExtensions
 
     private static IServiceCollection AddMauiServices(this IServiceCollection services)
     {
+#if ANDROID
+        services.AddSingleton<IFcmService, FcmService>();
+#endif
         services.AddSingleton<IMovieNavigationContext, MovieNavigationContext>();
         services.AddSingleton<IWatchListNavigationContext, WatchListNavigationContext>();
         services.AddSingleton<IMovieDetailNavigationContext, MovieDetailNavigationContext>();

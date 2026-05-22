@@ -49,6 +49,9 @@ public static class ServiceCollectionExtensions
         services.AddTransient<IAuthClient>(sp =>
             new AuthClient(sp.GetRequiredService<IHttpClientFactory>().CreateClient("CineLogApi")));
 
+        services.AddTransient<INotificationsClient>(sp =>
+            new NotificationsClient(sp.GetRequiredService<IHttpClientFactory>().CreateClient("CineLogApi")));
+
         services.AddTransient<IUsersClient>(sp =>
             new UsersClient(sp.GetRequiredService<IHttpClientFactory>().CreateClient("CineLogApi")));
 
@@ -72,6 +75,7 @@ public static class ServiceCollectionExtensions
 
     private static IServiceCollection AddCoreServices(this IServiceCollection services)
     {
+        services.AddSingleton<IFcmService, NullFcmService>();
         services.AddTransient<IAuthService, AuthService>();
         services.AddTransient<IHomeService, HomeService>();
         services.AddTransient<IProfileService, ProfileService>();

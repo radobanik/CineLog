@@ -8,11 +8,13 @@ public sealed class AuthService : IAuthService
 {
     private readonly IAuthClient _authClient;
     private readonly ISessionService _session;
+    private readonly IFcmService _fcmService;
 
-    public AuthService(IAuthClient authClient, ISessionService session)
+    public AuthService(IAuthClient authClient, ISessionService session, IFcmService fcmService)
     {
         _authClient = authClient;
         _session = session;
+        _fcmService = fcmService;
     }
 
     public async Task LoginAsync(string email, string password, CancellationToken ct = default)
@@ -21,6 +23,7 @@ public sealed class AuthService : IAuthService
             new LoginCommand { Email = email, Password = password }, ct);
 
         await _session.SetSessionAsync(response.Token!, response.UserId!.Value, response.Username!);
+        _ = _fcmService.RegisterTokenAsync(CancellationToken.None);
     }
 
     public async Task RegisterAsync(string username, string email, string password, CancellationToken ct = default)
@@ -29,6 +32,7 @@ public sealed class AuthService : IAuthService
             new RegisterCommand { Username = username, Email = email, Password = password }, ct);
 
         await _session.SetSessionAsync(response.Token!, response.UserId!.Value, response.Username!);
+        _ = _fcmService.RegisterTokenAsync(CancellationToken.None);
     }
 
     public Task LogoutAsync()
