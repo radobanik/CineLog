@@ -16,12 +16,28 @@ CineLog lets users log movies, write reviews, react to others' reviews, and foll
 | Cache | Redis 7 |
 | ORM | Entity Framework Core 10 |
 | Auth | JWT Bearer |
-| Real-time | SignalR |
+| Push notifications | Firebase Cloud Messaging |
 | Search | Elasticsearch 8 |
 | Logging | Seq |
 | Blob storage | MinIO |
 | External data | TMDb API |
 | Data sync | CineLog.TmdbSync (background worker) |
+
+## Local setup
+
+Both files below are gitignored and must be added manually by each developer.
+
+**Backend** — place the Firebase service account key at:
+```
+src/api/CineLog.Api/firebase-adminsdk.json
+```
+Download it from Firebase Console → Project Settings → Service accounts → Generate new private key.
+
+**Mobile** — place the Google Services config at:
+```
+src/mobile/CineLog.Mobile/Platforms/Android/google-services.json
+```
+Download it from Firebase Console → Project Settings → Your Android app.
 
 ## Documentation
 

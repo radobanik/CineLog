@@ -10,15 +10,15 @@ using CineLog.Infrastructure.Data;
 using CineLog.Infrastructure.Notifications;
 using CineLog.Infrastructure.Repositories;
 using CineLog.Infrastructure.Search;
-using Microsoft.Extensions.Hosting;
 using CineLog.Infrastructure.Services;
 using EFCoreSecondLevelCacheInterceptor;
 using Elastic.Clients.Elasticsearch;
+using FirebaseAdmin;
+using Google.Apis.Auth.OAuth2;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Polly;
 
 namespace CineLog.Infrastructure.Extensions;
 
@@ -106,9 +106,18 @@ public static class ServiceCollectionExtensions
         // JWT
         services.AddScoped<IJwtService, JwtService>();
 
-        // SignalR and Notification service
-        services.AddSignalR();
-        services.AddScoped<INotificationService, SignalRNotificationService>();
+        // Notification service
+        services.Configure<FirebaseOptions>(configuration.GetSection("Firebase"));
+        var firebaseCredPath = configuration["Firebase:CredentialPath"];
+        if (!string.IsNullOrWhiteSpace(firebaseCredPath) && FirebaseApp.DefaultInstance is null)
+        {
+            FirebaseApp.Create(new AppOptions
+            {
+                Credential = GoogleCredential.FromFile(firebaseCredPath)
+            });
+        }
+
+        services.AddScoped<INotificationService, FirebasePushNotificationService>();
 
         return services;
     }
