@@ -11,6 +11,7 @@ public class User : IdentityUser<Guid>
     public string? Bio { get; set; }
     public string? AvatarUrl { get; set; }
     public DateTimeOffset CreatedAt { get; set; }
+    public string? FcmToken { get; set; }
 
     public IReadOnlyCollection<Review> Reviews => _reviews.AsReadOnly();
     public IReadOnlyCollection<UserFollow> Following => _following.AsReadOnly();
