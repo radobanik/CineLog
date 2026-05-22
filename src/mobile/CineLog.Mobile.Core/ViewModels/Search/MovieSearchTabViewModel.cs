@@ -10,31 +10,48 @@ namespace CineLog.Mobile.Core.ViewModels.Search;
 
 public partial class MovieSearchTabViewModel : BaseViewModel
 {
+    private const int HomeMoviePageSize = 24;
+    private const int MaxHomeMovieLoads = 4;
+
     private readonly IMovieSearchService searchService;
+    private readonly IHomeService homeService;
+    private readonly IMovieNavigationContext movieNav;
     private readonly IMovieDetailNavigationContext movieDetailNav;
     private readonly INavigationService navigation;
 
     private string currentQuery = string.Empty;
-    private int page;
+    private int searchPage;
+    private int homeMovieCount = HomeMoviePageSize;
+    private int homeLoadCount;
+    private bool searchHasMore;
+    private bool homeHasMore = true;
+    private bool hasLoadedHome;
 
     [ObservableProperty] private bool hasQuery;
     [ObservableProperty] private bool showSkeleton;
     [ObservableProperty] private bool showNoResults;
     [ObservableProperty] private bool isLoadingMore;
-    [ObservableProperty] private bool canLoadMore;
+    [ObservableProperty] private bool isLoadingHome;
+    [ObservableProperty] private bool isLoadingMoreHome;
 
     public ObservableCollection<MovieItem> Movies { get; } = [];
+    public ObservableCollection<MovieItem> HomeMovies { get; } = [];
 
     public bool ShowResults => HasQuery && Movies.Count > 0;
-    public bool ShowEmptyState => !HasQuery;
+    public bool ShowHome => !HasQuery;
+    public bool CanLoadMore => HasQuery ? searchHasMore : homeHasMore;
 
     public MovieSearchTabViewModel(
         IMovieSearchService searchService,
+        IHomeService homeService,
+        IMovieNavigationContext movieNav,
         IMovieDetailNavigationContext movieDetailNav,
         INavigationService navigation,
         IAlertService alerts) : base(alerts)
     {
         this.searchService = searchService;
+        this.homeService = homeService;
+        this.movieNav = movieNav;
         this.movieDetailNav = movieDetailNav;
         this.navigation = navigation;
     }
@@ -43,24 +60,27 @@ public partial class MovieSearchTabViewModel : BaseViewModel
     {
         HasQuery = !string.IsNullOrWhiteSpace(query);
         ShowNoResults = false;
-        CanLoadMore = false;
         Movies.Clear();
 
         if (!HasQuery)
         {
+            currentQuery = string.Empty;
+            searchHasMore = false;
+            await LoadHomeMoviesAsync(ct);
             RefreshVisibility();
             return;
         }
 
         currentQuery = query.Trim();
-        page = 1;
+        searchPage = 1;
+        searchHasMore = false;
         ShowSkeleton = true;
 
         try
         {
-            var result = await searchService.SearchMoviesAsync(currentQuery, page, ct);
-            AddMovies(result.Items);
-            CanLoadMore = result.HasMore;
+            var result = await searchService.SearchMoviesAsync(currentQuery, searchPage, ct);
+            AddMovies(Movies, result.Items);
+            searchHasMore = result.HasMore;
             ShowNoResults = Movies.Count == 0;
         }
         finally
@@ -72,25 +92,39 @@ public partial class MovieSearchTabViewModel : BaseViewModel
         }
     }
 
-    [RelayCommand]
-    private async Task LoadMore()
+    private async Task LoadHomeMoviesAsync(CancellationToken ct = default)
     {
-        if (IsLoadingMore || !CanLoadMore || string.IsNullOrWhiteSpace(currentQuery))
+        if (hasLoadedHome && HomeMovies.Count > 0)
             return;
 
-        IsLoadingMore = true;
+        HomeMovies.Clear();
+        homeMovieCount = HomeMoviePageSize;
+        homeLoadCount = 1;
+        homeHasMore = true;
+        IsLoadingHome = true;
 
         try
         {
-            var result = await searchService.SearchMoviesAsync(currentQuery, ++page);
-            AddMovies(result.Items);
-            CanLoadMore = result.HasMore;
-            RefreshVisibility();
+            var movies = await homeService.GetNewReleaseMoviesAsync(homeMovieCount, ct);
+            AddMovies(HomeMovies, movies);
+            hasLoadedHome = true;
         }
         finally
         {
-            IsLoadingMore = false;
+            if (!ct.IsCancellationRequested)
+                IsLoadingHome = false;
+
+            RefreshVisibility();
         }
+    }
+
+    [RelayCommand]
+    private async Task LoadMore()
+    {
+        if (HasQuery)
+            await LoadMoreSearchResultsAsync();
+        else
+            await LoadMoreHomeMoviesAsync();
     }
 
     [RelayCommand]
@@ -100,17 +134,72 @@ public partial class MovieSearchTabViewModel : BaseViewModel
         return navigation.NavigateToAsync(Routes.MovieDetail);
     }
 
-    private void AddMovies(IEnumerable<MovieItem> movies)
+    [RelayCommand]
+    private Task GoToCategory(MovieCategory category)
     {
-        var existingIds = Movies.Select(x => x.Id).ToHashSet();
+        movieNav.Category = category;
+        return navigation.NavigateToAsync(Routes.MoviesCategory);
+    }
+
+    private async Task LoadMoreSearchResultsAsync()
+    {
+        if (IsLoadingMore || !searchHasMore || string.IsNullOrWhiteSpace(currentQuery))
+            return;
+
+        IsLoadingMore = true;
+
+        try
+        {
+            var result = await searchService.SearchMoviesAsync(currentQuery, ++searchPage);
+            AddMovies(Movies, result.Items);
+            searchHasMore = result.HasMore;
+            RefreshVisibility();
+        }
+        finally
+        {
+            IsLoadingMore = false;
+        }
+    }
+
+    private async Task LoadMoreHomeMoviesAsync()
+    {
+        if (IsLoadingMoreHome || !homeHasMore)
+            return;
+
+        IsLoadingMoreHome = true;
+
+        try
+        {
+            var previousCount = HomeMovies.Count;
+            homeMovieCount += HomeMoviePageSize;
+            homeLoadCount++;
+
+            var movies = await homeService.GetNewReleaseMoviesAsync(homeMovieCount);
+            AddMovies(HomeMovies, movies);
+
+            if (HomeMovies.Count == previousCount || homeLoadCount >= MaxHomeMovieLoads)
+                homeHasMore = false;
+
+            RefreshVisibility();
+        }
+        finally
+        {
+            IsLoadingMoreHome = false;
+        }
+    }
+
+    private static void AddMovies(ObservableCollection<MovieItem> target, IEnumerable<MovieItem> movies)
+    {
+        var existingIds = target.Select(x => x.Id).ToHashSet();
 
         foreach (var movie in movies.Where(x => existingIds.Add(x.Id)))
-            Movies.Add(movie);
+            target.Add(movie);
     }
 
     private void RefreshVisibility()
     {
         OnPropertyChanged(nameof(ShowResults));
-        OnPropertyChanged(nameof(ShowEmptyState));
+        OnPropertyChanged(nameof(ShowHome));
+        OnPropertyChanged(nameof(CanLoadMore));
     }
 }

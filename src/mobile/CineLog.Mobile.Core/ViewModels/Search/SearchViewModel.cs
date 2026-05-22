@@ -38,12 +38,11 @@ public partial class SearchViewModel : BaseViewModel
 
     public override async Task OnAppearingAsync()
     {
-        if (!IsPeopleSelected)
-            return;
-
-        await People.SearchAsync(SearchQuery);
+        if (IsMoviesSelected)
+            await Movies.SearchAsync(SearchQuery);
+        else
+            await People.SearchAsync(SearchQuery);
     }
-
 
     partial void OnSearchQueryChanged(string value) => _ = SearchDebouncedAsync(value);
     partial void OnSelectedSectionChanged(SearchSection value) => _ = SearchDebouncedAsync(SearchQuery);
