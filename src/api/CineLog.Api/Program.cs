@@ -6,7 +6,6 @@ using CineLog.Application.Common;
 using CineLog.Application.Extensions;
 using CineLog.Infrastructure.Data;
 using CineLog.Infrastructure.Extensions;
-using CineLog.Infrastructure.Notifications;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
@@ -124,7 +123,6 @@ if (!app.Environment.IsEnvironment("Testing"))
     app.UseRateLimiter();
 
 app.MapControllers();
-app.MapHub<NotificationHub>("/hubs/notifications");
 
 if (app.Environment.IsDevelopment())
 {
