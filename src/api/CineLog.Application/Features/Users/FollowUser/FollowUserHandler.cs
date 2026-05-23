@@ -1,4 +1,3 @@
-// api/CineLog.Application/Features/Users/FollowUser/FollowUserHandler.cs
 using CineLog.Application.Common;
 using CineLog.Domain.Entities;
 using CineLog.Domain.Enums;

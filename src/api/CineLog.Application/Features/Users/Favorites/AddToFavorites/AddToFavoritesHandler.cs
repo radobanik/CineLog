@@ -1,4 +1,3 @@
-// api/CineLog.Application/Features/Users/Favorites/AddToFavorites/AddToFavoritesHandler.cs
 using CineLog.Application.Common;
 using CineLog.Domain.Entities;
 using CineLog.Domain.Enums;
