@@ -1,5 +1,7 @@
+// api/CineLog.Application/Features/Users/FollowUser/FollowUserHandler.cs
 using CineLog.Application.Common;
 using CineLog.Domain.Entities;
+using CineLog.Domain.Enums;
 using CineLog.Domain.Exceptions;
 using CineLog.Domain.Interfaces;
 using CineLog.Domain.Repositories;
@@ -41,6 +43,14 @@ public class FollowUserHandler : IRequestHandler<FollowUserCommand>
 
         var follow = UserFollow.Create(_currentUser.UserId, request.TargetUserId);
         await _context.UserFollows.AddAsync(follow, cancellationToken);
+
+        await _context.ActivityLogs.AddAsync(
+            ActivityLog.Create(
+                _currentUser.UserId,
+                ActivityType.UserFollowed,
+                targetUserId: request.TargetUserId),
+            cancellationToken);
+
         await _context.SaveChangesAsync(cancellationToken);
     }
 }
