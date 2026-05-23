@@ -5,6 +5,7 @@ namespace CineLog.Mobile.Core.Services.Interfaces;
 public interface IActivityFeedService
 {
     Task<IReadOnlyList<ActivityFeedItem>> GetActivityFeedAsync(
-        int count = 50,
+        int skip = 0,
+        int count = 25,
         CancellationToken ct = default);
 }

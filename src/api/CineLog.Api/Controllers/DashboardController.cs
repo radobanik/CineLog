@@ -46,7 +46,8 @@ public class DashboardController : ControllerBase
     [HttpGet("activity-feed")]
     [ProducesResponseType(typeof(List<ActivityFeedItemResponse>), StatusCodes.Status200OK)]
     public async Task<ActionResult<List<ActivityFeedItemResponse>>> GetActivityFeed(
-        [FromQuery] int count = 50,
+        [FromQuery] int skip = 0,
+        [FromQuery] int count = 25,
         CancellationToken ct = default)
-        => Ok(await _sender.Send(new GetActivityFeedQuery(count), ct));
+        => Ok(await _sender.Send(new GetActivityFeedQuery(skip, count), ct));
 }

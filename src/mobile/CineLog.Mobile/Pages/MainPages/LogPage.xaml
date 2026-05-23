@@ -15,17 +15,18 @@
     <Grid Padding="20">
 
         <RefreshView Command="{Binding LoadCommand}" IsRefreshing="{Binding IsBusy, Mode=OneWay}">
-
             <CollectionView
                 ItemsSource="{Binding Items}"
                 ItemsUpdatingScrollMode="KeepScrollOffset"
+                RemainingItemsThreshold="6"
+                RemainingItemsThresholdReachedCommand="{Binding LoadMoreCommand}"
                 SelectionMode="None">
 
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="activity:ActivityFeedItem">
                         <Grid RowDefinitions="Auto,Auto">
                             <Grid
-                                Padding="0,14"
+                                Padding="0,16"
                                 ColumnDefinitions="48,*,64"
                                 ColumnSpacing="12">
 
@@ -63,25 +64,65 @@
 
                                 <VerticalStackLayout
                                     Grid.Column="1"
-                                    Spacing="5"
+                                    Spacing="8"
                                     VerticalOptions="Start">
 
                                     <Label
+                                        FontSize="16"
                                         LineBreakMode="WordWrap"
-                                        Style="{StaticResource BodyMediumLabel}"
-                                        Text="{Binding ActionText}" />
+                                        TextColor="{StaticResource OnSurface}">
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span
+                                                    FontAttributes="Bold"
+                                                    Text="{Binding ActorDisplayName}"
+                                                    TextColor="{StaticResource OnBackground}" />
+                                                <Span Text=" " />
+                                                <Span
+                                                    Text="{Binding ActionVerb}"
+                                                    TextColor="{StaticResource TextSecondary}" />
+                                                <Span Text=" " />
+                                                <Span
+                                                    FontAttributes="Bold"
+                                                    Text="{Binding PrimaryObjectText}"
+                                                    TextColor="{StaticResource OnBackground}" />
+                                                <Span
+                                                    Text="{Binding SecondaryText}"
+                                                    TextColor="{StaticResource TextSecondary}" />
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
 
-                                    <HorizontalStackLayout IsVisible="{Binding ReviewRatingText, Converter={StaticResource IsNotNullOrEmptyConverter}}" Spacing="6">
-                                        <Label Style="{StaticResource CaptionLabel}" Text="Rating" />
-                                        <Label Style="{StaticResource AccentLabel}" Text="{Binding ReviewRatingText}" />
-                                    </HorizontalStackLayout>
+                                    <Border
+                                        BackgroundColor="{StaticResource Surface}"
+                                        IsVisible="{Binding HasReviewPreview}"
+                                        Padding="10"
+                                        Stroke="{StaticResource Border}"
+                                        StrokeThickness="1">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="8" />
+                                        </Border.StrokeShape>
 
-                                    <Label
-                                        IsVisible="{Binding HasReviewText}"
-                                        LineBreakMode="TailTruncation"
-                                        MaxLines="2"
-                                        Style="{StaticResource CaptionLabel}"
-                                        Text="{Binding ReviewText}" />
+                                        <VerticalStackLayout Spacing="5">
+                                            <HorizontalStackLayout Spacing="8">
+                                                <Label
+                                                    FontAttributes="Bold"
+                                                    Style="{StaticResource CaptionLabel}"
+                                                    Text="Review" />
+                                                <Label
+                                                    IsVisible="{Binding ReviewRatingText, Converter={StaticResource IsNotNullOrEmptyConverter}}"
+                                                    Style="{StaticResource AccentLabel}"
+                                                    Text="{Binding ReviewRatingText}" />
+                                            </HorizontalStackLayout>
+
+                                            <Label
+                                                IsVisible="{Binding HasReviewText}"
+                                                LineBreakMode="TailTruncation"
+                                                MaxLines="3"
+                                                Style="{StaticResource BodyMediumLabel}"
+                                                Text="{Binding ReviewText}" />
+                                        </VerticalStackLayout>
+                                    </Border>
 
                                     <Label Style="{StaticResource CaptionLabel}" Text="{Binding TimeText}" />
                                 </VerticalStackLayout>
@@ -89,14 +130,14 @@
                                 <Border
                                     Grid.Column="2"
                                     BackgroundColor="{StaticResource SurfaceVariant}"
-                                    HeightRequest="84"
+                                    HeightRequest="86"
                                     IsVisible="{Binding HasMoviePoster}"
                                     Stroke="{StaticResource Border}"
                                     StrokeThickness="1"
                                     VerticalOptions="Start"
-                                    WidthRequest="56">
+                                    WidthRequest="58">
                                     <Border.StrokeShape>
-                                        <RoundRectangle CornerRadius="6" />
+                                        <RoundRectangle CornerRadius="7" />
                                     </Border.StrokeShape>
                                     <Image Aspect="AspectFill" Source="{Binding MoviePosterPath}" />
                                 </Border>
@@ -125,7 +166,12 @@
                 </CollectionView.EmptyView>
 
                 <CollectionView.Footer>
-                    <BoxView HeightRequest="32" Color="Transparent" />
+                    <Grid Padding="0,18,0,32">
+                        <ActivityIndicator
+                            HorizontalOptions="Center"
+                            IsRunning="{Binding IsLoadingMore}"
+                            IsVisible="{Binding IsLoadingMore}" />
+                    </Grid>
                 </CollectionView.Footer>
             </CollectionView>
         </RefreshView>

@@ -21,7 +21,8 @@ public class GetActivityFeedHandler : IRequestHandler<GetActivityFeedQuery, List
         GetActivityFeedQuery request,
         CancellationToken cancellationToken)
     {
-        var count = Math.Clamp(request.Count, 1, 100);
+        var skip = Math.Max(0, request.Skip);
+        var count = Math.Clamp(request.Count, 1, 50);
 
         var followedUserIds = await _db.UserFollows
             .AsNoTracking()
@@ -42,6 +43,7 @@ public class GetActivityFeedHandler : IRequestHandler<GetActivityFeedQuery, List
                     a.Type != ActivityType.MovieAddedToCustomWatchlist
                 ))
             .OrderByDescending(a => a.CreatedAt)
+            .Skip(skip)
             .Take(count)
             .ToListAsync(cancellationToken);
 
@@ -106,18 +108,10 @@ public class GetActivityFeedHandler : IRequestHandler<GetActivityFeedQuery, List
                 a.Type,
                 a.CreatedAt,
                 users[a.ActorUserId],
-                a.TargetUserId.HasValue && users.TryGetValue(a.TargetUserId.Value, out var targetUser)
-                    ? targetUser
-                    : null,
-                a.MovieId.HasValue && movies.TryGetValue(a.MovieId.Value, out var movie)
-                    ? movie
-                    : null,
-                a.ReviewId.HasValue && reviews.TryGetValue(a.ReviewId.Value, out var review)
-                    ? review
-                    : null,
-                a.WatchlistId.HasValue && watchlists.TryGetValue(a.WatchlistId.Value, out var watchlist)
-                    ? watchlist
-                    : null))
+                a.TargetUserId.HasValue && users.TryGetValue(a.TargetUserId.Value, out var targetUser) ? targetUser : null,
+                a.MovieId.HasValue && movies.TryGetValue(a.MovieId.Value, out var movie) ? movie : null,
+                a.ReviewId.HasValue && reviews.TryGetValue(a.ReviewId.Value, out var review) ? review : null,
+                a.WatchlistId.HasValue && watchlists.TryGetValue(a.WatchlistId.Value, out var watchlist) ? watchlist : null))
             .ToList();
     }
 }

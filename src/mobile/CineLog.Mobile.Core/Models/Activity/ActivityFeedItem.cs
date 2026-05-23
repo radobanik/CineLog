@@ -9,10 +9,12 @@ public sealed class ActivityFeedItem
     public Guid ActorId { get; init; }
     public string ActorUsername { get; init; } = string.Empty;
     public string? ActorAvatarUrl { get; init; }
+    public bool IsCurrentUser { get; init; }
 
     public Guid? TargetUserId { get; init; }
     public string? TargetUsername { get; init; }
     public string? TargetAvatarUrl { get; init; }
+    public bool IsTargetCurrentUser { get; init; }
 
     public Guid? MovieId { get; init; }
     public string? MovieTitle { get; init; }
@@ -33,55 +35,55 @@ public sealed class ActivityFeedItem
     public bool HasActorAvatar => !string.IsNullOrWhiteSpace(ActorAvatarUrl);
     public bool HasMovie => MovieId.HasValue;
     public bool HasMoviePoster => !string.IsNullOrWhiteSpace(MoviePosterPath);
+    public bool HasReviewPreview => HasReviewText || ReviewRating.HasValue;
     public bool HasReviewText => !string.IsNullOrWhiteSpace(ReviewText);
-    public bool HasTargetUser => TargetUserId.HasValue;
-    public bool HasWatchlist => WatchlistId.HasValue;
+    public bool HasPrimaryObject => !string.IsNullOrWhiteSpace(PrimaryObjectText);
 
-    public string ActionText => Type switch
+    public string ActorDisplayName => IsCurrentUser ? "You" : ActorUsername;
+
+    public string ActionVerb => Type switch
     {
-        ActivityFeedType.MovieWatched =>
-            $"{ActorUsername} watched {MovieLabel}",
+        ActivityFeedType.MovieWatched => IsCurrentUser ? "watched" : "watched",
+        ActivityFeedType.MovieWatchLaterAdded => "added",
+        ActivityFeedType.MovieFavorited => "added",
+        ActivityFeedType.MovieFavoriteRemoved => "removed",
+        ActivityFeedType.MovieAddedToCustomWatchlist => "added",
+        ActivityFeedType.ReviewCreated => "reviewed",
+        ActivityFeedType.ReviewUpdated => "updated a review for",
+        ActivityFeedType.ReviewDeleted => "deleted a review for",
+        ActivityFeedType.ReviewLiked => "liked a review for",
+        ActivityFeedType.ReviewUnliked => "unliked a review for",
+        ActivityFeedType.UserFollowed => "followed",
+        ActivityFeedType.UserUnfollowed => "unfollowed",
+        ActivityFeedType.ProfileUpdated => IsCurrentUser ? "updated your profile" : "updated their profile",
+        ActivityFeedType.AvatarUpdated => IsCurrentUser ? "updated your avatar" : "updated their avatar",
+        _ => "did something"
+    };
 
-        ActivityFeedType.MovieWatchLaterAdded =>
-            $"{ActorUsername} added {MovieLabel} to Watch later",
+    public string PrimaryObjectText => Type switch
+    {
+        ActivityFeedType.MovieWatched => MovieLabel,
+        ActivityFeedType.MovieWatchLaterAdded => MovieLabel,
+        ActivityFeedType.MovieFavorited => MovieLabel,
+        ActivityFeedType.MovieFavoriteRemoved => MovieLabel,
+        ActivityFeedType.MovieAddedToCustomWatchlist => MovieLabel,
+        ActivityFeedType.ReviewCreated => MovieLabel,
+        ActivityFeedType.ReviewUpdated => MovieLabel,
+        ActivityFeedType.ReviewDeleted => MovieLabel,
+        ActivityFeedType.ReviewLiked => MovieLabel,
+        ActivityFeedType.ReviewUnliked => MovieLabel,
+        ActivityFeedType.UserFollowed => TargetUserLabel,
+        ActivityFeedType.UserUnfollowed => TargetUserLabel,
+        _ => string.Empty
+    };
 
-        ActivityFeedType.MovieFavorited =>
-            $"{ActorUsername} added {MovieLabel} to Favorites",
-
-        ActivityFeedType.MovieFavoriteRemoved =>
-            $"{ActorUsername} removed {MovieLabel} from Favorites",
-
-        ActivityFeedType.MovieAddedToCustomWatchlist =>
-            $"{ActorUsername} added {MovieLabel} to {WatchlistLabel}",
-
-        ActivityFeedType.ReviewCreated =>
-            $"{ActorUsername} reviewed {MovieLabel}",
-
-        ActivityFeedType.ReviewUpdated =>
-            $"{ActorUsername} updated a review for {MovieLabel}",
-
-        ActivityFeedType.ReviewDeleted =>
-            $"{ActorUsername} deleted a review for {MovieLabel}",
-
-        ActivityFeedType.ReviewLiked =>
-            $"{ActorUsername} liked a review",
-
-        ActivityFeedType.ReviewUnliked =>
-            $"{ActorUsername} unliked a review",
-
-        ActivityFeedType.UserFollowed =>
-            $"{ActorUsername} followed {TargetUserLabel}",
-
-        ActivityFeedType.UserUnfollowed =>
-            $"{ActorUsername} unfollowed {TargetUserLabel}",
-
-        ActivityFeedType.ProfileUpdated =>
-            $"{ActorUsername} updated their profile",
-
-        ActivityFeedType.AvatarUpdated =>
-            $"{ActorUsername} updated their avatar",
-
-        _ => $"{ActorUsername} did something"
+    public string SecondaryText => Type switch
+    {
+        ActivityFeedType.MovieWatchLaterAdded => " to Watch later",
+        ActivityFeedType.MovieFavorited => " to Favorites",
+        ActivityFeedType.MovieFavoriteRemoved => " from Favorites",
+        ActivityFeedType.MovieAddedToCustomWatchlist => $" to {WatchlistLabel}",
+        _ => string.Empty
     };
 
     public string TimeText
@@ -116,5 +118,9 @@ public sealed class ActivityFeedItem
         string.IsNullOrWhiteSpace(WatchlistName) ? "a watchlist" : WatchlistName;
 
     private string TargetUserLabel =>
-        string.IsNullOrWhiteSpace(TargetUsername) ? "a user" : TargetUsername;
+        IsTargetCurrentUser
+            ? "you"
+            : string.IsNullOrWhiteSpace(TargetUsername)
+                ? "a user"
+                : TargetUsername;
 }

@@ -60,13 +60,12 @@ internal static class ActivityLogSeeder
                 WatchlistType.Custom,
                 "Activity picks");
 
-            var ownReview = FindReviewForUser(reviews, actor.Id, userIndex);
-            var targetReview = FindReviewForUser(reviews, targetUser.Id, userIndex + 1);
-
             for (var typeIndex = 0; typeIndex < ActivityTypes.Length; typeIndex++)
             {
                 var type = ActivityTypes[typeIndex];
                 var movie = movies[(userIndex + typeIndex) % movies.Count];
+                var ownReview = FindReviewForUser(reviews, actor.Id, userIndex + typeIndex);
+                var targetReview = FindReviewForUser(reviews, targetUser.Id, userIndex + typeIndex + 3);
                 var createdAt = baseCreatedAt.AddMinutes((userIndex * ActivityTypes.Length) + typeIndex);
 
                 await SeedActivityAsync(
@@ -225,10 +224,17 @@ internal static class ActivityLogSeeder
     private static Review FindReviewForUser(
         IReadOnlyList<Review> reviews,
         Guid userId,
-        int fallbackIndex)
+        int index)
     {
-        return reviews.FirstOrDefault(r => r.UserId == userId)
-            ?? reviews[fallbackIndex % reviews.Count];
+        var userReviews = reviews
+            .Where(r => r.UserId == userId)
+            .OrderBy(r => r.CreatedAt)
+            .ToList();
+
+        if (userReviews.Count > 0)
+            return userReviews[index % userReviews.Count];
+
+        return reviews[index % reviews.Count];
     }
 
     private static async Task AddWatchlistItemIfMissingAsync(

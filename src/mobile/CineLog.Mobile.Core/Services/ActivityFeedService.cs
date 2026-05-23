@@ -1,36 +1,51 @@
-using CineLog.Mobile.ApiClient.Clients;
+using CineLog.Mobile.ApiClient.Models;
 using CineLog.Mobile.Core.Models.Activity;
 using CineLog.Mobile.Core.Services.Interfaces;
+using Newtonsoft.Json;
 using ApiActivityFeedItem = CineLog.Mobile.ApiClient.Models.ActivityFeedItemResponse;
 using ApiActivityType = CineLog.Mobile.ApiClient.Models.ActivityType;
 
 namespace CineLog.Mobile.Core.Services;
 
-public sealed class ActivityFeedService(IDashboardClient dashboardClient) : IActivityFeedService
+public sealed class ActivityFeedService(
+    IHttpClientFactory httpClientFactory,
+    ISessionService session) : IActivityFeedService
 {
     public async Task<IReadOnlyList<ActivityFeedItem>> GetActivityFeedAsync(
-        int count = 50,
+        int skip = 0,
+        int count = 25,
         CancellationToken ct = default)
     {
-        var response = await dashboardClient.GetActivityFeedAsync(count, ct);
-        return [.. response.Select(MapActivity)];
+        var client = httpClientFactory.CreateClient("CineLogApi");
+        var response = await client.GetAsync($"api/dashboard/activity-feed?skip={skip}&count={count}", ct);
+        response.EnsureSuccessStatusCode();
+
+        var json = await response.Content.ReadAsStringAsync(ct);
+        var items = JsonConvert.DeserializeObject<ICollection<ApiActivityFeedItem>>(json) ?? [];
+
+        return [.. items.Select(MapActivity)];
     }
 
-    private static ActivityFeedItem MapActivity(ApiActivityFeedItem item)
+    private ActivityFeedItem MapActivity(ApiActivityFeedItem item)
     {
+        var actorId = item.Actor?.Id ?? Guid.Empty;
+        var targetUserId = item.TargetUser?.Id;
+
         return new ActivityFeedItem
         {
             Id = item.Id ?? Guid.Empty,
             Type = MapType(item.Type),
             CreatedAt = item.CreatedAt ?? DateTimeOffset.MinValue,
 
-            ActorId = item.Actor?.Id ?? Guid.Empty,
+            ActorId = actorId,
             ActorUsername = item.Actor?.Username ?? "Unknown user",
             ActorAvatarUrl = item.Actor?.AvatarUrl,
+            IsCurrentUser = actorId == session.UserId,
 
-            TargetUserId = item.TargetUser?.Id,
+            TargetUserId = targetUserId,
             TargetUsername = item.TargetUser?.Username,
             TargetAvatarUrl = item.TargetUser?.AvatarUrl,
+            IsTargetCurrentUser = targetUserId == session.UserId,
 
             MovieId = item.Movie?.Id,
             MovieTitle = item.Movie?.Title,
