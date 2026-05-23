@@ -25,6 +25,7 @@ public class AppDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid>, I
     public DbSet<Watchlist> Watchlists => Set<Watchlist>();
     public DbSet<WatchlistItem> WatchlistItems => Set<WatchlistItem>();
     public DbSet<UserFavorite> UserFavorites => Set<UserFavorite>();
+    public DbSet<ActivityLog> ActivityLogs => Set<ActivityLog>();
     public DbSet<Genre> Genres => Set<Genre>();
     public DbSet<MovieGenre> MovieGenres => Set<MovieGenre>();
     public DbSet<Person> Persons => Set<Person>();
