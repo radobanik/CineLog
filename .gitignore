@@ -55,6 +55,7 @@ appsettings.*.local.json
 appsettings.Development.json
 **/secrets.json
 *firebase-adminsdk*.json
+*google-services*.json
 
 # Docker
 docker-compose.override.yml
