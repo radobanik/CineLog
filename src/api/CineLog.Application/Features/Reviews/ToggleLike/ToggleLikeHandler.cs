@@ -35,7 +35,9 @@ public class ToggleLikeHandler : IRequestHandler<ToggleLikeCommand>
         var existingLike = review.Reactions
             .FirstOrDefault(r => r.UserId == _currentUser.UserId && r.Type == ReactionType.Like);
 
-        var isAddingLike = existingLike is null;
+        var activityType = existingLike is null
+            ? ActivityType.ReviewLiked
+            : ActivityType.ReviewUnliked;
 
         if (existingLike is not null)
         {
@@ -48,18 +50,15 @@ public class ToggleLikeHandler : IRequestHandler<ToggleLikeCommand>
 
         await _reviewRepository.UpdateReactionsAsync(review, cancellationToken);
 
-        if (isAddingLike)
-        {
-            await _context.ActivityLogs.AddAsync(
-                ActivityLog.Create(
-                    _currentUser.UserId,
-                    ActivityType.ReviewLiked,
-                    movieId: review.MovieId,
-                    reviewId: review.Id),
-                cancellationToken);
+        await _context.ActivityLogs.AddAsync(
+            ActivityLog.Create(
+                _currentUser.UserId,
+                activityType,
+                movieId: review.MovieId,
+                reviewId: review.Id),
+            cancellationToken);
 
-            await _context.SaveChangesAsync(cancellationToken);
-        }
+        await _context.SaveChangesAsync(cancellationToken);
 
         foreach (var domainEvent in review.DomainEvents)
             await _publisher.Publish(domainEvent, cancellationToken);
