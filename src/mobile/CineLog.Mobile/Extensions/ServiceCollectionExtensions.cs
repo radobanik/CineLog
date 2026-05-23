@@ -51,6 +51,7 @@ public static class ServiceCollectionExtensions
         services.AddTransient<MovieWatchListPage>();
         services.AddTransient<ProfilePage>();
         services.AddTransient<EditProfilePage>();
+        services.AddTransient<AddReviewPage>();
         return services;
     }
 }

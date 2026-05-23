@@ -104,6 +104,9 @@ public partial class MovieDetailViewModel : BaseViewModel
     }
 
     [RelayCommand]
+    private Task OpenAddReview() => _navigation.NavigateToAsync(Routes.AddReview);
+
+    [RelayCommand]
     private Task OpenAddToWatchlist() => _navigation.NavigateToAsync(Routes.AddToWatchlist);
 
     [RelayCommand]

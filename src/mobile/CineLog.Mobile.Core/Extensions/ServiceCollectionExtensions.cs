@@ -106,6 +106,7 @@ public static class ServiceCollectionExtensions
         services.AddTransient<WatchListNameFormViewModel>();
         services.AddTransient<MovieDetailViewModel>();
         services.AddTransient<AddToWatchlistViewModel>();
+        services.AddTransient<AddReviewViewModel>();
         services.AddTransient<MovieReviewsViewModel>();
         services.AddTransient<EditProfileViewModel>();
         return services;

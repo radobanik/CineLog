@@ -89,6 +89,9 @@
                 Padding="8,0,8,12">
 
                 <VerticalStackLayout Grid.Column="0" HorizontalOptions="Center" Spacing="6">
+                    <VerticalStackLayout.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding OpenAddReviewCommand}" />
+                    </VerticalStackLayout.GestureRecognizers>
                     <Border
                         WidthRequest="44"
                         HeightRequest="44"
@@ -102,11 +105,11 @@
                             FontFamily="FASolid"
                             FontSize="16"
                             TextColor="{StaticResource OnSurface}"
-                            Text="{x:Static helpers:FontAwesomeIcons.Eye}"
+                            Text="{x:Static helpers:FontAwesomeIcons.Edit}"
                             HorizontalOptions="Center"
                             VerticalOptions="Center" />
                     </Border>
-                    <Label Style="{StaticResource CaptionLabel}" Text="Watched" HorizontalOptions="Center" />
+                    <Label Style="{StaticResource CaptionLabel}" Text="Review" HorizontalOptions="Center" />
                 </VerticalStackLayout>
 
                 <VerticalStackLayout Grid.Column="1" HorizontalOptions="Center" Spacing="6">
