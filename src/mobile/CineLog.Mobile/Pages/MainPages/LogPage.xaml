@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <pages:BasePage
     x:Class="CineLog.Mobile.Pages.MainPages.LogPage"
+    x:DataType="vm:LogViewModel"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:activity="clr-namespace:CineLog.Mobile.Core.Models.Activity;assembly=CineLog.Mobile.Core"
+    xmlns:controls="clr-namespace:CineLog.Mobile.Controls"
     xmlns:helpers="clr-namespace:CineLog.Mobile.Helpers"
     xmlns:pages="clr-namespace:CineLog.Mobile.Pages"
     xmlns:vm="clr-namespace:CineLog.Mobile.Core.ViewModels.Log;assembly=CineLog.Mobile.Core"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     Title="Log"
-    x:DataType="vm:LogViewModel"
     BackgroundColor="{StaticResource Background}"
     ShowMenuButton="True">
 
     <Grid Padding="20">
-
         <RefreshView Command="{Binding LoadCommand}" IsRefreshing="{Binding IsBusy, Mode=OneWay}">
             <CollectionView
                 ItemsSource="{Binding Items}"
@@ -31,7 +31,9 @@
                                 ColumnSpacing="12">
 
                                 <Grid.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:LogViewModel}}, Path=OpenActivityCommand}" CommandParameter="{Binding .}" />
+                                    <TapGestureRecognizer
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:LogViewModel}}, Path=OpenActivityCommand}"
+                                        CommandParameter="{Binding .}" />
                                 </Grid.GestureRecognizers>
 
                                 <Border
@@ -109,6 +111,7 @@
                                                     FontAttributes="Bold"
                                                     Style="{StaticResource CaptionLabel}"
                                                     Text="Review" />
+
                                                 <Label
                                                     IsVisible="{Binding ReviewRatingText, Converter={StaticResource IsNotNullOrEmptyConverter}}"
                                                     Style="{StaticResource AccentLabel}"
@@ -139,6 +142,7 @@
                                     <Border.StrokeShape>
                                         <RoundRectangle CornerRadius="7" />
                                     </Border.StrokeShape>
+
                                     <Image Aspect="AspectFill" Source="{Binding MoviePosterPath}" />
                                 </Border>
                             </Grid>
@@ -150,12 +154,15 @@
 
                 <CollectionView.EmptyView>
                     <Grid Padding="0,120,0,0">
-                        <VerticalStackLayout Spacing="12">
+                        <VerticalStackLayout
+                            Spacing="12"
+                            IsVisible="{Binding HasNoItems}">
                             <Label
                                 FontSize="40"
                                 HorizontalOptions="Center"
                                 Style="{StaticResource PrimaryIconLabel}"
                                 Text="{x:Static helpers:FontAwesomeIcons.Film}" />
+
                             <Label
                                 HorizontalOptions="Center"
                                 HorizontalTextAlignment="Center"
@@ -176,10 +183,8 @@
             </CollectionView>
         </RefreshView>
 
-        <ActivityIndicator
-            HorizontalOptions="Center"
-            IsRunning="{Binding IsBusy}"
-            IsVisible="{Binding IsBusy}"
-            VerticalOptions="Center" />
+        <controls:ActivityLogSkeleton
+            InputTransparent="True"
+            IsVisible="{Binding IsInitialLoading}" />
     </Grid>
 </pages:BasePage>
