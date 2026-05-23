@@ -1,22 +1,20 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <pages:BasePage
     x:Class="CineLog.Mobile.Pages.MainPages.LogPage"
-    x:DataType="vm:LogViewModel"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:activity="clr-namespace:CineLog.Mobile.Core.Models.Activity;assembly=CineLog.Mobile.Core"
     xmlns:helpers="clr-namespace:CineLog.Mobile.Helpers"
     xmlns:pages="clr-namespace:CineLog.Mobile.Pages"
     xmlns:vm="clr-namespace:CineLog.Mobile.Core.ViewModels.Log;assembly=CineLog.Mobile.Core"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="Log"
+    x:DataType="vm:LogViewModel"
     BackgroundColor="{StaticResource Background}"
-    ShowMenuButton="True"
-    Title="Log">
+    ShowMenuButton="True">
 
     <Grid Padding="20">
 
-        <RefreshView
-            Command="{Binding LoadCommand}"
-            IsRefreshing="{Binding IsBusy, Mode=OneWay}">
+        <RefreshView Command="{Binding LoadCommand}" IsRefreshing="{Binding IsBusy, Mode=OneWay}">
 
             <CollectionView
                 ItemsSource="{Binding Items}"
@@ -32,9 +30,7 @@
                                 ColumnSpacing="12">
 
                                 <Grid.GestureRecognizers>
-                                    <TapGestureRecognizer
-                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:LogViewModel}}, Path=OpenActivityCommand}"
-                                        CommandParameter="{Binding .}" />
+                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:LogViewModel}}, Path=OpenActivityCommand}" CommandParameter="{Binding .}" />
                                 </Grid.GestureRecognizers>
 
                                 <Border
@@ -75,15 +71,9 @@
                                         Style="{StaticResource BodyMediumLabel}"
                                         Text="{Binding ActionText}" />
 
-                                    <HorizontalStackLayout
-                                        IsVisible="{Binding ReviewRatingText, Converter={StaticResource IsNotNullOrEmptyConverter}}"
-                                        Spacing="6">
-                                        <Label
-                                            Style="{StaticResource CaptionLabel}"
-                                            Text="Rating" />
-                                        <Label
-                                            Style="{StaticResource AccentLabel}"
-                                            Text="{Binding ReviewRatingText}" />
+                                    <HorizontalStackLayout IsVisible="{Binding ReviewRatingText, Converter={StaticResource IsNotNullOrEmptyConverter}}" Spacing="6">
+                                        <Label Style="{StaticResource CaptionLabel}" Text="Rating" />
+                                        <Label Style="{StaticResource AccentLabel}" Text="{Binding ReviewRatingText}" />
                                     </HorizontalStackLayout>
 
                                     <Label
@@ -93,9 +83,7 @@
                                         Style="{StaticResource CaptionLabel}"
                                         Text="{Binding ReviewText}" />
 
-                                    <Label
-                                        Style="{StaticResource CaptionLabel}"
-                                        Text="{Binding TimeText}" />
+                                    <Label Style="{StaticResource CaptionLabel}" Text="{Binding TimeText}" />
                                 </VerticalStackLayout>
 
                                 <Border
@@ -110,15 +98,11 @@
                                     <Border.StrokeShape>
                                         <RoundRectangle CornerRadius="6" />
                                     </Border.StrokeShape>
-                                    <Image
-                                        Aspect="AspectFill"
-                                        Source="{Binding MoviePosterPath}" />
+                                    <Image Aspect="AspectFill" Source="{Binding MoviePosterPath}" />
                                 </Border>
                             </Grid>
 
-                            <BoxView
-                                Grid.Row="1"
-                                Style="{StaticResource ListDivider}" />
+                            <BoxView Grid.Row="1" Style="{StaticResource ListDivider}" />
                         </Grid>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
@@ -141,9 +125,7 @@
                 </CollectionView.EmptyView>
 
                 <CollectionView.Footer>
-                    <BoxView
-                        Color="Transparent"
-                        HeightRequest="32" />
+                    <BoxView HeightRequest="32" Color="Transparent" />
                 </CollectionView.Footer>
             </CollectionView>
         </RefreshView>

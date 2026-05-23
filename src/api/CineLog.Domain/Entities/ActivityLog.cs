@@ -21,7 +21,8 @@ public class ActivityLog
         Guid? targetUserId = null,
         Guid? movieId = null,
         Guid? reviewId = null,
-        Guid? watchlistId = null)
+        Guid? watchlistId = null,
+        DateTimeOffset? createdAt = null)
     {
         return new ActivityLog
         {
@@ -32,7 +33,7 @@ public class ActivityLog
             ReviewId = reviewId,
             WatchlistId = watchlistId,
             Type = type,
-            CreatedAt = DateTimeOffset.UtcNow
+            CreatedAt = createdAt ?? DateTimeOffset.UtcNow
         };
     }
 }

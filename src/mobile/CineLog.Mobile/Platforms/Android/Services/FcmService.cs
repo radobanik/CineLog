@@ -1,4 +1,3 @@
-// src/mobile/CineLog.Mobile/Platforms/Android/Services/FcmService.cs
 using CineLog.Mobile.ApiClient.Clients;
 using CineLog.Mobile.ApiClient.Models;
 using CineLog.Mobile.Core.Services.Interfaces;
