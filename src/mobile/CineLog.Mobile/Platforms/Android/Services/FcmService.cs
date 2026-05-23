@@ -1,4 +1,6 @@
+// src/mobile/CineLog.Mobile/Platforms/Android/Services/FcmService.cs
 using CineLog.Mobile.ApiClient.Clients;
+using CineLog.Mobile.ApiClient.Models;
 using CineLog.Mobile.Core.Services.Interfaces;
 using Firebase.Messaging;
 
@@ -24,11 +26,13 @@ public class FcmService : IFcmService
 
         try
         {
-            await _notificationsClient.RegisterFcmTokenAsync(token, ct);
+            await _notificationsClient.RegisterFcmTokenAsync(
+                new RegisterFcmTokenCommand { Token = token },
+                ct);
         }
         catch
         {
-            // Non-critical — will sync on next launch or when OnNewToken fires
+            // Non-critical - will sync on next launch or when OnNewToken fires
         }
     }
 

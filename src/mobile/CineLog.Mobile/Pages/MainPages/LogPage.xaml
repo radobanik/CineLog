@@ -1,26 +1,157 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <pages:BasePage
+    x:Class="CineLog.Mobile.Pages.MainPages.LogPage"
+    x:DataType="vm:LogViewModel"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:activity="clr-namespace:CineLog.Mobile.Core.Models.Activity;assembly=CineLog.Mobile.Core"
     xmlns:helpers="clr-namespace:CineLog.Mobile.Helpers"
     xmlns:pages="clr-namespace:CineLog.Mobile.Pages"
-    x:Class="CineLog.Mobile.Pages.MainPages.LogPage"
+    xmlns:vm="clr-namespace:CineLog.Mobile.Core.ViewModels.Log;assembly=CineLog.Mobile.Core"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    BackgroundColor="{StaticResource Background}"
     ShowMenuButton="True"
     Title="Log">
 
-    <Grid Padding="28">
-        <VerticalStackLayout Spacing="12" VerticalOptions="Center">
-            <Label
-                HorizontalOptions="Center"
-                Style="{StaticResource PrimaryIconLabel}"
-                FontSize="40"
-                Text="{x:Static helpers:FontAwesomeIcons.Film}" />
-            <Label
-                HorizontalOptions="Center"
-                HorizontalTextAlignment="Center"
-                Style="{StaticResource CaptionLabel}"
-                Text="Placeholder" />
-        </VerticalStackLayout>
-    </Grid>
+    <Grid Padding="20">
 
+        <RefreshView
+            Command="{Binding LoadCommand}"
+            IsRefreshing="{Binding IsBusy, Mode=OneWay}">
+
+            <CollectionView
+                ItemsSource="{Binding Items}"
+                ItemsUpdatingScrollMode="KeepScrollOffset"
+                SelectionMode="None">
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="activity:ActivityFeedItem">
+                        <Grid RowDefinitions="Auto,Auto">
+                            <Grid
+                                Padding="0,14"
+                                ColumnDefinitions="48,*,64"
+                                ColumnSpacing="12">
+
+                                <Grid.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:LogViewModel}}, Path=OpenActivityCommand}"
+                                        CommandParameter="{Binding .}" />
+                                </Grid.GestureRecognizers>
+
+                                <Border
+                                    Grid.Column="0"
+                                    BackgroundColor="{StaticResource SurfaceVariant}"
+                                    HeightRequest="42"
+                                    StrokeThickness="0"
+                                    VerticalOptions="Start"
+                                    WidthRequest="42">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="21" />
+                                    </Border.StrokeShape>
+
+                                    <Grid>
+                                        <Image
+                                            Aspect="AspectFill"
+                                            IsVisible="{Binding HasActorAvatar}"
+                                            Source="{Binding ActorAvatarUrl}" />
+
+                                        <Label
+                                            FontAttributes="Bold"
+                                            FontSize="15"
+                                            HorizontalOptions="Center"
+                                            IsVisible="{Binding HasActorAvatar, Converter={StaticResource InvertedBoolConverter}}"
+                                            Text="{Binding ActorInitial}"
+                                            TextColor="{StaticResource Primary}"
+                                            VerticalOptions="Center" />
+                                    </Grid>
+                                </Border>
+
+                                <VerticalStackLayout
+                                    Grid.Column="1"
+                                    Spacing="5"
+                                    VerticalOptions="Start">
+
+                                    <Label
+                                        LineBreakMode="WordWrap"
+                                        Style="{StaticResource BodyMediumLabel}"
+                                        Text="{Binding ActionText}" />
+
+                                    <HorizontalStackLayout
+                                        IsVisible="{Binding ReviewRatingText, Converter={StaticResource IsNotNullOrEmptyConverter}}"
+                                        Spacing="6">
+                                        <Label
+                                            Style="{StaticResource CaptionLabel}"
+                                            Text="Rating" />
+                                        <Label
+                                            Style="{StaticResource AccentLabel}"
+                                            Text="{Binding ReviewRatingText}" />
+                                    </HorizontalStackLayout>
+
+                                    <Label
+                                        IsVisible="{Binding HasReviewText}"
+                                        LineBreakMode="TailTruncation"
+                                        MaxLines="2"
+                                        Style="{StaticResource CaptionLabel}"
+                                        Text="{Binding ReviewText}" />
+
+                                    <Label
+                                        Style="{StaticResource CaptionLabel}"
+                                        Text="{Binding TimeText}" />
+                                </VerticalStackLayout>
+
+                                <Border
+                                    Grid.Column="2"
+                                    BackgroundColor="{StaticResource SurfaceVariant}"
+                                    HeightRequest="84"
+                                    IsVisible="{Binding HasMoviePoster}"
+                                    Stroke="{StaticResource Border}"
+                                    StrokeThickness="1"
+                                    VerticalOptions="Start"
+                                    WidthRequest="56">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="6" />
+                                    </Border.StrokeShape>
+                                    <Image
+                                        Aspect="AspectFill"
+                                        Source="{Binding MoviePosterPath}" />
+                                </Border>
+                            </Grid>
+
+                            <BoxView
+                                Grid.Row="1"
+                                Style="{StaticResource ListDivider}" />
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+
+                <CollectionView.EmptyView>
+                    <Grid Padding="0,120,0,0">
+                        <VerticalStackLayout Spacing="12">
+                            <Label
+                                FontSize="40"
+                                HorizontalOptions="Center"
+                                Style="{StaticResource PrimaryIconLabel}"
+                                Text="{x:Static helpers:FontAwesomeIcons.Film}" />
+                            <Label
+                                HorizontalOptions="Center"
+                                HorizontalTextAlignment="Center"
+                                Style="{StaticResource CaptionLabel}"
+                                Text="No activity yet." />
+                        </VerticalStackLayout>
+                    </Grid>
+                </CollectionView.EmptyView>
+
+                <CollectionView.Footer>
+                    <BoxView
+                        Color="Transparent"
+                        HeightRequest="32" />
+                </CollectionView.Footer>
+            </CollectionView>
+        </RefreshView>
+
+        <ActivityIndicator
+            HorizontalOptions="Center"
+            IsRunning="{Binding IsBusy}"
+            IsVisible="{Binding IsBusy}"
+            VerticalOptions="Center" />
+    </Grid>
 </pages:BasePage>
