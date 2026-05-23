@@ -38,13 +38,20 @@ public class GetActivityFeedHandler : IRequestHandler<GetActivityFeedQuery, List
         var activities = await _db.ActivityLogs
             .AsNoTracking()
             .Where(a =>
-                IsFollowActivity(a.Type)
-                    ? a.ActorUserId == currentUserId || a.TargetUserId == currentUserId
-                    : visibleActorIds.Contains(a.ActorUserId) &&
-                      (
-                          a.ActorUserId == currentUserId ||
-                          a.Type != ActivityType.MovieAddedToCustomWatchlist
-                      ))
+                (
+                    (a.Type == ActivityType.UserFollowed || a.Type == ActivityType.UserUnfollowed) &&
+                    (a.ActorUserId == currentUserId || a.TargetUserId == currentUserId)
+                )
+                ||
+                (
+                    a.Type != ActivityType.UserFollowed &&
+                    a.Type != ActivityType.UserUnfollowed &&
+                    visibleActorIds.Contains(a.ActorUserId) &&
+                    (
+                        a.ActorUserId == currentUserId ||
+                        a.Type != ActivityType.MovieAddedToCustomWatchlist
+                    )
+                ))
             .OrderByDescending(a => a.CreatedAt)
             .Skip(skip)
             .Take(count)
@@ -117,7 +124,4 @@ public class GetActivityFeedHandler : IRequestHandler<GetActivityFeedQuery, List
                 a.WatchlistId.HasValue && watchlists.TryGetValue(a.WatchlistId.Value, out var watchlist) ? watchlist : null))
             .ToList();
     }
-
-    private static bool IsFollowActivity(ActivityType type) =>
-        type is ActivityType.UserFollowed or ActivityType.UserUnfollowed;
 }
