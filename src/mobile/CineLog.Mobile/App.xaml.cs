@@ -16,20 +16,31 @@ public partial class App : Application
 
     private async Task InitializeAsync(ISessionService session, AppShell shell, IFcmService fcmService)
     {
-        await RequestNotificationPermissionAsync();
+        try
+        {
+            await RequestNotificationPermissionAsync();
 
-        var restored = await session.TryRestoreSessionAsync();
+            var restored = await session.TryRestoreSessionAsync();
 
-        MainPage = shell;
+            MainPage = shell;
 
-        var route = restored
-            ? $"//{Routes.AuthenticatedRoot}"
-            : $"//{Routes.Login}";
+            var route = restored
+                ? $"//{Routes.AuthenticatedRoot}"
+                : $"//{Routes.Login}";
 
-        await shell.GoToAsync(route);
+            await shell.GoToAsync(route);
 
-        if (restored)
-            _ = fcmService.RegisterTokenAsync();
+            if (restored)
+                _ = fcmService.RegisterTokenAsync();
+        }
+        catch
+        {
+            // If initialization fails for any reason, clear any potentially corrupt session
+            // and fall back to the login screen so the app is never stuck on black screen.
+            session.ClearSession();
+            MainPage = shell;
+            await shell.GoToAsync($"//{Routes.Login}");
+        }
     }
 
     private static async Task RequestNotificationPermissionAsync()
