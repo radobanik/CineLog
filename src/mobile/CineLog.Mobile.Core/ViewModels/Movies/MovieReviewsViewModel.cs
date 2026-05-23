@@ -1,5 +1,6 @@
 using System.Collections.ObjectModel;
 using CineLog.Mobile.ApiClient.Clients;
+using CineLog.Mobile.ApiClient.Models;
 using CineLog.Mobile.Core.Models.Review;
 using CineLog.Mobile.Core.Navigation;
 using CineLog.Mobile.Core.Services.Interfaces;
@@ -36,6 +37,8 @@ public partial class MovieReviewsViewModel(
         _totalPages = 0;
         Reviews.Clear();
         CanLoadMore = false;
+
+        await LoadFocusedReviewAsync();
         await FetchNextPageAsync();
     }
 
@@ -59,6 +62,24 @@ public partial class MovieReviewsViewModel(
         }
     }
 
+    private async Task LoadFocusedReviewAsync()
+    {
+        if (reviewsNav.FocusReviewId is not { } reviewId)
+            return;
+
+        reviewsNav.FocusReviewId = null;
+
+        try
+        {
+            var review = await reviewsClient.GetByIdAsync(reviewId);
+            Reviews.Add(MapReview(review));
+        }
+        catch
+        {
+            // Deleted reviews can still have activity rows. In that case the normal list is enough.
+        }
+    }
+
     private async Task FetchNextPageAsync()
     {
         IReadOnlyList<ReviewListItem> items;
@@ -78,7 +99,10 @@ public partial class MovieReviewsViewModel(
         }
 
         foreach (var item in items)
-            Reviews.Add(item);
+        {
+            if (Reviews.All(existing => existing.Id != item.Id))
+                Reviews.Add(item);
+        }
 
         _currentPage++;
         _totalPages = totalPages;
@@ -107,4 +131,17 @@ public partial class MovieReviewsViewModel(
 
     [RelayCommand]
     private Task GoBack() => navigation.NavigateBackAsync();
+
+    private static ReviewListItem MapReview(ReviewResponse review) => new()
+    {
+        Id = review.Id ?? Guid.Empty,
+        Username = review.Username,
+        AvatarUrl = review.AvatarUrl,
+        MovieTitle = review.MovieTitle ?? string.Empty,
+        Rating = review.Rating,
+        ReviewText = review.ReviewText,
+        CreatedAt = review.CreatedAt,
+        LikesCount = review.LikesCount ?? 0,
+        IsLiked = review.IsLiked ?? false
+    };
 }

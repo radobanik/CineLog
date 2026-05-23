@@ -7,4 +7,5 @@ public class ReviewsNavigationContext : IReviewsNavigationContext
 {
     public ReviewsMode Mode { get; set; }
     public Guid EntityId { get; set; }
+    public Guid? FocusReviewId { get; set; }
 }

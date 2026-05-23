@@ -23,25 +23,28 @@ public class GetActivityFeedHandler : IRequestHandler<GetActivityFeedQuery, List
     {
         var skip = Math.Max(0, request.Skip);
         var count = Math.Clamp(request.Count, 1, 50);
+        var currentUserId = _currentUser.UserId;
 
         var followedUserIds = await _db.UserFollows
             .AsNoTracking()
-            .Where(f => f.FollowerId == _currentUser.UserId)
+            .Where(f => f.FollowerId == currentUserId)
             .Select(f => f.FollowedId)
             .ToListAsync(cancellationToken);
 
         var visibleActorIds = followedUserIds
-            .Append(_currentUser.UserId)
+            .Append(currentUserId)
             .ToHashSet();
 
         var activities = await _db.ActivityLogs
             .AsNoTracking()
             .Where(a =>
-                visibleActorIds.Contains(a.ActorUserId) &&
-                (
-                    a.ActorUserId == _currentUser.UserId ||
-                    a.Type != ActivityType.MovieAddedToCustomWatchlist
-                ))
+                IsFollowActivity(a.Type)
+                    ? a.ActorUserId == currentUserId || a.TargetUserId == currentUserId
+                    : visibleActorIds.Contains(a.ActorUserId) &&
+                      (
+                          a.ActorUserId == currentUserId ||
+                          a.Type != ActivityType.MovieAddedToCustomWatchlist
+                      ))
             .OrderByDescending(a => a.CreatedAt)
             .Skip(skip)
             .Take(count)
@@ -114,4 +117,7 @@ public class GetActivityFeedHandler : IRequestHandler<GetActivityFeedQuery, List
                 a.WatchlistId.HasValue && watchlists.TryGetValue(a.WatchlistId.Value, out var watchlist) ? watchlist : null))
             .ToList();
     }
+
+    private static bool IsFollowActivity(ActivityType type) =>
+        type is ActivityType.UserFollowed or ActivityType.UserUnfollowed;
 }
