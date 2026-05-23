@@ -1,4 +1,6 @@
 using CineLog.Application.Common;
+using CineLog.Domain.Entities;
+using CineLog.Domain.Enums;
 using CineLog.Domain.Exceptions;
 using CineLog.Domain.Interfaces;
 using MediatR;
@@ -25,6 +27,14 @@ public class RemoveFromFavoritesHandler : IRequestHandler<RemoveFromFavoritesCom
             ?? throw new NotFoundException("Movie is not in your favorites.");
 
         _context.UserFavorites.Remove(entry);
+
+        await _context.ActivityLogs.AddAsync(
+            ActivityLog.Create(
+                _currentUser.UserId,
+                ActivityType.MovieFavoriteRemoved,
+                movieId: request.MovieId),
+            cancellationToken);
+
         await _context.SaveChangesAsync(cancellationToken);
     }
 }
