@@ -58,7 +58,7 @@ public sealed class ProfileService(IUsersClient usersClient) : IProfileService
 
     public async Task<IReadOnlyList<ReviewListItem>> GetReviewsAsync(Guid userId, CancellationToken ct = default)
     {
-        var response = await usersClient.GetReviewsAsync(userId, null, null, ct);
+        var response = await usersClient.GetReviewsAsync(userId, page: 1, pageSize: 5, ct);
         return [.. (response?.Items ?? []).Select(r => new ReviewListItem
         {
             Id = r.Id ?? Guid.Empty,

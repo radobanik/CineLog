@@ -16,6 +16,7 @@ public partial class ProfileViewModel(
     IFollowService followService,
     IMovieDetailNavigationContext movieDetailNav,
     IReviewsNavigationContext reviewsNav,
+    IEditReviewNavigationContext editReviewNav,
     INavigationService navigation,
     IAlertService alerts)
     : BaseViewModel(alerts)
@@ -89,6 +90,19 @@ public partial class ProfileViewModel(
         reviewsNav.Mode = ReviewsMode.User;
         reviewsNav.EntityId = _userId;
         return navigation.NavigateToAsync(Routes.MovieReviews);
+    }
+
+    [RelayCommand]
+    private Task GoToEditReview(ReviewListItem review)
+    {
+        if (!IsOwnProfile)
+            return Task.CompletedTask;
+
+        editReviewNav.ReviewId = review.Id;
+        editReviewNav.MovieTitle = review.MovieTitle;
+        editReviewNav.Rating = review.Rating ?? 0.0;
+        editReviewNav.ReviewText = review.ReviewText;
+        return navigation.NavigateToAsync(Routes.AddReview);
     }
 
     [RelayCommand]

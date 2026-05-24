@@ -20,6 +20,7 @@ public partial class MovieDetailViewModel : BaseViewModel
     private readonly INavigationService _navigation;
     private readonly IReviewsClient _reviewsClient;
     private readonly IMoviesClient _moviesClient;
+    private readonly IEditReviewNavigationContext _editReviewNav;
 
     [ObservableProperty] private MovieDetailInfo? _movie;
     [ObservableProperty] private string _reviewsCountText = string.Empty;
@@ -35,6 +36,7 @@ public partial class MovieDetailViewModel : BaseViewModel
         IMovieDetailService movieDetailService,
         IMovieDetailNavigationContext movieDetailNav,
         IReviewsNavigationContext reviewsNav,
+        IEditReviewNavigationContext editReviewNav,
         INavigationService navigation,
         IReviewsClient reviewsClient,
         IMoviesClient moviesClient,
@@ -44,6 +46,7 @@ public partial class MovieDetailViewModel : BaseViewModel
         _movieDetailService = movieDetailService;
         _movieDetailNav = movieDetailNav;
         _reviewsNav = reviewsNav;
+        _editReviewNav = editReviewNav;
         _navigation = navigation;
         _reviewsClient = reviewsClient;
         _moviesClient = moviesClient;
@@ -104,7 +107,11 @@ public partial class MovieDetailViewModel : BaseViewModel
     }
 
     [RelayCommand]
-    private Task OpenAddReview() => _navigation.NavigateToAsync(Routes.AddReview);
+    private Task OpenAddReview()
+    {
+        _editReviewNav.ReviewId = Guid.Empty;
+        return _navigation.NavigateToAsync(Routes.AddReview);
+    }
 
     [RelayCommand]
     private Task OpenAddToWatchlist() => _navigation.NavigateToAsync(Routes.AddToWatchlist);

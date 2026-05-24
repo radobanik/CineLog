@@ -29,6 +29,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IWatchListNavigationContext, WatchListNavigationContext>();
         services.AddSingleton<IMovieDetailNavigationContext, MovieDetailNavigationContext>();
         services.AddSingleton<IReviewsNavigationContext, ReviewsNavigationContext>();
+        services.AddSingleton<IEditReviewNavigationContext, EditReviewNavigationContext>();
         services.AddSingleton<ISecureStorageService, MauiSecureStorageService>();
         services.AddSingleton<INavigationService, ShellNavigationService>();
         services.AddSingleton<IAlertService, MauiAlertService>();
