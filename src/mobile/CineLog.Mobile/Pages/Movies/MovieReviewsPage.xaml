@@ -14,8 +14,18 @@
     ShowMenuButton="false">
 
     <Grid Padding="6,24,6,24">
+        <ActivityIndicator
+            HorizontalOptions="Center"
+            VerticalOptions="Center"
+            IsRunning="{Binding IsBusy}"
+            IsVisible="{Binding IsBusy}"
+            Color="{StaticResource Primary}" />
+
         <CollectionView
+            IsVisible="{Binding IsNotBusy}"
             ItemsSource="{Binding Reviews}"
+            RemainingItemsThreshold="3"
+            RemainingItemsThresholdReachedCommand="{Binding LoadMoreCommand}"
             SelectionMode="None">
 
             <CollectionView.ItemTemplate>
@@ -34,22 +44,11 @@
             </CollectionView.ItemTemplate>
 
             <CollectionView.Footer>
-                <VerticalStackLayout Padding="0,8,0,24">
-                    <Button
-                        Text="Load more"
-                        Command="{Binding LoadMoreCommand}"
-                        IsVisible="{Binding CanLoadMore}"
-                        BackgroundColor="{StaticResource Surface}"
-                        TextColor="{StaticResource Primary}"
-                        FontAttributes="Bold"
-                        CornerRadius="8"
-                        HeightRequest="48" />
-                    <ActivityIndicator
-                        Margin="0,12"
-                        IsRunning="{Binding IsLoadingMore}"
-                        IsVisible="{Binding IsLoadingMore}"
-                        Color="{StaticResource Primary}" />
-                </VerticalStackLayout>
+                <ActivityIndicator
+                    Margin="0,12"
+                    IsRunning="{Binding IsLoadingMore}"
+                    IsVisible="{Binding IsLoadingMore}"
+                    Color="{StaticResource Primary}" />
             </CollectionView.Footer>
         </CollectionView>
     </Grid>
