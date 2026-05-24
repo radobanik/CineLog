@@ -97,14 +97,46 @@
 
                     <VerticalStackLayout
                         Grid.Column="1"
-                        Spacing="4"
+                        Spacing="6"
                         HorizontalOptions="Center"
                         VerticalOptions="Center">
-                        <Label
-                            Style="{StaticResource RatingLabel}"
-                            FontSize="22"
-                            Text="{Binding Rating, Converter={StaticResource RatingToStarsConverter}}"
-                            HorizontalOptions="Center" />
+                        <HorizontalStackLayout
+                            Spacing="3"
+                            HorizontalOptions="Center"
+                            BindableLayout.ItemsSource="{Binding Stars}">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate x:DataType="vm:StarDisplayItem">
+                                    <Grid>
+                                        <!-- Grey full star: always visible as background -->
+                                        <Label
+                                            FontFamily="FASolid"
+                                            FontSize="26"
+                                            Text="{x:Static helpers:FontAwesomeIcons.Star}"
+                                            TextColor="{StaticResource TextDisabled}"
+                                            HorizontalOptions="Center"
+                                            VerticalOptions="Center" />
+                                        <!-- Colored full star: shown when full -->
+                                        <Label
+                                            FontFamily="FASolid"
+                                            FontSize="26"
+                                            Text="{x:Static helpers:FontAwesomeIcons.Star}"
+                                            TextColor="{StaticResource Primary}"
+                                            IsVisible="{Binding IsFull}"
+                                            HorizontalOptions="Center"
+                                            VerticalOptions="Center" />
+                                        <!-- Colored half star: overlays grey star, left=colored, right=grey -->
+                                        <Label
+                                            FontFamily="FASolid"
+                                            FontSize="26"
+                                            Text="{x:Static helpers:FontAwesomeIcons.StarHalf}"
+                                            TextColor="{StaticResource Primary}"
+                                            IsVisible="{Binding IsHalf}"
+                                            HorizontalOptions="Center"
+                                            VerticalOptions="Center" />
+                                    </Grid>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </HorizontalStackLayout>
                         <Label
                             Style="{StaticResource HeadlineMediumLabel}"
                             Text="{Binding RatingText}"

@@ -1,4 +1,5 @@
 using CineLog.Mobile.ApiClient.Clients;
+using CineLog.Mobile.ApiClient.Infrastructure;
 using CineLog.Mobile.ApiClient.Models;
 using CineLog.Mobile.Core.Models.Movies;
 using CineLog.Mobile.Core.Navigation;
@@ -16,7 +17,7 @@ public partial class AddReviewViewModel(
     INavigationService navigation,
     IAlertService alerts) : BaseViewModel(alerts)
 {
-    private const double MinRating = 0.5;
+    private const double MinRating = 0.0;
     private const double MaxRating = 5.0;
     private const double RatingStep = 0.5;
 
@@ -24,7 +25,8 @@ public partial class AddReviewViewModel(
     [NotifyPropertyChangedFor(nameof(CanDecrease))]
     [NotifyPropertyChangedFor(nameof(CanIncrease))]
     [NotifyPropertyChangedFor(nameof(RatingText))]
-    private double _rating = 2.5;
+    [NotifyPropertyChangedFor(nameof(Stars))]
+    private double _rating = 0.0;
 
     [ObservableProperty] private MovieDetailInfo? _movie;
     [ObservableProperty] private string? _reviewText;
@@ -32,6 +34,8 @@ public partial class AddReviewViewModel(
     public bool CanDecrease => Rating > MinRating;
     public bool CanIncrease => Rating < MaxRating;
     public string RatingText => Rating.ToString("0.0");
+
+    public IReadOnlyList<StarDisplayItem> Stars => BuildStarItems(Rating);
 
     protected override async Task LoadAsync()
     {
@@ -58,16 +62,23 @@ public partial class AddReviewViewModel(
     {
         await ExecuteAsync(async () =>
         {
-            await reviewsClient.CreateAsync(new CreateReviewCommand
+            try
             {
-                MovieId = movieDetailNav.MovieId,
-                Rating = Rating,
-                ReviewText = string.IsNullOrWhiteSpace(ReviewText) ? null : ReviewText,
-                ContainsSpoilers = false
-            });
+                await reviewsClient.CreateAsync(new CreateReviewCommand
+                {
+                    MovieId = movieDetailNav.MovieId,
+                    Rating = Rating,
+                    ReviewText = string.IsNullOrWhiteSpace(ReviewText) ? null : ReviewText,
+                    ContainsSpoilers = false
+                });
 
-            await alerts.ShowToastAsync("Review submitted!");
-            await navigation.NavigateBackAsync();
+                await alerts.ShowToastAsync("Review submitted!");
+                await navigation.NavigateBackAsync();
+            }
+            catch (ApiException ex) when (ex.StatusCode == 409)
+            {
+                await alerts.ShowAlertAsync("Already Reviewed", "You have already submitted a review for this film.");
+            }
         });
     }
 
@@ -82,5 +93,20 @@ public partial class AddReviewViewModel(
 
         if (confirmed)
             await navigation.NavigateBackAsync();
+    }
+
+    private static IReadOnlyList<StarDisplayItem> BuildStarItems(double rating)
+    {
+        var items = new StarDisplayItem[5];
+        for (var i = 0; i < 5; i++)
+        {
+            if (rating >= i + 1.0)
+                items[i] = new StarDisplayItem(IsFull: true, IsHalf: false);
+            else if (rating >= i + 0.5)
+                items[i] = new StarDisplayItem(IsFull: false, IsHalf: true);
+            else
+                items[i] = new StarDisplayItem(IsFull: false, IsHalf: false);
+        }
+        return items;
     }
 }
