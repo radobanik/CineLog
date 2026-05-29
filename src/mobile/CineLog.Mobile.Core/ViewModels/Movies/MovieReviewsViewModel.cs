@@ -15,6 +15,8 @@ public partial class MovieReviewsViewModel(
     IProfileService profileService,
     IReviewsClient reviewsClient,
     IReviewsNavigationContext reviewsNav,
+    IEditReviewNavigationContext editReviewNav,
+    ISessionService session,
     INavigationService navigation,
     IAlertService alerts) : BaseViewModel(alerts)
 {
@@ -27,6 +29,7 @@ public partial class MovieReviewsViewModel(
 
     public bool IsMovieMode => reviewsNav.Mode == ReviewsMode.Movie;
     public bool IsUserMode => reviewsNav.Mode == ReviewsMode.User;
+    public bool IsOwnReviews => IsUserMode && reviewsNav.EntityId == session.UserId;
 
     public ObservableCollection<ReviewListItem> Reviews { get; } = [];
 
@@ -127,6 +130,19 @@ public partial class MovieReviewsViewModel(
             review.IsLiked = wasLiked;
             review.LikesCount += wasLiked ? 1 : -1;
         }
+    }
+
+    [RelayCommand]
+    private Task GoToEditReview(ReviewListItem review)
+    {
+        if (!IsOwnReviews)
+            return Task.CompletedTask;
+
+        editReviewNav.ReviewId = review.Id;
+        editReviewNav.MovieTitle = review.MovieTitle;
+        editReviewNav.Rating = review.Rating ?? 0.0;
+        editReviewNav.ReviewText = review.ReviewText;
+        return navigation.NavigateToAsync(Routes.AddReview);
     }
 
     [RelayCommand]

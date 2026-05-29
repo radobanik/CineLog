@@ -36,6 +36,11 @@ public partial class App : Application
         }
         catch
         {
+            // If initialization fails for any reason, clear any potentially corrupt session
+            // and fall back to the login screen so the app is never stuck on a black screen.
+            await session.ClearSessionAsync();
+
+            MainPage = shell;
             await shell.GoToAsync($"//{Routes.Login}");
         }
     }

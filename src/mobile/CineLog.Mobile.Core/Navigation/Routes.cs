@@ -21,6 +21,8 @@ public static class Routes
     public const string EditProfile = nameof(EditProfile);
     public const string UserProfile = nameof(UserProfile);
 
+    public const string AddReview = nameof(AddReview);
+
     public const string AuthenticatedRoot = MainTabs + "/" + Home;
 
 }

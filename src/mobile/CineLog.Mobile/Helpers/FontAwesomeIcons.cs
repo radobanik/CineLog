@@ -23,6 +23,7 @@ public static class FontAwesomeIcons
     public const string ChevronLeft = "\uf053";
     public const string ChevronRight = "\uf054";
     public const string Plus = "\uf067";
+    public const string Minus = "\uf068";
     public const string Trash = "\uf1f8";
     public const string Edit = "\uf044";
     public const string EllipsisV = "\uf142";
