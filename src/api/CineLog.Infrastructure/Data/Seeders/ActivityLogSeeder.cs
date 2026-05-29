@@ -144,6 +144,15 @@ internal static class ActivityLogSeeder
                     createdAt: createdAt);
                 break;
 
+            case ActivityType.WatchlistCreated:
+                await AddActivityIfMissingAsync(
+                    context,
+                    actorUserId,
+                    type,
+                    watchlistId: customWatchlist.Id,
+                    createdAt: createdAt);
+                break;
+
             case ActivityType.ReviewCreated:
             case ActivityType.ReviewUpdated:
                 await AddActivityIfMissingAsync(

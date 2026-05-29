@@ -16,5 +16,6 @@ public enum ActivityType
     ProfileUpdated = 11,
     AvatarUpdated = 12,
     ReviewUpdated = 13,
-    ReviewDeleted = 14
+    ReviewDeleted = 14,
+    WatchlistCreated = 15
 }

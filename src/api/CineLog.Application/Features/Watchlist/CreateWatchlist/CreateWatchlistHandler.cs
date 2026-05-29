@@ -1,4 +1,6 @@
 using CineLog.Application.Common;
+using CineLog.Domain.Entities;
+using CineLog.Domain.Enums;
 using CineLog.Domain.Interfaces;
 using MediatR;
 using WatchlistEntity = CineLog.Domain.Entities.Watchlist;
@@ -19,8 +21,18 @@ public class CreateWatchlistHandler : IRequestHandler<CreateWatchlistCommand, Gu
     public async Task<Guid> Handle(CreateWatchlistCommand request, CancellationToken cancellationToken)
     {
         var watchlist = WatchlistEntity.CreateCustom(_currentUser.UserId, request.Name);
+
         await _context.Watchlists.AddAsync(watchlist, cancellationToken);
+
+        await _context.ActivityLogs.AddAsync(
+            ActivityLog.Create(
+                _currentUser.UserId,
+                ActivityType.WatchlistCreated,
+                watchlistId: watchlist.Id),
+            cancellationToken);
+
         await _context.SaveChangesAsync(cancellationToken);
+
         return watchlist.Id;
     }
 }
