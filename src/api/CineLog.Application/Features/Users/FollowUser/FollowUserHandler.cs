@@ -14,15 +14,18 @@ public class FollowUserHandler : IRequestHandler<FollowUserCommand>
     private readonly IUserRepository _userRepository;
     private readonly IAppDbContext _context;
     private readonly ICurrentUserService _currentUser;
+    private readonly INotificationService _notificationService;
 
     public FollowUserHandler(
         IUserRepository userRepository,
         IAppDbContext context,
-        ICurrentUserService currentUser)
+        ICurrentUserService currentUser,
+        INotificationService notificationService)
     {
         _userRepository = userRepository;
         _context = context;
         _currentUser = currentUser;
+        _notificationService = notificationService;
     }
 
     public async Task Handle(FollowUserCommand request, CancellationToken cancellationToken)
@@ -51,5 +54,16 @@ public class FollowUserHandler : IRequestHandler<FollowUserCommand>
             cancellationToken);
 
         await _context.SaveChangesAsync(cancellationToken);
+
+        var followerName = await _context.Users
+            .Where(u => u.Id == _currentUser.UserId)
+            .Select(u => u.UserName)
+            .FirstOrDefaultAsync(cancellationToken);
+
+        await _notificationService.SendAsync(
+            request.TargetUserId,
+            "New Follower",
+            $"{followerName} started following you.",
+            cancellationToken);
     }
 }
