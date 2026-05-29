@@ -109,16 +109,29 @@ public static class ServiceCollectionExtensions
         // Notification service
         services.Configure<FirebaseOptions>(configuration.GetSection("Firebase"));
         var firebaseCredPath = configuration["Firebase:CredentialPath"];
-        if (!string.IsNullOrWhiteSpace(firebaseCredPath) && FirebaseApp.DefaultInstance is null)
+        var resolvedFirebaseCredPath = ResolveFirebaseCredentialPath(firebaseCredPath);
+        if (resolvedFirebaseCredPath is not null && FirebaseApp.DefaultInstance is null)
         {
             FirebaseApp.Create(new AppOptions
             {
-                Credential = GoogleCredential.FromFile(firebaseCredPath)
+                Credential = GoogleCredential.FromFile(resolvedFirebaseCredPath)
             });
         }
 
         services.AddScoped<INotificationService, FirebasePushNotificationService>();
 
         return services;
+    }
+
+    private static string? ResolveFirebaseCredentialPath(string? credentialPath)
+    {
+        if (string.IsNullOrWhiteSpace(credentialPath))
+            return null;
+
+        if (File.Exists(credentialPath))
+            return credentialPath;
+
+        var outputPath = Path.Combine(AppContext.BaseDirectory, credentialPath);
+        return File.Exists(outputPath) ? outputPath : null;
     }
 }

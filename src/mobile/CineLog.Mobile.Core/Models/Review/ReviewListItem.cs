@@ -15,8 +15,17 @@ public sealed partial class ReviewListItem : ObservableObject
     [ObservableProperty] private int _likesCount;
     [ObservableProperty] private bool _isLiked;
 
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(ReviewMaxLines))]
+    [NotifyPropertyChangedFor(nameof(ExpandLabel))]
+    private bool _isExpanded;
+
     public string Initial => (Username?.Length > 0 ? Username[0].ToString() : "?").ToUpper();
     public string DateText => CreatedAt?.ToString("MMM d, yyyy") ?? string.Empty;
     public string DayText => CreatedAt?.ToString("%d") ?? string.Empty;
     public string MonthText => CreatedAt?.ToString("MMM") ?? string.Empty;
+
+    public bool HasReviewText => !string.IsNullOrWhiteSpace(ReviewText);
+    public int ReviewMaxLines => IsExpanded ? int.MaxValue : 3;
+    public string ExpandLabel => IsExpanded ? "Show less" : "Show more";
 }

@@ -1,5 +1,6 @@
 using CineLog.Application.Common;
 using CineLog.Domain.Entities;
+using CineLog.Domain.Enums;
 using CineLog.Domain.Exceptions;
 using CineLog.Domain.Interfaces;
 using CineLog.Domain.Repositories;
@@ -37,6 +38,14 @@ public class AddToFavoritesHandler : IRequestHandler<AddToFavoritesCommand>
 
         await _context.UserFavorites.AddAsync(
             UserFavorite.Create(_currentUser.UserId, request.MovieId), cancellationToken);
+
+        await _context.ActivityLogs.AddAsync(
+            ActivityLog.Create(
+                _currentUser.UserId,
+                ActivityType.MovieFavorited,
+                movieId: request.MovieId),
+            cancellationToken);
+
         await _context.SaveChangesAsync(cancellationToken);
     }
 }

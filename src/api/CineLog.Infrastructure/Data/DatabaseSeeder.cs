@@ -24,5 +24,6 @@ public static class DatabaseSeeder
         await UserFollowSeeder.SeedAsync(dbContext);
         await FavoriteSeeder.SeedAsync(dbContext);
         await WatchlistSeeder.SeedAsync(dbContext);
+        await ActivityLogSeeder.SeedAsync(dbContext);
     }
 }

@@ -1,5 +1,7 @@
 using CineLog.Application.Common;
 using CineLog.Application.Features.Users.UploadAvatar;
+using CineLog.Domain.Entities;
+using CineLog.Domain.Enums;
 using CineLog.Domain.Exceptions;
 using CineLog.Domain.Interfaces;
 using CineLog.Domain.Repositories;
@@ -34,6 +36,13 @@ public class SetUserAvatarHandler : IRequestHandler<SetUserAvatarCommand, Upload
         var url = await _blobStorage.UploadAsync(key, request.FileStream, request.ContentType, cancellationToken);
 
         user.AvatarUrl = url;
+
+        await _context.ActivityLogs.AddAsync(
+            ActivityLog.Create(
+                request.UserId,
+                ActivityType.AvatarUpdated),
+            cancellationToken);
+
         await _context.SaveChangesAsync(cancellationToken);
 
         return new UploadAvatarResponse(url);

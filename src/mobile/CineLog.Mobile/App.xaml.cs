@@ -9,20 +9,19 @@ public partial class App : Application
     {
         InitializeComponent();
 
-        MainPage = new ContentPage { BackgroundColor = (Color)Resources["Background"] };
+        MainPage = shell;
 
         _ = InitializeAsync(session, shell, fcmService);
     }
 
-    private async Task InitializeAsync(ISessionService session, AppShell shell, IFcmService fcmService)
+    private static async Task InitializeAsync(
+        ISessionService session,
+        AppShell shell,
+        IFcmService fcmService)
     {
         try
         {
-            await RequestNotificationPermissionAsync();
-
             var restored = await session.TryRestoreSessionAsync();
-
-            MainPage = shell;
 
             var route = restored
                 ? $"//{Routes.AuthenticatedRoot}"
@@ -30,14 +29,17 @@ public partial class App : Application
 
             await shell.GoToAsync(route);
 
+            await RequestNotificationPermissionAsync();
+
             if (restored)
                 _ = fcmService.RegisterTokenAsync();
         }
         catch
         {
             // If initialization fails for any reason, clear any potentially corrupt session
-            // and fall back to the login screen so the app is never stuck on black screen.
-            session.ClearSession();
+            // and fall back to the login screen so the app is never stuck on a black screen.
+            await session.ClearSessionAsync();
+
             MainPage = shell;
             await shell.GoToAsync($"//{Routes.Login}");
         }

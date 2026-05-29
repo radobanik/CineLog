@@ -1,4 +1,6 @@
 using CineLog.Application.Common;
+using CineLog.Domain.Entities;
+using CineLog.Domain.Enums;
 using CineLog.Domain.Exceptions;
 using CineLog.Domain.Interfaces;
 using CineLog.Domain.Repositories;
@@ -30,6 +32,13 @@ public class UpdateProfileHandler : IRequestHandler<UpdateProfileCommand, UserPr
 
         user.Bio = request.Bio;
         user.AvatarUrl = request.AvatarUrl;
+
+        await _context.ActivityLogs.AddAsync(
+            ActivityLog.Create(
+                _currentUser.UserId,
+                ActivityType.ProfileUpdated),
+            cancellationToken);
+
         await _context.SaveChangesAsync(cancellationToken);
 
         var filmsCount = await _context.Reviews

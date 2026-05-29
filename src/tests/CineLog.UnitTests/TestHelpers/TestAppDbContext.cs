@@ -27,6 +27,7 @@ public class TestAppDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid
     public DbSet<Watchlist> Watchlists => Set<Watchlist>();
     public DbSet<WatchlistItem> WatchlistItems => Set<WatchlistItem>();
     public DbSet<UserFavorite> UserFavorites => Set<UserFavorite>();
+    public DbSet<ActivityLog> ActivityLogs => Set<ActivityLog>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -78,6 +79,11 @@ public class TestAppDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid
         {
             b.HasKey(uf => new { uf.UserId, uf.MovieId });
         });
+
+        modelBuilder.Entity<ActivityLog>(b =>
+        {
+            b.HasKey(a => a.Id);
+        });
     }
 
     public static TestAppDbContext Create(string? dbName = null)
@@ -85,6 +91,7 @@ public class TestAppDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid
         var opts = new DbContextOptionsBuilder<TestAppDbContext>()
             .UseInMemoryDatabase(dbName ?? Guid.NewGuid().ToString())
             .Options;
+
         return new TestAppDbContext(opts);
     }
 }

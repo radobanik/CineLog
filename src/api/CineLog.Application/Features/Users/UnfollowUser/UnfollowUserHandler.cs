@@ -1,4 +1,6 @@
 using CineLog.Application.Common;
+using CineLog.Domain.Entities;
+using CineLog.Domain.Enums;
 using CineLog.Domain.Exceptions;
 using CineLog.Domain.Interfaces;
 using MediatR;
@@ -26,6 +28,14 @@ public class UnfollowUserHandler : IRequestHandler<UnfollowUserCommand>
             ?? throw new NotFoundException("You are not following this user.");
 
         _context.UserFollows.Remove(follow);
+
+        await _context.ActivityLogs.AddAsync(
+            ActivityLog.Create(
+                _currentUser.UserId,
+                ActivityType.UserUnfollowed,
+                targetUserId: request.TargetUserId),
+            cancellationToken);
+
         await _context.SaveChangesAsync(cancellationToken);
     }
 }
