@@ -9,27 +9,35 @@ public partial class App : Application
     {
         InitializeComponent();
 
-        MainPage = new ContentPage { BackgroundColor = (Color)Resources["Background"] };
+        MainPage = shell;
 
         _ = InitializeAsync(session, shell, fcmService);
     }
 
-    private async Task InitializeAsync(ISessionService session, AppShell shell, IFcmService fcmService)
+    private static async Task InitializeAsync(
+        ISessionService session,
+        AppShell shell,
+        IFcmService fcmService)
     {
-        await RequestNotificationPermissionAsync();
+        try
+        {
+            var restored = await session.TryRestoreSessionAsync();
 
-        var restored = await session.TryRestoreSessionAsync();
+            var route = restored
+                ? $"//{Routes.AuthenticatedRoot}"
+                : $"//{Routes.Login}";
 
-        MainPage = shell;
+            await shell.GoToAsync(route);
 
-        var route = restored
-            ? $"//{Routes.AuthenticatedRoot}"
-            : $"//{Routes.Login}";
+            await RequestNotificationPermissionAsync();
 
-        await shell.GoToAsync(route);
-
-        if (restored)
-            _ = fcmService.RegisterTokenAsync();
+            if (restored)
+                _ = fcmService.RegisterTokenAsync();
+        }
+        catch
+        {
+            await shell.GoToAsync($"//{Routes.Login}");
+        }
     }
 
     private static async Task RequestNotificationPermissionAsync()

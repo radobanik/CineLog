@@ -6,6 +6,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="firebase-adminsdk.json" CopyToOutputDirectory="PreserveNewest" Condition="Exists('firebase-adminsdk.json')" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AspNetCore.HealthChecks.NpgSql" Version="9.0.0" />
     <PackageReference Include="AspNetCore.HealthChecks.Redis" Version="9.0.0" />
     <PackageReference Include="EFCoreSecondLevelCacheInterceptor" Version="5.3.9" />

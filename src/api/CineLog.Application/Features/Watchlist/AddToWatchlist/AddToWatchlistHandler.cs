@@ -43,6 +43,21 @@ public class AddToWatchlistHandler : IRequestHandler<AddToWatchlistCommand>
         await _context.WatchlistItems.AddAsync(
             WatchlistItem.Create(request.WatchlistId, request.MovieId), cancellationToken);
 
+        var activityType = watchlist.Type switch
+        {
+            WatchlistType.Watched => ActivityType.MovieWatched,
+            WatchlistType.WatchLater => ActivityType.MovieWatchLaterAdded,
+            _ => ActivityType.MovieAddedToCustomWatchlist
+        };
+
+        await _context.ActivityLogs.AddAsync(
+            ActivityLog.Create(
+                _currentUser.UserId,
+                activityType,
+                movieId: request.MovieId,
+                watchlistId: request.WatchlistId),
+            cancellationToken);
+
         if (watchlist.Type == WatchlistType.Watched)
         {
             var watchLaterId = await _context.Watchlists
@@ -62,7 +77,6 @@ public class AddToWatchlistHandler : IRequestHandler<AddToWatchlistCommand>
                     _context.WatchlistItems.Remove(watchLaterItem);
             }
         }
-
 
         await _context.SaveChangesAsync(cancellationToken);
     }

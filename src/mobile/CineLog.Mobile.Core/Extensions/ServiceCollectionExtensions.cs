@@ -5,11 +5,12 @@ using CineLog.Mobile.Core.Services.Interfaces;
 using CineLog.Mobile.Core.ViewModels.Auth;
 using CineLog.Mobile.Core.ViewModels.Common;
 using CineLog.Mobile.Core.ViewModels.Home;
+using CineLog.Mobile.Core.ViewModels.Log;
 using CineLog.Mobile.Core.ViewModels.Movies;
 using CineLog.Mobile.Core.ViewModels.Profile;
 using CineLog.Mobile.Core.ViewModels.Search;
-using Microsoft.Extensions.DependencyInjection;
 using CineLog.Mobile.Core.ViewModels.WatchList;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace CineLog.Mobile.Core.Extensions;
 
@@ -37,9 +38,9 @@ public static class ServiceCollectionExtensions
     {
         services.AddTransient<AuthenticatedHttpMessageHandler>();
         services.AddHttpClient("CineLogApi", client =>
-            {
-                client.BaseAddress = new Uri(apiBaseUrl);
-            })
+        {
+            client.BaseAddress = new Uri(apiBaseUrl);
+        })
             .AddHttpMessageHandler<AuthenticatedHttpMessageHandler>();
         return services;
     }
@@ -84,6 +85,7 @@ public static class ServiceCollectionExtensions
         services.AddTransient<IUserService, UserService>();
         services.AddTransient<IFollowService, FollowService>();
         services.AddTransient<IWatchListService, WatchListService>();
+        services.AddTransient<IActivityFeedService, ActivityFeedService>();
 
         return services;
     }
@@ -93,6 +95,7 @@ public static class ServiceCollectionExtensions
         services.AddTransient<LoginViewModel>();
         services.AddTransient<RegisterViewModel>();
         services.AddTransient<HomeViewModel>();
+        services.AddTransient<LogViewModel>();
         services.AddTransient<MoviesCategoryViewModel>();
         services.AddTransient<ProfileViewModel>();
 

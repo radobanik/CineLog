@@ -27,6 +27,7 @@ public partial class MovieDetailViewModel : BaseViewModel
     [ObservableProperty] private bool _hasNoOverview;
     [ObservableProperty] private bool _hasNoCast;
     [ObservableProperty] private bool _isLiked;
+    [ObservableProperty] private ReviewListItem? _focusedReview;
 
     public ObservableCollection<CastMemberItem> Cast { get; } = [];
     public ObservableCollection<ReviewListItem> Reviews { get; } = [];
@@ -72,12 +73,16 @@ public partial class MovieDetailViewModel : BaseViewModel
             Cast.Clear();
             foreach (var member in detail.Cast)
                 Cast.Add(member);
+
             HasNoCast = Cast.Count == 0;
 
             var (reviews, totalCount) = reviewsTask.Result;
             Reviews.Clear();
+
             foreach (var review in reviews)
                 Reviews.Add(review);
+
+            await AddFocusedReviewAsync();
 
             ReviewsCountText = BuildReviewsCountText(totalCount);
             HasNoReviews = Reviews.Count == 0;
@@ -111,6 +116,8 @@ public partial class MovieDetailViewModel : BaseViewModel
     {
         _reviewsNav.Mode = ReviewsMode.Movie;
         _reviewsNav.EntityId = _movieDetailNav.MovieId;
+        _reviewsNav.FocusReviewId = null;
+
         return _navigation.NavigateToAsync(Routes.MovieReviews);
     }
 
@@ -135,10 +142,54 @@ public partial class MovieDetailViewModel : BaseViewModel
     [RelayCommand]
     private Task GoBack() => _navigation.NavigateBackAsync();
 
+    private async Task AddFocusedReviewAsync()
+    {
+        FocusedReview = null;
+
+        if (!_reviewsNav.FocusReviewId.HasValue)
+            return;
+
+        var reviewId = _reviewsNav.FocusReviewId.Value;
+        _reviewsNav.FocusReviewId = null;
+
+        var existing = Reviews.FirstOrDefault(r => r.Id == reviewId);
+        if (existing is not null)
+        {
+            existing.IsExpanded = true;
+            Reviews.Remove(existing);
+            Reviews.Insert(0, existing);
+            FocusedReview = existing;
+            return;
+        }
+
+        var review = await _reviewsClient.GetByIdAsync(reviewId);
+
+        var focusedReview = new ReviewListItem
+        {
+            Id = review.Id ?? reviewId,
+            Username = review.Username ?? string.Empty,
+            AvatarUrl = review.AvatarUrl,
+            MovieTitle = review.MovieTitle ?? Movie?.Title ?? string.Empty,
+            Rating = review.Rating,
+            ReviewText = review.ReviewText,
+            CreatedAt = review.CreatedAt,
+            LikesCount = review.LikesCount ?? 0,
+            IsLiked = review.IsLiked ?? false,
+            IsExpanded = true
+        };
+
+        Reviews.Insert(0, focusedReview);
+        FocusedReview = focusedReview;
+    }
+
     private static string BuildReviewsCountText(int total)
     {
         if (total == 0) return string.Empty;
-        var formatted = total >= 1000 ? $"{total / 1000.0:0.#}k" : total.ToString();
+
+        var formatted = total >= 1000
+            ? $"{total / 1000.0:0.#}k"
+            : total.ToString();
+
         return $"See all {formatted}";
     }
 }

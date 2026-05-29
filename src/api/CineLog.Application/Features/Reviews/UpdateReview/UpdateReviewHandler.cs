@@ -1,4 +1,5 @@
 using CineLog.Application.Common;
+using CineLog.Domain.Entities;
 using CineLog.Domain.Enums;
 using CineLog.Domain.Exceptions;
 using CineLog.Domain.Interfaces;
@@ -47,6 +48,16 @@ public class UpdateReviewHandler : IRequestHandler<UpdateReviewCommand, ReviewRe
 
         review.Update(Rating.Create(request.Rating), request.ReviewText, request.ContainsSpoilers);
         await _reviewRepository.UpdateAsync(review, cancellationToken);
+
+        await _context.ActivityLogs.AddAsync(
+            ActivityLog.Create(
+                _currentUser.UserId,
+                ActivityType.ReviewUpdated,
+                movieId: review.MovieId,
+                reviewId: review.Id),
+            cancellationToken);
+
+        await _context.SaveChangesAsync(cancellationToken);
 
         var isLiked = await _context.ReviewReactions
             .AnyAsync(rr => rr.ReviewId == review.Id

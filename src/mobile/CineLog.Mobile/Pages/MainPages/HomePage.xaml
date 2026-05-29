@@ -1,43 +1,43 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <pages:BasePage
     x:Class="CineLog.Mobile.Pages.MainPages.HomePage"
-    x:DataType="vm:HomeViewModel"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:controls="clr-namespace:CineLog.Mobile.Controls"
     xmlns:helpers="clr-namespace:CineLog.Mobile.Helpers"
     xmlns:pages="clr-namespace:CineLog.Mobile.Pages"
     xmlns:vm="clr-namespace:CineLog.Mobile.Core.ViewModels.Home;assembly=CineLog.Mobile.Core"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    ShowMenuButton="True"
-    Title="Movies">
+    Title="Movies"
+    x:DataType="vm:HomeViewModel"
+    ShowMenuButton="True">
 
     <ScrollView>
         <VerticalStackLayout Padding="16,16,16,24" Spacing="18">
 
             <Label
-                Style="{StaticResource CaptionLabel}"
                 IsVisible="{Binding HasError}"
+                Style="{StaticResource CaptionLabel}"
                 Text="{Binding ErrorMessage}" />
 
             <controls:MovieCarousel
                 Title="Top Rated"
+                IsLoading="{Binding IsBusy}"
+                IsLoadingMore="{Binding IsLoadingMoreTopRated}"
+                ItemTappedCommand="{Binding GoToMovieCommand}"
                 ItemsSource="{Binding TopRatedMovies}"
                 LoadMoreCommand="{Binding LoadMoreTopRatedCommand}"
-                SeeAllCommand="{Binding GoToTopRatedCommand}"
-                ItemTappedCommand="{Binding GoToMovieCommand}"
-                IsLoadingMore="{Binding IsLoadingMoreTopRated}"
-                IsLoading="{Binding IsBusy}" />
+                SeeAllCommand="{Binding GoToTopRatedCommand}" />
 
             <BoxView Style="{StaticResource ListDivider}" />
 
             <controls:MovieCarousel
                 Title="New Releases"
+                IsLoading="{Binding IsBusy}"
+                IsLoadingMore="{Binding IsLoadingMoreNewReleases}"
+                ItemTappedCommand="{Binding GoToMovieCommand}"
                 ItemsSource="{Binding NewReleaseMovies}"
                 LoadMoreCommand="{Binding LoadMoreNewReleasesCommand}"
-                SeeAllCommand="{Binding GoToNewReleasesCommand}"
-                ItemTappedCommand="{Binding GoToMovieCommand}"
-                IsLoadingMore="{Binding IsLoadingMoreNewReleases}"
-                IsLoading="{Binding IsBusy}" />
+                SeeAllCommand="{Binding GoToNewReleasesCommand}" />
 
         </VerticalStackLayout>
     </ScrollView>

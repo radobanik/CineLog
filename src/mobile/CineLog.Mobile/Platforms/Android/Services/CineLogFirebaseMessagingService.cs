@@ -1,6 +1,7 @@
 using Android.App;
 using AndroidX.Core.App;
 using CineLog.Mobile.ApiClient.Clients;
+using CineLog.Mobile.ApiClient.Models;
 using CineLog.Mobile.Core.Services.Interfaces;
 using Firebase.Messaging;
 using Microsoft.Extensions.DependencyInjection;
@@ -22,7 +23,7 @@ public class CineLogFirebaseMessagingService : FirebaseMessagingService
         var client = services?.GetService<INotificationsClient>();
         if (client is null) return;
 
-        _ = client.RegisterFcmTokenAsync(token);
+        _ = client.RegisterFcmTokenAsync(new RegisterFcmTokenCommand { Token = token });
     }
 
     public override void OnMessageReceived(RemoteMessage message)
@@ -44,7 +45,7 @@ public class CineLogFirebaseMessagingService : FirebaseMessagingService
         }
 
         var notification = new NotificationCompat.Builder(this, ChannelId)
-            .SetSmallIcon(Resource.Mipmap.appicon)
+            .SetSmallIcon(CineLog.Mobile.Resource.Mipmap.appicon)
             .SetContentTitle(title)
             .SetContentText(body)
             .SetAutoCancel(true)

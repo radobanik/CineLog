@@ -13,6 +13,7 @@ public interface IAppDbContext
     DbSet<Watchlist> Watchlists { get; }
     DbSet<WatchlistItem> WatchlistItems { get; }
     DbSet<UserFavorite> UserFavorites { get; }
+    DbSet<ActivityLog> ActivityLogs { get; }
     DbSet<Genre> Genres { get; }
     DbSet<MovieGenre> MovieGenres { get; }
     DbSet<Person> Persons { get; }

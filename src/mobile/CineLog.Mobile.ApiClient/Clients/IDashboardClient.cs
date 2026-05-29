@@ -45,4 +45,17 @@ public partial interface IDashboardClient
     /// <returns>OK</returns>
     /// <exception cref = "ApiException">A server side error occurred.</exception>
     System.Threading.Tasks.Task<System.Collections.Generic.ICollection<MovieSummaryResponse>> GetNewestAsync(int? count, System.Threading.CancellationToken cancellationToken);
+    /// <summary>
+    /// Get the current user's activity feed.
+    /// </summary>
+    /// <returns>OK</returns>
+    /// <exception cref = "ApiException">A server side error occurred.</exception>
+    System.Threading.Tasks.Task<System.Collections.Generic.ICollection<ActivityFeedItemResponse>> GetActivityFeedAsync(int? count);
+    /// <param name = "cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <summary>
+    /// Get the current user's activity feed.
+    /// </summary>
+    /// <returns>OK</returns>
+    /// <exception cref = "ApiException">A server side error occurred.</exception>
+    System.Threading.Tasks.Task<System.Collections.Generic.ICollection<ActivityFeedItemResponse>> GetActivityFeedAsync(int? count, System.Threading.CancellationToken cancellationToken);
 }

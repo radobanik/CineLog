@@ -1,3 +1,4 @@
+using CineLog.Application.Features.Activity.GetActivityFeed;
 using CineLog.Application.Features.Dashboard.GetNewActions;
 using CineLog.Application.Features.Movies;
 using CineLog.Application.Features.Movies.GetNewest;
@@ -40,4 +41,13 @@ public class DashboardController : ControllerBase
         [FromQuery] int count = 20,
         CancellationToken ct = default)
         => Ok(await _sender.Send(new GetNewestQuery(count), ct));
+
+    /// <summary>Get the current user's activity feed.</summary>
+    [HttpGet("activity-feed")]
+    [ProducesResponseType(typeof(List<ActivityFeedItemResponse>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<List<ActivityFeedItemResponse>>> GetActivityFeed(
+        [FromQuery] int skip = 0,
+        [FromQuery] int count = 25,
+        CancellationToken ct = default)
+        => Ok(await _sender.Send(new GetActivityFeedQuery(skip, count), ct));
 }

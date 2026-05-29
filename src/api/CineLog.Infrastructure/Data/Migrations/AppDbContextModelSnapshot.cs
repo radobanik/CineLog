@@ -22,6 +22,50 @@ namespace CineLog.Infrastructure.Data.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("CineLog.Domain.Entities.ActivityLog", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ActorUserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid?>("MovieId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("ReviewId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("TargetUserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid?>("WatchlistId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ActorUserId");
+
+                    b.HasIndex("CreatedAt");
+
+                    b.HasIndex("MovieId");
+
+                    b.HasIndex("ReviewId");
+
+                    b.HasIndex("TargetUserId");
+
+                    b.HasIndex("WatchlistId");
+
+                    b.ToTable("activity_logs", (string)null);
+                });
+
             modelBuilder.Entity("CineLog.Domain.Entities.Genre", b =>
                 {
                     b.Property<Guid>("Id")
@@ -653,6 +697,35 @@ namespace CineLog.Infrastructure.Data.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("CineLog.Domain.Entities.ActivityLog", b =>
+                {
+                    b.HasOne("CineLog.Domain.Entities.User", null)
+                        .WithMany()
+                        .HasForeignKey("ActorUserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("CineLog.Domain.Entities.Movie", null)
+                        .WithMany()
+                        .HasForeignKey("MovieId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("CineLog.Domain.Entities.Review", null)
+                        .WithMany()
+                        .HasForeignKey("ReviewId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("CineLog.Domain.Entities.User", null)
+                        .WithMany()
+                        .HasForeignKey("TargetUserId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("CineLog.Domain.Entities.Watchlist", null)
+                        .WithMany()
+                        .HasForeignKey("WatchlistId")
+                        .OnDelete(DeleteBehavior.SetNull);
                 });
 
             modelBuilder.Entity("CineLog.Domain.Entities.MovieCast", b =>

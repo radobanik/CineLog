@@ -1,4 +1,5 @@
 using System.Windows.Input;
+using CineLog.Mobile.Core.Models.Review;
 
 namespace CineLog.Mobile.Controls;
 
@@ -25,5 +26,13 @@ public partial class ReviewListCard : ContentView
     public ReviewListCard()
     {
         InitializeComponent();
+    }
+
+    private void ToggleExpanded(object? sender, TappedEventArgs e)
+    {
+        if (BindingContext is ReviewListItem review && review.HasReviewText)
+        {
+            review.IsExpanded = !review.IsExpanded;
+        }
     }
 }
