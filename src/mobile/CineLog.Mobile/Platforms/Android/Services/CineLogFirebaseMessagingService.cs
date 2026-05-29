@@ -45,7 +45,7 @@ public class CineLogFirebaseMessagingService : FirebaseMessagingService
         }
 
         var notification = new NotificationCompat.Builder(this, ChannelId)
-            .SetSmallIcon(CineLog.Mobile.Resource.Mipmap.appicon)
+            .SetSmallIcon(CineLog.Mobile.Resource.Drawable.notification_icon)
             .SetContentTitle(title)
             .SetContentText(body)
             .SetAutoCancel(true)
