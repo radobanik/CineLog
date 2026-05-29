@@ -15,9 +15,9 @@ public partial class App : Application
     }
 
     private static async Task InitializeAsync(
-        ISessionService session,
-        AppShell shell,
-        IFcmService fcmService)
+    ISessionService session,
+    AppShell shell,
+    IFcmService fcmService)
     {
         try
         {
@@ -38,9 +38,8 @@ public partial class App : Application
         {
             // If initialization fails for any reason, clear any potentially corrupt session
             // and fall back to the login screen so the app is never stuck on a black screen.
-            await session.ClearSessionAsync();
+            session.ClearSession();
 
-            MainPage = shell;
             await shell.GoToAsync($"//{Routes.Login}");
         }
     }
