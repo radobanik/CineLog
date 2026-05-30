@@ -18,7 +18,7 @@ public partial class AddReviewViewModel(
     INavigationService navigation,
     IAlertService alerts) : BaseViewModel(alerts)
 {
-    private const double MinRating = 0.0;
+    private const double MinRating = 0.5;
     private const double MaxRating = 5.0;
     private const double RatingStep = 0.5;
 
@@ -98,6 +98,12 @@ public partial class AddReviewViewModel(
     [RelayCommand]
     private async Task Submit()
     {
+        if (Rating == 0.0)
+        {
+            await alerts.ShowAlertAsync("Rating Required", "Please select a star rating before submitting.");
+            return;
+        }
+
         await ExecuteAsync(async () =>
         {
             if (IsEditMode)
