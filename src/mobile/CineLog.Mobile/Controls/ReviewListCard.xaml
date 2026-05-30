@@ -23,7 +23,9 @@
                 <RoundRectangle CornerRadius="6" />
             </Border.StrokeShape>
 
-            <Grid ColumnDefinitions="34,*,58" ColumnSpacing="10">
+            <Grid
+                ColumnDefinitions="34,*,58"
+                ColumnSpacing="10">
 
                 <Border
                     Grid.Column="0"
@@ -121,14 +123,18 @@
                 <Grid
                     Grid.Column="2"
                     RowDefinitions="76,Auto"
-                    RowSpacing="4">
+                    RowSpacing="4"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center">
 
                     <Border
                         Grid.Row="0"
                         BackgroundColor="{StaticResource SurfaceVariant}"
                         HeightRequest="76"
+                        HorizontalOptions="Center"
                         Stroke="{StaticResource Border}"
                         StrokeThickness="1"
+                        VerticalOptions="Center"
                         WidthRequest="54">
 
                         <Border.StrokeShape>
