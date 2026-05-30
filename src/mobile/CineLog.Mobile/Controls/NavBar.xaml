@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentView
     x:Class="CineLog.Mobile.Controls.NavBar"
-    x:Name="This"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Name="This">
 
     <Grid ColumnDefinitions="52, *, 52" HeightRequest="52">
 
@@ -12,9 +12,10 @@
             FontFamily="FASolid"
             FontSize="18"
             HorizontalOptions="Center"
-            VerticalOptions="Center"
+            IsVisible="{Binding Source={x:Reference This}, Path=LeftIcon, Converter={StaticResource IsNotNullOrEmptyConverter}}"
             Text="{Binding Source={x:Reference This}, Path=LeftIcon}"
-            TextColor="{StaticResource OnSurface}">
+            TextColor="{StaticResource OnSurface}"
+            VerticalOptions="Center">
             <Label.GestureRecognizers>
                 <TapGestureRecognizer Tapped="OnLeftTapped" />
             </Label.GestureRecognizers>
@@ -22,23 +23,23 @@
 
         <Label
             Grid.Column="1"
+            Margin="0,2,0,0"
             FontAttributes="Bold"
             FontSize="18"
             HorizontalOptions="Center"
-            Margin="0,2,0,0"
-            VerticalOptions="Center"
             Text="{Binding Source={x:Reference This}, Path=Title}"
-            TextColor="{StaticResource OnBackground}" />
+            TextColor="{StaticResource OnBackground}"
+            VerticalOptions="Center" />
 
         <Label
             Grid.Column="2"
-            Style="{StaticResource IconLabel}"
             FontSize="18"
             HorizontalOptions="Center"
-            VerticalOptions="Center"
+            IsVisible="{Binding Source={x:Reference This}, Path=HasRightIcon}"
+            Style="{StaticResource IconLabel}"
             Text="{Binding Source={x:Reference This}, Path=RightIcon}"
             TextColor="{StaticResource OnSurface}"
-            IsVisible="{Binding Source={x:Reference This}, Path=HasRightIcon}">
+            VerticalOptions="Center">
             <Label.GestureRecognizers>
                 <TapGestureRecognizer Tapped="OnRightTapped" />
             </Label.GestureRecognizers>
