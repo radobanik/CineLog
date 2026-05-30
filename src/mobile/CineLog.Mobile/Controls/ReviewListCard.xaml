@@ -198,9 +198,17 @@
         </Border>
 
         <!--  Existing reviews mode: movie detail reviews + profile reviews  -->
-        <VerticalStackLayout IsVisible="{Binding Source={x:Reference This}, Path=IsLatestMode, Converter={StaticResource InvertedBoolConverter}}">
+        <Border
+            Margin="0,8,0,8"
+            Padding="10"
+            BackgroundColor="{StaticResource Surface}"
+            IsVisible="{Binding Source={x:Reference This}, Path=IsLatestMode, Converter={StaticResource InvertedBoolConverter}}"
+            Stroke="{StaticResource Border}"
+            StrokeThickness="1">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="6" />
+            </Border.StrokeShape>
             <Grid
-                Margin="0,12,0,0"
                 ColumnDefinitions="50,*,Auto"
                 ColumnSpacing="12">
 
@@ -385,7 +393,6 @@
                 </HorizontalStackLayout>
             </Grid>
 
-            <BoxView Margin="0,12,0,0" Style="{StaticResource ListDivider}" />
-        </VerticalStackLayout>
+        </Border>
     </Grid>
 </ContentView>
