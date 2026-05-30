@@ -123,7 +123,7 @@
                         <Label
                             HorizontalOptions="Center"
                             Style="{StaticResource HeadlineMediumLabel}"
-                            Text="67" />
+                            Text="{Binding FilmsThisYearCount}" />
                         <Label Style="{StaticResource OverlineLabel}" Text="THIS YEAR" />
                     </VerticalStackLayout>
 

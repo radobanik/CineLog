@@ -41,6 +41,7 @@ public partial class ProfileViewModel(
     [ObservableProperty] private string _avatarUrl = string.Empty;
 
     [ObservableProperty] private int _filmsCount;
+    [ObservableProperty] private int _filmsThisYearCount;
     [ObservableProperty] private int _followersCount;
     [ObservableProperty] private int _followingCount;
 
@@ -157,6 +158,7 @@ public partial class ProfileViewModel(
         IsBioExpanded = false;
         AvatarUrl = profile.AvatarUrl;
         FilmsCount = profile.FilmsCount;
+        FilmsThisYearCount = profile.FilmsThisYearCount;
         FollowersCount = profile.FollowersCount;
         FollowingCount = profile.FollowingCount;
 

@@ -19,6 +19,7 @@ public sealed class ProfileService(IUsersClient usersClient) : IProfileService
             Bio = user.Bio ?? string.Empty,
             AvatarUrl = user.AvatarUrl ?? string.Empty,
             FilmsCount = user.FilmsCount ?? 0,
+            FilmsThisYearCount = user.FilmsThisYearCount ?? 0,
             FollowersCount = user.FollowersCount ?? 0,
             FollowingCount = user.FollowingCount ?? 0
         };
@@ -37,6 +38,7 @@ public sealed class ProfileService(IUsersClient usersClient) : IProfileService
             Bio = user.Bio ?? string.Empty,
             AvatarUrl = user.AvatarUrl ?? string.Empty,
             FilmsCount = user.FilmsCount ?? 0,
+            FilmsThisYearCount = user.FilmsThisYearCount ?? 0,
             FollowersCount = user.FollowersCount ?? 0,
             FollowingCount = user.FollowingCount ?? 0,
             IsFollowing = user.IsFollowing ?? false
