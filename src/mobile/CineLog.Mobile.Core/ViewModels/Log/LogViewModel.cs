@@ -54,7 +54,7 @@ public partial class LogViewModel : BaseViewModel
 
     public override Task OnAppearingAsync()
     {
-        return HasLoadedOnce ? Task.CompletedTask : Load();
+        return IsBusy ? Task.CompletedTask : Load();
     }
 
     [RelayCommand]
