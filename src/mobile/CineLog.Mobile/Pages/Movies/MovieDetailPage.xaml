@@ -284,10 +284,9 @@
         </VerticalStackLayout>
         </ScrollView>
 
-        <ActivityIndicator IsRunning="{Binding IsBusy}"
-                           IsVisible="{Binding IsBusy}"
-                           HorizontalOptions="Center"
-                           VerticalOptions="Center" />
+        <ScrollView IsVisible="{Binding IsBusy}" VerticalScrollBarVisibility="Never">
+            <controls:MovieDetailSkeleton />
+        </ScrollView>
         <Label FontSize="18"
                Style="{StaticResource IconLabel}"
                TextColor="{StaticResource OnBackground}"
