@@ -13,6 +13,7 @@ namespace CineLog.Mobile.Core.ViewModels.Movies;
 public partial class MovieReviewsViewModel(
     IMovieDetailService movieDetailService,
     IProfileService profileService,
+    IHomeService homeService,
     IReviewsClient reviewsClient,
     IReviewsNavigationContext reviewsNav,
     IEditReviewNavigationContext editReviewNav,
@@ -24,12 +25,16 @@ public partial class MovieReviewsViewModel(
     private int _currentPage = 0;
     private int _totalPages = 0;
 
-    [ObservableProperty] private bool _canLoadMore;
-    [ObservableProperty] private bool _isLoadingMore;
+    [ObservableProperty]
+    private bool _canLoadMore;
+
+    [ObservableProperty]
+    private bool _isLoadingMore;
 
     public bool IsMovieMode => reviewsNav.Mode == ReviewsMode.Movie;
     public bool IsUserMode => reviewsNav.Mode == ReviewsMode.User;
     public bool IsOwnReviews => IsUserMode && reviewsNav.EntityId == session.UserId;
+    public bool IsLatestMode => reviewsNav.Mode == ReviewsMode.All;
 
     public ObservableCollection<ReviewListItem> Reviews { get; } = [];
 
@@ -48,9 +53,11 @@ public partial class MovieReviewsViewModel(
     [RelayCommand]
     private async Task LoadMore()
     {
-        if (IsLoadingMore || IsBusy || !CanLoadMore) return;
+        if (IsLoadingMore || IsBusy || !CanLoadMore)
+            return;
 
         IsLoadingMore = true;
+
         try
         {
             await FetchNextPageAsync();
@@ -90,15 +97,29 @@ public partial class MovieReviewsViewModel(
 
         if (reviewsNav.Mode == ReviewsMode.Movie)
         {
-            var (i, _, tp) = await movieDetailService.GetReviewsPageAsync(reviewsNav.EntityId, _currentPage + 1, PageSize);
+            var (i, _, tp) = await movieDetailService.GetReviewsPageAsync(
+                reviewsNav.EntityId,
+                _currentPage + 1,
+                PageSize);
+
+            items = i;
+            totalPages = tp;
+        }
+        else if (reviewsNav.Mode == ReviewsMode.User)
+        {
+            var (i, _, tp) = await profileService.GetReviewsPageAsync(
+                reviewsNav.EntityId,
+                _currentPage + 1,
+                PageSize);
+
             items = i;
             totalPages = tp;
         }
         else
         {
-            var (i, _, tp) = await profileService.GetReviewsPageAsync(reviewsNav.EntityId, _currentPage + 1, PageSize);
-            items = i;
-            totalPages = tp;
+            var requestedCount = (_currentPage + 1) * PageSize;
+            items = await homeService.GetLatestReviewsAsync(requestedCount);
+            totalPages = items.Count == requestedCount ? _currentPage + 2 : _currentPage + 1;
         }
 
         foreach (var item in items)
@@ -115,7 +136,8 @@ public partial class MovieReviewsViewModel(
     [RelayCommand]
     private async Task ToggleLike(ReviewListItem review)
     {
-        if (!IsMovieMode) return;
+        if (!IsMovieMode && !IsLatestMode)
+            return;
 
         var wasLiked = review.IsLiked;
         review.IsLiked = !wasLiked;
@@ -142,6 +164,7 @@ public partial class MovieReviewsViewModel(
         editReviewNav.MovieTitle = review.MovieTitle;
         editReviewNav.Rating = review.Rating ?? 0.0;
         editReviewNav.ReviewText = review.ReviewText;
+
         return navigation.NavigateToAsync(Routes.AddReview);
     }
 

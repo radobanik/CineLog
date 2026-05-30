@@ -8,6 +8,9 @@ public partial class ReviewListCard : ContentView
     public static readonly BindableProperty IsMovieModeProperty =
         BindableProperty.Create(nameof(IsMovieMode), typeof(bool), typeof(ReviewListCard), false);
 
+    public static readonly BindableProperty IsLatestModeProperty =
+        BindableProperty.Create(nameof(IsLatestMode), typeof(bool), typeof(ReviewListCard), false);
+
     public static readonly BindableProperty LikeCommandProperty =
         BindableProperty.Create(nameof(LikeCommand), typeof(ICommand), typeof(ReviewListCard));
 
@@ -15,6 +18,12 @@ public partial class ReviewListCard : ContentView
     {
         get => (bool)GetValue(IsMovieModeProperty);
         set => SetValue(IsMovieModeProperty, value);
+    }
+
+    public bool IsLatestMode
+    {
+        get => (bool)GetValue(IsLatestModeProperty);
+        set => SetValue(IsLatestModeProperty, value);
     }
 
     public ICommand? LikeCommand
@@ -31,8 +40,6 @@ public partial class ReviewListCard : ContentView
     private void ToggleExpanded(object? sender, TappedEventArgs e)
     {
         if (BindingContext is ReviewListItem review && review.HasReviewText)
-        {
             review.IsExpanded = !review.IsExpanded;
-        }
     }
 }

@@ -4,4 +4,5 @@ public enum ReviewsMode
 {
     Movie,
     User,
+    All
 }
