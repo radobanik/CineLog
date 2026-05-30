@@ -44,6 +44,10 @@ public class UpdateProfileHandler : IRequestHandler<UpdateProfileCommand, UserPr
         var filmsCount = await _context.Reviews
             .CountAsync(r => r.UserId == user.Id, cancellationToken);
 
+        var thisYear = DateTimeOffset.UtcNow.Year;
+        var filmsThisYearCount = await _context.Reviews
+            .CountAsync(r => r.UserId == user.Id && r.CreatedAt.Year == thisYear, cancellationToken);
+
         var followersCount = await _context.UserFollows
             .CountAsync(f => f.FollowedId == user.Id, cancellationToken);
 
@@ -56,6 +60,7 @@ public class UpdateProfileHandler : IRequestHandler<UpdateProfileCommand, UserPr
              user.Bio,
              user.AvatarUrl,
              filmsCount,
+             filmsThisYearCount,
              followersCount,
              followingCount,
              false);

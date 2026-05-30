@@ -6,6 +6,7 @@ public record UserProfileResponse(
     string? Bio,
     string? AvatarUrl,
     int FilmsCount,
+    int FilmsThisYearCount,
     int FollowersCount,
     int FollowingCount,
     bool IsFollowing);

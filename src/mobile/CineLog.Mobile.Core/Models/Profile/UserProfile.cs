@@ -7,6 +7,7 @@ public sealed class UserProfile
     public string Bio { get; init; } = string.Empty;
     public string AvatarUrl { get; init; } = string.Empty;
     public int FilmsCount { get; init; }
+    public int FilmsThisYearCount { get; init; }
     public int FollowersCount { get; init; }
     public int FollowingCount { get; init; }
     public bool IsFollowing { get; init; }
