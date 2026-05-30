@@ -1,5 +1,4 @@
 using CineLog.Mobile.Core.ViewModels.WatchList;
-using System.ComponentModel;
 
 namespace CineLog.Mobile.Pages.MainPages;
 
@@ -14,15 +13,7 @@ public partial class WatchListsPage : BasePage
         _vm = vm;
         BindingContext = vm;
 
-        _vm.PropertyChanged += OnViewModelPropertyChanged;
-    }
-
-    private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
-    {
-        if (e.PropertyName != nameof(WatchListViewModel.IsBusy) || _vm.IsBusy)
-            return;
-
-        ScrollToTopAfterLayout();
+        _vm.ScrollToBottomRequested += OnScrollToBottomRequested;
     }
 
     protected override void OnAppearing()
@@ -31,10 +22,31 @@ public partial class WatchListsPage : BasePage
         ScrollToTopAfterLayout();
     }
 
+    private void OnScrollToBottomRequested(object? sender, EventArgs e)
+    {
+        ScrollToBottomAfterLayout();
+    }
+
     private void ScrollToTopAfterLayout()
     {
         Dispatcher.DispatchDelayed(
             TimeSpan.FromMilliseconds(250),
             () => WatchListsCollection.ScrollTo(0, position: ScrollToPosition.Start, animate: false));
+    }
+
+    private void ScrollToBottomAfterLayout()
+    {
+        Dispatcher.DispatchDelayed(
+            TimeSpan.FromMilliseconds(250),
+            () =>
+            {
+                if (_vm.Lists.Count == 0)
+                    return;
+
+                WatchListsCollection.ScrollTo(
+                    _vm.Lists.Count - 1,
+                    position: ScrollToPosition.End,
+                    animate: true);
+            });
     }
 }

@@ -19,6 +19,7 @@ public partial class WatchListViewModel(
 
     public WatchListNameFormViewModel NameForm { get; } = new();
     public ObservableCollection<WatchListRowViewModel> Lists { get; } = [];
+    public event EventHandler? ScrollToBottomRequested;
 
     protected override async Task LoadAsync()
     {
@@ -82,6 +83,7 @@ public partial class WatchListViewModel(
                 await watchListService.CreateWatchListAsync(name);
                 NameForm.Close();
                 await ReloadWatchListsAsync();
+                ScrollToBottomRequested?.Invoke(this, EventArgs.Empty);
             });
 
             return;

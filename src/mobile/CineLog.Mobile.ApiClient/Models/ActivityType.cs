@@ -18,4 +18,5 @@ public enum ActivityType
     _12 = 12,
     _13 = 13,
     _14 = 14,
+    _15 = 15,
 }

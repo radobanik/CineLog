@@ -49,7 +49,10 @@ public class GetActivityFeedHandler : IRequestHandler<GetActivityFeedQuery, List
                     visibleActorIds.Contains(a.ActorUserId) &&
                     (
                         a.ActorUserId == currentUserId ||
-                        a.Type != ActivityType.MovieAddedToCustomWatchlist
+                        (
+                            a.Type != ActivityType.MovieAddedToCustomWatchlist &&
+                            a.Type != ActivityType.WatchlistCreated
+                        )
                     )
                 ))
             .OrderByDescending(a => a.CreatedAt)

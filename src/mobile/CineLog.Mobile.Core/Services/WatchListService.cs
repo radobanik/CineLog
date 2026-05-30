@@ -26,31 +26,35 @@ namespace CineLog.Mobile.Core.Services
 
         public async Task<IReadOnlyList<WatchListCollectionItem>> GetWatchListsAsync(CancellationToken ct = default)
         {
+            var favorites = await _usersClient.GetFavoritesAsync(ct);
+            var watchlists = await _watchlistsClient.GetAllAsync(ct);
+
+            var result = new List<WatchListCollectionItem>
             {
-                var favorites = await _usersClient.GetFavoritesAsync(ct);
-                var watchlists = await _watchlistsClient.GetAllAsync(ct);
-
-                var result = new List<WatchListCollectionItem>
+                new()
                 {
-                    new()
-                    {
-                        Id = Guid.Empty,
-                        Name = "Favorites",
-                        ItemCount = favorites.Count,
-                        Type = WatchListType.Favorites
-                    }
-                };
+                    Id = Guid.Empty,
+                    Name = "Favorites",
+                    ItemCount = favorites.Count,
+                    Type = WatchListType.Favorites,
+                    CreatedAt = DateTimeOffset.MinValue
+                }
+            };
 
-                result.AddRange(watchlists.Select(w => new WatchListCollectionItem
-                {
-                    Id = w.Id ?? Guid.Empty,
-                    Name = w.Name ?? "Untitled list",
-                    ItemCount = w.ItemCount ?? 0,
-                    Type = (WatchListType)(w.Type ?? 0)
-                }));
+            result.AddRange(watchlists.Select(w => new WatchListCollectionItem
+            {
+                Id = w.Id ?? Guid.Empty,
+                Name = w.Name ?? "Untitled list",
+                ItemCount = w.ItemCount ?? 0,
+                CreatedAt = w.CreatedAt ?? DateTimeOffset.MinValue,
+                Type = (WatchListType)(w.Type ?? 0)
+            }));
 
-                return result;
-            }
+            return result
+                .OrderBy(GetWatchListSortGroup)
+                .ThenBy(w => w.CreatedAt)
+                .ThenBy(w => w.Name)
+                .ToList();
         }
 
         public async Task<IReadOnlyList<MovieItem>> GetMoviesAsync(WatchListCollectionItem watchList, CancellationToken ct = default)
@@ -90,5 +94,16 @@ namespace CineLog.Mobile.Core.Services
             AverageRating = movie.AverageRating,
             IsFavorite = isFavorite
         };
+
+        private static int GetWatchListSortGroup(WatchListCollectionItem watchList)
+        {
+            return watchList.Type switch
+            {
+                WatchListType.Favorites => 0,
+                WatchListType.WatchLater => 1,
+                WatchListType.Watched => 2,
+                _ => 3
+            };
+        }
     }
 }

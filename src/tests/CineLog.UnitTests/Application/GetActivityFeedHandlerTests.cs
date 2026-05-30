@@ -130,6 +130,46 @@ public class GetActivityFeedHandlerTests
     }
 
     [Fact]
+    public async Task Handle_HidesFollowedUsersWatchlistCreatedActivities()
+    {
+        var currentUserId = Guid.NewGuid();
+        var followedUserId = Guid.NewGuid();
+
+        var (ctx, _, handler) = BuildSut(currentUserId);
+
+        var currentUserWatchlist = Watchlist.CreateCustom(currentUserId, "Alice List");
+        var followedUserWatchlist = Watchlist.CreateCustom(followedUserId, "Bob List");
+
+        ctx.Users.AddRange(
+            CreateUser(currentUserId, "alice"),
+            CreateUser(followedUserId, "bob"));
+
+        ctx.Watchlists.AddRange(currentUserWatchlist, followedUserWatchlist);
+        ctx.UserFollows.Add(UserFollow.Create(currentUserId, followedUserId));
+
+        var ownWatchlistCreatedActivity = ActivityLog.Create(
+            currentUserId,
+            ActivityType.WatchlistCreated,
+            watchlistId: currentUserWatchlist.Id,
+            createdAt: DateTimeOffset.UtcNow);
+
+        var followedWatchlistCreatedActivity = ActivityLog.Create(
+            followedUserId,
+            ActivityType.WatchlistCreated,
+            watchlistId: followedUserWatchlist.Id,
+            createdAt: DateTimeOffset.UtcNow.AddMinutes(1));
+
+        ctx.ActivityLogs.AddRange(ownWatchlistCreatedActivity, followedWatchlistCreatedActivity);
+        await ctx.SaveChangesAsync();
+
+        var result = await handler.Handle(new GetActivityFeedQuery(), CancellationToken.None);
+
+        result.Should().ContainSingle();
+        result[0].Id.Should().Be(ownWatchlistCreatedActivity.Id);
+        result[0].Watchlist!.Name.Should().Be("Alice List");
+    }
+
+    [Fact]
     public async Task Handle_ReturnsFollowActivitiesOnlyWhenCurrentUserIsActorOrTarget()
     {
         var currentUserId = Guid.NewGuid();

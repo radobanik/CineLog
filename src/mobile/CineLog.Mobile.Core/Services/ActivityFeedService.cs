@@ -76,6 +76,7 @@ public sealed class ActivityFeedService(
         ApiActivityType._12 => ActivityFeedType.AvatarUpdated,
         ApiActivityType._13 => ActivityFeedType.ReviewUpdated,
         ApiActivityType._14 => ActivityFeedType.ReviewDeleted,
+        ApiActivityType._15 => ActivityFeedType.WatchlistCreated,
         _ => ActivityFeedType.ProfileUpdated
     };
 }

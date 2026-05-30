@@ -57,6 +57,7 @@ public sealed class ActivityFeedItem
         ActivityFeedType.UserUnfollowed => "unfollowed",
         ActivityFeedType.ProfileUpdated => IsCurrentUser ? "updated your profile" : "updated their profile",
         ActivityFeedType.AvatarUpdated => IsCurrentUser ? "updated your avatar" : "updated their avatar",
+        ActivityFeedType.WatchlistCreated => "created a watchlist:",
         _ => "did something"
     };
 
@@ -74,6 +75,7 @@ public sealed class ActivityFeedItem
         ActivityFeedType.ReviewUnliked => MovieLabel,
         ActivityFeedType.UserFollowed => TargetUserLabel,
         ActivityFeedType.UserUnfollowed => TargetUserLabel,
+        ActivityFeedType.WatchlistCreated => WatchlistLabel,
         _ => string.Empty
     };
 
