@@ -1,4 +1,5 @@
 using CineLog.Mobile.ApiClient.Clients;
+using CineLog.Mobile.ApiClient.Infrastructure;
 using CineLog.Mobile.ApiClient.Models;
 using CineLog.Mobile.Core.Navigation;
 using CineLog.Mobile.Core.Services.Interfaces;
@@ -11,9 +12,12 @@ namespace CineLog.Mobile.Core.ViewModels.Profile;
 public partial class EditProfileViewModel(
     IProfileService profileService,
     IUsersClient usersClient,
+    IMediaPickerService mediaPicker,
     INavigationService navigation,
     IAlertService alerts) : BaseViewModel(alerts)
 {
+    private PickedPhoto? _pendingAvatar;
+
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(Initial))]
     private string _username = string.Empty;
@@ -47,11 +51,30 @@ public partial class EditProfileViewModel(
     }
 
     [RelayCommand]
+    private async Task PickAvatar()
+    {
+        var photo = await mediaPicker.PickPhotoAsync();
+        if (photo is null) return;
+
+        _pendingAvatar = photo;
+        AvatarUrl = photo.LocalPath;
+    }
+
+    [RelayCommand]
     private async Task Save()
     {
         await ExecuteAsync(async () =>
         {
-            await usersClient.UpdateMeAsync(new UpdateProfileCommand { Bio = Bio });
+            if (_pendingAvatar is not null)
+            {
+                await using var stream = await _pendingAvatar.OpenStreamAsync();
+                var file = new FileParameter(stream, _pendingAvatar.FileName, _pendingAvatar.ContentType);
+                var uploadResponse = await usersClient.UploadAvatarAsync(file);
+                AvatarUrl = uploadResponse.AvatarUrl ?? AvatarUrl;
+                _pendingAvatar = null;
+            }
+
+            await usersClient.UpdateMeAsync(new UpdateProfileCommand { Bio = Bio, AvatarUrl = AvatarUrl });
             await navigation.NavigateBackAsync();
         });
     }

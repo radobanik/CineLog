@@ -36,6 +36,7 @@ public static class FontAwesomeIcons
     public const string Calendar = "\uf073";
     public const string Globe = "\uf0ac";
     public const string Image = "\uf03e";
+    public const string Camera = "\uf030";
 
     public const string ThumbsUp = "\uf164";
     public const string Comment = "\uf075";
