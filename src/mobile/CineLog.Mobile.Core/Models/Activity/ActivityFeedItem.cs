@@ -1,7 +1,11 @@
+using CommunityToolkit.Mvvm.ComponentModel;
+
 namespace CineLog.Mobile.Core.Models.Activity;
 
-public sealed class ActivityFeedItem
+public sealed partial class ActivityFeedItem : ObservableObject
 {
+    private const int CollapsedReviewLengthLimit = 110;
+
     public Guid Id { get; init; }
     public ActivityFeedType Type { get; init; }
     public DateTimeOffset CreatedAt { get; init; }
@@ -27,6 +31,12 @@ public sealed class ActivityFeedItem
     public Guid? WatchlistId { get; init; }
     public string? WatchlistName { get; init; }
 
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(ReviewMaxLines))]
+    [NotifyPropertyChangedFor(nameof(ReviewExpandText))]
+    [NotifyPropertyChangedFor(nameof(IsReviewCollapsed))]
+    private bool _isReviewExpanded;
+
     public string ActorInitial =>
         string.IsNullOrWhiteSpace(ActorUsername)
             ? "?"
@@ -39,11 +49,19 @@ public sealed class ActivityFeedItem
     public bool HasReviewText => !string.IsNullOrWhiteSpace(ReviewText);
     public bool HasPrimaryObject => !string.IsNullOrWhiteSpace(PrimaryObjectText);
 
+    public bool HasExpandableReview =>
+        !string.IsNullOrWhiteSpace(ReviewText) &&
+        ReviewText.Length > CollapsedReviewLengthLimit;
+
+    public bool IsReviewCollapsed => HasExpandableReview && !IsReviewExpanded;
+    public int ReviewMaxLines => IsReviewExpanded ? int.MaxValue : 2;
+    public string ReviewExpandText => IsReviewExpanded ? "Show less" : "Show more";
+
     public string ActorDisplayName => IsCurrentUser ? "You" : ActorUsername;
 
     public string ActionVerb => Type switch
     {
-        ActivityFeedType.MovieWatched => IsCurrentUser ? "watched" : "watched",
+        ActivityFeedType.MovieWatched => "watched",
         ActivityFeedType.MovieWatchLaterAdded => "added",
         ActivityFeedType.MovieFavorited => "added",
         ActivityFeedType.MovieFavoriteRemoved => "removed",
@@ -112,6 +130,12 @@ public sealed class ActivityFeedItem
 
     public string? ReviewRatingText =>
         ReviewRating.HasValue ? ReviewRating.Value.ToString("0.0") : null;
+
+    public void ToggleReviewExpanded()
+    {
+        if (HasExpandableReview)
+            IsReviewExpanded = !IsReviewExpanded;
+    }
 
     private string MovieLabel =>
         string.IsNullOrWhiteSpace(MovieTitle) ? "a movie" : MovieTitle;

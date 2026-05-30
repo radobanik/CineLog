@@ -205,7 +205,7 @@
                     HorizontalOptions="Center"
                     IsVisible="{Binding Source={x:Reference This}, Path=IsMovieMode}"
                     StrokeThickness="0"
-                    VerticalOptions="Start"
+                    VerticalOptions="Center"
                     WidthRequest="40">
 
                     <Border.StrokeShape>
@@ -330,7 +330,7 @@
                     HorizontalOptions="End"
                     IsVisible="{Binding Source={x:Reference This}, Path=IsMovieMode}"
                     Spacing="4"
-                    VerticalOptions="Start">
+                    VerticalOptions="Center">
 
                     <Label
                         FontFamily="FASolid"
