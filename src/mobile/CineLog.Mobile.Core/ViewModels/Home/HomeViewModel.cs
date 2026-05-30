@@ -1,5 +1,7 @@
 using System.Collections.ObjectModel;
+using CineLog.Mobile.ApiClient.Clients;
 using CineLog.Mobile.Core.Models;
+using CineLog.Mobile.Core.Models.Review;
 using CineLog.Mobile.Core.Navigation;
 using CineLog.Mobile.Core.Services.Interfaces;
 using CineLog.Mobile.Core.ViewModels.Base;
@@ -11,6 +13,7 @@ namespace CineLog.Mobile.Core.ViewModels.Home;
 public partial class HomeViewModel : BaseViewModel
 {
     private const int RailPageSize = 12;
+    private const int LatestReviewsCount = 5;
     private const int MaxAdditionalLoads = 3;
 
     private readonly IAuthService _authService;
@@ -18,17 +21,13 @@ public partial class HomeViewModel : BaseViewModel
     private readonly INavigationService _navigation;
     private readonly IMovieNavigationContext _movieNav;
     private readonly IMovieDetailNavigationContext _movieDetailNav;
+    private readonly IReviewsNavigationContext _reviewsNav;
 
     private int _topRatedCount = RailPageSize;
-    private int _newReleaseCount = RailPageSize;
     private int _topRatedLoadCount;
-    private int _newReleaseLoadCount;
 
     [ObservableProperty]
     private bool _isLoadingMoreTopRated;
-
-    [ObservableProperty]
-    private bool _isLoadingMoreNewReleases;
 
     [ObservableProperty]
     private bool _hasLoadedOnce;
@@ -42,29 +41,41 @@ public partial class HomeViewModel : BaseViewModel
     [ObservableProperty]
     private bool _canLoadMoreTopRated = true;
 
-    [ObservableProperty]
-    private bool _canLoadMoreNewReleases = true;
+    private readonly IReviewsClient _reviewsClient;
 
     public ObservableCollection<MovieItem> TopRatedMovies { get; } = [];
-    public ObservableCollection<MovieItem> NewReleaseMovies { get; } = [];
+    public ObservableCollection<ReviewListItem> LatestReviews { get; } = [];
 
-    public HomeViewModel(IAuthService authService, IHomeService homeService, INavigationService navigation, IMovieNavigationContext movieNav, IMovieDetailNavigationContext movieDetailNav, IAlertService alerts)
-        : base(alerts)
+    public HomeViewModel(
+     IAuthService authService,
+     IHomeService homeService,
+     INavigationService navigation,
+     IMovieNavigationContext movieNav,
+     IMovieDetailNavigationContext movieDetailNav,
+     IReviewsNavigationContext reviewsNav,
+     IReviewsClient reviewsClient,
+     IAlertService alerts)
+     : base(alerts)
     {
         _authService = authService;
         _homeService = homeService;
         _navigation = navigation;
         _movieNav = movieNav;
         _movieDetailNav = movieDetailNav;
+        _reviewsNav = reviewsNav;
+        _reviewsClient = reviewsClient;
         Title = "Home";
     }
 
-    public override Task OnAppearingAsync()
+    public override async Task OnAppearingAsync()
     {
-        if (HasLoadedOnce && (TopRatedMovies.Count > 0 || NewReleaseMovies.Count > 0))
-            return Task.CompletedTask;
+        if (!HasLoadedOnce || TopRatedMovies.Count == 0)
+        {
+            await Load();
+            return;
+        }
 
-        return Load();
+        await ExecuteAsync(ReloadLatestReviewsAsync);
     }
 
     [RelayCommand]
@@ -76,12 +87,11 @@ public partial class HomeViewModel : BaseViewModel
             ErrorMessage = string.Empty;
 
             _topRatedCount = RailPageSize;
-            _newReleaseCount = RailPageSize;
             _topRatedLoadCount = 1;
-            _newReleaseLoadCount = 1;
+            CanLoadMoreTopRated = true;
 
             await ReloadTopRatedAsync();
-            await ReloadNewReleasesAsync();
+            await ReloadLatestReviewsAsync();
 
             HasLoadedOnce = true;
         });
@@ -90,7 +100,7 @@ public partial class HomeViewModel : BaseViewModel
     [RelayCommand]
     public async Task LoadIfNeeded()
     {
-        if (HasLoadedOnce && (TopRatedMovies.Count > 0 || NewReleaseMovies.Count > 0))
+        if (HasLoadedOnce && (TopRatedMovies.Count > 0 || LatestReviews.Count > 0))
             return;
 
         await Load();
@@ -106,34 +116,36 @@ public partial class HomeViewModel : BaseViewModel
             ReplaceMovies(TopRatedMovies, movies);
     }
 
-    private async Task ReloadNewReleasesAsync(bool appendOnly = false)
+    private async Task ReloadLatestReviewsAsync()
     {
-        var movies = await _homeService.GetNewReleaseMoviesAsync(_newReleaseCount);
+        LatestReviews.Clear();
 
-        if (appendOnly)
-            AppendOnlyNewMovies(NewReleaseMovies, movies);
-        else
-            ReplaceMovies(NewReleaseMovies, movies);
+        var reviews = await _homeService.GetLatestReviewsAsync(LatestReviewsCount);
+
+        foreach (var review in reviews)
+            LatestReviews.Add(review);
     }
 
     private static void ReplaceMovies(
-    ObservableCollection<MovieItem> target,
-    IEnumerable<MovieItem> movies)
+        ObservableCollection<MovieItem> target,
+        IEnumerable<MovieItem> movies)
     {
         target.Clear();
+
         foreach (var movie in movies)
             target.Add(movie);
     }
 
     private static void AppendOnlyNewMovies(
-    ObservableCollection<MovieItem> target,
-    IEnumerable<MovieItem> movies)
+        ObservableCollection<MovieItem> target,
+        IEnumerable<MovieItem> movies)
     {
         var existingIds = target.Select(x => x.Id).ToHashSet();
 
         foreach (var movie in movies.Where(x => !existingIds.Contains(x.Id)))
             target.Add(movie);
     }
+
     [RelayCommand]
     public async Task LoadMoreTopRated()
     {
@@ -163,34 +175,6 @@ public partial class HomeViewModel : BaseViewModel
     }
 
     [RelayCommand]
-    public async Task LoadMoreNewReleases()
-    {
-        if (IsBusy || IsLoadingMoreNewReleases || !CanLoadMoreNewReleases)
-            return;
-
-        try
-        {
-            IsLoadingMoreNewReleases = true;
-            _newReleaseCount += RailPageSize;
-            _newReleaseLoadCount++;
-
-            await ReloadNewReleasesAsync(appendOnly: true);
-
-            if (_newReleaseLoadCount >= MaxAdditionalLoads)
-                CanLoadMoreNewReleases = false;
-        }
-        catch (Exception ex)
-        {
-            HasError = true;
-            ErrorMessage = ex.Message;
-        }
-        finally
-        {
-            IsLoadingMoreNewReleases = false;
-        }
-    }
-
-    [RelayCommand]
     public Task GoToMovie(MovieItem movie)
     {
         _movieDetailNav.MovieId = movie.Id;
@@ -212,6 +196,16 @@ public partial class HomeViewModel : BaseViewModel
     }
 
     [RelayCommand]
+    public Task GoToAllReviews()
+    {
+        _reviewsNav.Mode = ReviewsMode.All;
+        _reviewsNav.EntityId = Guid.Empty;
+        _reviewsNav.FocusReviewId = null;
+
+        return _navigation.NavigateToAsync(Routes.MovieReviews);
+    }
+
+    [RelayCommand]
     private async Task Logout()
     {
         await ExecuteAsync(async () =>
@@ -220,6 +214,25 @@ public partial class HomeViewModel : BaseViewModel
             await _navigation.NavigateToRootAsync(Routes.Login);
         });
     }
+
+    [RelayCommand]
+    private async Task ToggleLatestReviewLike(ReviewListItem review)
+    {
+        var wasLiked = review.IsLiked;
+        review.IsLiked = !wasLiked;
+        review.LikesCount += wasLiked ? -1 : 1;
+
+        try
+        {
+            await _reviewsClient.ToggleLikeAsync(review.Id);
+        }
+        catch
+        {
+            review.IsLiked = wasLiked;
+            review.LikesCount += wasLiked ? 1 : -1;
+        }
+    }
+
 
     public override async Task HandleErrorAsync(Exception ex)
     {

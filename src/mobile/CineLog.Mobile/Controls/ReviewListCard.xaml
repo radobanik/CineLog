@@ -1,202 +1,391 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentView
     x:Class="CineLog.Mobile.Controls.ReviewListCard"
-    x:Name="This"
-    x:DataType="review:ReviewListItem"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:helpers="clr-namespace:CineLog.Mobile.Helpers"
     xmlns:review="clr-namespace:CineLog.Mobile.Core.Models.Review;assembly=CineLog.Mobile.Core"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+    x:Name="This"
+    x:DataType="review:ReviewListItem">
 
-    <VerticalStackLayout>
-        <Grid
-            ColumnDefinitions="50, *, Auto"
-            ColumnSpacing="12"
-            Margin="0,12,0,0">
+    <Grid>
 
-            <!-- Movie mode: avatar circle -->
-            <Border
-                Grid.Column="0"
-                WidthRequest="40"
-                HeightRequest="40"
-                BackgroundColor="{StaticResource Surface}"
-                StrokeThickness="0"
-                VerticalOptions="Start"
-                HorizontalOptions="Center"
-                IsVisible="{Binding Source={x:Reference This}, Path=IsMovieMode}">
-                <Border.StrokeShape>
-                    <RoundRectangle CornerRadius="20" />
-                </Border.StrokeShape>
+        <!--  Compact latest review mode: homepage + see all latest reviews  -->
+        <Border
+            Margin="0,8,0,8"
+            Padding="10"
+            BackgroundColor="{StaticResource Surface}"
+            IsVisible="{Binding Source={x:Reference This}, Path=IsLatestMode}"
+            Stroke="{StaticResource Border}"
+            StrokeThickness="1">
 
-                <Grid>
-                    <Image
-                        Source="{Binding AvatarUrl}"
-                        Aspect="AspectFill"
-                        IsVisible="{Binding AvatarUrl, Converter={StaticResource IsNotNullOrEmptyConverter}}" />
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="6" />
+            </Border.StrokeShape>
+
+            <Grid
+                ColumnDefinitions="34,*,58"
+                ColumnSpacing="10">
+
+                <Border
+                    Grid.Column="0"
+                    BackgroundColor="{StaticResource SurfaceVariant}"
+                    HeightRequest="28"
+                    StrokeThickness="0"
+                    VerticalOptions="Center"
+                    WidthRequest="28">
+
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="14" />
+                    </Border.StrokeShape>
+
+                    <Grid>
+                        <Image
+                            Aspect="AspectFill"
+                            IsVisible="{Binding AvatarUrl, Converter={StaticResource IsNotNullOrEmptyConverter}}"
+                            Source="{Binding AvatarUrl}" />
+
+                        <Label
+                            FontAttributes="Bold"
+                            FontSize="11"
+                            HorizontalOptions="Center"
+                            Text="{Binding Initial}"
+                            TextColor="{StaticResource Primary}"
+                            VerticalOptions="Center">
+                            <Label.Triggers>
+                                <DataTrigger
+                                    Binding="{Binding AvatarUrl, Converter={StaticResource IsNotNullOrEmptyConverter}}"
+                                    TargetType="Label"
+                                    Value="True">
+                                    <Setter Property="IsVisible" Value="False" />
+                                </DataTrigger>
+                            </Label.Triggers>
+                        </Label>
+                    </Grid>
+                </Border>
+
+                <VerticalStackLayout
+                    Grid.Column="1"
+                    Spacing="2"
+                    VerticalOptions="Start">
 
                     <Label
-                        Text="{Binding Initial}"
-                        Style="{StaticResource SectionHeaderLabel}"
+                        FontSize="10"
+                        LineBreakMode="TailTruncation"
+                        MaxLines="1"
+                        TextColor="{StaticResource TextSecondary}">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="{Binding Username}" />
+                                <Span Text=" reviewed" />
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+
+                    <Label
+                        FontAttributes="Bold"
+                        FontSize="13"
+                        LineBreakMode="TailTruncation"
+                        MaxLines="1"
+                        Text="{Binding MovieTitle}"
+                        TextColor="{StaticResource OnSurface}" />
+
+                    <Label
+                        FontSize="11"
+                        Style="{StaticResource RatingLabel}"
+                        Text="{Binding Rating, Converter={StaticResource RatingToStarsConverter}}" />
+
+                    <Label
+                        FontSize="10"
+                        IsVisible="{Binding HasReviewText}"
+                        LineBreakMode="TailTruncation"
+                        MaxLines="{Binding ReviewMaxLines}"
+                        Text="{Binding ReviewText}"
+                        TextColor="{StaticResource TextSecondary}" />
+
+                    <Label
+                        FontAttributes="Bold"
+                        FontSize="10"
+                        IsVisible="{Binding HasReviewText}"
+                        Text="{Binding ExpandLabel}"
+                        TextColor="{StaticResource Primary}">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="ToggleExpanded" />
+                        </Label.GestureRecognizers>
+                    </Label>
+
+                    <Label
+                        FontSize="10"
+                        Text="{Binding DateText}"
+                        TextColor="{StaticResource TextSecondary}" />
+                </VerticalStackLayout>
+
+                <Grid
+                    Grid.Column="2"
+                    RowDefinitions="76,Auto"
+                    RowSpacing="4"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center">
+
+                    <Border
+                        Grid.Row="0"
+                        BackgroundColor="{StaticResource SurfaceVariant}"
+                        HeightRequest="76"
                         HorizontalOptions="Center"
-                        VerticalOptions="Center">
+                        Stroke="{StaticResource Border}"
+                        StrokeThickness="1"
+                        VerticalOptions="Center"
+                        WidthRequest="54">
+
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="5" />
+                        </Border.StrokeShape>
+
+                        <Grid>
+                            <Image
+                                Aspect="AspectFill"
+                                IsVisible="{Binding HasMoviePoster}"
+                                Source="{Binding MoviePosterPath}" />
+
+                            <Label
+                                HorizontalOptions="Center"
+                                IsVisible="{Binding HasMoviePoster, Converter={StaticResource InvertedBoolConverter}}"
+                                Style="{StaticResource SecondaryIconLabel}"
+                                Text="{x:Static helpers:FontAwesomeIcons.Film}"
+                                VerticalOptions="Center" />
+                        </Grid>
+                    </Border>
+
+                    <HorizontalStackLayout
+                        Grid.Row="1"
+                        HorizontalOptions="Center"
+                        Spacing="4">
+
+                        <Label FontFamily="FASolid" FontSize="13">
+                            <Label.Triggers>
+                                <DataTrigger
+                                    Binding="{Binding IsLiked}"
+                                    TargetType="Label"
+                                    Value="True">
+                                    <Setter Property="TextColor" Value="#E53935" />
+                                </DataTrigger>
+
+                                <DataTrigger
+                                    Binding="{Binding IsLiked}"
+                                    TargetType="Label"
+                                    Value="False">
+                                    <Setter Property="TextColor" Value="{StaticResource TextSecondary}" />
+                                </DataTrigger>
+                            </Label.Triggers>
+
+                            <Label.Text>
+                                <x:Static Member="helpers:FontAwesomeIcons.Heart" />
+                            </Label.Text>
+
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding Source={x:Reference This}, Path=LikeCommand}" CommandParameter="{Binding .}" />
+                            </Label.GestureRecognizers>
+                        </Label>
+
+                        <Label
+                            FontSize="10"
+                            Text="{Binding LikesCount}"
+                            TextColor="{StaticResource TextSecondary}"
+                            VerticalOptions="Center" />
+                    </HorizontalStackLayout>
+                </Grid>
+            </Grid>
+        </Border>
+
+        <!--  Existing reviews mode: movie detail reviews + profile reviews  -->
+        <VerticalStackLayout IsVisible="{Binding Source={x:Reference This}, Path=IsLatestMode, Converter={StaticResource InvertedBoolConverter}}">
+            <Grid
+                Margin="0,12,0,0"
+                ColumnDefinitions="50,*,Auto"
+                ColumnSpacing="12">
+
+                <Border
+                    Grid.Column="0"
+                    BackgroundColor="{StaticResource Surface}"
+                    HeightRequest="40"
+                    HorizontalOptions="Center"
+                    IsVisible="{Binding Source={x:Reference This}, Path=IsMovieMode}"
+                    StrokeThickness="0"
+                    VerticalOptions="Center"
+                    WidthRequest="40">
+
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="20" />
+                    </Border.StrokeShape>
+
+                    <Grid>
+                        <Image
+                            Aspect="AspectFill"
+                            IsVisible="{Binding AvatarUrl, Converter={StaticResource IsNotNullOrEmptyConverter}}"
+                            Source="{Binding AvatarUrl}" />
+
+                        <Label
+                            HorizontalOptions="Center"
+                            Style="{StaticResource SectionHeaderLabel}"
+                            Text="{Binding Initial}"
+                            VerticalOptions="Center">
+                            <Label.Triggers>
+                                <DataTrigger
+                                    Binding="{Binding AvatarUrl, Converter={StaticResource IsNotNullOrEmptyConverter}}"
+                                    TargetType="Label"
+                                    Value="True">
+                                    <Setter Property="IsVisible" Value="False" />
+                                </DataTrigger>
+                            </Label.Triggers>
+                        </Label>
+                    </Grid>
+                </Border>
+
+                <VerticalStackLayout
+                    Grid.Column="0"
+                    HorizontalOptions="Center"
+                    IsVisible="{Binding Source={x:Reference This}, Path=IsMovieMode, Converter={StaticResource InvertedBoolConverter}}"
+                    VerticalOptions="Center">
+
+                    <Label
+                        HorizontalOptions="Center"
+                        Style="{StaticResource HeadlineMediumLabel}"
+                        Text="{Binding DayText}" />
+
+                    <Label
+                        HorizontalOptions="Center"
+                        Style="{StaticResource CaptionLabel}"
+                        Text="{Binding MonthText}" />
+                </VerticalStackLayout>
+
+                <VerticalStackLayout
+                    Grid.Column="1"
+                    IsVisible="{Binding Source={x:Reference This}, Path=IsMovieMode}"
+                    Spacing="3">
+                    <VerticalStackLayout.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="ToggleExpanded" />
+                    </VerticalStackLayout.GestureRecognizers>
+
+                    <Label
+                        FontAttributes="Bold"
+                        Style="{StaticResource BodyMediumLabel}"
+                        Text="{Binding Username}" />
+
+                    <Label
+                        Style="{StaticResource RatingLabel}"
+                        Text="{Binding Rating, Converter={StaticResource RatingToStarsConverter}}"
+                        VerticalOptions="Center" />
+
+                    <Label
+                        IsVisible="{Binding HasReviewText}"
+                        LineBreakMode="TailTruncation"
+                        MaxLines="{Binding ReviewMaxLines}"
+                        Style="{StaticResource CaptionLabel}"
+                        Text="{Binding ReviewText}" />
+
+                    <Label
+                        FontAttributes="Bold"
+                        FontSize="13"
+                        IsVisible="{Binding HasReviewText}"
+                        Text="{Binding ExpandLabel}"
+                        TextColor="{StaticResource Primary}" />
+
+                    <Label
+                        Margin="0,2,0,0"
+                        Style="{StaticResource CaptionLabel}"
+                        Text="{Binding DateText}" />
+                </VerticalStackLayout>
+
+                <VerticalStackLayout
+                    Grid.Column="1"
+                    IsVisible="{Binding Source={x:Reference This}, Path=IsMovieMode, Converter={StaticResource InvertedBoolConverter}}"
+                    Spacing="3"
+                    VerticalOptions="Center">
+                    <VerticalStackLayout.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="ToggleExpanded" />
+                    </VerticalStackLayout.GestureRecognizers>
+
+                    <Label
+                        FontAttributes="Bold"
+                        Style="{StaticResource BodyLargeLabel}"
+                        Text="{Binding MovieTitle}" />
+
+                    <Label
+                        Style="{StaticResource RatingLabel}"
+                        Text="{Binding Rating, Converter={StaticResource RatingToStarsConverter}}"
+                        VerticalOptions="Center" />
+
+                    <Label
+                        IsVisible="{Binding HasReviewText}"
+                        LineBreakMode="TailTruncation"
+                        MaxLines="{Binding ReviewMaxLines}"
+                        Style="{StaticResource CaptionLabel}"
+                        Text="{Binding ReviewText}" />
+
+                    <Label
+                        FontAttributes="Bold"
+                        FontSize="13"
+                        IsVisible="{Binding HasReviewText}"
+                        Text="{Binding ExpandLabel}"
+                        TextColor="{StaticResource Primary}" />
+                </VerticalStackLayout>
+
+                <VerticalStackLayout
+                    Grid.Column="2"
+                    Padding="8,0,0,0"
+                    HorizontalOptions="End"
+                    IsVisible="{Binding Source={x:Reference This}, Path=IsMovieMode}"
+                    Spacing="4"
+                    VerticalOptions="Center">
+
+                    <Label
+                        FontFamily="FASolid"
+                        FontSize="20"
+                        HorizontalOptions="Center">
                         <Label.Triggers>
                             <DataTrigger
+                                Binding="{Binding IsLiked}"
                                 TargetType="Label"
-                                Binding="{Binding AvatarUrl, Converter={StaticResource IsNotNullOrEmptyConverter}}"
                                 Value="True">
-                                <Setter Property="IsVisible" Value="False" />
+                                <Setter Property="TextColor" Value="#E53935" />
+                            </DataTrigger>
+
+                            <DataTrigger
+                                Binding="{Binding IsLiked}"
+                                TargetType="Label"
+                                Value="False">
+                                <Setter Property="TextColor" Value="{StaticResource TextSecondary}" />
                             </DataTrigger>
                         </Label.Triggers>
+
+                        <Label.Text>
+                            <x:Static Member="helpers:FontAwesomeIcons.Heart" />
+                        </Label.Text>
+
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding Source={x:Reference This}, Path=LikeCommand}" CommandParameter="{Binding .}" />
+                        </Label.GestureRecognizers>
                     </Label>
-                </Grid>
-            </Border>
 
-            <!-- User mode: day + month -->
-            <VerticalStackLayout
-                Grid.Column="0"
-                VerticalOptions="Center"
-                HorizontalOptions="Center"
-                IsVisible="{Binding Source={x:Reference This}, Path=IsMovieMode, Converter={StaticResource InvertedBoolConverter}}">
-                <Label
-                    Style="{StaticResource HeadlineMediumLabel}"
-                    Text="{Binding DayText}"
-                    HorizontalOptions="Center" />
+                    <Label
+                        HorizontalOptions="Center"
+                        Style="{StaticResource CaptionLabel}"
+                        Text="{Binding LikesCount}" />
+                </VerticalStackLayout>
 
-                <Label
-                    Style="{StaticResource CaptionLabel}"
-                    Text="{Binding MonthText}"
-                    HorizontalOptions="Center" />
-            </VerticalStackLayout>
+                <HorizontalStackLayout
+                    Grid.Column="2"
+                    IsVisible="{Binding Source={x:Reference This}, Path=IsMovieMode, Converter={StaticResource InvertedBoolConverter}}"
+                    Spacing="4"
+                    VerticalOptions="Center">
 
-            <!-- Movie mode: username, rating, text, date -->
-            <VerticalStackLayout
-                Grid.Column="1"
-                Spacing="3"
-                IsVisible="{Binding Source={x:Reference This}, Path=IsMovieMode}">
-                <VerticalStackLayout.GestureRecognizers>
-                    <TapGestureRecognizer Tapped="ToggleExpanded" />
-                </VerticalStackLayout.GestureRecognizers>
+                    <Label Style="{StaticResource CaptionLabel}" Text="{Binding LikesCount}" />
 
-                <Label
-                    Style="{StaticResource BodyMediumLabel}"
-                    FontAttributes="Bold"
-                    Text="{Binding Username}" />
+                    <Label Style="{StaticResource SecondaryIconLabel}" Text="{x:Static helpers:FontAwesomeIcons.Heart}" />
+                </HorizontalStackLayout>
+            </Grid>
 
-                <Label
-                    Style="{StaticResource RatingLabel}"
-                    Text="{Binding Rating, Converter={StaticResource RatingToStarsConverter}}"
-                    VerticalOptions="Center" />
-
-                <Label
-                    Style="{StaticResource CaptionLabel}"
-                    Text="{Binding ReviewText}"
-                    LineBreakMode="TailTruncation"
-                    MaxLines="{Binding ReviewMaxLines}"
-                    IsVisible="{Binding HasReviewText}" />
-
-                <Label
-                    Text="{Binding ExpandLabel}"
-                    TextColor="{StaticResource Primary}"
-                    FontSize="13"
-                    FontAttributes="Bold"
-                    IsVisible="{Binding HasReviewText}" />
-
-                <Label
-                    Style="{StaticResource CaptionLabel}"
-                    Text="{Binding DateText}"
-                    Margin="0,2,0,0" />
-            </VerticalStackLayout>
-
-            <!-- User mode: movie title + rating inline, text -->
-            <VerticalStackLayout
-                Grid.Column="1"
-                Spacing="3"
-                VerticalOptions="Center"
-                IsVisible="{Binding Source={x:Reference This}, Path=IsMovieMode, Converter={StaticResource InvertedBoolConverter}}">
-                <VerticalStackLayout.GestureRecognizers>
-                    <TapGestureRecognizer Tapped="ToggleExpanded" />
-                </VerticalStackLayout.GestureRecognizers>
-
-                <Label
-                    Style="{StaticResource BodyLargeLabel}"
-                    Text="{Binding MovieTitle}"
-                    FontAttributes="Bold" />
-
-                <Label
-                    Style="{StaticResource RatingLabel}"
-                    Text="{Binding Rating, Converter={StaticResource RatingToStarsConverter}}"
-                    VerticalOptions="Center" />
-
-                <Label
-                    Style="{StaticResource CaptionLabel}"
-                    Text="{Binding ReviewText}"
-                    LineBreakMode="TailTruncation"
-                    MaxLines="{Binding ReviewMaxLines}"
-                    IsVisible="{Binding HasReviewText}" />
-
-                <Label
-                    Text="{Binding ExpandLabel}"
-                    TextColor="{StaticResource Primary}"
-                    FontSize="13"
-                    FontAttributes="Bold"
-                    IsVisible="{Binding HasReviewText}" />
-            </VerticalStackLayout>
-
-            <!-- Movie mode: interactive like -->
-            <VerticalStackLayout
-                Grid.Column="2"
-                HorizontalOptions="End"
-                VerticalOptions="Start"
-                Spacing="4"
-                Padding="8,0,0,0"
-                IsVisible="{Binding Source={x:Reference This}, Path=IsMovieMode}">
-                <Label
-                    FontFamily="FASolid"
-                    FontSize="20"
-                    HorizontalOptions="Center">
-                    <Label.Triggers>
-                        <DataTrigger TargetType="Label" Binding="{Binding IsLiked}" Value="True">
-                            <Setter Property="TextColor" Value="#E53935" />
-                        </DataTrigger>
-
-                        <DataTrigger TargetType="Label" Binding="{Binding IsLiked}" Value="False">
-                            <Setter Property="TextColor" Value="{StaticResource TextSecondary}" />
-                        </DataTrigger>
-                    </Label.Triggers>
-
-                    <Label.Text>
-                        <x:Static Member="helpers:FontAwesomeIcons.Heart" />
-                    </Label.Text>
-
-                    <Label.GestureRecognizers>
-                        <TapGestureRecognizer
-                            Command="{Binding Source={x:Reference This}, Path=LikeCommand}"
-                            CommandParameter="{Binding .}" />
-                    </Label.GestureRecognizers>
-                </Label>
-
-                <Label
-                    Style="{StaticResource CaptionLabel}"
-                    Text="{Binding LikesCount}"
-                    HorizontalOptions="Center" />
-            </VerticalStackLayout>
-
-            <!-- User mode: static like count -->
-            <HorizontalStackLayout
-                Grid.Column="2"
-                VerticalOptions="Center"
-                Spacing="4"
-                IsVisible="{Binding Source={x:Reference This}, Path=IsMovieMode, Converter={StaticResource InvertedBoolConverter}}">
-                <Label
-                    Style="{StaticResource CaptionLabel}"
-                    Text="{Binding LikesCount}" />
-
-                <Label
-                    Style="{StaticResource SecondaryIconLabel}"
-                    Text="{x:Static helpers:FontAwesomeIcons.Heart}" />
-            </HorizontalStackLayout>
-        </Grid>
-
-        <BoxView Style="{StaticResource ListDivider}" Margin="0,12,0,0" />
-    </VerticalStackLayout>
+            <BoxView Margin="0,12,0,0" Style="{StaticResource ListDivider}" />
+        </VerticalStackLayout>
+    </Grid>
 </ContentView>

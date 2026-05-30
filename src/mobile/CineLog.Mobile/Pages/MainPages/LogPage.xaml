@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <pages:BasePage
     x:Class="CineLog.Mobile.Pages.MainPages.LogPage"
-    x:DataType="vm:LogViewModel"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:activity="clr-namespace:CineLog.Mobile.Core.Models.Activity;assembly=CineLog.Mobile.Core"
     xmlns:controls="clr-namespace:CineLog.Mobile.Controls"
     xmlns:helpers="clr-namespace:CineLog.Mobile.Helpers"
     xmlns:pages="clr-namespace:CineLog.Mobile.Pages"
     xmlns:vm="clr-namespace:CineLog.Mobile.Core.ViewModels.Log;assembly=CineLog.Mobile.Core"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     Title="Log"
+    x:DataType="vm:LogViewModel"
     BackgroundColor="{StaticResource Background}"
     ShowMenuButton="True">
 
@@ -25,54 +25,53 @@
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="activity:ActivityFeedItem">
                         <Grid RowDefinitions="Auto,Auto">
-                            <Grid
-                                Padding="0,16"
-                                ColumnDefinitions="48,*,64"
-                                ColumnSpacing="12">
+                            <VerticalStackLayout Padding="0,16" Spacing="10">
 
-                                <Grid.GestureRecognizers>
-                                    <TapGestureRecognizer
-                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:LogViewModel}}, Path=OpenActivityCommand}"
-                                        CommandParameter="{Binding .}" />
-                                </Grid.GestureRecognizers>
+                                <Grid
+                                    ColumnDefinitions="48,*,64"
+                                    ColumnSpacing="12"
+                                    VerticalOptions="Center">
 
-                                <Border
-                                    Grid.Column="0"
-                                    BackgroundColor="{StaticResource SurfaceVariant}"
-                                    HeightRequest="42"
-                                    StrokeThickness="0"
-                                    VerticalOptions="Start"
-                                    WidthRequest="42">
-                                    <Border.StrokeShape>
-                                        <RoundRectangle CornerRadius="21" />
-                                    </Border.StrokeShape>
+                                    <Grid.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:LogViewModel}}, Path=OpenActivityCommand}" CommandParameter="{Binding .}" />
+                                    </Grid.GestureRecognizers>
 
-                                    <Grid>
-                                        <Image
-                                            Aspect="AspectFill"
-                                            IsVisible="{Binding HasActorAvatar}"
-                                            Source="{Binding ActorAvatarUrl}" />
+                                    <Border
+                                        Grid.Column="0"
+                                        BackgroundColor="{StaticResource SurfaceVariant}"
+                                        HeightRequest="42"
+                                        StrokeThickness="0"
+                                        VerticalOptions="Center"
+                                        WidthRequest="42">
 
-                                        <Label
-                                            FontAttributes="Bold"
-                                            FontSize="15"
-                                            HorizontalOptions="Center"
-                                            IsVisible="{Binding HasActorAvatar, Converter={StaticResource InvertedBoolConverter}}"
-                                            Text="{Binding ActorInitial}"
-                                            TextColor="{StaticResource Primary}"
-                                            VerticalOptions="Center" />
-                                    </Grid>
-                                </Border>
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="21" />
+                                        </Border.StrokeShape>
 
-                                <VerticalStackLayout
-                                    Grid.Column="1"
-                                    Spacing="8"
-                                    VerticalOptions="Start">
+                                        <Grid>
+                                            <Image
+                                                Aspect="AspectFill"
+                                                IsVisible="{Binding HasActorAvatar}"
+                                                Source="{Binding ActorAvatarUrl}" />
+
+                                            <Label
+                                                FontAttributes="Bold"
+                                                FontSize="15"
+                                                HorizontalOptions="Center"
+                                                IsVisible="{Binding HasActorAvatar, Converter={StaticResource InvertedBoolConverter}}"
+                                                Text="{Binding ActorInitial}"
+                                                TextColor="{StaticResource Primary}"
+                                                VerticalOptions="Center" />
+                                        </Grid>
+                                    </Border>
 
                                     <Label
+                                        Grid.Column="1"
                                         FontSize="16"
                                         LineBreakMode="WordWrap"
-                                        TextColor="{StaticResource OnSurface}">
+                                        TextColor="{StaticResource OnSurface}"
+                                        VerticalOptions="Center">
+
                                         <Label.FormattedText>
                                             <FormattedString>
                                                 <Span
@@ -80,72 +79,114 @@
                                                     Text="{Binding ActorDisplayName}"
                                                     TextColor="{StaticResource OnBackground}" />
                                                 <Span Text=" " />
-                                                <Span
-                                                    Text="{Binding ActionVerb}"
-                                                    TextColor="{StaticResource TextSecondary}" />
+                                                <Span Text="{Binding ActionVerb}" TextColor="{StaticResource TextSecondary}" />
                                                 <Span Text=" " />
                                                 <Span
                                                     FontAttributes="Bold"
                                                     Text="{Binding PrimaryObjectText}"
                                                     TextColor="{StaticResource OnBackground}" />
-                                                <Span
-                                                    Text="{Binding SecondaryText}"
-                                                    TextColor="{StaticResource TextSecondary}" />
+                                                <Span Text="{Binding SecondaryText}" TextColor="{StaticResource TextSecondary}" />
                                             </FormattedString>
                                         </Label.FormattedText>
                                     </Label>
 
                                     <Border
-                                        BackgroundColor="{StaticResource Surface}"
-                                        IsVisible="{Binding HasReviewPreview}"
-                                        Padding="10"
+                                        Grid.Column="2"
+                                        BackgroundColor="{StaticResource SurfaceVariant}"
+                                        HeightRequest="86"
+                                        IsVisible="{Binding HasMovie}"
                                         Stroke="{StaticResource Border}"
-                                        StrokeThickness="1">
+                                        StrokeThickness="1"
+                                        VerticalOptions="Center"
+                                        WidthRequest="58">
+
                                         <Border.StrokeShape>
-                                            <RoundRectangle CornerRadius="8" />
+                                            <RoundRectangle CornerRadius="7" />
                                         </Border.StrokeShape>
 
-                                        <VerticalStackLayout Spacing="5">
-                                            <HorizontalStackLayout Spacing="8">
-                                                <Label
-                                                    FontAttributes="Bold"
-                                                    Style="{StaticResource CaptionLabel}"
-                                                    Text="Review" />
-
-                                                <Label
-                                                    IsVisible="{Binding ReviewRatingText, Converter={StaticResource IsNotNullOrEmptyConverter}}"
-                                                    Style="{StaticResource AccentLabel}"
-                                                    Text="{Binding ReviewRatingText}" />
-                                            </HorizontalStackLayout>
+                                        <Grid>
+                                            <Image
+                                                Aspect="AspectFill"
+                                                IsVisible="{Binding HasMoviePoster}"
+                                                Source="{Binding MoviePosterPath}" />
 
                                             <Label
-                                                IsVisible="{Binding HasReviewText}"
-                                                LineBreakMode="TailTruncation"
-                                                MaxLines="3"
-                                                Style="{StaticResource BodyMediumLabel}"
-                                                Text="{Binding ReviewText}" />
-                                        </VerticalStackLayout>
+                                                HorizontalOptions="Center"
+                                                IsVisible="{Binding HasMoviePoster, Converter={StaticResource InvertedBoolConverter}}"
+                                                Style="{StaticResource SecondaryIconLabel}"
+                                                Text="{x:Static helpers:FontAwesomeIcons.Film}"
+                                                VerticalOptions="Center" />
+                                        </Grid>
                                     </Border>
-
-                                    <Label Style="{StaticResource CaptionLabel}" Text="{Binding TimeText}" />
-                                </VerticalStackLayout>
+                                </Grid>
 
                                 <Border
-                                    Grid.Column="2"
-                                    BackgroundColor="{StaticResource SurfaceVariant}"
-                                    HeightRequest="86"
-                                    IsVisible="{Binding HasMoviePoster}"
+                                    Padding="12"
+                                    BackgroundColor="{StaticResource Surface}"
+                                    HeightRequest="128"
+                                    IsVisible="{Binding HasReviewPreview}"
                                     Stroke="{StaticResource Border}"
-                                    StrokeThickness="1"
-                                    VerticalOptions="Start"
-                                    WidthRequest="58">
+                                    StrokeThickness="1">
+
+                                    <Border.Triggers>
+                                        <DataTrigger
+                                            Binding="{Binding IsReviewExpanded}"
+                                            TargetType="Border"
+                                            Value="True">
+                                            <Setter Property="HeightRequest" Value="-1" />
+                                        </DataTrigger>
+                                    </Border.Triggers>
+
                                     <Border.StrokeShape>
-                                        <RoundRectangle CornerRadius="7" />
+                                        <RoundRectangle CornerRadius="8" />
                                     </Border.StrokeShape>
 
-                                    <Image Aspect="AspectFill" Source="{Binding MoviePosterPath}" />
+                                    <Grid RowDefinitions="Auto,*,Auto" RowSpacing="6">
+                                        <HorizontalStackLayout Grid.Row="0" Spacing="8">
+                                            <Label
+                                                FontAttributes="Bold"
+                                                Style="{StaticResource CaptionLabel}"
+                                                Text="Review" />
+
+                                            <Label
+                                                FontAttributes="Bold"
+                                                IsVisible="{Binding ReviewRatingText, Converter={StaticResource IsNotNullOrEmptyConverter}}"
+                                                Style="{StaticResource AccentLabel}"
+                                                Text="{Binding ReviewRatingText}"
+                                                TextColor="{StaticResource Primary}" />
+
+                                            <Label
+                                                FontSize="15"
+                                                IsVisible="{Binding ReviewRatingText, Converter={StaticResource IsNotNullOrEmptyConverter}}"
+                                                Style="{StaticResource RatingLabel}"
+                                                Text="{Binding ReviewRating, Converter={StaticResource RatingToStarsConverter}}"
+                                                TextColor="{StaticResource Primary}" />
+                                        </HorizontalStackLayout>
+
+                                        <Label
+                                            Grid.Row="1"
+                                            IsVisible="{Binding HasReviewText}"
+                                            LineBreakMode="TailTruncation"
+                                            MaxLines="{Binding ReviewMaxLines}"
+                                            Style="{StaticResource BodyMediumLabel}"
+                                            Text="{Binding ReviewText}" />
+
+                                        <Label
+                                            Grid.Row="2"
+                                            FontAttributes="Bold"
+                                            FontSize="13"
+                                            IsVisible="{Binding HasExpandableReview}"
+                                            Text="{Binding ReviewExpandText}"
+                                            TextColor="{StaticResource Primary}">
+                                            <Label.GestureRecognizers>
+                                                <TapGestureRecognizer Tapped="ToggleReviewExpanded" />
+                                            </Label.GestureRecognizers>
+                                        </Label>
+                                    </Grid>
                                 </Border>
-                            </Grid>
+
+                                <Label Style="{StaticResource CaptionLabel}" Text="{Binding TimeText}" />
+                            </VerticalStackLayout>
 
                             <BoxView Grid.Row="1" Style="{StaticResource ListDivider}" />
                         </Grid>
@@ -154,9 +195,7 @@
 
                 <CollectionView.EmptyView>
                     <Grid Padding="0,120,0,0">
-                        <VerticalStackLayout
-                            Spacing="12"
-                            IsVisible="{Binding HasNoItems}">
+                        <VerticalStackLayout IsVisible="{Binding HasNoItems}" Spacing="12">
                             <Label
                                 FontSize="40"
                                 HorizontalOptions="Center"
@@ -183,8 +222,6 @@
             </CollectionView>
         </RefreshView>
 
-        <controls:ActivityLogSkeleton
-            InputTransparent="True"
-            IsVisible="{Binding IsInitialLoading}" />
+        <controls:ActivityLogSkeleton InputTransparent="True" IsVisible="{Binding IsInitialLoading}" />
     </Grid>
 </pages:BasePage>

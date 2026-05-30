@@ -86,6 +86,16 @@ namespace CineLog.Mobile.Core.Services
                 : _watchlistsClient.RemoveMovieAsync(watchList.Id, movieId, ct);
         }
 
+        public Task AddMovieToWatchListAsync(
+            WatchListCollectionItem watchList,
+            Guid movieId,
+            CancellationToken ct = default)
+        {
+            return watchList.IsFavorites
+                ? _moviesClient.AddToFavoritesAsync(movieId, ct)
+                : _watchlistsClient.AddMovieAsync(watchList.Id, movieId, ct);
+        }
+
         private static MovieItem MapMovie(MovieListItemResponse movie, bool isFavorite) => new()
         {
             Id = movie.Id ?? Guid.Empty,

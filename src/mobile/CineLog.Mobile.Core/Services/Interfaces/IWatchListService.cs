@@ -12,7 +12,7 @@ namespace CineLog.Mobile.Core.Services.Interfaces
         Task<IReadOnlyList<MovieItem>> GetMoviesAsync(WatchListCollectionItem list, CancellationToken ct = default);
         Task<Guid> CreateWatchListAsync(string name, CancellationToken ct = default);
         Task DeleteWatchListAsync(WatchListCollectionItem watchList, CancellationToken ct = default);
-
+        Task AddMovieToWatchListAsync(WatchListCollectionItem watchList, Guid movieId, CancellationToken ct = default);
         Task RemoveMovieFromWatchListAsync(WatchListCollectionItem list, Guid movieId, CancellationToken ct = default);
     }
 }

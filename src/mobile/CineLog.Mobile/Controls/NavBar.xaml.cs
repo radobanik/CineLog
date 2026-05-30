@@ -11,7 +11,7 @@ public partial class NavBar : ContentView
     public static readonly BindableProperty ShowMenuButtonProperty =
         BindableProperty.Create(nameof(ShowMenuButton), typeof(bool), typeof(NavBar), false,
             propertyChanged: (b, _, n) => ((NavBar)b).LeftIcon = (bool)n
-                ? FontAwesomeIcons.Bars
+                ? string.Empty
                 : FontAwesomeIcons.ChevronLeft);
 
     public static readonly BindableProperty LeftIconProperty =

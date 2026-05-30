@@ -4,8 +4,8 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:controls="clr-namespace:CineLog.Mobile.Controls"
-    xmlns:helpers="clr-namespace:CineLog.Mobile.Helpers"
     xmlns:pages="clr-namespace:CineLog.Mobile.Pages"
+    xmlns:review="clr-namespace:CineLog.Mobile.Core.Models.Review;assembly=CineLog.Mobile.Core"
     xmlns:vm="clr-namespace:CineLog.Mobile.Core.ViewModels.Home;assembly=CineLog.Mobile.Core"
     Title="Movies"
     x:DataType="vm:HomeViewModel"
@@ -30,14 +30,30 @@
 
             <BoxView Style="{StaticResource ListDivider}" />
 
-            <controls:MovieCarousel
-                Title="New Releases"
-                IsLoading="{Binding IsBusy}"
-                IsLoadingMore="{Binding IsLoadingMoreNewReleases}"
-                ItemTappedCommand="{Binding GoToMovieCommand}"
-                ItemsSource="{Binding NewReleaseMovies}"
-                LoadMoreCommand="{Binding LoadMoreNewReleasesCommand}"
-                SeeAllCommand="{Binding GoToNewReleasesCommand}" />
+            <Grid ColumnDefinitions="*,Auto">
+                <Label
+                    Grid.Column="0"
+                    Style="{StaticResource SectionHeaderLabel}"
+                    Text="Latest Reviews"
+                    VerticalOptions="Center" />
+
+                <Button
+                    Grid.Column="1"
+                    Padding="8,0"
+                    BackgroundColor="Transparent"
+                    Command="{Binding GoToAllReviewsCommand}"
+                    FontAttributes="Bold"
+                    Text="See all"
+                    TextColor="{StaticResource Primary}" />
+            </Grid>
+
+            <VerticalStackLayout BindableLayout.ItemsSource="{Binding LatestReviews}">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate x:DataType="review:ReviewListItem">
+                        <controls:ReviewListCard IsLatestMode="True" LikeCommand="{Binding Source={RelativeSource AncestorType={x:Type vm:HomeViewModel}}, Path=ToggleLatestReviewLikeCommand}" />
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </VerticalStackLayout>
 
         </VerticalStackLayout>
     </ScrollView>

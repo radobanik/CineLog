@@ -8,6 +8,7 @@ public sealed partial class ReviewListItem : ObservableObject
     public string? Username { get; init; }
     public string? AvatarUrl { get; init; }
     public string MovieTitle { get; init; } = string.Empty;
+    public string? MoviePosterPath { get; init; }
     public double? Rating { get; init; }
     public string? ReviewText { get; init; }
     public DateTimeOffset? CreatedAt { get; init; }
@@ -26,6 +27,7 @@ public sealed partial class ReviewListItem : ObservableObject
     public string MonthText => CreatedAt?.ToString("MMM") ?? string.Empty;
 
     public bool HasReviewText => !string.IsNullOrWhiteSpace(ReviewText);
+    public bool HasMoviePoster => !string.IsNullOrWhiteSpace(MoviePosterPath);
     public int ReviewMaxLines => IsExpanded ? int.MaxValue : 3;
     public string ExpandLabel => IsExpanded ? "Show less" : "Show more";
 }
