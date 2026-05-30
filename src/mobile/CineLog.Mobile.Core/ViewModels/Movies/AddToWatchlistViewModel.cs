@@ -1,7 +1,5 @@
 using System.Collections.ObjectModel;
-using CineLog.Mobile.ApiClient.Clients;
 using CineLog.Mobile.ApiClient.Infrastructure;
-using CineLog.Mobile.Core.Models.WatchList;
 using CineLog.Mobile.Core.Services.Interfaces;
 using CineLog.Mobile.Core.ViewModels.Base;
 using CineLog.Mobile.Core.ViewModels.WatchList;
@@ -11,29 +9,24 @@ using CommunityToolkit.Mvvm.Input;
 namespace CineLog.Mobile.Core.ViewModels.Movies;
 
 public partial class AddToWatchlistViewModel(
-    IWatchlistsClient watchlistsClient,
+    IWatchListService watchListService,
     IMovieDetailNavigationContext movieDetailNav,
     INavigationService navigation,
     IAlertService alerts) : BaseViewModel(alerts)
 {
-    [ObservableProperty] private bool _hasWatchlists;
+    [ObservableProperty]
+    private bool _hasWatchlists;
 
     public ObservableCollection<WatchListRowViewModel> Lists { get; } = [];
 
     protected override async Task LoadAsync()
     {
         Title = "Add to Watchlist";
-        var watchlists = await watchlistsClient.GetAllAsync();
 
         Lists.Clear();
-        foreach (var w in watchlists)
-            Lists.Add(new WatchListRowViewModel(new WatchListCollectionItem
-            {
-                Id = w.Id ?? Guid.Empty,
-                Name = w.Name ?? "Untitled list",
-                ItemCount = w.ItemCount ?? 0,
-                Type = (WatchListType)(w.Type ?? 0)
-            }));
+
+        foreach (var watchList in await watchListService.GetWatchListsAsync())
+            Lists.Add(new WatchListRowViewModel(watchList));
 
         HasWatchlists = Lists.Count > 0;
     }
@@ -41,12 +34,14 @@ public partial class AddToWatchlistViewModel(
     [RelayCommand]
     private async Task AddToWatchlist(WatchListRowViewModel? row)
     {
-        if (row is null) return;
+        if (row is null)
+            return;
 
         IsBusy = true;
+
         try
         {
-            await watchlistsClient.AddMovieAsync(row.Id, movieDetailNav.MovieId);
+            await watchListService.AddMovieToWatchListAsync(row.Item, movieDetailNav.MovieId);
             await alerts.ShowToastAsync($"Added to {row.Name}.");
             await navigation.NavigateBackAsync();
         }
@@ -63,7 +58,4 @@ public partial class AddToWatchlistViewModel(
             IsBusy = false;
         }
     }
-
-    [RelayCommand]
-    private Task GoBack() => navigation.NavigateBackAsync();
 }

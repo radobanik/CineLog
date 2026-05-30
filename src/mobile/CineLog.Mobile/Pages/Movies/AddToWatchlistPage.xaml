@@ -6,34 +6,16 @@
     xmlns:pages="clr-namespace:CineLog.Mobile.Pages"
     xmlns:vm="clr-namespace:CineLog.Mobile.Core.ViewModels.Movies;assembly=CineLog.Mobile.Core"
     xmlns:watchListVm="clr-namespace:CineLog.Mobile.Core.ViewModels.WatchList;assembly=CineLog.Mobile.Core"
-    x:DataType="vm:AddToWatchlistViewModel"
     Title="{Binding Title}"
+    x:DataType="vm:AddToWatchlistViewModel"
     BackgroundColor="{StaticResource Background}"
     ShowMenuButton="false">
 
-    <Grid Padding="24" RowDefinitions="Auto,*">
-
-        <Grid Padding="0,4,0,16" ColumnDefinitions="44,*">
-            <Button
-                Padding="0"
-                BackgroundColor="Transparent"
-                Command="{Binding GoBackCommand}"
-                FontSize="28"
-                Text="‹"
-                TextColor="{StaticResource OnBackground}" />
-            <Label
-                Grid.Column="1"
-                FontAttributes="Bold"
-                FontSize="22"
-                LineBreakMode="TailTruncation"
-                Text="Add to Watchlist"
-                TextColor="{StaticResource OnBackground}"
-                VerticalOptions="Center" />
-        </Grid>
+    <Grid Padding="24">
 
         <CollectionView
-            Grid.Row="1"
             ItemsSource="{Binding Lists}"
+            ItemsUpdatingScrollMode="KeepScrollOffset"
             SelectionMode="None">
 
             <CollectionView.ItemTemplate>
@@ -44,36 +26,51 @@
                         BackgroundColor="{StaticResource Surface}"
                         Stroke="{StaticResource Border}"
                         StrokeThickness="1">
+
                         <Border.StrokeShape>
                             <RoundRectangle CornerRadius="10" />
                         </Border.StrokeShape>
+
                         <Grid ColumnDefinitions="64,*" ColumnSpacing="12">
                             <Grid.GestureRecognizers>
-                                <TapGestureRecognizer
-                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:AddToWatchlistViewModel}}, Path=AddToWatchlistCommand}"
-                                    CommandParameter="{Binding .}" />
+                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:AddToWatchlistViewModel}}, Path=AddToWatchlistCommand}" CommandParameter="{Binding .}" />
                             </Grid.GestureRecognizers>
+
                             <Border
                                 BackgroundColor="{StaticResource SurfaceVariant}"
                                 HeightRequest="52"
                                 StrokeThickness="0"
                                 VerticalOptions="Center"
                                 WidthRequest="52">
+
                                 <Border.StrokeShape>
                                     <RoundRectangle CornerRadius="26" />
                                 </Border.StrokeShape>
+
                                 <Label
                                     FontAttributes="Bold"
                                     FontSize="22"
                                     HorizontalOptions="Center"
                                     Text="{Binding IconText}"
                                     TextColor="{StaticResource Primary}"
-                                    VerticalOptions="Center" />
+                                    VerticalOptions="Center">
+                                    <Label.Triggers>
+                                        <DataTrigger
+                                            Binding="{Binding UsesIconFont}"
+                                            TargetType="Label"
+                                            Value="True">
+                                            <Setter Property="FontFamily" Value="FASolid" />
+                                            <Setter Property="FontAttributes" Value="None" />
+                                        </DataTrigger>
+                                    </Label.Triggers>
+                                </Label>
                             </Border>
+
                             <VerticalStackLayout
                                 Grid.Column="1"
                                 Spacing="2"
                                 VerticalOptions="Center">
+
                                 <Label
                                     FontAttributes="Bold"
                                     FontSize="20"
@@ -81,6 +78,7 @@
                                     MaxLines="1"
                                     Text="{Binding Name}"
                                     TextColor="{StaticResource OnSurface}" />
+
                                 <Label
                                     FontSize="15"
                                     Text="{Binding CountText}"
@@ -93,10 +91,14 @@
 
             <CollectionView.EmptyView>
                 <Label
+                    Margin="0,8,0,0"
                     Style="{StaticResource CaptionLabel}"
-                    Text="No watchlists yet."
-                    Margin="0,8,0,0" />
+                    Text="No watchlists yet." />
             </CollectionView.EmptyView>
+
+            <CollectionView.Footer>
+                <BoxView HeightRequest="112" Color="Transparent" />
+            </CollectionView.Footer>
         </CollectionView>
     </Grid>
 </pages:BasePage>
