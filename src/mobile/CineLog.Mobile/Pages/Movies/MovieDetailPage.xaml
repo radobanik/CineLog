@@ -87,7 +87,7 @@
             </HorizontalStackLayout>
 
             <Grid
-                ColumnDefinitions="*, *, *, *"
+                ColumnDefinitions="*, *, *"
                 Padding="8,0,8,12">
 
                 <VerticalStackLayout Grid.Column="0" HorizontalOptions="Center" Spacing="6">
@@ -168,27 +168,6 @@
                             VerticalOptions="Center" />
                     </Border>
                     <Label Style="{StaticResource CaptionLabel}" Text="Watchlist" HorizontalOptions="Center" />
-                </VerticalStackLayout>
-
-                <VerticalStackLayout Grid.Column="3" HorizontalOptions="Center" Spacing="6">
-                    <Border
-                        WidthRequest="44"
-                        HeightRequest="44"
-                        BackgroundColor="{StaticResource Surface}"
-                        StrokeThickness="0"
-                        HorizontalOptions="Center">
-                        <Border.StrokeShape>
-                            <RoundRectangle CornerRadius="22" />
-                        </Border.StrokeShape>
-                        <Label
-                            FontFamily="FASolid"
-                            FontSize="16"
-                            TextColor="{StaticResource OnSurface}"
-                            Text="{x:Static helpers:FontAwesomeIcons.Share}"
-                            HorizontalOptions="Center"
-                            VerticalOptions="Center" />
-                    </Border>
-                    <Label Style="{StaticResource CaptionLabel}" Text="Share" HorizontalOptions="Center" />
                 </VerticalStackLayout>
 
             </Grid>
