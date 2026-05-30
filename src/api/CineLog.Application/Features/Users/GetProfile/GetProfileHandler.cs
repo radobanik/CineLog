@@ -26,9 +26,6 @@ public class GetProfileHandler : IRequestHandler<GetProfileQuery, UserProfileRes
             ?? throw new NotFoundException($"User {request.UserId} not found.");
 
         var filmsCount = await _context.Reviews.CountAsync(r => r.UserId == request.UserId, cancellationToken);
-        var thisYear = DateTimeOffset.UtcNow.Year;
-        var filmsThisYearCount = await _context.Reviews.CountAsync(
-            r => r.UserId == request.UserId && r.CreatedAt.Year == thisYear, cancellationToken);
         var followersCount = await _context.UserFollows.CountAsync(f => f.FollowedId == request.UserId, cancellationToken);
         var followingCount = await _context.UserFollows.CountAsync(f => f.FollowerId == request.UserId, cancellationToken);
 
@@ -43,7 +40,6 @@ public class GetProfileHandler : IRequestHandler<GetProfileQuery, UserProfileRes
             user.Bio,
             user.AvatarUrl,
             filmsCount,
-            filmsThisYearCount,
             followersCount,
             followingCount,
             isFollowing);

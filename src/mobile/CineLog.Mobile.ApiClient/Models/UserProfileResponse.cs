@@ -19,9 +19,6 @@ public partial class UserProfileResponse
     [Newtonsoft.Json.JsonProperty("filmsCount", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
     public int? FilmsCount { get; set; } = default !;
 
-    [Newtonsoft.Json.JsonProperty("filmsThisYearCount", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-    public int? FilmsThisYearCount { get; set; } = default !;
-
     [Newtonsoft.Json.JsonProperty("followersCount", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
     public int? FollowersCount { get; set; } = default !;
 

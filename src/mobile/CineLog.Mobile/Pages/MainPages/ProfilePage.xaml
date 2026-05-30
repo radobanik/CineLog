@@ -110,7 +110,7 @@
                     <RoundRectangle CornerRadius="10" />
                 </Border.StrokeShape>
 
-                <Grid ColumnDefinitions="*, *, *, *">
+                <Grid ColumnDefinitions="*, *, *">
                     <VerticalStackLayout Grid.Column="0" HorizontalOptions="Center">
                         <Label
                             HorizontalOptions="Center"
@@ -123,19 +123,11 @@
                         <Label
                             HorizontalOptions="Center"
                             Style="{StaticResource HeadlineMediumLabel}"
-                            Text="{Binding FilmsThisYearCount}" />
-                        <Label Style="{StaticResource OverlineLabel}" Text="THIS YEAR" />
-                    </VerticalStackLayout>
-
-                    <VerticalStackLayout Grid.Column="2" HorizontalOptions="Center">
-                        <Label
-                            HorizontalOptions="Center"
-                            Style="{StaticResource HeadlineMediumLabel}"
                             Text="{Binding FollowersCount}" />
                         <Label Style="{StaticResource OverlineLabel}" Text="FOLLOWERS" />
                     </VerticalStackLayout>
 
-                    <VerticalStackLayout Grid.Column="3" HorizontalOptions="Center">
+                    <VerticalStackLayout Grid.Column="2" HorizontalOptions="Center">
                         <Label
                             HorizontalOptions="Center"
                             Style="{StaticResource HeadlineMediumLabel}"
