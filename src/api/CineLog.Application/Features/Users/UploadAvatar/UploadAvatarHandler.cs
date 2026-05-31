@@ -35,7 +35,7 @@ public class UploadAvatarHandler : IRequestHandler<UploadAvatarCommand, UploadAv
             ?? throw new NotFoundException($"User {userId} not found.");
 
         var extension = Path.GetExtension(request.FileName).ToLowerInvariant();
-        var key = $"avatars/{userId}{extension}";
+        var key = $"avatars/{userId}_{DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()}{extension}";
 
         var url = await _blobStorage.UploadAsync(key, request.FileStream, request.ContentType, cancellationToken);
 

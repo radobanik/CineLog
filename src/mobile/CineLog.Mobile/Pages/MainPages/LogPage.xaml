@@ -138,7 +138,7 @@
                                     </Border.Triggers>
 
                                     <Border.StrokeShape>
-                                        <RoundRectangle CornerRadius="8" />
+                                        <RoundRectangle CornerRadius="6" />
                                     </Border.StrokeShape>
 
                                     <Grid RowDefinitions="Auto,*,Auto" RowSpacing="6">

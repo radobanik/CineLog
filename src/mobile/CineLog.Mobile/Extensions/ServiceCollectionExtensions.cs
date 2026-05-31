@@ -33,6 +33,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<ISecureStorageService, MauiSecureStorageService>();
         services.AddSingleton<INavigationService, ShellNavigationService>();
         services.AddSingleton<IAlertService, MauiAlertService>();
+        services.AddSingleton<IMediaPickerService, MauiMediaPickerService>();
         services.AddSingleton<IKeyboardService, KeyboardService>();
         return services;
     }

@@ -28,6 +28,8 @@
     </array>
     <key>XSAppIconAssets</key>
     <string>Assets.xcassets/appicon.appiconset</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>CineLog needs access to your photo library to update your profile picture.</string>
     <key>NSAppTransportSecurity</key>
     <dict>
         <key>NSAllowsLocalNetworking</key>

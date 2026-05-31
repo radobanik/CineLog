@@ -14,35 +14,61 @@
     <ScrollView>
         <VerticalStackLayout Padding="20,24,20,48" Spacing="0">
 
-            <Border
+            <Grid
                 WidthRequest="90"
                 HeightRequest="90"
-                StrokeThickness="0"
                 HorizontalOptions="Center"
                 Margin="0,0,0,12">
-                <Border.StrokeShape>
-                    <RoundRectangle CornerRadius="45" />
-                </Border.StrokeShape>
-                <Grid BackgroundColor="{StaticResource Surface}">
-                    <Image
-                        Source="{Binding AvatarUrl}"
-                        Aspect="AspectFill"
-                        IsVisible="{Binding AvatarUrl, Converter={StaticResource IsNotNullOrEmptyConverter}}" />
+                <Grid.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding PickAvatarCommand}" />
+                </Grid.GestureRecognizers>
+                <Border
+                    WidthRequest="90"
+                    HeightRequest="90"
+                    StrokeThickness="0">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="45" />
+                    </Border.StrokeShape>
+                    <Grid BackgroundColor="{StaticResource Surface}">
+                        <Image
+                            Source="{Binding AvatarUrl}"
+                            Aspect="AspectFill"
+                            IsVisible="{Binding AvatarUrl, Converter={StaticResource IsNotNullOrEmptyConverter}}" />
+                        <Label
+                            Text="{Binding Initial}"
+                            Style="{StaticResource HeadlineMediumLabel}"
+                            HorizontalOptions="Center"
+                            VerticalOptions="Center">
+                            <Label.Triggers>
+                                <DataTrigger TargetType="Label"
+                                             Binding="{Binding AvatarUrl, Converter={StaticResource IsNotNullOrEmptyConverter}}"
+                                             Value="True">
+                                    <Setter Property="IsVisible" Value="False" />
+                                </DataTrigger>
+                            </Label.Triggers>
+                        </Label>
+                    </Grid>
+                </Border>
+                <Border
+                    WidthRequest="26"
+                    HeightRequest="26"
+                    StrokeThickness="0"
+                    HorizontalOptions="End"
+                    VerticalOptions="End"
+                    Margin="0,0,2,2"
+                    BackgroundColor="{StaticResource Primary}">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="13" />
+                    </Border.StrokeShape>
                     <Label
-                        Text="{Binding Initial}"
-                        Style="{StaticResource HeadlineMediumLabel}"
+                        Text="{x:Static helpers:FontAwesomeIcons.Camera}"
+                        FontFamily="FASolid"
+                        FontSize="12"
+                        TextColor="White"
                         HorizontalOptions="Center"
-                        VerticalOptions="Center">
-                        <Label.Triggers>
-                            <DataTrigger TargetType="Label"
-                                         Binding="{Binding AvatarUrl, Converter={StaticResource IsNotNullOrEmptyConverter}}"
-                                         Value="True">
-                                <Setter Property="IsVisible" Value="False" />
-                            </DataTrigger>
-                        </Label.Triggers>
-                    </Label>
-                </Grid>
-            </Border>
+                        VerticalOptions="Center" />
+                </Border>
+            </Grid>
 
             <Label
                 Style="{StaticResource HeadlineMediumLabel}"
