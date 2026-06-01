@@ -90,6 +90,7 @@ public class CreateReviewHandler : IRequestHandler<CreateReviewCommand, ReviewRe
             user.UserName!,
             user.AvatarUrl,
             movie.Title,
+            movie.PosterPath,
             review.Rating.Value,
             review.ReviewText,
             review.ContainsSpoilers,

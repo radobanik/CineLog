@@ -1,4 +1,5 @@
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 
 namespace CineLog.Mobile.Core.Models.Review;
 
@@ -28,6 +29,10 @@ public sealed partial class ReviewListItem : ObservableObject
 
     public bool HasReviewText => !string.IsNullOrWhiteSpace(ReviewText);
     public bool HasMoviePoster => !string.IsNullOrWhiteSpace(MoviePosterPath);
+    public bool IsLongReview => ReviewText?.Length >= 120;
     public int ReviewMaxLines => IsExpanded ? int.MaxValue : 3;
     public string ExpandLabel => IsExpanded ? "Show less" : "Show more";
+
+    [RelayCommand]
+    private void ToggleExpanded() => IsExpanded = !IsExpanded;
 }

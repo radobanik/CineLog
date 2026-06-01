@@ -36,10 +36,12 @@ public class GetMovieReviewsHandler : IRequestHandler<GetMovieReviewsQuery, Page
             .Select(u => new { u.Id, u.UserName, u.AvatarUrl })
             .ToListAsync(cancellationToken);
 
-        var movieTitle = await _context.Movies
+        var movieInfo = await _context.Movies
             .Where(m => m.Id == request.MovieId)
-            .Select(m => m.Title)
-            .FirstOrDefaultAsync(cancellationToken) ?? string.Empty;
+            .Select(m => new { m.Title, m.PosterPath })
+            .FirstOrDefaultAsync(cancellationToken);
+        var movieTitle = movieInfo?.Title ?? string.Empty;
+        var moviePosterPath = movieInfo?.PosterPath;
 
         var reviewIds = reviews.Select(r => r.Id).ToList();
         var likedIds = await _context.ReviewReactions
@@ -58,6 +60,7 @@ public class GetMovieReviewsHandler : IRequestHandler<GetMovieReviewsQuery, Page
             usernameMap.GetValueOrDefault(r.UserId, string.Empty),
             avatarMap.GetValueOrDefault(r.UserId),
             movieTitle,
+            moviePosterPath,
             r.Rating.Value,
             r.ReviewText,
             r.ContainsSpoilers,

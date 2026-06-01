@@ -63,6 +63,7 @@ public sealed class ProfileService(IUsersClient usersClient) : IProfileService
         {
             Id = r.Id ?? Guid.Empty,
             MovieTitle = r.MovieTitle ?? string.Empty,
+            MoviePosterPath = r.MoviePosterPath,
             Rating = r.Rating,
             ReviewText = r.ReviewText,
             LikesCount = r.LikesCount ?? 0,
@@ -78,6 +79,7 @@ public sealed class ProfileService(IUsersClient usersClient) : IProfileService
         {
             Id = r.Id ?? Guid.Empty,
             MovieTitle = r.MovieTitle ?? string.Empty,
+            MoviePosterPath = r.MoviePosterPath,
             Rating = r.Rating,
             ReviewText = r.ReviewText,
             LikesCount = r.LikesCount ?? 0,

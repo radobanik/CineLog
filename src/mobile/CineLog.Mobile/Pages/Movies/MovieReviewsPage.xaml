@@ -30,17 +30,12 @@
 
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="models:ReviewListItem">
-                    <Grid>
-                        <controls:ReviewListCard
-                            IsMovieMode="{Binding Source={RelativeSource AncestorType={x:Type vm:MovieReviewsViewModel}}, Path=IsMovieMode}"
-                            IsLatestMode="{Binding Source={RelativeSource AncestorType={x:Type vm:MovieReviewsViewModel}}, Path=IsLatestMode}"
-                            LikeCommand="{Binding Source={RelativeSource AncestorType={x:Type vm:MovieReviewsViewModel}}, Path=ToggleLikeCommand}" />
-                        <Grid.GestureRecognizers>
-                            <TapGestureRecognizer
-                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MovieReviewsViewModel}}, Path=GoToEditReviewCommand}"
-                                CommandParameter="{Binding .}" />
-                        </Grid.GestureRecognizers>
-                    </Grid>
+                    <controls:ReviewListCard
+                        CardCommand="{Binding Source={RelativeSource AncestorType={x:Type vm:MovieReviewsViewModel}}, Path=GoToEditReviewCommand}"
+                        CardCommandParameter="{Binding .}"
+                        IsLatestMode="{Binding Source={RelativeSource AncestorType={x:Type vm:MovieReviewsViewModel}}, Path=IsLatestMode}"
+                        IsMovieMode="{Binding Source={RelativeSource AncestorType={x:Type vm:MovieReviewsViewModel}}, Path=IsMovieMode}"
+                        LikeCommand="{Binding Source={RelativeSource AncestorType={x:Type vm:MovieReviewsViewModel}}, Path=ToggleLikeCommand}" />
                 </DataTemplate>
             </CollectionView.ItemTemplate>
 

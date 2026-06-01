@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using CineLog.Mobile.ApiClient.Clients;
 using CineLog.Mobile.Core.Models;
 using CineLog.Mobile.Core.Models.Review;
 using CineLog.Mobile.Core.Navigation;
@@ -14,6 +15,7 @@ public partial class ProfileViewModel(
     IAuthService authService,
     ISessionService session,
     IFollowService followService,
+    IReviewsClient reviewsClient,
     IMovieDetailNavigationContext movieDetailNav,
     IReviewsNavigationContext reviewsNav,
     IEditReviewNavigationContext editReviewNav,
@@ -126,6 +128,28 @@ public partial class ProfileViewModel(
         {
             IsFollowing = wasFollowing;
             ApplyFollowerDelta(wasFollowing);
+            await HandleErrorAsync(ex);
+        }
+    }
+
+    [RelayCommand]
+    private async Task ToggleLike(ReviewListItem review)
+    {
+        if (IsOwnProfile)
+            return;
+
+        var wasLiked = review.IsLiked;
+        review.IsLiked = !wasLiked;
+        review.LikesCount += wasLiked ? -1 : 1;
+
+        try
+        {
+            await reviewsClient.ToggleLikeAsync(review.Id);
+        }
+        catch (Exception ex)
+        {
+            review.IsLiked = wasLiked;
+            review.LikesCount += wasLiked ? 1 : -1;
             await HandleErrorAsync(ex);
         }
     }

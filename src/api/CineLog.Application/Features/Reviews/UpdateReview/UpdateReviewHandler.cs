@@ -71,6 +71,7 @@ public class UpdateReviewHandler : IRequestHandler<UpdateReviewCommand, ReviewRe
             user.UserName!,
             user.AvatarUrl,
             movie.Title,
+            movie.PosterPath,
             review.Rating.Value,
             review.ReviewText,
             review.ContainsSpoilers,

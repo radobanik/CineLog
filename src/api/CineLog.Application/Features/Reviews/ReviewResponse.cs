@@ -6,6 +6,7 @@ public record ReviewResponse(
     string Username,
     string? AvatarUrl,
     string MovieTitle,
+    string? MoviePosterPath,
     decimal Rating,
     string? ReviewText,
     bool ContainsSpoilers,
