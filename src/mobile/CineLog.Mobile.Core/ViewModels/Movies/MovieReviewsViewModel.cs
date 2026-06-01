@@ -17,6 +17,7 @@ public partial class MovieReviewsViewModel(
     IReviewsClient reviewsClient,
     IReviewsNavigationContext reviewsNav,
     IEditReviewNavigationContext editReviewNav,
+    IMovieDetailNavigationContext movieDetailNav,
     ISessionService session,
     INavigationService navigation,
     IAlertService alerts) : BaseViewModel(alerts)
@@ -169,11 +170,19 @@ public partial class MovieReviewsViewModel(
     }
 
     [RelayCommand]
+    private Task GoToMovieFromReview(ReviewListItem review)
+    {
+        movieDetailNav.MovieId = review.MovieId;
+        return navigation.NavigateToAsync(Routes.MovieDetail);
+    }
+
+    [RelayCommand]
     private Task GoBack() => navigation.NavigateBackAsync();
 
     private static ReviewListItem MapReview(ReviewResponse review) => new()
     {
         Id = review.Id ?? Guid.Empty,
+        MovieId = review.MovieId ?? Guid.Empty,
         Username = review.Username,
         AvatarUrl = review.AvatarUrl,
         MovieTitle = review.MovieTitle ?? string.Empty,

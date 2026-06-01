@@ -5,6 +5,7 @@ public record ReviewResponse(
     Guid UserId,
     string Username,
     string? AvatarUrl,
+    Guid MovieId,
     string MovieTitle,
     string? MoviePosterPath,
     decimal Rating,

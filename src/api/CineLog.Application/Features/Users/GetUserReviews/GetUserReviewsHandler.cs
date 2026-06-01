@@ -61,6 +61,7 @@ public class GetUserReviewsHandler : IRequestHandler<GetUserReviewsQuery, PagedR
             r.UserId,
             username,
             avatarUrl,
+            r.MovieId,
             movieTitleMap.GetValueOrDefault(r.MovieId, string.Empty),
             moviePosterMap.GetValueOrDefault(r.MovieId),
             r.Rating.Value,

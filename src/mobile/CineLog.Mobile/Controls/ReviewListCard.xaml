@@ -139,6 +139,10 @@
                             <RoundRectangle CornerRadius="5" />
                         </Border.StrokeShape>
 
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding Source={x:Reference This}, Path=GoToMovieCommand}" CommandParameter="{Binding .}" />
+                        </Border.GestureRecognizers>
+
                         <Grid>
                             <Image
                                 Aspect="AspectFill"
@@ -357,16 +361,13 @@
                 </VerticalStackLayout>
 
                 <!--  Column 2: heart icon (movie mode)  -->
-                <VerticalStackLayout
+                <HorizontalStackLayout
                     Grid.Column="2"
                     HorizontalOptions="End"
                     IsVisible="{Binding Source={x:Reference This}, Path=IsMovieMode}"
                     Spacing="4"
                     VerticalOptions="Center">
-                    <Label
-                        FontFamily="FASolid"
-                        FontSize="20"
-                        HorizontalOptions="Center">
+                    <Label FontFamily="FASolid" FontSize="13">
                         <Label.Triggers>
                             <DataTrigger
                                 Binding="{Binding IsLiked}"
@@ -389,10 +390,10 @@
                         </Label.GestureRecognizers>
                     </Label>
                     <Label
-                        HorizontalOptions="Center"
                         Style="{StaticResource CaptionLabel}"
-                        Text="{Binding LikesCount}" />
-                </VerticalStackLayout>
+                        Text="{Binding LikesCount}"
+                        VerticalOptions="Center" />
+                </HorizontalStackLayout>
 
                 <!--  Column 2: poster + heart (profile mode) — mirrors homepage right column  -->
                 <Grid
@@ -413,6 +414,9 @@
                         <Border.StrokeShape>
                             <RoundRectangle CornerRadius="5" />
                         </Border.StrokeShape>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding Source={x:Reference This}, Path=GoToMovieCommand}" CommandParameter="{Binding .}" />
+                        </Border.GestureRecognizers>
                         <Grid>
                             <Image
                                 Aspect="AspectFill"

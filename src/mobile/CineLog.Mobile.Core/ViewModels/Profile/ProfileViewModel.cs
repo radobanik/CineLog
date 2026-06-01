@@ -81,6 +81,13 @@ public partial class ProfileViewModel(
     }
 
     [RelayCommand]
+    private Task GoToMovieFromReview(ReviewListItem review)
+    {
+        movieDetailNav.MovieId = review.MovieId;
+        return navigation.NavigateToAsync(Routes.MovieDetail);
+    }
+
+    [RelayCommand]
     private void ToggleBio() => IsBioExpanded = !IsBioExpanded;
 
     [RelayCommand]

@@ -20,6 +20,9 @@ public partial class ReviewListCard : ContentView
     public static readonly BindableProperty CardCommandParameterProperty =
         BindableProperty.Create(nameof(CardCommandParameter), typeof(object), typeof(ReviewListCard));
 
+    public static readonly BindableProperty GoToMovieCommandProperty =
+        BindableProperty.Create(nameof(GoToMovieCommand), typeof(ICommand), typeof(ReviewListCard));
+
     public bool IsMovieMode
     {
         get => (bool)GetValue(IsMovieModeProperty);
@@ -48,6 +51,12 @@ public partial class ReviewListCard : ContentView
     {
         get => GetValue(CardCommandParameterProperty);
         set => SetValue(CardCommandParameterProperty, value);
+    }
+
+    public ICommand? GoToMovieCommand
+    {
+        get => (ICommand?)GetValue(GoToMovieCommandProperty);
+        set => SetValue(GoToMovieCommandProperty, value);
     }
 
     public ReviewListCard()

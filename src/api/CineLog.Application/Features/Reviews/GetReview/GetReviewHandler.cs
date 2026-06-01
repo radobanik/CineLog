@@ -52,6 +52,7 @@ public class GetReviewHandler : IRequestHandler<GetReviewQuery, ReviewResponse>
             review.UserId,
             username,
             avatarUrl,
+            review.MovieId,
             movieTitle,
             moviePosterPath,
             review.Rating.Value,

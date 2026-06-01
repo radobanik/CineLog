@@ -29,6 +29,7 @@ public sealed class HomeService(IDashboardClient dashboardClient) : IHomeService
         .Select(action => new ReviewListItem
         {
             Id = action.Review?.Id ?? Guid.Empty,
+            MovieId = action.Movie?.Id ?? Guid.Empty,
             Username = action.User?.Username ?? string.Empty,
             AvatarUrl = action.User?.AvatarUrl,
             MovieTitle = action.Movie?.Title ?? string.Empty,

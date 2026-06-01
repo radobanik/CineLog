@@ -28,8 +28,8 @@
                             <VerticalStackLayout Padding="0,16" Spacing="10">
 
                                 <Grid
-                                    ColumnDefinitions="48,*,64"
-                                    ColumnSpacing="12"
+                                    ColumnDefinitions="34,*,58"
+                                    ColumnSpacing="10"
                                     VerticalOptions="Center">
 
                                     <Grid.GestureRecognizers>
@@ -39,24 +39,21 @@
                                     <Border
                                         Grid.Column="0"
                                         BackgroundColor="{StaticResource SurfaceVariant}"
-                                        HeightRequest="42"
+                                        HeightRequest="28"
                                         StrokeThickness="0"
                                         VerticalOptions="Center"
-                                        WidthRequest="42">
-
+                                        WidthRequest="28">
                                         <Border.StrokeShape>
-                                            <RoundRectangle CornerRadius="21" />
+                                            <RoundRectangle CornerRadius="14" />
                                         </Border.StrokeShape>
-
                                         <Grid>
                                             <Image
                                                 Aspect="AspectFill"
                                                 IsVisible="{Binding HasActorAvatar}"
                                                 Source="{Binding ActorAvatarUrl}" />
-
                                             <Label
                                                 FontAttributes="Bold"
-                                                FontSize="15"
+                                                FontSize="11"
                                                 HorizontalOptions="Center"
                                                 IsVisible="{Binding HasActorAvatar, Converter={StaticResource InvertedBoolConverter}}"
                                                 Text="{Binding ActorInitial}"
@@ -67,11 +64,10 @@
 
                                     <Label
                                         Grid.Column="1"
-                                        FontSize="16"
+                                        FontSize="13"
                                         LineBreakMode="WordWrap"
                                         TextColor="{StaticResource OnSurface}"
                                         VerticalOptions="Center">
-
                                         <Label.FormattedText>
                                             <FormattedString>
                                                 <Span
@@ -93,23 +89,20 @@
                                     <Border
                                         Grid.Column="2"
                                         BackgroundColor="{StaticResource SurfaceVariant}"
-                                        HeightRequest="86"
+                                        HeightRequest="76"
                                         IsVisible="{Binding HasMovie}"
                                         Stroke="{StaticResource Border}"
                                         StrokeThickness="1"
                                         VerticalOptions="Center"
-                                        WidthRequest="58">
-
+                                        WidthRequest="54">
                                         <Border.StrokeShape>
-                                            <RoundRectangle CornerRadius="7" />
+                                            <RoundRectangle CornerRadius="5" />
                                         </Border.StrokeShape>
-
                                         <Grid>
                                             <Image
                                                 Aspect="AspectFill"
                                                 IsVisible="{Binding HasMoviePoster}"
                                                 Source="{Binding MoviePosterPath}" />
-
                                             <Label
                                                 HorizontalOptions="Center"
                                                 IsVisible="{Binding HasMoviePoster, Converter={StaticResource InvertedBoolConverter}}"
@@ -121,60 +114,43 @@
                                 </Grid>
 
                                 <Border
-                                    Padding="12"
+                                    Padding="10"
                                     BackgroundColor="{StaticResource Surface}"
-                                    HeightRequest="128"
                                     IsVisible="{Binding HasReviewPreview}"
                                     Stroke="{StaticResource Border}"
                                     StrokeThickness="1">
-
-                                    <Border.Triggers>
-                                        <DataTrigger
-                                            Binding="{Binding IsReviewExpanded}"
-                                            TargetType="Border"
-                                            Value="True">
-                                            <Setter Property="HeightRequest" Value="-1" />
-                                        </DataTrigger>
-                                    </Border.Triggers>
-
                                     <Border.StrokeShape>
                                         <RoundRectangle CornerRadius="6" />
                                     </Border.StrokeShape>
 
-                                    <Grid RowDefinitions="Auto,*,Auto" RowSpacing="6">
-                                        <HorizontalStackLayout Grid.Row="0" Spacing="8">
+                                    <Grid RowDefinitions="Auto,Auto,Auto" RowSpacing="4">
+                                        <HorizontalStackLayout Grid.Row="0" Spacing="6">
                                             <Label
-                                                FontAttributes="Bold"
-                                                Style="{StaticResource CaptionLabel}"
-                                                Text="Review" />
-
-                                            <Label
-                                                FontAttributes="Bold"
-                                                IsVisible="{Binding ReviewRatingText, Converter={StaticResource IsNotNullOrEmptyConverter}}"
-                                                Style="{StaticResource AccentLabel}"
-                                                Text="{Binding ReviewRatingText}"
-                                                TextColor="{StaticResource Primary}" />
-
-                                            <Label
-                                                FontSize="15"
+                                                FontSize="11"
                                                 IsVisible="{Binding ReviewRatingText, Converter={StaticResource IsNotNullOrEmptyConverter}}"
                                                 Style="{StaticResource RatingLabel}"
-                                                Text="{Binding ReviewRating, Converter={StaticResource RatingToStarsConverter}}"
+                                                Text="{Binding ReviewRating, Converter={StaticResource RatingToStarsConverter}}" />
+                                            <Label
+                                                FontAttributes="Bold"
+                                                FontSize="11"
+                                                IsVisible="{Binding ReviewRatingText, Converter={StaticResource IsNotNullOrEmptyConverter}}"
+                                                Text="{Binding ReviewRatingText}"
                                                 TextColor="{StaticResource Primary}" />
                                         </HorizontalStackLayout>
 
                                         <Label
                                             Grid.Row="1"
+                                            FontSize="10"
                                             IsVisible="{Binding HasReviewText}"
                                             LineBreakMode="TailTruncation"
                                             MaxLines="{Binding ReviewMaxLines}"
-                                            Style="{StaticResource BodyMediumLabel}"
-                                            Text="{Binding ReviewText}" />
+                                            Text="{Binding ReviewText}"
+                                            TextColor="{StaticResource TextSecondary}" />
 
                                         <Label
                                             Grid.Row="2"
                                             FontAttributes="Bold"
-                                            FontSize="13"
+                                            FontSize="10"
                                             IsVisible="{Binding HasExpandableReview}"
                                             Text="{Binding ReviewExpandText}"
                                             TextColor="{StaticResource Primary}">

@@ -16,6 +16,9 @@ public partial class ReviewResponse
     [Newtonsoft.Json.JsonProperty("avatarUrl", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
     public string? AvatarUrl { get; set; } = default !;
 
+    [Newtonsoft.Json.JsonProperty("movieId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+    public System.Guid? MovieId { get; set; } = default !;
+
     [Newtonsoft.Json.JsonProperty("movieTitle", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
     public string? MovieTitle { get; set; } = default !;
 
