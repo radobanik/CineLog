@@ -47,7 +47,15 @@
                     TextColor="{StaticResource Primary}" />
             </Grid>
 
-            <VerticalStackLayout BindableLayout.ItemsSource="{Binding LatestReviews}">
+            <VerticalStackLayout IsVisible="{Binding IsBusy}">
+                <controls:LatestReviewItemSkeleton />
+                <controls:LatestReviewItemSkeleton />
+                <controls:LatestReviewItemSkeleton />
+                <controls:LatestReviewItemSkeleton />
+                <controls:LatestReviewItemSkeleton />
+            </VerticalStackLayout>
+
+            <VerticalStackLayout BindableLayout.ItemsSource="{Binding LatestReviews}" IsVisible="{Binding IsNotBusy}">
                 <BindableLayout.ItemTemplate>
                     <DataTemplate x:DataType="review:ReviewListItem">
                         <controls:ReviewListCard
