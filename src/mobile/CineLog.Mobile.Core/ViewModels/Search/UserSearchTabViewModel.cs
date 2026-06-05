@@ -23,7 +23,6 @@ public partial class UserSearchTabViewModel(
     [ObservableProperty] private bool hasQuery;
     [ObservableProperty] private bool showSkeleton;
     [ObservableProperty] private bool showNoResults;
-    [ObservableProperty] private bool isLoadingMore;
 
     public ObservableCollection<UserSearchRowViewModel> SearchResults { get; } = [];
     public ObservableCollection<UserSearchRowViewModel> RecommendedUsers { get; } = [];
@@ -83,10 +82,10 @@ public partial class UserSearchTabViewModel(
     [RelayCommand]
     private async Task LoadMore()
     {
-        if (IsLoadingMore || !CanLoadMore)
+        if (IsBusy || !CanLoadMore)
             return;
 
-        IsLoadingMore = true;
+        IsBusy = true;
 
         try
         {
@@ -97,7 +96,7 @@ public partial class UserSearchTabViewModel(
         }
         finally
         {
-            IsLoadingMore = false;
+            IsBusy = false;
         }
     }
 

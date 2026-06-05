@@ -138,11 +138,10 @@
             </CollectionView.ItemTemplate>
 
             <CollectionView.Footer>
-                <VerticalStackLayout Padding="0,12,0,24">
-                    <ActivityIndicator IsRunning="{Binding IsLoadingHome}" IsVisible="{Binding IsLoadingHome}" />
-
-                    <ActivityIndicator IsRunning="{Binding IsLoadingMoreHome}" IsVisible="{Binding IsLoadingMoreHome}" />
-                </VerticalStackLayout>
+                <ActivityIndicator
+                    Margin="0,12,0,24"
+                    IsRunning="{Binding IsBusy}"
+                    IsVisible="{Binding IsBusy}" />
             </CollectionView.Footer>
         </CollectionView>
 
@@ -199,8 +198,8 @@
             <CollectionView.Footer>
                 <ActivityIndicator
                     Margin="0,8"
-                    IsRunning="{Binding IsLoadingMore}"
-                    IsVisible="{Binding IsLoadingMore}" />
+                    IsRunning="{Binding IsBusy}"
+                    IsVisible="{Binding IsBusy}" />
             </CollectionView.Footer>
         </CollectionView>
 
