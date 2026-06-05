@@ -34,10 +34,12 @@ public class GetReviewHandler : IRequestHandler<GetReviewQuery, ReviewResponse>
         var username = userInfo?.UserName ?? string.Empty;
         var avatarUrl = userInfo?.AvatarUrl;
 
-        var movieTitle = await _context.Movies
+        var movieInfo = await _context.Movies
             .Where(m => m.Id == review.MovieId)
-            .Select(m => m.Title)
-            .FirstOrDefaultAsync(cancellationToken) ?? string.Empty;
+            .Select(m => new { m.Title, m.PosterPath })
+            .FirstOrDefaultAsync(cancellationToken);
+        var movieTitle = movieInfo?.Title ?? string.Empty;
+        var moviePosterPath = movieInfo?.PosterPath;
 
         var isLiked = await _context.ReviewReactions
             .AnyAsync(rr => rr.ReviewId == review.Id
@@ -50,7 +52,9 @@ public class GetReviewHandler : IRequestHandler<GetReviewQuery, ReviewResponse>
             review.UserId,
             username,
             avatarUrl,
+            review.MovieId,
             movieTitle,
+            moviePosterPath,
             review.Rating.Value,
             review.ReviewText,
             review.ContainsSpoilers,

@@ -14,6 +14,15 @@ public partial class ReviewListCard : ContentView
     public static readonly BindableProperty LikeCommandProperty =
         BindableProperty.Create(nameof(LikeCommand), typeof(ICommand), typeof(ReviewListCard));
 
+    public static readonly BindableProperty CardCommandProperty =
+        BindableProperty.Create(nameof(CardCommand), typeof(ICommand), typeof(ReviewListCard));
+
+    public static readonly BindableProperty CardCommandParameterProperty =
+        BindableProperty.Create(nameof(CardCommandParameter), typeof(object), typeof(ReviewListCard));
+
+    public static readonly BindableProperty GoToMovieCommandProperty =
+        BindableProperty.Create(nameof(GoToMovieCommand), typeof(ICommand), typeof(ReviewListCard));
+
     public bool IsMovieMode
     {
         get => (bool)GetValue(IsMovieModeProperty);
@@ -32,14 +41,26 @@ public partial class ReviewListCard : ContentView
         set => SetValue(LikeCommandProperty, value);
     }
 
+    public ICommand? CardCommand
+    {
+        get => (ICommand?)GetValue(CardCommandProperty);
+        set => SetValue(CardCommandProperty, value);
+    }
+
+    public object? CardCommandParameter
+    {
+        get => GetValue(CardCommandParameterProperty);
+        set => SetValue(CardCommandParameterProperty, value);
+    }
+
+    public ICommand? GoToMovieCommand
+    {
+        get => (ICommand?)GetValue(GoToMovieCommandProperty);
+        set => SetValue(GoToMovieCommandProperty, value);
+    }
+
     public ReviewListCard()
     {
         InitializeComponent();
-    }
-
-    private void ToggleExpanded(object? sender, TappedEventArgs e)
-    {
-        if (BindingContext is ReviewListItem review && review.HasReviewText)
-            review.IsExpanded = !review.IsExpanded;
     }
 }

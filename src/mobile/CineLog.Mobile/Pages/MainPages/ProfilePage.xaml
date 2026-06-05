@@ -198,14 +198,12 @@
 
                     <CollectionView.ItemTemplate>
                         <DataTemplate x:DataType="review:ReviewListItem">
-                            <Grid>
-                                <controls:ReviewListCard IsMovieMode="False" />
-                                <Grid.GestureRecognizers>
-                                    <TapGestureRecognizer
-                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ProfileViewModel}}, Path=GoToEditReviewCommand}"
-                                        CommandParameter="{Binding .}" />
-                                </Grid.GestureRecognizers>
-                            </Grid>
+                            <controls:ReviewListCard
+                                CardCommand="{Binding Source={RelativeSource AncestorType={x:Type vm:ProfileViewModel}}, Path=GoToEditReviewCommand}"
+                                CardCommandParameter="{Binding .}"
+                                GoToMovieCommand="{Binding Source={RelativeSource AncestorType={x:Type vm:ProfileViewModel}}, Path=GoToMovieFromReviewCommand}"
+                                IsMovieMode="False"
+                                LikeCommand="{Binding Source={RelativeSource AncestorType={x:Type vm:ProfileViewModel}}, Path=ToggleLikeCommand}" />
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
                 </CollectionView>

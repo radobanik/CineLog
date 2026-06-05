@@ -182,6 +182,13 @@ public partial class HomeViewModel : BaseViewModel
     }
 
     [RelayCommand]
+    public Task GoToMovieFromReview(ReviewListItem review)
+    {
+        _movieDetailNav.MovieId = review.MovieId;
+        return _navigation.NavigateToAsync(Routes.MovieDetail);
+    }
+
+    [RelayCommand]
     public Task GoToTopRated()
     {
         _movieNav.Category = MovieCategory.TopRated;

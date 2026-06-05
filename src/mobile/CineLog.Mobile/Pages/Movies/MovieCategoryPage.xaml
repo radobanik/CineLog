@@ -9,7 +9,7 @@
     xmlns:vm="clr-namespace:CineLog.Mobile.Core.ViewModels.Common;assembly=CineLog.Mobile.Core"
     x:DataType="vm:MoviesCategoryViewModel">
 
-    <Grid>
+    <Grid Padding="16,16,16,0">
         <controls:MovieGridSkeleton IsVisible="{Binding IsBusy}" />
 
         <CollectionView

@@ -62,7 +62,9 @@ public sealed class ProfileService(IUsersClient usersClient) : IProfileService
         return [.. (response?.Items ?? []).Select(r => new ReviewListItem
         {
             Id = r.Id ?? Guid.Empty,
+            MovieId = r.MovieId ?? Guid.Empty,
             MovieTitle = r.MovieTitle ?? string.Empty,
+            MoviePosterPath = r.MoviePosterPath,
             Rating = r.Rating,
             ReviewText = r.ReviewText,
             LikesCount = r.LikesCount ?? 0,
@@ -77,7 +79,9 @@ public sealed class ProfileService(IUsersClient usersClient) : IProfileService
         var items = (response?.Items ?? []).Select(r => new ReviewListItem
         {
             Id = r.Id ?? Guid.Empty,
+            MovieId = r.MovieId ?? Guid.Empty,
             MovieTitle = r.MovieTitle ?? string.Empty,
+            MoviePosterPath = r.MoviePosterPath,
             Rating = r.Rating,
             ReviewText = r.ReviewText,
             LikesCount = r.LikesCount ?? 0,
