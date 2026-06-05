@@ -11,23 +11,6 @@
     x:DataType="vm:SearchViewModel"
     ShowMenuButton="True">
 
-    <pages:BasePage.Resources>
-        <Style
-            x:Key="FollowToggleButton"
-            BasedOn="{StaticResource PrimaryButton}"
-            TargetType="Button">
-            <Setter Property="HeightRequest" Value="34" />
-            <Setter Property="WidthRequest" Value="92" />
-            <Setter Property="MinimumWidthRequest" Value="92" />
-            <Setter Property="Padding" Value="0" />
-            <Setter Property="FontSize" Value="13" />
-            <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
-            <Setter Property="TextColor" Value="{StaticResource OnPrimary}" />
-            <Setter Property="BorderColor" Value="{StaticResource Primary}" />
-            <Setter Property="BorderWidth" Value="0" />
-        </Style>
-    </pages:BasePage.Resources>
-
     <Grid RowDefinitions="Auto,Auto,*">
         <Border
             Grid.Row="0"
