@@ -3,10 +3,11 @@
     x:Class="CineLog.Mobile.Views.WatchList.WatchListMovieRowView"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:helpers="clr-namespace:CineLog.Mobile.Helpers"
     x:Name="Root">
 
     <Border
-        Margin="0,0,0,12"
+        Margin="0,0,0,10"
         Padding="12"
         BackgroundColor="{StaticResource Surface}"
         Stroke="{StaticResource Border}"
@@ -17,6 +18,7 @@
         </Border.StrokeShape>
 
         <Grid ColumnDefinitions="64,*,44" ColumnSpacing="12">
+
             <Border
                 BackgroundColor="{StaticResource SurfaceVariant}"
                 HeightRequest="76"
@@ -36,29 +38,45 @@
                 VerticalOptions="Center">
 
                 <Label
+                    Style="{StaticResource BodyLargeLabel}"
                     FontAttributes="Bold"
-                    FontSize="15"
                     LineBreakMode="TailTruncation"
                     MaxLines="1"
-                    Text="{Binding Title}"
-                    TextColor="{StaticResource OnSurface}" />
+                    Text="{Binding Title}" />
 
-                <Label
-                    FontSize="13"
-                    Text="{Binding RatingText}"
-                    TextColor="{StaticResource Primary}" />
+                <HorizontalStackLayout Spacing="4">
+                    <Label
+                        Style="{StaticResource RatingLabel}"
+                        FontSize="11"
+                        Text="{Binding AverageRating, Converter={StaticResource RatingToStarsConverter}}"
+                        VerticalOptions="Center" />
+                    <Label
+                        Style="{StaticResource CaptionLabel}"
+                        Text="{Binding RatingText}"
+                        VerticalOptions="Center" />
+                </HorizontalStackLayout>
+
             </VerticalStackLayout>
 
-            <Button
+            <Label
                 Grid.Column="2"
-                Padding="0"
-                BackgroundColor="Transparent"
-                Command="{Binding Source={x:Reference Root}, Path=RemoveCommand}"
-                CommandParameter="{Binding .}"
-                HeightRequest="40"
-                Text="✕"
+                FontFamily="FASolid"
+                FontSize="16"
+                HeightRequest="44"
+                HorizontalOptions="Center"
+                HorizontalTextAlignment="Center"
+                Text="{x:Static helpers:FontAwesomeIcons.Times}"
                 TextColor="{StaticResource Error}"
-                WidthRequest="40" />
+                VerticalOptions="Center"
+                VerticalTextAlignment="Center"
+                WidthRequest="44">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer
+                        Command="{Binding Source={x:Reference Root}, Path=RemoveCommand}"
+                        CommandParameter="{Binding .}" />
+                </Label.GestureRecognizers>
+            </Label>
+
         </Grid>
     </Border>
 </ContentView>
