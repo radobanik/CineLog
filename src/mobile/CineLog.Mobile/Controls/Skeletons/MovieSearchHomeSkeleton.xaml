@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView
+    x:Class="CineLog.Mobile.Controls.MovieSearchHomeSkeleton"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:controls="clr-namespace:CineLog.Mobile.Controls"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <VerticalStackLayout Spacing="10">
+
+        <Grid ColumnDefinitions="*,*,*" ColumnSpacing="10">
+            <VerticalStackLayout Grid.Column="0" Spacing="6">
+                <controls:SkeletonView HeightRequest="170" CornerRadius="12" />
+                <controls:SkeletonView HeightRequest="11" WidthRequest="50" HorizontalOptions="Center" CornerRadius="4" />
+            </VerticalStackLayout>
+            <VerticalStackLayout Grid.Column="1" Spacing="6">
+                <controls:SkeletonView HeightRequest="170" CornerRadius="12" />
+                <controls:SkeletonView HeightRequest="11" WidthRequest="50" HorizontalOptions="Center" CornerRadius="4" />
+            </VerticalStackLayout>
+            <VerticalStackLayout Grid.Column="2" Spacing="6">
+                <controls:SkeletonView HeightRequest="170" CornerRadius="12" />
+                <controls:SkeletonView HeightRequest="11" WidthRequest="50" HorizontalOptions="Center" CornerRadius="4" />
+            </VerticalStackLayout>
+        </Grid>
+
+        <Grid ColumnDefinitions="*,*,*" ColumnSpacing="10">
+            <VerticalStackLayout Grid.Column="0" Spacing="6">
+                <controls:SkeletonView HeightRequest="170" CornerRadius="12" />
+                <controls:SkeletonView HeightRequest="11" WidthRequest="50" HorizontalOptions="Center" CornerRadius="4" />
+            </VerticalStackLayout>
+            <VerticalStackLayout Grid.Column="1" Spacing="6">
+                <controls:SkeletonView HeightRequest="170" CornerRadius="12" />
+                <controls:SkeletonView HeightRequest="11" WidthRequest="50" HorizontalOptions="Center" CornerRadius="4" />
+            </VerticalStackLayout>
+            <VerticalStackLayout Grid.Column="2" Spacing="6">
+                <controls:SkeletonView HeightRequest="170" CornerRadius="12" />
+                <controls:SkeletonView HeightRequest="11" WidthRequest="50" HorizontalOptions="Center" CornerRadius="4" />
+            </VerticalStackLayout>
+        </Grid>
+
+        <Grid ColumnDefinitions="*,*,*" ColumnSpacing="10">
+            <VerticalStackLayout Grid.Column="0" Spacing="6">
+                <controls:SkeletonView HeightRequest="170" CornerRadius="12" />
+                <controls:SkeletonView HeightRequest="11" WidthRequest="50" HorizontalOptions="Center" CornerRadius="4" />
+            </VerticalStackLayout>
+            <VerticalStackLayout Grid.Column="1" Spacing="6">
+                <controls:SkeletonView HeightRequest="170" CornerRadius="12" />
+                <controls:SkeletonView HeightRequest="11" WidthRequest="50" HorizontalOptions="Center" CornerRadius="4" />
+            </VerticalStackLayout>
+            <VerticalStackLayout Grid.Column="2" Spacing="6">
+                <controls:SkeletonView HeightRequest="170" CornerRadius="12" />
+                <controls:SkeletonView HeightRequest="11" WidthRequest="50" HorizontalOptions="Center" CornerRadius="4" />
+            </VerticalStackLayout>
+        </Grid>
+
+    </VerticalStackLayout>
+</ContentView>

@@ -30,6 +30,7 @@ public partial class MovieSearchTabViewModel : BaseViewModel
     [ObservableProperty] private bool hasQuery;
     [ObservableProperty] private bool showSkeleton;
     [ObservableProperty] private bool showNoResults;
+    [ObservableProperty] private bool showHomeSkeleton;
 
     public ObservableCollection<MovieItem> Movies { get; } = [];
     public ObservableCollection<MovieItem> HomeMovies { get; } = [];
@@ -98,7 +99,7 @@ public partial class MovieSearchTabViewModel : BaseViewModel
         homeMovieCount = HomeMoviePageSize;
         homeLoadCount = 1;
         homeHasMore = true;
-        IsBusy = true;
+        ShowHomeSkeleton = true;
 
         try
         {
@@ -109,7 +110,7 @@ public partial class MovieSearchTabViewModel : BaseViewModel
         finally
         {
             if (!ct.IsCancellationRequested)
-                IsBusy = false;
+                ShowHomeSkeleton = false;
 
             RefreshVisibility();
         }
