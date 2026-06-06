@@ -25,7 +25,7 @@
                 HorizontalOptions="Center"
                 VerticalOptions="Center" />
 
-            <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Start">
+            <VerticalStackLayout Grid.Column="1" Spacing="6" VerticalOptions="Start">
                 <controls:SkeletonView HeightRequest="10" WidthRequest="110" CornerRadius="5" HorizontalOptions="Start" />
                 <controls:SkeletonView HeightRequest="13" WidthRequest="130" CornerRadius="5" HorizontalOptions="Start" />
                 <controls:SkeletonView HeightRequest="11" WidthRequest="50" CornerRadius="5" HorizontalOptions="Start" />
