@@ -10,7 +10,7 @@
     BackgroundColor="{StaticResource Background}"
     ShowMenuButton="True">
 
-    <Grid Padding="24">
+    <Grid Padding="20">
 
         <RefreshView Command="{Binding RefreshCommand}" IsRefreshing="{Binding IsRefreshing, Mode=OneWay}">
 
@@ -32,7 +32,7 @@
                 </CollectionView.ItemTemplate>
 
                 <CollectionView.Footer>
-                    <BoxView HeightRequest="112" Color="Transparent" />
+                    <BoxView HeightRequest="88" Color="Transparent" />
                 </CollectionView.Footer>
             </CollectionView>
         </RefreshView>

@@ -15,9 +15,13 @@ public partial class WatchListRowViewModel(WatchListCollectionItem item) : Obser
     public Guid Id => Item.Id;
 
     public WatchListType Type => Item.Type;
+    public bool IsDefault => Item.IsDefault;
     public bool IsFavorites => Item.IsFavorites;
     public bool CanEdit => Item.CanEdit;
     public bool CanDelete => Item.CanDelete;
+
+    [ObservableProperty]
+    private bool _isFirstCustom;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IconText))]
