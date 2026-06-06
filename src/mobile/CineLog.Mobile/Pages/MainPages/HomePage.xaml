@@ -11,7 +11,7 @@
     x:DataType="vm:HomeViewModel"
     ShowMenuButton="True">
 
-    <RefreshView Command="{Binding LoadCommand}" IsRefreshing="{Binding IsBusy, Mode=OneWay}">
+    <RefreshView Command="{Binding RefreshCommand}" IsRefreshing="{Binding IsRefreshing, Mode=OneWay}">
         <ScrollView>
             <VerticalStackLayout Padding="16,16,16,24" Spacing="18">
 

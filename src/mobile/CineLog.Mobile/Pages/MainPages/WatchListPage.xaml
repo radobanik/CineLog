@@ -12,7 +12,7 @@
 
     <Grid Padding="24">
 
-        <RefreshView Command="{Binding LoadCommand}" IsRefreshing="{Binding IsBusy, Mode=OneWay}">
+        <RefreshView Command="{Binding RefreshCommand}" IsRefreshing="{Binding IsRefreshing, Mode=OneWay}">
 
             <CollectionView
                 x:Name="WatchListsCollection"

@@ -14,7 +14,7 @@
     ShowMenuButton="True">
 
     <Grid Padding="20">
-        <RefreshView Command="{Binding LoadCommand}" IsRefreshing="{Binding IsBusy, Mode=OneWay}">
+        <RefreshView Command="{Binding RefreshCommand}" IsRefreshing="{Binding IsRefreshing, Mode=OneWay}">
             <CollectionView
                 ItemsSource="{Binding Items}"
                 ItemsUpdatingScrollMode="KeepScrollOffset"
@@ -198,6 +198,6 @@
             </CollectionView>
         </RefreshView>
 
-        <controls:ActivityLogSkeleton InputTransparent="True" IsVisible="{Binding IsInitialLoading}" />
+        <controls:ActivityLogSkeleton IsVisible="{Binding IsBusy}" />
     </Grid>
 </pages:BasePage>

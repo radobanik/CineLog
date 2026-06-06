@@ -1,5 +1,6 @@
 using CineLog.Mobile.Core.Services.Interfaces;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 
 namespace CineLog.Mobile.Core.ViewModels.Base;
 
@@ -8,6 +9,9 @@ public abstract partial class BaseViewModel(IAlertService alerts) : ObservableOb
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsNotBusy))]
     private bool _isBusy;
+
+    [ObservableProperty]
+    private bool _isRefreshing;
 
     [ObservableProperty]
     private string _title = string.Empty;
@@ -22,7 +26,14 @@ public abstract partial class BaseViewModel(IAlertService alerts) : ObservableOb
     public virtual Task HandleErrorAsync(Exception ex) =>
         alerts.ShowAlertAsync(ErrorTitle, ex.Message);
 
-    protected virtual Task RefreshAsync() => Task.CompletedTask;
+    [RelayCommand]
+    private async Task Refresh()
+    {
+        IsRefreshing = true;
+        try { await ExecuteAsync(LoadAsync); }
+        finally { IsRefreshing = false; }
+    }
+
     protected virtual Task LoadAsync() => Task.CompletedTask;
     protected virtual Task UnloadAsync() => Task.CompletedTask;
 

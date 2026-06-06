@@ -15,7 +15,7 @@
     NavBarRightIcon="{Binding ProfileNavRightIcon}"
     ShowMenuButton="{Binding IsOwnProfile}">
 
-    <RefreshView Command="{Binding LoadCommand}" IsRefreshing="{Binding IsBusy, Mode=OneWay}">
+    <RefreshView Command="{Binding RefreshCommand}" IsRefreshing="{Binding IsRefreshing, Mode=OneWay}">
         <ScrollView>
             <VerticalStackLayout Padding="20" Spacing="25">
 

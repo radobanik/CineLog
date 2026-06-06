@@ -71,30 +71,11 @@ public partial class HomeViewModel : BaseViewModel
     {
         if (!HasLoadedOnce || TopRatedMovies.Count == 0)
         {
-            await Load();
+            await ExecuteAsync(LoadAsync);
             return;
         }
 
         await ExecuteAsync(ReloadLatestReviewsAsync);
-    }
-
-    [RelayCommand]
-    public async Task Load()
-    {
-        await ExecuteAsync(async () =>
-        {
-            HasError = false;
-            ErrorMessage = string.Empty;
-
-            _topRatedCount = RailPageSize;
-            _topRatedLoadCount = 1;
-            CanLoadMoreTopRated = true;
-
-            await ReloadTopRatedAsync();
-            await ReloadLatestReviewsAsync();
-
-            HasLoadedOnce = true;
-        });
     }
 
     [RelayCommand]
@@ -103,7 +84,22 @@ public partial class HomeViewModel : BaseViewModel
         if (HasLoadedOnce && (TopRatedMovies.Count > 0 || LatestReviews.Count > 0))
             return;
 
-        await Load();
+        await ExecuteAsync(LoadAsync);
+    }
+
+    protected override async Task LoadAsync()
+    {
+        HasError = false;
+        ErrorMessage = string.Empty;
+
+        _topRatedCount = RailPageSize;
+        _topRatedLoadCount = 1;
+        CanLoadMoreTopRated = true;
+
+        await ReloadTopRatedAsync();
+        await ReloadLatestReviewsAsync();
+
+        HasLoadedOnce = true;
     }
 
     private async Task ReloadTopRatedAsync(bool appendOnly = false)
