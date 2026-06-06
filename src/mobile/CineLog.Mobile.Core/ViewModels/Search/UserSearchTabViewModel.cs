@@ -22,7 +22,14 @@ public partial class UserSearchTabViewModel(
 
     [ObservableProperty] private bool hasQuery;
     [ObservableProperty] private bool showSkeleton;
+    [ObservableProperty] private bool showHomeSkeleton;
     [ObservableProperty] private bool showNoResults;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsFollowingSelected))]
+    private bool _isPopularSelected = true;
+
+    public bool IsFollowingSelected => !IsPopularSelected;
 
     public ObservableCollection<UserSearchRowViewModel> SearchResults { get; } = [];
     public ObservableCollection<UserSearchRowViewModel> RecommendedUsers { get; } = [];
@@ -32,6 +39,12 @@ public partial class UserSearchTabViewModel(
     public bool ShowHome => !HasQuery;
     public bool CanLoadMore => HasQuery ? searchHasMore : followingHasMore;
 
+    [RelayCommand]
+    private void SelectPopular() => IsPopularSelected = true;
+
+    [RelayCommand]
+    private void SelectFollowing() => IsPopularSelected = false;
+
     public async Task SearchAsync(string query, CancellationToken ct = default)
     {
         HasQuery = !string.IsNullOrWhiteSpace(query);
@@ -40,7 +53,9 @@ public partial class UserSearchTabViewModel(
 
         if (!HasQuery)
         {
-            await LoadHomeAsync(ct);
+            ShowHomeSkeleton = true;
+            try { await LoadHomeAsync(ct); }
+            finally { if (!ct.IsCancellationRequested) ShowHomeSkeleton = false; }
             RefreshVisibility();
             return;
         }
@@ -68,6 +83,8 @@ public partial class UserSearchTabViewModel(
 
     public async Task LoadHomeAsync(CancellationToken ct = default)
     {
+        IsPopularSelected = true;
+
         RecommendedUsers.Clear();
         AddUsers(RecommendedUsers, await userService.GetRecommendedUsersAsync(10, ct));
 
@@ -76,7 +93,6 @@ public partial class UserSearchTabViewModel(
         var result = await followService.GetFollowingAsync(followingPage, ct);
         AddUsers(FollowingUsers, result.Items);
         followingHasMore = result.HasMore;
-
     }
 
     [RelayCommand]
