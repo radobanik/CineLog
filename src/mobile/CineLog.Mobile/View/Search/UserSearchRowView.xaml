@@ -43,25 +43,6 @@
             <Label Style="{StaticResource CaptionLabel}" Text="{Binding ReviewsText}" />
         </VerticalStackLayout>
 
-        <Button
-            Grid.Column="2"
-            Command="{Binding Source={x:Reference Root}, Path=ToggleFollowCommand}"
-            CommandParameter="{Binding .}"
-            Style="{StaticResource FollowToggleButton}"
-            Text="{Binding FollowButtonText}">
-            <Button.Triggers>
-                <DataTrigger
-                    Binding="{Binding IsFollowing}"
-                    TargetType="Button"
-                    Value="True">
-                    <Setter Property="BackgroundColor" Value="{StaticResource SurfaceVariant}" />
-                    <Setter Property="TextColor" Value="{StaticResource Error}" />
-                    <Setter Property="BorderColor" Value="{StaticResource SurfaceVariant}" />
-                    <Setter Property="BorderWidth" Value="0" />
-                </DataTrigger>
-            </Button.Triggers>
-        </Button>
-
         <controls:FollowToggleButtonView
             Grid.Column="2"
             Command="{Binding Source={x:Reference Root}, Path=ToggleFollowCommand}"

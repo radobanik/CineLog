@@ -54,12 +54,21 @@ public partial class MovieSearchTabViewModel : BaseViewModel
         this.navigation = navigation;
     }
 
+    protected override async Task LoadAsync()
+    {
+        if (HasQuery)
+        {
+            await RefreshSearchResultsAsync();
+            return;
+        }
+
+        await RefreshHomeMoviesAsync();
+    }
+
     public async Task SearchAsync(string query, CancellationToken ct = default)
     {
         HasQuery = !string.IsNullOrWhiteSpace(query);
         ShowNoResults = false;
-        Movies.Clear();
-
         if (!HasQuery)
         {
             currentQuery = string.Empty;
@@ -72,6 +81,7 @@ public partial class MovieSearchTabViewModel : BaseViewModel
         currentQuery = query.Trim();
         searchPage = 1;
         searchHasMore = false;
+        Movies.Clear();
         ShowSkeleton = true;
 
         try
@@ -90,30 +100,74 @@ public partial class MovieSearchTabViewModel : BaseViewModel
         }
     }
 
+    public async Task RefreshAsync(string query, CancellationToken ct = default)
+    {
+        if (string.IsNullOrWhiteSpace(query))
+        {
+            await RefreshHomeMoviesAsync(ct);
+            return;
+        }
+
+        currentQuery = query.Trim();
+        await RefreshSearchResultsAsync(ct);
+    }
+
     private async Task LoadHomeMoviesAsync(CancellationToken ct = default)
     {
         if (hasLoadedHome && HomeMovies.Count > 0)
             return;
 
-        HomeMovies.Clear();
+        var showInitialSkeleton = HomeMovies.Count == 0;
         homeMovieCount = HomeMoviePageSize;
         homeLoadCount = 1;
         homeHasMore = true;
-        ShowHomeSkeleton = true;
+
+        if (showInitialSkeleton)
+            ShowHomeSkeleton = true;
 
         try
         {
             var movies = await homeService.GetNewReleaseMoviesAsync(homeMovieCount, ct);
+            HomeMovies.Clear();
             AddMovies(HomeMovies, movies);
             hasLoadedHome = true;
         }
         finally
         {
-            if (!ct.IsCancellationRequested)
+            if (showInitialSkeleton && !ct.IsCancellationRequested)
                 ShowHomeSkeleton = false;
 
             RefreshVisibility();
         }
+    }
+
+    private async Task RefreshHomeMoviesAsync(CancellationToken ct = default)
+    {
+        homeMovieCount = HomeMoviePageSize;
+        homeLoadCount = 1;
+        homeHasMore = true;
+
+        var movies = await homeService.GetNewReleaseMoviesAsync(homeMovieCount, ct);
+        HomeMovies.Clear();
+        AddMovies(HomeMovies, movies);
+        hasLoadedHome = true;
+        RefreshVisibility();
+    }
+
+    private async Task RefreshSearchResultsAsync(CancellationToken ct = default)
+    {
+        if (string.IsNullOrWhiteSpace(currentQuery))
+            return;
+
+        searchPage = 1;
+        searchHasMore = false;
+
+        var result = await searchService.SearchMoviesAsync(currentQuery, searchPage, ct);
+        Movies.Clear();
+        AddMovies(Movies, result.Items);
+        searchHasMore = result.HasMore;
+        ShowNoResults = Movies.Count == 0;
+        RefreshVisibility();
     }
 
     [RelayCommand]

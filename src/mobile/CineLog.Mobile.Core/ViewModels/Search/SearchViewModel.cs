@@ -36,13 +36,8 @@ public partial class SearchViewModel : BaseViewModel
         Title = "Search";
     }
 
-    public override async Task OnAppearingAsync()
-    {
-        if (IsMoviesSelected)
-            await Movies.SearchAsync(SearchQuery);
-        else
-            await People.SearchAsync(SearchQuery);
-    }
+    public override Task OnAppearingAsync() =>
+        ExecuteAsync(SearchSelectedSectionAsync);
 
     partial void OnSearchQueryChanged(string value) => _ = SearchDebouncedAsync(value);
     partial void OnSelectedSectionChanged(SearchSection value) => _ = SearchDebouncedAsync(SearchQuery);
@@ -50,6 +45,11 @@ public partial class SearchViewModel : BaseViewModel
     [RelayCommand] private void SelectMovies() => SelectedSection = SearchSection.Movies;
     [RelayCommand] private void SelectPeople() => SelectedSection = SearchSection.People;
     [RelayCommand] private void Clear() => SearchQuery = string.Empty;
+
+    private Task SearchSelectedSectionAsync() =>
+        IsMoviesSelected
+            ? Movies.SearchAsync(SearchQuery)
+            : People.SearchAsync(SearchQuery);
 
     private async Task SearchDebouncedAsync(string query)
     {
