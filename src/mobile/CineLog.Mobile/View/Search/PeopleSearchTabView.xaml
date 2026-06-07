@@ -6,70 +6,94 @@
     xmlns:helpers="clr-namespace:CineLog.Mobile.Helpers"
     xmlns:searchViews="clr-namespace:CineLog.Mobile.Views.Search"
     xmlns:searchVm="clr-namespace:CineLog.Mobile.Core.ViewModels.Search;assembly=CineLog.Mobile.Core"
+    xmlns:controls="clr-namespace:CineLog.Mobile.Controls"
     x:Name="Root">
 
     <Grid Padding="16,0">
-        <Grid
-            IsVisible="{Binding ShowHome}"
-            RowDefinitions="*,*"
-            RowSpacing="12">
 
-            <Grid Grid.Row="0" RowDefinitions="Auto,*">
-                <Label
-                    Grid.Row="0"
-                    Margin="0,0,0,8"
-                    Style="{StaticResource SectionHeaderLabel}"
-                    Text="Popular reviewers" />
+        <!--  Home mode: secondary tabs (Popular / Following)  -->
+        <Grid IsVisible="{Binding ShowHome}" RowDefinitions="Auto,Auto,*">
 
-                <CollectionView
-                    Grid.Row="1"
-                    ItemsSource="{Binding RecommendedUsers}"
-                    SelectionMode="None">
+            <BoxView Grid.Row="0" Margin="0,0,0,12" Style="{StaticResource ListDivider}" />
+
+            <HorizontalStackLayout Grid.Row="1" Margin="0,0,0,12" Spacing="8">
+                <Button
+                    Command="{Binding SelectPopularCommand}"
+                    Style="{StaticResource SecondaryButton}"
+                    Text="Popular">
+                    <Button.Triggers>
+                        <DataTrigger
+                            Binding="{Binding IsPopularSelected}"
+                            TargetType="Button"
+                            Value="True">
+                            <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
+                            <Setter Property="TextColor" Value="{StaticResource OnPrimary}" />
+                            <Setter Property="BorderWidth" Value="0" />
+                        </DataTrigger>
+                    </Button.Triggers>
+                </Button>
+
+                <Button
+                    Command="{Binding SelectFollowingCommand}"
+                    Style="{StaticResource SecondaryButton}"
+                    Text="Following">
+                    <Button.Triggers>
+                        <DataTrigger
+                            Binding="{Binding IsFollowingSelected}"
+                            TargetType="Button"
+                            Value="True">
+                            <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
+                            <Setter Property="TextColor" Value="{StaticResource OnPrimary}" />
+                            <Setter Property="BorderWidth" Value="0" />
+                        </DataTrigger>
+                    </Button.Triggers>
+                </Button>
+            </HorizontalStackLayout>
+
+            <!--  Popular tab  -->
+            <Grid Grid.Row="2" IsVisible="{Binding IsPopularSelected}">
+                <CollectionView ItemsSource="{Binding RecommendedUsers}" SelectionMode="None">
                     <CollectionView.ItemTemplate>
                         <DataTemplate x:DataType="searchVm:UserSearchRowViewModel">
-                            <searchViews:UserSearchRowView OpenProfileCommand="{Binding Source={x:Reference Root}, Path=BindingContext.OpenProfileCommand}" ToggleFollowCommand="{Binding Source={x:Reference Root}, Path=BindingContext.ToggleFollowCommand}" />
+                            <searchViews:UserSearchRowView
+                                OpenProfileCommand="{Binding Source={x:Reference Root}, Path=BindingContext.OpenProfileCommand}"
+                                ToggleFollowCommand="{Binding Source={x:Reference Root}, Path=BindingContext.ToggleFollowCommand}" />
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
                 </CollectionView>
+                <controls:PeopleTabSkeleton InputTransparent="True" IsVisible="{Binding ShowHomeSkeleton}" />
             </Grid>
 
-            <BoxView
-                Grid.Row="0"
-                Style="{StaticResource ListDivider}"
-                VerticalOptions="End" />
+            <!--  Following tab  -->
+            <Grid Grid.Row="2" IsVisible="{Binding IsFollowingSelected}">
+                <CollectionView ItemsSource="{Binding FollowingUsers}" SelectionMode="None">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="searchVm:UserSearchRowViewModel">
+                            <searchViews:UserSearchRowView
+                                OpenProfileCommand="{Binding Source={x:Reference Root}, Path=BindingContext.OpenProfileCommand}"
+                                ToggleFollowCommand="{Binding Source={x:Reference Root}, Path=BindingContext.ToggleFollowCommand}" />
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
 
-            <Grid Grid.Row="1" RowDefinitions="Auto,*,Auto">
-                <Label
-                    Grid.Row="0"
-                    Margin="0,0,0,8"
-                    Style="{StaticResource SectionHeaderLabel}"
-                    Text="Following" />
-
-                <ScrollView Grid.Row="1">
-                    <VerticalStackLayout BindableLayout.ItemsSource="{Binding FollowingUsers}" Spacing="0">
-                        <BindableLayout.ItemTemplate>
-                            <DataTemplate x:DataType="searchVm:UserSearchRowViewModel">
-                                <searchViews:UserSearchRowView OpenProfileCommand="{Binding Source={x:Reference Root}, Path=BindingContext.OpenProfileCommand}" ToggleFollowCommand="{Binding Source={x:Reference Root}, Path=BindingContext.ToggleFollowCommand}" />
-                            </DataTemplate>
-                        </BindableLayout.ItemTemplate>
-                    </VerticalStackLayout>
-                </ScrollView>
-
-                <VerticalStackLayout Grid.Row="2" Spacing="4">
-                    <ActivityIndicator
-                        Margin="0,8"
-                        IsRunning="{Binding IsLoadingMore}"
-                        IsVisible="{Binding IsLoadingMore}" />
-
-                    <Button
-                        Command="{Binding LoadMoreCommand}"
-                        IsVisible="{Binding CanLoadMore}"
-                        Style="{StaticResource TextButton}"
-                        Text="Load more" />
-                </VerticalStackLayout>
+                    <CollectionView.Footer>
+                        <VerticalStackLayout Padding="0,8" Spacing="4">
+                            <ActivityIndicator
+                                IsRunning="{Binding IsBusy}"
+                                IsVisible="{Binding IsBusy}" />
+                            <Button
+                                Command="{Binding LoadMoreCommand}"
+                                IsVisible="{Binding CanLoadMore}"
+                                Style="{StaticResource TextButton}"
+                                Text="Load more" />
+                        </VerticalStackLayout>
+                    </CollectionView.Footer>
+                </CollectionView>
+                <controls:PeopleTabSkeleton InputTransparent="True" IsVisible="{Binding ShowHomeSkeleton}" />
             </Grid>
+
         </Grid>
 
+        <!--  Search results  -->
         <CollectionView
             IsVisible="{Binding ShowResults}"
             ItemsSource="{Binding SearchResults}"
@@ -78,18 +102,21 @@
             SelectionMode="None">
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="searchVm:UserSearchRowViewModel">
-                    <searchViews:UserSearchRowView OpenProfileCommand="{Binding Source={x:Reference Root}, Path=BindingContext.OpenProfileCommand}" ToggleFollowCommand="{Binding Source={x:Reference Root}, Path=BindingContext.ToggleFollowCommand}" />
+                    <searchViews:UserSearchRowView
+                        OpenProfileCommand="{Binding Source={x:Reference Root}, Path=BindingContext.OpenProfileCommand}"
+                        ToggleFollowCommand="{Binding Source={x:Reference Root}, Path=BindingContext.ToggleFollowCommand}" />
                 </DataTemplate>
             </CollectionView.ItemTemplate>
 
             <CollectionView.Footer>
                 <ActivityIndicator
                     Margin="0,8"
-                    IsRunning="{Binding IsLoadingMore}"
-                    IsVisible="{Binding IsLoadingMore}" />
+                    IsRunning="{Binding IsBusy}"
+                    IsVisible="{Binding IsBusy}" />
             </CollectionView.Footer>
         </CollectionView>
 
+        <!--  No results  -->
         <VerticalStackLayout
             HorizontalOptions="Center"
             IsVisible="{Binding ShowNoResults}"
@@ -105,5 +132,6 @@
                 Style="{StaticResource BodyMediumLabel}"
                 Text="No results found" />
         </VerticalStackLayout>
+
     </Grid>
 </ContentView>

@@ -30,9 +30,6 @@ public partial class LogViewModel : BaseViewModel
     [ObservableProperty]
     private bool _isLoadingMore;
 
-    [ObservableProperty]
-    private bool _isInitialLoading;
-
     public bool HasNoItems => !HasItems && HasLoadedOnce && !IsBusy;
 
     public ObservableCollection<ActivityFeedItem> Items { get; } = [];
@@ -54,31 +51,23 @@ public partial class LogViewModel : BaseViewModel
 
     public override Task OnAppearingAsync()
     {
-        return IsBusy ? Task.CompletedTask : Load();
+        return IsBusy ? Task.CompletedTask : ExecuteAsync(LoadAsync);
     }
 
-    [RelayCommand]
-    private async Task Load()
+    protected override async Task LoadAsync()
     {
-        IsInitialLoading = !HasLoadedOnce;
+        _canLoadMore = true;
+        Items.Clear();
 
-        await ExecuteAsync(async () =>
-        {
-            _canLoadMore = true;
-            Items.Clear();
+        var items = await _activityFeedService.GetActivityFeedAsync(0, PageSize);
 
-            var items = await _activityFeedService.GetActivityFeedAsync(0, PageSize);
+        foreach (var item in items)
+            Items.Add(item);
 
-            foreach (var item in items)
-                Items.Add(item);
-
-            _canLoadMore = items.Count == PageSize;
-            HasItems = Items.Count > 0;
-            HasLoadedOnce = true;
-            OnPropertyChanged(nameof(HasNoItems));
-        });
-
-        IsInitialLoading = false;
+        _canLoadMore = items.Count == PageSize;
+        HasItems = Items.Count > 0;
+        HasLoadedOnce = true;
+        OnPropertyChanged(nameof(HasNoItems));
     }
 
     [RelayCommand]

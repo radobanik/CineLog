@@ -7,10 +7,10 @@
 
     <ScrollView>
         <VerticalStackLayout Spacing="0">
-            <controls:ActivityLogItemSkeleton />
-            <controls:ActivityLogItemSkeleton />
-            <controls:ActivityLogItemSkeleton />
-            <controls:ActivityLogItemSkeleton />
+            <controls:ActivityLogEventItemSkeleton />
+            <controls:ActivityLogEventItemSkeleton />
+            <controls:ActivityLogReviewItemSkeleton />
+            <controls:ActivityLogReviewItemSkeleton />
         </VerticalStackLayout>
     </ScrollView>
 </ContentView>

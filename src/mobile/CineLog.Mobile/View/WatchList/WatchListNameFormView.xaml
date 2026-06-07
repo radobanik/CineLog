@@ -28,36 +28,30 @@
 
             <VerticalStackLayout Spacing="16">
                 <Label
-                    FontAttributes="Bold"
-                    FontSize="18"
+                    Style="{StaticResource HeadlineMediumLabel}"
                     HorizontalOptions="Center"
-                    Text="{Binding Source={x:Reference Root}, Path=Title}"
+                    Text="{Binding Source={x:Reference Root}, Path=Title}" />
+
+                <Entry
+                    BackgroundColor="Transparent"
+                    Placeholder="List name"
+                    PlaceholderColor="{StaticResource TextSecondary}"
+                    ReturnCommand="{Binding Source={x:Reference Root}, Path=ConfirmCommand}"
+                    Text="{Binding Source={x:Reference Root}, Path=Name}"
                     TextColor="{StaticResource OnSurface}" />
 
-                <Grid ColumnDefinitions="*,44" ColumnSpacing="8">
-                    <Entry
-                        BackgroundColor="Transparent"
-                        Placeholder="List name"
-                        PlaceholderColor="{StaticResource TextSecondary}"
-                        ReturnCommand="{Binding Source={x:Reference Root}, Path=ConfirmCommand}"
-                        Text="{Binding Source={x:Reference Root}, Path=Name}"
-                        TextColor="{StaticResource OnSurface}" />
+                <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
+                    <Button
+                        Style="{StaticResource SecondaryButton}"
+                        Command="{Binding Source={x:Reference Root}, Path=CancelCommand}"
+                        Text="Cancel" />
 
                     <Button
                         Grid.Column="1"
-                        Padding="0"
-                        BackgroundColor="Transparent"
+                        Style="{StaticResource PrimaryButton}"
                         Command="{Binding Source={x:Reference Root}, Path=ConfirmCommand}"
-                        FontSize="18"
-                        Text="✓"
-                        TextColor="{StaticResource Primary}" />
+                        Text="Save" />
                 </Grid>
-
-                <Button
-                    BackgroundColor="Transparent"
-                    Command="{Binding Source={x:Reference Root}, Path=CancelCommand}"
-                    Text="Cancel"
-                    TextColor="{StaticResource TextSecondary}" />
             </VerticalStackLayout>
         </Border>
     </Grid>

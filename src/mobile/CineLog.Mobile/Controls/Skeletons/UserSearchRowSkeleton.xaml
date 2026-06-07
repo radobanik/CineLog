@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView
+    x:Class="CineLog.Mobile.Controls.UserSearchRowSkeleton"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:controls="clr-namespace:CineLog.Mobile.Controls"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <Grid ColumnDefinitions="44,*,Auto" ColumnSpacing="0" Padding="0,8">
+
+        <controls:SkeletonView
+            Grid.Column="0"
+            HeightRequest="34"
+            WidthRequest="34"
+            CornerRadius="17"
+            VerticalOptions="Center" />
+
+        <VerticalStackLayout Grid.Column="1" Spacing="5" VerticalOptions="Center">
+            <controls:SkeletonView HeightRequest="14" WidthRequest="110" HorizontalOptions="Start" />
+            <controls:SkeletonView HeightRequest="11" WidthRequest="75" HorizontalOptions="Start" />
+        </VerticalStackLayout>
+
+        <controls:SkeletonView
+            Grid.Column="2"
+            HeightRequest="34"
+            WidthRequest="92"
+            CornerRadius="18"
+            VerticalOptions="Center" />
+
+    </Grid>
+</ContentView>

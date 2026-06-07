@@ -9,142 +9,137 @@
     x:Name="Root">
 
     <Grid Padding="16,0">
-        <CollectionView
-            IsVisible="{Binding ShowHome}"
-            ItemSizingStrategy="MeasureFirstItem"
-            ItemsSource="{Binding HomeMovies}"
-            RemainingItemsThreshold="6"
-            RemainingItemsThresholdReachedCommand="{Binding LoadMoreCommand}"
-            SelectionMode="None">
+        <Grid IsVisible="{Binding ShowHome}" RowDefinitions="Auto,*">
 
-            <CollectionView.Header>
-                <VerticalStackLayout Padding="0,0,0,14" Spacing="12">
-                    <Label Style="{StaticResource SectionHeaderLabel}" Text="Browse by genre" />
+            <VerticalStackLayout Grid.Row="0" Padding="0,0,0,14" Spacing="12">
+                <Label Style="{StaticResource SectionHeaderLabel}" Text="Browse by genre" />
 
-                    <Grid
-                        ColumnDefinitions="*,*"
-                        ColumnSpacing="10"
-                        RowDefinitions="64,64"
-                        RowSpacing="10">
+                <Grid
+                    ColumnDefinitions="*,*"
+                    ColumnSpacing="10"
+                    RowDefinitions="64,64"
+                    RowSpacing="10">
 
-                        <Border
-                            Grid.Row="0"
-                            Grid.Column="0"
-                            BackgroundColor="#5A1215"
-                            StrokeThickness="0">
-                            <Border.StrokeShape>
-                                <RoundRectangle CornerRadius="8" />
-                            </Border.StrokeShape>
+                    <Border
+                        Grid.Row="0"
+                        Grid.Column="0"
+                        BackgroundColor="#5A1215"
+                        StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8" />
+                        </Border.StrokeShape>
 
-                            <Label
-                                FontAttributes="Bold"
-                                HorizontalOptions="Center"
-                                Text="Action"
-                                TextColor="{StaticResource OnBackground}"
-                                VerticalOptions="Center" />
+                        <Label
+                            FontAttributes="Bold"
+                            HorizontalOptions="Center"
+                            Text="Action"
+                            TextColor="{StaticResource OnBackground}"
+                            VerticalOptions="Center" />
 
-                            <Border.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding Source={x:Reference Root}, Path=BindingContext.GoToCategoryCommand}" CommandParameter="{x:Static models:MovieCategory.Action}" />
-                            </Border.GestureRecognizers>
-                        </Border>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding Source={x:Reference Root}, Path=BindingContext.GoToCategoryCommand}" CommandParameter="{x:Static models:MovieCategory.Action}" />
+                        </Border.GestureRecognizers>
+                    </Border>
 
-                        <Border
-                            Grid.Row="0"
-                            Grid.Column="1"
-                            BackgroundColor="#16225F"
-                            StrokeThickness="0">
-                            <Border.StrokeShape>
-                                <RoundRectangle CornerRadius="8" />
-                            </Border.StrokeShape>
+                    <Border
+                        Grid.Row="0"
+                        Grid.Column="1"
+                        BackgroundColor="#16225F"
+                        StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8" />
+                        </Border.StrokeShape>
 
-                            <Label
-                                FontAttributes="Bold"
-                                HorizontalOptions="Center"
-                                Text="Drama"
-                                TextColor="{StaticResource OnBackground}"
-                                VerticalOptions="Center" />
+                        <Label
+                            FontAttributes="Bold"
+                            HorizontalOptions="Center"
+                            Text="Drama"
+                            TextColor="{StaticResource OnBackground}"
+                            VerticalOptions="Center" />
 
-                            <Border.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding Source={x:Reference Root}, Path=BindingContext.GoToCategoryCommand}" CommandParameter="{x:Static models:MovieCategory.Drama}" />
-                            </Border.GestureRecognizers>
-                        </Border>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding Source={x:Reference Root}, Path=BindingContext.GoToCategoryCommand}" CommandParameter="{x:Static models:MovieCategory.Drama}" />
+                        </Border.GestureRecognizers>
+                    </Border>
 
-                        <Border
-                            Grid.Row="1"
-                            Grid.Column="0"
-                            BackgroundColor="#073A46"
-                            StrokeThickness="0">
-                            <Border.StrokeShape>
-                                <RoundRectangle CornerRadius="8" />
-                            </Border.StrokeShape>
+                    <Border
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        BackgroundColor="#073A46"
+                        StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8" />
+                        </Border.StrokeShape>
 
-                            <Label
-                                FontAttributes="Bold"
-                                HorizontalOptions="Center"
-                                Text="Sci-Fi"
-                                TextColor="{StaticResource OnBackground}"
-                                VerticalOptions="Center" />
+                        <Label
+                            FontAttributes="Bold"
+                            HorizontalOptions="Center"
+                            Text="Sci-Fi"
+                            TextColor="{StaticResource OnBackground}"
+                            VerticalOptions="Center" />
 
-                            <Border.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding Source={x:Reference Root}, Path=BindingContext.GoToCategoryCommand}" CommandParameter="{x:Static models:MovieCategory.Scifi}" />
-                            </Border.GestureRecognizers>
-                        </Border>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding Source={x:Reference Root}, Path=BindingContext.GoToCategoryCommand}" CommandParameter="{x:Static models:MovieCategory.Scifi}" />
+                        </Border.GestureRecognizers>
+                    </Border>
 
-                        <Border
-                            Grid.Row="1"
-                            Grid.Column="1"
-                            BackgroundColor="{StaticResource Surface}"
-                            StrokeThickness="0">
-                            <Border.StrokeShape>
-                                <RoundRectangle CornerRadius="8" />
-                            </Border.StrokeShape>
+                    <Border
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        BackgroundColor="{StaticResource Surface}"
+                        StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8" />
+                        </Border.StrokeShape>
 
-                            <Label
-                                FontAttributes="Bold"
-                                HorizontalOptions="Center"
-                                Text="Horror"
-                                TextColor="{StaticResource OnBackground}"
-                                VerticalOptions="Center" />
+                        <Label
+                            FontAttributes="Bold"
+                            HorizontalOptions="Center"
+                            Text="Horror"
+                            TextColor="{StaticResource OnBackground}"
+                            VerticalOptions="Center" />
 
-                            <Border.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding Source={x:Reference Root}, Path=BindingContext.GoToCategoryCommand}" CommandParameter="{x:Static models:MovieCategory.Horror}" />
-                            </Border.GestureRecognizers>
-                        </Border>
-                    </Grid>
-                </VerticalStackLayout>
-            </CollectionView.Header>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding Source={x:Reference Root}, Path=BindingContext.GoToCategoryCommand}" CommandParameter="{x:Static models:MovieCategory.Horror}" />
+                        </Border.GestureRecognizers>
+                    </Border>
+                </Grid>
+            </VerticalStackLayout>
 
-            <CollectionView.ItemsLayout>
-                <GridItemsLayout
-                    HorizontalItemSpacing="10"
-                    Orientation="Vertical"
-                    Span="3"
-                    VerticalItemSpacing="10" />
-            </CollectionView.ItemsLayout>
+            <Grid Grid.Row="1">
+                <CollectionView
+                    ItemSizingStrategy="MeasureFirstItem"
+                    ItemsSource="{Binding HomeMovies}"
+                    RemainingItemsThreshold="6"
+                    RemainingItemsThresholdReachedCommand="{Binding LoadMoreCommand}"
+                    SelectionMode="None">
 
-            <CollectionView.ItemTemplate>
-                <DataTemplate x:DataType="models:MovieItem">
-                    <Grid>
-                        <controls:MoviePosterCard
-                            Title="{Binding Title}"
-                            PosterPath="{Binding PosterPath}"
-                            RatingText="{Binding RatingText}" />
+                    <CollectionView.ItemsLayout>
+                        <GridItemsLayout
+                            HorizontalItemSpacing="10"
+                            Orientation="Vertical"
+                            Span="3"
+                            VerticalItemSpacing="10" />
+                    </CollectionView.ItemsLayout>
 
-                        <Grid.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding Source={x:Reference Root}, Path=BindingContext.GoToMovieCommand}" CommandParameter="{Binding .}" />
-                        </Grid.GestureRecognizers>
-                    </Grid>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="models:MovieItem">
+                            <Grid>
+                                <controls:MoviePosterCard
+                                    Title="{Binding Title}"
+                                    PosterPath="{Binding PosterPath}"
+                                    RatingText="{Binding RatingText}" />
 
-            <CollectionView.Footer>
-                <VerticalStackLayout Padding="0,12,0,24">
-                    <ActivityIndicator IsRunning="{Binding IsLoadingHome}" IsVisible="{Binding IsLoadingHome}" />
-
-                    <ActivityIndicator IsRunning="{Binding IsLoadingMoreHome}" IsVisible="{Binding IsLoadingMoreHome}" />
-                </VerticalStackLayout>
-            </CollectionView.Footer>
-        </CollectionView>
+                                <Grid.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding Source={x:Reference Root}, Path=BindingContext.GoToMovieCommand}" CommandParameter="{Binding .}" />
+                                </Grid.GestureRecognizers>
+                            </Grid>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+                <controls:MovieSearchHomeSkeleton InputTransparent="True" IsVisible="{Binding ShowHomeSkeleton}" />
+            </Grid>
+        </Grid>
 
         <CollectionView
             x:Name="SkeletonGrid"
@@ -199,8 +194,8 @@
             <CollectionView.Footer>
                 <ActivityIndicator
                     Margin="0,8"
-                    IsRunning="{Binding IsLoadingMore}"
-                    IsVisible="{Binding IsLoadingMore}" />
+                    IsRunning="{Binding IsBusy}"
+                    IsVisible="{Binding IsBusy}" />
             </CollectionView.Footer>
         </CollectionView>
 

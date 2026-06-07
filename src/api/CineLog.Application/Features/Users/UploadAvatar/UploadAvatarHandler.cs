@@ -41,11 +41,12 @@ public class UploadAvatarHandler : IRequestHandler<UploadAvatarCommand, UploadAv
 
         user.AvatarUrl = url;
 
-        await _context.ActivityLogs.AddAsync(
+        // Temporally do not show activity log on avatar update
+        /*await _context.ActivityLogs.AddAsync(
             ActivityLog.Create(
                 _currentUser.UserId,
                 ActivityType.AvatarUpdated),
-            cancellationToken);
+            cancellationToken);*/
 
         await _context.SaveChangesAsync(cancellationToken);
 

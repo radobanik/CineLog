@@ -111,6 +111,15 @@ public partial class WatchListViewModel(
         await ExecuteAsync(async () =>
         {
             await watchListService.DeleteWatchListAsync(row.Item);
+
+            if (row.IsFirstCustom)
+            {
+                var idx = Lists.IndexOf(row);
+                var next = Lists.Skip(idx + 1).FirstOrDefault(r => !r.IsDefault);
+                if (next is not null)
+                    next.IsFirstCustom = true;
+            }
+
             Lists.Remove(row);
             OnPropertyChanged(nameof(HasWatchLists));
             await alerts.ShowToastAsync("List deleted.");
@@ -121,8 +130,16 @@ public partial class WatchListViewModel(
     {
         Lists.Clear();
 
-        foreach (var list in await watchListService.GetWatchListsAsync())
-            Lists.Add(new WatchListRowViewModel(list));
+        var rows = (await watchListService.GetWatchListsAsync())
+            .Select(list => new WatchListRowViewModel(list))
+            .ToList();
+
+        var firstCustom = rows.FirstOrDefault(r => !r.IsDefault);
+        if (firstCustom is not null)
+            firstCustom.IsFirstCustom = true;
+
+        foreach (var row in rows)
+            Lists.Add(row);
 
         OnPropertyChanged(nameof(HasWatchLists));
     }

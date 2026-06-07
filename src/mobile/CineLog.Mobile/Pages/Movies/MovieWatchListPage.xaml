@@ -10,7 +10,7 @@
     BackgroundColor="{StaticResource Background}"
     ShowMenuButton="false">
 
-    <Grid Padding="24">
+    <Grid Padding="20">
         <CollectionView
             ItemsSource="{Binding Movies}"
             RemainingItemsThreshold="3"

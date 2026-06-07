@@ -15,201 +15,203 @@
     NavBarRightIcon="{Binding ProfileNavRightIcon}"
     ShowMenuButton="{Binding IsOwnProfile}">
 
-    <ScrollView>
-        <VerticalStackLayout Padding="20" Spacing="25">
+    <RefreshView Command="{Binding RefreshCommand}" IsRefreshing="{Binding IsRefreshing, Mode=OneWay}">
+        <ScrollView>
+            <VerticalStackLayout Padding="20" Spacing="25">
 
-            <controls:ProfileHeaderSkeleton IsVisible="{Binding IsBusy}" />
+                <controls:ProfileHeaderSkeleton IsVisible="{Binding IsBusy}" />
 
-            <Grid
-                ColumnDefinitions="Auto, *, Auto"
-                ColumnSpacing="15"
-                IsVisible="{Binding IsNotBusy}">
+                <Grid
+                    ColumnDefinitions="Auto, *, Auto"
+                    ColumnSpacing="15"
+                    IsVisible="{Binding IsNotBusy}">
+                    <Border
+                        HeightRequest="80"
+                        StrokeThickness="0"
+                        WidthRequest="80">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="40" />
+                        </Border.StrokeShape>
+                        <Image Aspect="AspectFill" Source="{Binding AvatarUrl}" />
+                    </Border>
+
+                    <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
+                        <Label Style="{StaticResource HeadlineMediumLabel}" Text="{Binding Username}" />
+
+                        <Label
+                            Margin="0,5,0,0"
+                            LineBreakMode="TailTruncation"
+                            MaxLines="2"
+                            Style="{StaticResource BodyMediumLabel}"
+                            Text="{Binding Bio}">
+                            <Label.Triggers>
+                                <DataTrigger
+                                    Binding="{Binding IsBioExpanded}"
+                                    TargetType="Label"
+                                    Value="True">
+                                    <Setter Property="MaxLines" Value="4" />
+                                    <Setter Property="LineBreakMode" Value="WordWrap" />
+                                </DataTrigger>
+                            </Label.Triggers>
+                        </Label>
+
+                        <Label
+                            Margin="0,2,0,0"
+                            IsVisible="{Binding ShowExpandButton}"
+                            Style="{StaticResource CaptionLabel}"
+                            Text="Show full">
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding ToggleBioCommand}" />
+                            </Label.GestureRecognizers>
+                        </Label>
+
+                        <Label
+                            Margin="0,2,0,0"
+                            IsVisible="{Binding ShowCollapseButton}"
+                            Style="{StaticResource CaptionLabel}"
+                            Text="Show less">
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding ToggleBioCommand}" />
+                            </Label.GestureRecognizers>
+                        </Label>
+                    </VerticalStackLayout>
+
+                    <Grid Grid.Column="2" VerticalOptions="Start">
+                        <Label
+                            FontFamily="FASolid"
+                            FontSize="18"
+                            HeightRequest="44"
+                            HorizontalTextAlignment="Center"
+                            IsVisible="{Binding ShowSelfActions}"
+                            Text="{x:Static helpers:FontAwesomeIcons.Edit}"
+                            TextColor="{StaticResource TextSecondary}"
+                            VerticalTextAlignment="Center"
+                            WidthRequest="44">
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding OpenEditProfileCommand}" />
+                            </Label.GestureRecognizers>
+                        </Label>
+
+                        <controls:FollowToggleButtonView
+                            Command="{Binding ToggleFollowCommand}"
+                            IsFollowing="{Binding IsFollowing}"
+                            IsVisible="{Binding ShowFollowButton}"
+                            Text="{Binding FollowButtonText}" />
+                    </Grid>
+                </Grid>
+
+                <controls:ProfileStatsSkeleton IsVisible="{Binding IsBusy}" />
+
                 <Border
-                    HeightRequest="80"
-                    StrokeThickness="0"
-                    WidthRequest="80">
+                    Padding="15"
+                    BackgroundColor="{StaticResource Surface}"
+                    IsVisible="{Binding IsNotBusy}"
+                    StrokeThickness="0">
                     <Border.StrokeShape>
-                        <RoundRectangle CornerRadius="40" />
+                        <RoundRectangle CornerRadius="10" />
                     </Border.StrokeShape>
-                    <Image Aspect="AspectFill" Source="{Binding AvatarUrl}" />
+
+                    <Grid ColumnDefinitions="*, *, *">
+                        <VerticalStackLayout Grid.Column="0" HorizontalOptions="Center">
+                            <Label
+                                HorizontalOptions="Center"
+                                Style="{StaticResource HeadlineMediumLabel}"
+                                Text="{Binding FilmsCount}" />
+                            <Label Style="{StaticResource OverlineLabel}" Text="FILMS" />
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Grid.Column="1" HorizontalOptions="Center">
+                            <Label
+                                HorizontalOptions="Center"
+                                Style="{StaticResource HeadlineMediumLabel}"
+                                Text="{Binding FollowersCount}" />
+                            <Label Style="{StaticResource OverlineLabel}" Text="FOLLOWERS" />
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Grid.Column="2" HorizontalOptions="Center">
+                            <Label
+                                HorizontalOptions="Center"
+                                Style="{StaticResource HeadlineMediumLabel}"
+                                Text="{Binding FollowingCount}" />
+                            <Label Style="{StaticResource OverlineLabel}" Text="FOLLOWING" />
+                        </VerticalStackLayout>
+                    </Grid>
                 </Border>
 
-                <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
-                    <Label Style="{StaticResource HeadlineMediumLabel}" Text="{Binding Username}" />
+                <VerticalStackLayout IsVisible="{Binding IsOwnProfile}" Spacing="10">
+                    <Label Style="{StaticResource SectionHeaderLabel}" Text="FAVORITE FILMS" />
 
-                    <Label
-                        Margin="0,5,0,0"
-                        LineBreakMode="TailTruncation"
-                        MaxLines="2"
-                        Style="{StaticResource BodyMediumLabel}"
-                        Text="{Binding Bio}">
-                        <Label.Triggers>
-                            <DataTrigger
-                                Binding="{Binding IsBioExpanded}"
-                                TargetType="Label"
-                                Value="True">
-                                <Setter Property="MaxLines" Value="4" />
-                                <Setter Property="LineBreakMode" Value="WordWrap" />
-                            </DataTrigger>
-                        </Label.Triggers>
-                    </Label>
+                    <controls:FavouriteFilmsSkeleton IsVisible="{Binding IsBusy}" />
 
-                    <Label
-                        Margin="0,2,0,0"
-                        IsVisible="{Binding ShowExpandButton}"
-                        Style="{StaticResource CaptionLabel}"
-                        Text="Show full">
-                        <Label.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding ToggleBioCommand}" />
-                        </Label.GestureRecognizers>
-                    </Label>
+                    <CollectionView IsVisible="{Binding IsNotBusy}" ItemsSource="{Binding FavouriteMovies}">
+                        <CollectionView.EmptyView>
+                            <Label
+                                HorizontalOptions="Center"
+                                Style="{StaticResource CaptionLabel}"
+                                Text="No favorite films yet."
+                                VerticalOptions="Center" />
+                        </CollectionView.EmptyView>
 
-                    <Label
-                        Margin="0,2,0,0"
-                        IsVisible="{Binding ShowCollapseButton}"
-                        Style="{StaticResource CaptionLabel}"
-                        Text="Show less">
-                        <Label.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding ToggleBioCommand}" />
-                        </Label.GestureRecognizers>
-                    </Label>
+                        <CollectionView.ItemsLayout>
+                            <LinearItemsLayout ItemSpacing="10" Orientation="Horizontal" />
+                        </CollectionView.ItemsLayout>
+
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="models:MovieItem">
+                                <Grid>
+                                    <controls:MoviePosterCard
+                                        Title="{Binding Title}"
+                                        PosterPath="{Binding PosterPath}"
+                                        RatingText="{Binding RatingText}" />
+                                    <Grid.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ProfileViewModel}}, Path=GoToMovieCommand}" CommandParameter="{Binding .}" />
+                                    </Grid.GestureRecognizers>
+                                </Grid>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
                 </VerticalStackLayout>
 
-                <Grid Grid.Column="2" VerticalOptions="Start">
-                    <Label
-                        FontFamily="FASolid"
-                        FontSize="18"
-                        HeightRequest="44"
-                        HorizontalTextAlignment="Center"
-                        IsVisible="{Binding ShowSelfActions}"
-                        Text="{x:Static helpers:FontAwesomeIcons.Edit}"
-                        TextColor="{StaticResource TextSecondary}"
-                        VerticalTextAlignment="Center"
-                        WidthRequest="44">
-                        <Label.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding OpenEditProfileCommand}" />
-                        </Label.GestureRecognizers>
-                    </Label>
+                <VerticalStackLayout Spacing="15">
+                    <Grid ColumnDefinitions="*, Auto">
+                        <Label Style="{StaticResource SectionHeaderLabel}" Text="RECENT DIARY" />
 
-                    <controls:FollowToggleButtonView
-                        Command="{Binding ToggleFollowCommand}"
-                        IsFollowing="{Binding IsFollowing}"
-                        IsVisible="{Binding ShowFollowButton}"
-                        Text="{Binding FollowButtonText}" />
-                </Grid>
-            </Grid>
-
-            <controls:ProfileStatsSkeleton IsVisible="{Binding IsBusy}" />
-
-            <Border
-                Padding="15"
-                BackgroundColor="{StaticResource Surface}"
-                IsVisible="{Binding IsNotBusy}"
-                StrokeThickness="0">
-                <Border.StrokeShape>
-                    <RoundRectangle CornerRadius="10" />
-                </Border.StrokeShape>
-
-                <Grid ColumnDefinitions="*, *, *">
-                    <VerticalStackLayout Grid.Column="0" HorizontalOptions="Center">
                         <Label
-                            HorizontalOptions="Center"
-                            Style="{StaticResource HeadlineMediumLabel}"
-                            Text="{Binding FilmsCount}" />
-                        <Label Style="{StaticResource OverlineLabel}" Text="FILMS" />
-                    </VerticalStackLayout>
+                            Grid.Column="1"
+                            Style="{StaticResource AccentLabel}"
+                            Text="View all">
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding OpenAllReviewsCommand}" />
+                            </Label.GestureRecognizers>
+                        </Label>
+                    </Grid>
 
-                    <VerticalStackLayout Grid.Column="1" HorizontalOptions="Center">
-                        <Label
-                            HorizontalOptions="Center"
-                            Style="{StaticResource HeadlineMediumLabel}"
-                            Text="{Binding FollowersCount}" />
-                        <Label Style="{StaticResource OverlineLabel}" Text="FOLLOWERS" />
-                    </VerticalStackLayout>
+                    <controls:DiaryListSkeleton IsVisible="{Binding IsBusy}" />
 
-                    <VerticalStackLayout Grid.Column="2" HorizontalOptions="Center">
-                        <Label
-                            HorizontalOptions="Center"
-                            Style="{StaticResource HeadlineMediumLabel}"
-                            Text="{Binding FollowingCount}" />
-                        <Label Style="{StaticResource OverlineLabel}" Text="FOLLOWING" />
-                    </VerticalStackLayout>
-                </Grid>
-            </Border>
+                    <CollectionView IsVisible="{Binding IsNotBusy}" ItemsSource="{Binding Reviews}">
+                        <CollectionView.EmptyView>
+                            <Label
+                                HorizontalOptions="Center"
+                                Style="{StaticResource CaptionLabel}"
+                                Text="No recent diary entries."
+                                VerticalOptions="Center" />
+                        </CollectionView.EmptyView>
 
-            <VerticalStackLayout IsVisible="{Binding IsOwnProfile}" Spacing="10">
-                <Label Style="{StaticResource SectionHeaderLabel}" Text="FAVORITE FILMS" />
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="review:ReviewListItem">
+                                <controls:ReviewListCard
+                                    CardCommand="{Binding Source={RelativeSource AncestorType={x:Type vm:ProfileViewModel}}, Path=GoToEditReviewCommand}"
+                                    CardCommandParameter="{Binding .}"
+                                    GoToMovieCommand="{Binding Source={RelativeSource AncestorType={x:Type vm:ProfileViewModel}}, Path=GoToMovieFromReviewCommand}"
+                                    IsMovieMode="False"
+                                    LikeCommand="{Binding Source={RelativeSource AncestorType={x:Type vm:ProfileViewModel}}, Path=ToggleLikeCommand}" />
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </VerticalStackLayout>
 
-                <controls:FavouriteFilmsSkeleton IsVisible="{Binding IsBusy}" />
-
-                <CollectionView IsVisible="{Binding IsNotBusy}" ItemsSource="{Binding FavouriteMovies}">
-                    <CollectionView.EmptyView>
-                        <Label
-                            HorizontalOptions="Center"
-                            Style="{StaticResource CaptionLabel}"
-                            Text="No favorite films yet."
-                            VerticalOptions="Center" />
-                    </CollectionView.EmptyView>
-
-                    <CollectionView.ItemsLayout>
-                        <LinearItemsLayout ItemSpacing="10" Orientation="Horizontal" />
-                    </CollectionView.ItemsLayout>
-
-                    <CollectionView.ItemTemplate>
-                        <DataTemplate x:DataType="models:MovieItem">
-                            <Grid>
-                                <controls:MoviePosterCard
-                                    Title="{Binding Title}"
-                                    PosterPath="{Binding PosterPath}"
-                                    RatingText="{Binding RatingText}" />
-                                <Grid.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ProfileViewModel}}, Path=GoToMovieCommand}" CommandParameter="{Binding .}" />
-                                </Grid.GestureRecognizers>
-                            </Grid>
-                        </DataTemplate>
-                    </CollectionView.ItemTemplate>
-                </CollectionView>
             </VerticalStackLayout>
-
-            <VerticalStackLayout Spacing="15">
-                <Grid ColumnDefinitions="*, Auto">
-                    <Label Style="{StaticResource SectionHeaderLabel}" Text="RECENT DIARY" />
-
-                    <Label
-                        Grid.Column="1"
-                        Style="{StaticResource AccentLabel}"
-                        Text="View all">
-                        <Label.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding OpenAllReviewsCommand}" />
-                        </Label.GestureRecognizers>
-                    </Label>
-                </Grid>
-
-                <controls:DiaryListSkeleton IsVisible="{Binding IsBusy}" />
-
-                <CollectionView IsVisible="{Binding IsNotBusy}" ItemsSource="{Binding Reviews}">
-                    <CollectionView.EmptyView>
-                        <Label
-                            HorizontalOptions="Center"
-                            Style="{StaticResource CaptionLabel}"
-                            Text="No recent diary entries."
-                            VerticalOptions="Center" />
-                    </CollectionView.EmptyView>
-
-                    <CollectionView.ItemTemplate>
-                        <DataTemplate x:DataType="review:ReviewListItem">
-                            <controls:ReviewListCard
-                                CardCommand="{Binding Source={RelativeSource AncestorType={x:Type vm:ProfileViewModel}}, Path=GoToEditReviewCommand}"
-                                CardCommandParameter="{Binding .}"
-                                GoToMovieCommand="{Binding Source={RelativeSource AncestorType={x:Type vm:ProfileViewModel}}, Path=GoToMovieFromReviewCommand}"
-                                IsMovieMode="False"
-                                LikeCommand="{Binding Source={RelativeSource AncestorType={x:Type vm:ProfileViewModel}}, Path=ToggleLikeCommand}" />
-                        </DataTemplate>
-                    </CollectionView.ItemTemplate>
-                </CollectionView>
-            </VerticalStackLayout>
-
-        </VerticalStackLayout>
-    </ScrollView>
+        </ScrollView>
+    </RefreshView>
 
 </pages:BasePage>

@@ -11,54 +11,64 @@
     x:DataType="vm:HomeViewModel"
     ShowMenuButton="True">
 
-    <ScrollView>
-        <VerticalStackLayout Padding="16,16,16,24" Spacing="18">
+    <RefreshView Command="{Binding RefreshCommand}" IsRefreshing="{Binding IsRefreshing, Mode=OneWay}">
+        <ScrollView>
+            <VerticalStackLayout Padding="16,16,16,24" Spacing="18">
 
-            <Label
-                IsVisible="{Binding HasError}"
-                Style="{StaticResource CaptionLabel}"
-                Text="{Binding ErrorMessage}" />
-
-            <controls:MovieCarousel
-                Title="Top Rated"
-                IsLoading="{Binding IsBusy}"
-                IsLoadingMore="{Binding IsLoadingMoreTopRated}"
-                ItemTappedCommand="{Binding GoToMovieCommand}"
-                ItemsSource="{Binding TopRatedMovies}"
-                LoadMoreCommand="{Binding LoadMoreTopRatedCommand}"
-                SeeAllCommand="{Binding GoToTopRatedCommand}" />
-
-            <BoxView Style="{StaticResource ListDivider}" />
-
-            <Grid ColumnDefinitions="*,Auto">
                 <Label
-                    Grid.Column="0"
-                    Style="{StaticResource SectionHeaderLabel}"
-                    Text="Latest Reviews"
-                    VerticalOptions="Center" />
+                    IsVisible="{Binding HasError}"
+                    Style="{StaticResource CaptionLabel}"
+                    Text="{Binding ErrorMessage}" />
 
-                <Button
-                    Grid.Column="1"
-                    Padding="8,0"
-                    BackgroundColor="Transparent"
-                    Command="{Binding GoToAllReviewsCommand}"
-                    FontAttributes="Bold"
-                    Text="See all"
-                    TextColor="{StaticResource Primary}" />
-            </Grid>
+                <controls:MovieCarousel
+                    Title="Top Rated"
+                    IsLoading="{Binding IsBusy}"
+                    IsLoadingMore="{Binding IsLoadingMoreTopRated}"
+                    ItemTappedCommand="{Binding GoToMovieCommand}"
+                    ItemsSource="{Binding TopRatedMovies}"
+                    LoadMoreCommand="{Binding LoadMoreTopRatedCommand}"
+                    SeeAllCommand="{Binding GoToTopRatedCommand}" />
 
-            <VerticalStackLayout BindableLayout.ItemsSource="{Binding LatestReviews}">
-                <BindableLayout.ItemTemplate>
-                    <DataTemplate x:DataType="review:ReviewListItem">
-                        <controls:ReviewListCard
-                            GoToMovieCommand="{Binding Source={RelativeSource AncestorType={x:Type vm:HomeViewModel}}, Path=GoToMovieFromReviewCommand}"
-                            IsLatestMode="True"
-                            LikeCommand="{Binding Source={RelativeSource AncestorType={x:Type vm:HomeViewModel}}, Path=ToggleLatestReviewLikeCommand}" />
-                    </DataTemplate>
-                </BindableLayout.ItemTemplate>
+                <BoxView Style="{StaticResource ListDivider}" />
+
+                <Grid ColumnDefinitions="*,Auto">
+                    <Label
+                        Grid.Column="0"
+                        Style="{StaticResource SectionHeaderLabel}"
+                        Text="Latest Reviews"
+                        VerticalOptions="Center" />
+
+                    <Button
+                        Grid.Column="1"
+                        Padding="8,0"
+                        BackgroundColor="Transparent"
+                        Command="{Binding GoToAllReviewsCommand}"
+                        FontAttributes="Bold"
+                        Text="See all"
+                        TextColor="{StaticResource Primary}" />
+                </Grid>
+
+                <VerticalStackLayout IsVisible="{Binding IsBusy}">
+                    <controls:LatestReviewItemSkeleton />
+                    <controls:LatestReviewItemSkeleton />
+                    <controls:LatestReviewItemSkeleton />
+                    <controls:LatestReviewItemSkeleton />
+                    <controls:LatestReviewItemSkeleton />
+                </VerticalStackLayout>
+
+                <VerticalStackLayout BindableLayout.ItemsSource="{Binding LatestReviews}" IsVisible="{Binding IsNotBusy}">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="review:ReviewListItem">
+                            <controls:ReviewListCard
+                                GoToMovieCommand="{Binding Source={RelativeSource AncestorType={x:Type vm:HomeViewModel}}, Path=GoToMovieFromReviewCommand}"
+                                IsLatestMode="True"
+                                LikeCommand="{Binding Source={RelativeSource AncestorType={x:Type vm:HomeViewModel}}, Path=ToggleLatestReviewLikeCommand}" />
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
+
             </VerticalStackLayout>
-
-        </VerticalStackLayout>
-    </ScrollView>
+        </ScrollView>
+    </RefreshView>
 
 </pages:BasePage>

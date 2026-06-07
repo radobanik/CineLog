@@ -6,99 +6,107 @@
     xmlns:watchListViews="clr-namespace:CineLog.Mobile.Views.WatchList"
     x:Name="Root">
 
-    <AbsoluteLayout Margin="0,0,0,12" HeightRequest="112">
+    <VerticalStackLayout>
 
-        <Border
-            Padding="16"
-            AbsoluteLayout.LayoutBounds="0,0,1,96"
-            AbsoluteLayout.LayoutFlags="WidthProportional"
-            BackgroundColor="{StaticResource Surface}"
-            Stroke="{StaticResource Border}"
-            StrokeThickness="1">
+        <Label
+            Margin="0,6,0,8"
+            IsVisible="{Binding IsFirstCustom}"
+            Style="{StaticResource SectionHeaderLabel}"
+            Text="My Lists" />
 
-            <Border.StrokeShape>
-                <RoundRectangle CornerRadius="10" />
-            </Border.StrokeShape>
+        <AbsoluteLayout Margin="0,0,0,10" HeightRequest="88">
 
-            <Grid ColumnDefinitions="64,*,56" ColumnSpacing="12">
+            <Border
+                Padding="12"
+                AbsoluteLayout.LayoutBounds="0,0,1,76"
+                AbsoluteLayout.LayoutFlags="WidthProportional"
+                BackgroundColor="{StaticResource Surface}"
+                Stroke="{StaticResource Border}"
+                StrokeThickness="1">
 
-                <Border
-                    BackgroundColor="{StaticResource SurfaceVariant}"
-                    HeightRequest="52"
-                    StrokeThickness="0"
-                    VerticalOptions="Center"
-                    WidthRequest="52">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="10" />
+                </Border.StrokeShape>
 
-                    <Border.StrokeShape>
-                        <RoundRectangle CornerRadius="26" />
-                    </Border.StrokeShape>
+                <Grid ColumnDefinitions="52,*,44" ColumnSpacing="12">
 
-                    <Label
-                        FontAttributes="Bold"
-                        FontSize="22"
-                        HorizontalOptions="Center"
-                        Text="{Binding IconText}"
-                        TextColor="{StaticResource Primary}"
+                    <Border
+                        BackgroundColor="{StaticResource SurfaceVariant}"
+                        HeightRequest="40"
+                        StrokeThickness="0"
+                        VerticalOptions="Center"
+                        WidthRequest="40">
+
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="20" />
+                        </Border.StrokeShape>
+
+                        <Label
+                            FontAttributes="Bold"
+                            FontSize="16"
+                            HorizontalOptions="Center"
+                            Text="{Binding IconText}"
+                            TextColor="{StaticResource Primary}"
+                            VerticalOptions="Center">
+                            <Label.Triggers>
+                                <DataTrigger
+                                    Binding="{Binding UsesIconFont}"
+                                    TargetType="Label"
+                                    Value="True">
+                                    <Setter Property="FontFamily" Value="FASolid" />
+                                    <Setter Property="FontAttributes" Value="None" />
+                                </DataTrigger>
+
+                            </Label.Triggers>
+                        </Label>
+                    </Border>
+
+                    <VerticalStackLayout
+                        Grid.Column="1"
+                        Spacing="2"
                         VerticalOptions="Center">
-                        <Label.Triggers>
-                            <DataTrigger
-                                Binding="{Binding UsesIconFont}"
-                                TargetType="Label"
-                                Value="True">
-                                <Setter Property="FontFamily" Value="FASolid" />
-                                <Setter Property="FontAttributes" Value="None" />
-                            </DataTrigger>
 
-                        </Label.Triggers>
-                    </Label>
-                </Border>
+                        <Label
+                            Style="{StaticResource BodyLargeLabel}"
+                            FontAttributes="Bold"
+                            LineBreakMode="TailTruncation"
+                            MaxLines="1"
+                            Text="{Binding Name}" />
 
-                <VerticalStackLayout
-                    Grid.Column="1"
-                    Spacing="2"
-                    VerticalOptions="Center">
+                        <Label
+                            Style="{StaticResource CaptionLabel}"
+                            Text="{Binding CountText}" />
+                    </VerticalStackLayout>
 
-                    <Label
-                        FontAttributes="Bold"
+                    <Button
+                        Grid.Column="2"
+                        Padding="0"
+                        BackgroundColor="Transparent"
+                        Command="{Binding Source={x:Reference Root}, Path=ToggleOptionsCommand}"
+                        CommandParameter="{Binding .}"
                         FontSize="20"
-                        LineBreakMode="TailTruncation"
-                        MaxLines="1"
-                        Text="{Binding Name}"
-                        TextColor="{StaticResource OnSurface}" />
+                        HeightRequest="40"
+                        HorizontalOptions="End"
+                        Text="⋯"
+                        TextColor="{StaticResource TextSecondary}"
+                        VerticalOptions="Center"
+                        WidthRequest="40" />
 
-                    <Label
-                        FontSize="15"
-                        Text="{Binding CountText}"
-                        TextColor="{StaticResource TextSecondary}" />
-                </VerticalStackLayout>
+                    <Grid.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding Source={x:Reference Root}, Path=OpenCommand}" CommandParameter="{Binding .}" />
+                    </Grid.GestureRecognizers>
+                </Grid>
+            </Border>
 
-                <Button
-                    Grid.Column="2"
-                    Padding="0"
-                    BackgroundColor="Transparent"
-                    Command="{Binding Source={x:Reference Root}, Path=ToggleOptionsCommand}"
-                    CommandParameter="{Binding .}"
-                    FontSize="24"
-                    HeightRequest="48"
-                    HorizontalOptions="End"
-                    Text="⋯"
-                    TextColor="{StaticResource TextSecondary}"
-                    VerticalOptions="Center"
-                    WidthRequest="48" />
+            <watchListViews:WatchListRowOptionsView
+                AbsoluteLayout.LayoutBounds="0.78,16,128,72"
+                AbsoluteLayout.LayoutFlags="XProportional"
+                DeleteCommand="{Binding Source={x:Reference Root}, Path=DeleteCommand}"
+                EditCommand="{Binding Source={x:Reference Root}, Path=EditCommand}"
+                IsVisible="{Binding IsOptionsOpen}"
+                ZIndex="20" />
 
-                <Grid.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding Source={x:Reference Root}, Path=OpenCommand}" CommandParameter="{Binding .}" />
-                </Grid.GestureRecognizers>
-            </Grid>
-        </Border>
+        </AbsoluteLayout>
 
-        <watchListViews:WatchListRowOptionsView
-            AbsoluteLayout.LayoutBounds="0.76,20,128,76"
-            AbsoluteLayout.LayoutFlags="XProportional"
-            DeleteCommand="{Binding Source={x:Reference Root}, Path=DeleteCommand}"
-            EditCommand="{Binding Source={x:Reference Root}, Path=EditCommand}"
-            IsVisible="{Binding IsOptionsOpen}"
-            ZIndex="20" />
-
-    </AbsoluteLayout>
+    </VerticalStackLayout>
 </ContentView>

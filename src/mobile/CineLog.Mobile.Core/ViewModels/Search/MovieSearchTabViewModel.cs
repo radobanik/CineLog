@@ -30,9 +30,7 @@ public partial class MovieSearchTabViewModel : BaseViewModel
     [ObservableProperty] private bool hasQuery;
     [ObservableProperty] private bool showSkeleton;
     [ObservableProperty] private bool showNoResults;
-    [ObservableProperty] private bool isLoadingMore;
-    [ObservableProperty] private bool isLoadingHome;
-    [ObservableProperty] private bool isLoadingMoreHome;
+    [ObservableProperty] private bool showHomeSkeleton;
 
     public ObservableCollection<MovieItem> Movies { get; } = [];
     public ObservableCollection<MovieItem> HomeMovies { get; } = [];
@@ -101,7 +99,7 @@ public partial class MovieSearchTabViewModel : BaseViewModel
         homeMovieCount = HomeMoviePageSize;
         homeLoadCount = 1;
         homeHasMore = true;
-        IsLoadingHome = true;
+        ShowHomeSkeleton = true;
 
         try
         {
@@ -112,7 +110,7 @@ public partial class MovieSearchTabViewModel : BaseViewModel
         finally
         {
             if (!ct.IsCancellationRequested)
-                IsLoadingHome = false;
+                ShowHomeSkeleton = false;
 
             RefreshVisibility();
         }
@@ -143,10 +141,10 @@ public partial class MovieSearchTabViewModel : BaseViewModel
 
     private async Task LoadMoreSearchResultsAsync()
     {
-        if (IsLoadingMore || !searchHasMore || string.IsNullOrWhiteSpace(currentQuery))
+        if (IsBusy || !searchHasMore || string.IsNullOrWhiteSpace(currentQuery))
             return;
 
-        IsLoadingMore = true;
+        IsBusy = true;
 
         try
         {
@@ -157,16 +155,16 @@ public partial class MovieSearchTabViewModel : BaseViewModel
         }
         finally
         {
-            IsLoadingMore = false;
+            IsBusy = false;
         }
     }
 
     private async Task LoadMoreHomeMoviesAsync()
     {
-        if (IsLoadingMoreHome || !homeHasMore)
+        if (IsBusy || !homeHasMore)
             return;
 
-        IsLoadingMoreHome = true;
+        IsBusy = true;
 
         try
         {
@@ -184,7 +182,7 @@ public partial class MovieSearchTabViewModel : BaseViewModel
         }
         finally
         {
-            IsLoadingMoreHome = false;
+            IsBusy = false;
         }
     }
 

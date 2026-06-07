@@ -74,6 +74,9 @@ public partial class ProfileViewModel(
         _requestedUserId = userId == Guid.Empty ? null : userId;
 
     [RelayCommand]
+    private Task Load() => ExecuteAsync(LoadAsync);
+
+    [RelayCommand]
     public Task GoToMovie(MovieItem movie)
     {
         movieDetailNav.MovieId = movie.Id;

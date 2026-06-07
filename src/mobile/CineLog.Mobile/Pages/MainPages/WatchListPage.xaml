@@ -4,15 +4,16 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:pages="clr-namespace:CineLog.Mobile.Pages"
+    xmlns:controls="clr-namespace:CineLog.Mobile.Controls"
     xmlns:watchListViews="clr-namespace:CineLog.Mobile.Views.WatchList"
     x:Name="ThisPage"
     Title="WatchLists"
     BackgroundColor="{StaticResource Background}"
     ShowMenuButton="True">
 
-    <Grid Padding="24">
+    <Grid Padding="20">
 
-        <RefreshView Command="{Binding LoadCommand}" IsRefreshing="{Binding IsBusy, Mode=OneWay}">
+        <RefreshView Command="{Binding RefreshCommand}" IsRefreshing="{Binding IsRefreshing, Mode=OneWay}">
 
             <CollectionView
                 x:Name="WatchListsCollection"
@@ -32,10 +33,12 @@
                 </CollectionView.ItemTemplate>
 
                 <CollectionView.Footer>
-                    <BoxView HeightRequest="112" Color="Transparent" />
+                    <BoxView HeightRequest="88" Color="Transparent" />
                 </CollectionView.Footer>
             </CollectionView>
         </RefreshView>
+
+        <controls:WatchListSkeleton InputTransparent="True" IsVisible="{Binding IsBusy}" />
 
         <Button
             Margin="0,0,0,16"
