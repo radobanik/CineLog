@@ -19,7 +19,9 @@
 
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <watchListViews:WatchListMovieRowView RemoveCommand="{Binding Source={x:Reference ThisPage}, Path=BindingContext.RemoveMovieCommand}" />
+                    <watchListViews:WatchListMovieRowView
+                        OpenCommand="{Binding Source={x:Reference ThisPage}, Path=BindingContext.OpenMovieCommand}"
+                        RemoveCommand="{Binding Source={x:Reference ThisPage}, Path=BindingContext.RemoveMovieCommand}" />
                 </DataTemplate>
             </CollectionView.ItemTemplate>
 
