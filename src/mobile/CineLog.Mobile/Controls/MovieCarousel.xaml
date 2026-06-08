@@ -11,7 +11,7 @@
         <Grid ColumnDefinitions="*, Auto">
             <Label
                 Grid.Column="0"
-                Style="{StaticResource HeadlineMediumLabel}"
+                Style="{StaticResource SectionHeaderLabel}"
                 Text="{Binding Source={x:Reference This}, Path=Title}" />
 
             <Label

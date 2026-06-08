@@ -24,6 +24,11 @@
                 HeightRequest="76"
                 StrokeThickness="0"
                 WidthRequest="56">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer
+                        Command="{Binding Source={x:Reference Root}, Path=OpenCommand}"
+                        CommandParameter="{Binding .}" />
+                </Border.GestureRecognizers>
 
                 <Border.StrokeShape>
                     <RoundRectangle CornerRadius="6" />
@@ -36,6 +41,11 @@
                 Grid.Column="1"
                 Spacing="4"
                 VerticalOptions="Center">
+                <VerticalStackLayout.GestureRecognizers>
+                    <TapGestureRecognizer
+                        Command="{Binding Source={x:Reference Root}, Path=OpenCommand}"
+                        CommandParameter="{Binding .}" />
+                </VerticalStackLayout.GestureRecognizers>
 
                 <Label
                     Style="{StaticResource BodyLargeLabel}"
@@ -44,12 +54,7 @@
                     MaxLines="1"
                     Text="{Binding Title}" />
 
-                <HorizontalStackLayout Spacing="4">
-                    <Label
-                        Style="{StaticResource RatingLabel}"
-                        FontSize="11"
-                        Text="{Binding AverageRating, Converter={StaticResource RatingToStarsConverter}}"
-                        VerticalOptions="Center" />
+                <HorizontalStackLayout>
                     <Label
                         Style="{StaticResource CaptionLabel}"
                         Text="{Binding RatingText}"

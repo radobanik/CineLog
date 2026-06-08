@@ -1,10 +1,10 @@
 using System.Collections.ObjectModel;
 using CineLog.Mobile.Core.Models.Search;
+using CineLog.Mobile.Core.Navigation;
 using CineLog.Mobile.Core.Services.Interfaces;
 using CineLog.Mobile.Core.ViewModels.Base;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using CineLog.Mobile.Core.Navigation;
 
 namespace CineLog.Mobile.Core.ViewModels.Search;
 
@@ -45,17 +45,35 @@ public partial class UserSearchTabViewModel(
     [RelayCommand]
     private void SelectFollowing() => IsPopularSelected = false;
 
+    protected override Task LoadAsync()
+    {
+        if (HasQuery)
+            return RefreshSearchResultsAsync();
+
+        return RefreshHomeAsync();
+    }
+
     public async Task SearchAsync(string query, CancellationToken ct = default)
     {
         HasQuery = !string.IsNullOrWhiteSpace(query);
         ShowNoResults = false;
-        SearchResults.Clear();
-
         if (!HasQuery)
         {
-            ShowHomeSkeleton = true;
-            try { await LoadHomeAsync(ct); }
-            finally { if (!ct.IsCancellationRequested) ShowHomeSkeleton = false; }
+            var showInitialSkeleton = RecommendedUsers.Count == 0 && FollowingUsers.Count == 0;
+
+            if (showInitialSkeleton)
+                ShowHomeSkeleton = true;
+
+            try
+            {
+                await LoadHomeCoreAsync(resetSelectedTab: true, ct);
+            }
+            finally
+            {
+                if (showInitialSkeleton && !ct.IsCancellationRequested)
+                    ShowHomeSkeleton = false;
+            }
+
             RefreshVisibility();
             return;
         }
@@ -63,6 +81,7 @@ public partial class UserSearchTabViewModel(
         currentQuery = query.Trim();
         searchPage = 1;
         searchHasMore = false;
+        SearchResults.Clear();
         ShowSkeleton = true;
 
         try
@@ -81,16 +100,56 @@ public partial class UserSearchTabViewModel(
         }
     }
 
-    public async Task LoadHomeAsync(CancellationToken ct = default)
+    public async Task RefreshAsync(string query, CancellationToken ct = default)
     {
-        IsPopularSelected = true;
+        if (string.IsNullOrWhiteSpace(query))
+        {
+            await RefreshHomeAsync(ct);
+            return;
+        }
 
-        RecommendedUsers.Clear();
-        AddUsers(RecommendedUsers, await userService.GetRecommendedUsersAsync(10, ct));
+        currentQuery = query.Trim();
+        await RefreshSearchResultsAsync(ct);
+    }
 
-        FollowingUsers.Clear();
+    public Task LoadHomeAsync(CancellationToken ct = default) =>
+        LoadHomeCoreAsync(resetSelectedTab: true, ct);
+
+    private async Task RefreshHomeAsync(CancellationToken ct = default)
+    {
+        ShowNoResults = false;
+        SearchResults.Clear();
+        var showInitialSkeleton = RecommendedUsers.Count == 0 && FollowingUsers.Count == 0;
+
+        if (showInitialSkeleton)
+            ShowHomeSkeleton = true;
+
+        try
+        {
+            await LoadHomeCoreAsync(resetSelectedTab: false, ct);
+        }
+        finally
+        {
+            if (showInitialSkeleton && !ct.IsCancellationRequested)
+                ShowHomeSkeleton = false;
+
+            RefreshVisibility();
+        }
+    }
+
+    private async Task LoadHomeCoreAsync(bool resetSelectedTab, CancellationToken ct = default)
+    {
+        if (resetSelectedTab)
+            IsPopularSelected = true;
+
+        var recommendedUsers = await userService.GetRecommendedUsersAsync(10, ct);
         followingPage = 1;
         var result = await followService.GetFollowingAsync(followingPage, ct);
+
+        RecommendedUsers.Clear();
+        AddUsers(RecommendedUsers, recommendedUsers);
+
+        FollowingUsers.Clear();
         AddUsers(FollowingUsers, result.Items);
         followingHasMore = result.HasMore;
     }
@@ -147,7 +206,6 @@ public partial class UserSearchTabViewModel(
         }
     }
 
-
     [RelayCommand]
     private Task OpenProfile(UserSearchRowViewModel? user)
     {
@@ -164,6 +222,22 @@ public partial class UserSearchTabViewModel(
         var result = await userService.SearchUsersAsync(currentQuery, ++searchPage);
         AddUsers(SearchResults, result.Items);
         searchHasMore = result.HasMore;
+        RefreshVisibility();
+    }
+
+    private async Task RefreshSearchResultsAsync(CancellationToken ct = default)
+    {
+        if (string.IsNullOrWhiteSpace(currentQuery))
+            return;
+
+        searchPage = 1;
+        searchHasMore = false;
+
+        var result = await userService.SearchUsersAsync(currentQuery, searchPage, ct);
+        SearchResults.Clear();
+        AddUsers(SearchResults, result.Items);
+        searchHasMore = result.HasMore;
+        ShowNoResults = SearchResults.Count == 0;
         RefreshVisibility();
     }
 

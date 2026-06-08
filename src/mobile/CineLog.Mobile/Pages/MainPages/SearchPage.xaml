@@ -12,80 +12,80 @@
     ShowMenuButton="True">
 
     <Grid RowDefinitions="Auto,Auto,*">
-        <Border
-            Grid.Row="0"
-            Margin="16,12,16,8"
-            Style="{StaticResource InputFieldBorder}">
-            <Grid Padding="16,0" ColumnDefinitions="Auto,*,Auto">
-                <Label
-                    Grid.Column="0"
-                    Style="{StaticResource SecondaryIconLabel}"
-                    Text="{x:Static helpers:FontAwesomeIcons.Search}"
-                    VerticalOptions="Center" />
+            <Border
+                Grid.Row="0"
+                Margin="16,12,16,8"
+                Style="{StaticResource InputFieldBorder}">
+                <Grid Padding="16,0" ColumnDefinitions="Auto,*,Auto">
+                    <Label
+                        Grid.Column="0"
+                        Style="{StaticResource SecondaryIconLabel}"
+                        Text="{x:Static helpers:FontAwesomeIcons.Search}"
+                        VerticalOptions="Center" />
 
-                <Entry
-                    Grid.Column="1"
-                    Margin="10,0"
-                    Placeholder="Search films, people..."
-                    Style="{StaticResource CleanEntry}"
-                    Text="{Binding SearchQuery}" />
+                    <Entry
+                        Grid.Column="1"
+                        Margin="10,0"
+                        Placeholder="Search films, people..."
+                        Style="{StaticResource CleanEntry}"
+                        Text="{Binding SearchQuery}" />
 
-                <Label
-                    Grid.Column="2"
-                    IsVisible="{Binding HasQuery}"
-                    Style="{StaticResource SecondaryIconLabel}"
-                    Text="{x:Static helpers:FontAwesomeIcons.Times}"
-                    VerticalOptions="Center">
-                    <Label.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding ClearCommand}" />
-                    </Label.GestureRecognizers>
-                </Label>
+                    <Label
+                        Grid.Column="2"
+                        IsVisible="{Binding HasQuery}"
+                        Style="{StaticResource SecondaryIconLabel}"
+                        Text="{x:Static helpers:FontAwesomeIcons.Times}"
+                        VerticalOptions="Center">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ClearCommand}" />
+                        </Label.GestureRecognizers>
+                    </Label>
+                </Grid>
+            </Border>
+
+            <HorizontalStackLayout
+                Grid.Row="1"
+                Margin="16,0,16,8"
+                Spacing="8">
+                <Button
+                    Command="{Binding SelectMoviesCommand}"
+                    Style="{StaticResource SecondaryButton}"
+                    Text="Movies">
+                    <Button.Triggers>
+                        <DataTrigger
+                            Binding="{Binding IsMoviesSelected}"
+                            TargetType="Button"
+                            Value="True">
+                            <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
+                            <Setter Property="TextColor" Value="{StaticResource OnPrimary}" />
+                            <Setter Property="BorderWidth" Value="0" />
+                        </DataTrigger>
+                    </Button.Triggers>
+                </Button>
+
+                <Button
+                    Command="{Binding SelectPeopleCommand}"
+                    Style="{StaticResource SecondaryButton}"
+                    Text="People">
+                    <Button.Triggers>
+                        <DataTrigger
+                            Binding="{Binding IsPeopleSelected}"
+                            TargetType="Button"
+                            Value="True">
+                            <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
+                            <Setter Property="TextColor" Value="{StaticResource OnPrimary}" />
+                            <Setter Property="BorderWidth" Value="0" />
+                        </DataTrigger>
+                    </Button.Triggers>
+                </Button>
+            </HorizontalStackLayout>
+
+            <Grid Grid.Row="2" IsVisible="{Binding IsMoviesSelected}">
+                <searchViews:MovieSearchTabView BindingContext="{Binding Movies}" />
             </Grid>
-        </Border>
 
-        <HorizontalStackLayout
-            Grid.Row="1"
-            Margin="16,0,16,8"
-            Spacing="8">
-            <Button
-                Command="{Binding SelectMoviesCommand}"
-                Style="{StaticResource SecondaryButton}"
-                Text="Movies">
-                <Button.Triggers>
-                    <DataTrigger
-                        Binding="{Binding IsMoviesSelected}"
-                        TargetType="Button"
-                        Value="True">
-                        <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
-                        <Setter Property="TextColor" Value="{StaticResource OnPrimary}" />
-                        <Setter Property="BorderWidth" Value="0" />
-                    </DataTrigger>
-                </Button.Triggers>
-            </Button>
-
-            <Button
-                Command="{Binding SelectPeopleCommand}"
-                Style="{StaticResource SecondaryButton}"
-                Text="People">
-                <Button.Triggers>
-                    <DataTrigger
-                        Binding="{Binding IsPeopleSelected}"
-                        TargetType="Button"
-                        Value="True">
-                        <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
-                        <Setter Property="TextColor" Value="{StaticResource OnPrimary}" />
-                        <Setter Property="BorderWidth" Value="0" />
-                    </DataTrigger>
-                </Button.Triggers>
-            </Button>
-        </HorizontalStackLayout>
-
-        <Grid Grid.Row="2" IsVisible="{Binding IsMoviesSelected}">
-            <searchViews:MovieSearchTabView BindingContext="{Binding Movies}" />
-        </Grid>
-
-        <Grid Grid.Row="2" IsVisible="{Binding IsPeopleSelected}">
-            <searchViews:PeopleSearchTabView BindingContext="{Binding People}" />
-        </Grid>
+            <Grid Grid.Row="2" IsVisible="{Binding IsPeopleSelected}">
+                <searchViews:PeopleSearchTabView BindingContext="{Binding People}" />
+            </Grid>
     </Grid>
 </pages:BasePage>

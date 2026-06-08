@@ -1,17 +1,18 @@
 using System.Collections.ObjectModel;
 using CineLog.Mobile.Core.Models;
 using CineLog.Mobile.Core.Models.WatchList;
+using CineLog.Mobile.Core.Navigation;
 using CineLog.Mobile.Core.Services.Interfaces;
 using CineLog.Mobile.Core.ViewModels.Base;
 using CineLog.Mobile.Core.ViewModels.WatchList;
 using CineLog.Mobile.Core.ViewModels.WatchList.helper;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using static System.Net.WebRequestMethods;
 
 public partial class WatchListMoviesViewModel(
     IWatchListService watchListService,
     IWatchListNavigationContext watchListNavigation,
+    IMovieDetailNavigationContext movieDetailNavigation,
     INavigationService navigation,
     IAlertService alerts) : BaseViewModel(alerts)
 {
@@ -40,6 +41,16 @@ public partial class WatchListMoviesViewModel(
 
     [RelayCommand]
     private Task Back() => navigation.NavigateBackAsync();
+
+    [RelayCommand]
+    private Task OpenMovie(MovieItem? movie)
+    {
+        if (movie is null)
+            return Task.CompletedTask;
+
+        movieDetailNavigation.MovieId = movie.Id;
+        return navigation.NavigateToAsync(Routes.MovieDetail);
+    }
 
     private async Task OpenAsync(WatchListRowViewModel row)
     {
